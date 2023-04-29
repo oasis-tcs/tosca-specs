@@ -1,25 +1,19 @@
 <img src="media/image1.png" style="width:3.21in;height:0.66in" />
 
-TOSCA Version 2.
-
-> 
-> author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T17:56:00Z"
-> 
-> I have
-> provided a number of comments. Some of these are pure editorial, e.g
-> spelling, wording and cut and paste error correction. Other comments
-> fall into these themes:  
-> YAML is the only language  
-> Folded comment style and double quotes  
-> Policy definition in general and period in particular  
-> Node states  
-> Normative types in examples  
-> Environment variables and artefact arguments  
-> Get_node_type and node filters  
-> Documentation of optional and required
-> elements
-
-0<span class="comment-end" id="0"></span>
+TOSCA Version 2.<span class="comment-start" id="0"
+author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T17:56:00Z">I have
+provided a number of comments. Some of these are pure editorial, e.g
+spelling, wording and cut and paste error correction. Other comments
+fall into these themes:  
+YAML is the only language  
+Folded comment style and double quotes  
+Policy definition in general and period in particular  
+Node states  
+Normative types in examples  
+Environment variables and artefact arguments  
+Get_node_type and node filters  
+Documentation of optional and required
+elements</span>0<span class="comment-end" id="0"></span>
 
 Working Draft 06, Revision 02
 
@@ -1805,15 +1799,9 @@ publication.)</span>
 
 ## Objective
 
-
-
->  author="Chris Lauwers"
-> date="2020-05-31T00:44:00Z"
-> 
-> This prose has been copied from the TOSCA
-> Version 1.0 document and needs further editing.
-
-Cloud computing
+<span class="comment-start" id="45" author="Chris Lauwers"
+date="2020-05-31T00:44:00Z">This prose has been copied from the TOSCA
+Version 1.0 document and needs further editing.</span>Cloud computing
 can become more valuable if the creation and lifecycle management of
 application, infrastructure, and network services can be fully automated
 and supported across a variety of deployment environments. The core
@@ -1827,13 +1815,7 @@ deployment of services and their management throughout the complete
 service lifecycle (e.g. scaling, patching, monitoring,
 etc.).<span class="comment-end" id="45"></span>
 
-## TOSCA
-
->  author="Chris Lauwers" date="2021-06-28T23:04:00Z"
-> 
-> This section has been moved here from the Operational Model chapter in the previous draft. It may need to be consolidated with the "Objective" section to create a new "What is TOSCA" subsection.
-
-Scope<span class="comment-end" id="47"></span>
+## TOSCA <span class="comment-start" id="47" author="Chris Lauwers" date="2021-06-28T23:04:00Z">This section has been moved here from the Operational Model chapter in the previous draft. It may need to be consolidated with the "Objective" section to create a new "What is TOSCA" subsection.</span>Scope<span class="comment-end" id="47"></span>
 
 TOSCA is a domain-specific language for designing services and for
 defining the deployment and run-time management aspects of these
@@ -1942,15 +1924,9 @@ following definitions when used in context of this document.
 <tbody>
 <tr class="odd">
 <td>Instance Model</td>
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2020-06-22T17:48:00Z"
-> 
-> Needs to be updated to not confuse it
-> with real-life model
-
-A deployed service is a running instance of a
+<td><span class="comment-start" id="67" data-author="Calin Curescu"
+data-date="2020-06-22T17:48:00Z">Needs to be updated to not confuse it
+with real-life model</span>A deployed service is a running instance of a
 Service Template. The instance is typically derived by running a
 declarative workflow that is automatically generated based on the node
 templates and relationship templates defined in the service
@@ -1989,21 +1965,15 @@ graph.</td>
 </tr>
 <tr class="even">
 <td>Abstract Node Template</td>
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2019-02-06T18:10:00Z"
-> 
-> I think the latest understanding is
-> that a node is either “regular” or “selected” or “substituted”, we don’t
-> need the concept of an abstract node anymore.<br />
-> To be replaced with a definition of a node that is substituted or
-> selected.<br />
-> Also check the <strong>concrete</strong> node definition, e.g. “node
-> definition that are not substituted or selected may be referred more
-> specifically as regular nodes”.
-
-An abstract node template is a
+<td><span class="comment-start" id="70" data-author="Calin Curescu"
+data-date="2019-02-06T18:10:00Z">I think the latest understanding is
+that a node is either “regular” or “selected” or “substituted”, we don’t
+need the concept of an abstract node anymore.<br />
+To be replaced with a definition of a node that is substituted or
+selected.<br />
+Also check the <strong>concrete</strong> node definition, e.g. “node
+definition that are not substituted or selected may be referred more
+specifically as regular nodes”.</span>An abstract node template is a
 node template that doesn’t define any implementations for the TOSCA
 lifecycle management operations<span class="comment-end"
 id="70"></span>. Service designers explicitly mark node templates as
@@ -2018,15 +1988,9 @@ templates for those node templates.</td>
 
 The TOSCA language introduces a YAML-based grammar for creating service
 templates that define the lifecycle management of
-
-
->  author="Calin Curescu"
-> date="2020-06-22T17:51:00Z"
-> 
-> digital services (i.e. infrastructure,
-> …)
-
-application<span class="comment-end" id="91"></span>,
+<span class="comment-start" id="91" author="Calin Curescu"
+date="2020-06-22T17:51:00Z">digital services (i.e. infrastructure,
+…)</span>application<span class="comment-end" id="91"></span>,
 infrastructure, and network services. The language defines a *metamodel*
 for specifying both the structure of a service as well as its management
 aspects. Within a TOSCA file, a *Service Template* defines the
@@ -2054,14 +2018,8 @@ properties defined in the Node Type.
 
 Figure : Structural Elements of a Service Template and their Relations
 
-For
-
->  author="Jordan,PM,Paul,TNK6 R"
-> date="2020-11-04T16:20:00Z"
-> 
-> A diagram of the example would help
-
-
+For<span class="comment-start" id="94" author="Jordan,PM,Paul,TNK6 R"
+date="2020-11-04T16:20:00Z">A diagram of the example would help</span>
 example<span class="comment-end" id="94"></span>, consider a service
 that consists of an application server, a process engine, and a process
 model. A Service Template defining that service would include one Node
@@ -2074,48 +2032,24 @@ an operation for shutting down an instance of this application server. A
 constraint in the Node Template can specify a range of IP addresses
 available when making a concrete application server available.
 
-
-
->  author="Calin Curescu"
-> date="2020-06-22T17:58:00Z"
-> 
-> Will this be understood correctly, since
-> this is part of the node requirement and not relationship template as
-> such.
-
-Node templates may include one or more
-
-
->  author="Chris Lauwers"
-> date="2021-01-18T18:20:00Z"
-> 
-> Mike Rehder suggested to use the general
-> term “relations” to avoid reference to “relationship templates” or
-> types.
-
-*relationships* <span class="comment-end" id="96"></span>to
+<span class="comment-start" id="95" author="Calin Curescu"
+date="2020-06-22T17:58:00Z">Will this be understood correctly, since
+this is part of the node requirement and not relationship template as
+such.</span>Node templates may include one or more
+<span class="comment-start" id="96" author="Chris Lauwers"
+date="2021-01-18T18:20:00Z">Mike Rehder suggested to use the general
+term “relations” to avoid reference to “relationship templates” or
+types.</span>*relationships* <span class="comment-end" id="96"></span>to
 other node templates in the Service Template. Relationships represent
-the edges in the
-
-> 
-> author="Michael Rehder" date="2020-12-15T08:49:00Z"
-> 
-> New term! It’s
-> confusing to have “Service Template” and “Service Topology Graph” and
-> “Topology Template”.
-
-service topology
+the edges in the <span class="comment-start" id="97"
+author="Michael Rehder" date="2020-12-15T08:49:00Z">New term! It’s
+confusing to have “Service Template” and “Service Topology Graph” and
+“Topology Template”.</span>service topology
 graph<span class="comment-end" id="97"></span>.
-
-
->  author="Chris Lauwers"
-> date="2021-01-18T18:17:00Z"
-> 
-> Should we introduce “service topology graph”
-> when what we mean is really the “instance
-> model”.
-
-The<span class="comment-end" id="98"></span> node template
+<span class="comment-start" id="98" author="Chris Lauwers"
+date="2021-01-18T18:17:00Z">Should we introduce “service topology graph”
+when what we mean is really the “instance
+model”.</span>The<span class="comment-end" id="98"></span> node template
 that includes the relationship definition is implicitly defined as the
 source node of the relationship and the target node is explicitly
 specified as part of the relationship definition. Each relationship
@@ -2161,16 +2095,10 @@ describing the appropriate execution environment.
 ## Workflows
 
 A deployed service is an instance of a service
-template
-
->  author="Michael Rehder"
-> date="2020-12-15T08:46:00Z"
-> 
-> This isn’t correct as this document says
-> that a “Service Template” is merely a TOSCA document and so could just
-> have type definitions within it.
-
-<span class="comment-end"
+template<span class="comment-start" id="101" author="Michael Rehder"
+date="2020-12-15T08:46:00Z">This isn’t correct as this document says
+that a “Service Template” is merely a TOSCA document and so could just
+have type definitions within it.</span><span class="comment-end"
 id="101"></span>. More precisely, the instance is created by
 instantiating the Service Template of its TOSCA file by running
 workflows that are most often automatically created by the orchestrator
@@ -2205,16 +2133,10 @@ template).
 We discussed earlier how relationships are used to link node templates
 together into a service topology graph. However, it may not always be
 possible to define all node templates for a given
-
-
->  author="Michael Rehder"
-> date="2020-12-15T09:11:00Z"
-> 
-> Confusing – “service topology” is a new
-> term. It’s a “topology template” but not all “service template” are a
-> “topology template”.
-
-service topology within a single service
+<span class="comment-start" id="107" author="Michael Rehder"
+date="2020-12-15T09:11:00Z">Confusing – “service topology” is a new
+term. It’s a “topology template” but not all “service template” are a
+“topology template”.</span>service topology within a single service
 template<span class="comment-end" id="107"></span>. For example, modular
 design practices may dictate that different service subcomponents be
 modeled using separate service templates. This may result in
@@ -2267,33 +2189,22 @@ another Node Template in the same Service Template by connecting the
 respective requirement-capability-pairs via relationships; (2)
 requirements of a Node Template can be matched by the orchestrator, for
 example by allocating needed resources for a Node Template during
-instantiation.
-
-> 
-> author="Michael Rehder" date="2020-12-15T16:33:00Z"
-> 
-> There should be some
-> discussion about this issue – how are the relations defined in the
-> topology template related to the relations of the substituted node
-> type?
-
-<span class="comment-end" id="108"></span>
+instantiation.<span class="comment-start" id="108"
+author="Michael Rehder" date="2020-12-15T16:33:00Z">There should be some
+discussion about this issue – how are the relations defined in the
+topology template related to the relations of the substituted node
+type?</span><span class="comment-end" id="108"></span>
 
 ## Decomposition of Service Templates
 
 TOSCA provides support for decomposing service components using the
-Substitution Mapping feature. For example, a
-
->  author="Michael Rehder" date="2020-12-15T16:17:00Z"
-> 
-> Another
-> place where I find the use of the term “Service Template” overly
-> confusing. It should say “Topology Template” as that is the construct in
-> the end that is supporting the substitution.  
-> Section 4.5.1 says “topology template” so I think this change is in line
-> with the practical definitions in the document.
-
-Service Template
+Substitution Mapping feature. For example, a <span class="comment-start"
+id="114" author="Michael Rehder" date="2020-12-15T16:17:00Z">Another
+place where I find the use of the term “Service Template” overly
+confusing. It should say “Topology Template” as that is the construct in
+the end that is supporting the substitution.  
+Section 4.5.1 says “topology template” so I think this change is in line
+with the practical definitions in the document.</span>Service Template
 <span class="comment-end" id="114"></span>for a business application
 that is hosted on an application server tier might focus on defining the
 structure and manageability behavior of the business application itself.
@@ -2371,19 +2282,7 @@ content is specific for a particular cloud application. CSARs are zip
 files, typically compressed. A CSAR may contain a file called TOSCA.meta
 that describes the organization of the CSAR.
 
-## TOSCA
-
->  author="Chris Lauwers" date="2021-06-28T23:14:00Z"
-> 
-> This subsection has been moved here from the Operational Model chapter. We need to revisit where exactly it belongs to make sure the document flows correctly.
-
-
-
->  author="Chris Lauwers" date="2021-06-28T23:14:00Z"
-> 
-> Alternatively, we could also move this section into Chapter 5
-
-Entities<span class="comment-end" id="129"><span class="comment-end" id="130"></span></span>
+## TOSCA <span class="comment-start" id="129" author="Chris Lauwers" date="2021-06-28T23:14:00Z">This subsection has been moved here from the Operational Model chapter. We need to revisit where exactly it belongs to make sure the document flows correctly.</span><span class="comment-start" id="130" author="Chris Lauwers" date="2021-06-28T23:14:00Z">Alternatively, we could also move this section into Chapter 5</span>Entities<span class="comment-end" id="129"><span class="comment-end" id="130"></span></span>
 
 When defining services using TOSCA, we must distinguish between four
 kinds of entities:
@@ -2440,15 +2339,9 @@ The functional architecture defines the following three blocks:
 1.  **TOSCA Processor**: This functional block defines functionality
     that must be provided by all TOSCA implementations. TOSCA processors
     convert TOSCA-based service definitions into service
-
-
->  author="Chris Lauwers"
->     date="2021-06-28T23:19:00Z"
-> 
-> We need to better define the concept of
->     "representations"
-
-representations <span class="comment-end"
+    <span class="comment-start" id="132" author="Chris Lauwers"
+    date="2021-06-28T23:19:00Z">We need to better define the concept of
+    "representations"</span>representations <span class="comment-end"
     id="132"></span>that can be processed by an Orchestrator.
 
 <!-- -->
@@ -2529,36 +2422,12 @@ Except for the examples, this section is **normative** and describes the
 YAML grammar, definitions, and semantics for all keynames that are
 defined in the TOSCA Version 2.0 specification.
 
-## TOSCA
-
->  author="Chris Lauwers" date="2022-06-25T17:36:00Z"
-> 
-> Inconsistent capitalization
-
-
-
->  author="Chris Lauwers" date="2022-06-25T17:36:00Z"
-> 
-> This section should be moved into the previous chapter
-
-
-
->  author="Chris Lauwers" date="2022-12-05T18:42:00Z"
-> 
-> What is a metamodel?
-
-Metamodel<span class="comment-end" id="157"><span class="comment-end" id="158"><span class="comment-end" id="159"></span></span></span>
+## TOSCA <span class="comment-start" id="157" author="Chris Lauwers" date="2022-06-25T17:36:00Z">Inconsistent capitalization</span><span class="comment-start" id="158" author="Chris Lauwers" date="2022-06-25T17:36:00Z">This section should be moved into the previous chapter</span><span class="comment-start" id="159" author="Chris Lauwers" date="2022-12-05T18:42:00Z">What is a metamodel?</span>Metamodel<span class="comment-end" id="157"><span class="comment-end" id="158"><span class="comment-end" id="159"></span></span></span>
 
 This section defines the models and the modeling goals that comprise the
 TOSCA Version 2.0 specification.
 
-###
-
->  author="Calin Curescu" date="2020-04-16T12:53:00Z"
-> 
-> This section needs completion before submitting the TOSCA 2.0.
-
-Modeling concepts and goals
+### <span class="comment-start" id="161" author="Calin Curescu" date="2020-04-16T12:53:00Z">This section needs completion before submitting the TOSCA 2.0.</span>Modeling concepts and goals
 
 TBD. Here we should have selected core concepts of TOSCA 1.0 from
 section “[3   Core Concepts and Usage
@@ -2587,17 +2456,11 @@ are clarified next:
 
 - Entity definitions are based on different sets of keynames (with
   specific syntax and semantics) that are associated with values (of a
-  specific
-
->  author="Chris Lauwers"
->   date="2021-01-17T00:51:00Z"
-> 
-> Alternative language proposed by PJ:
->   Entity definitions comprise pairs of keynames and values. Each entity
->   has it own syntax, semantics and set of
->   keynames.
-
-format<span class="comment-end" id="163"></span>).
+  specific <span class="comment-start" id="163" author="Chris Lauwers"
+  date="2021-01-17T00:51:00Z">Alternative language proposed by PJ:
+  Entity definitions comprise pairs of keynames and values. Each entity
+  has it own syntax, semantics and set of
+  keynames.</span>format<span class="comment-end" id="163"></span>).
 
 <!-- -->
 
@@ -2612,16 +2475,10 @@ format<span class="comment-end" id="163"></span>).
 
 - The derivation rules describe what (keyname) definitions are inherited
   from the parent type and further if and how they can be expanded or
-
-
->  author="Jordan,PM,Paul,TNK6 R"
->   date="2020-11-04T16:42:00Z"
-> 
-> Expansion and modification is part of
->   Refinement not Derivation. This bullet point should be
->   removed
-
-<span class="comment-end" id="164"></span>modified. Note
+  <span class="comment-start" id="164" author="Jordan,PM,Paul,TNK6 R"
+  date="2020-11-04T16:42:00Z">Expansion and modification is part of
+  Refinement not Derivation. This bullet point should be
+  removed</span><span class="comment-end" id="164"></span>modified. Note
   that some definitions (for example, “version”) and intrinsic to the
   type declaration and so are not inherited.
 
@@ -2636,16 +2493,10 @@ format<span class="comment-end" id="163"></span>).
 
 - Definitions within a type definition consist of the definition of
   keynames and other TOSCA entities (e.g. properties, requirements,
-  capabilities, etc.).
-
-> 
->   author="Jordan,PM,Paul,TNK6 R" date="2020-11-04T16:43:00Z"
-> 
-> Type
->   definition is part of Definition not
->   Refinement
-
-<span class="comment-end" id="165"></span>
+  capabilities, etc.). <span class="comment-start" id="165"
+  author="Jordan,PM,Paul,TNK6 R" date="2020-11-04T16:43:00Z">Type
+  definition is part of Definition not
+  Refinement</span><span class="comment-end" id="165"></span>
   Definitions within a parent type can be refined (adjusted) to better
   suit the needs of the referencing type.
 
@@ -2655,17 +2506,11 @@ format<span class="comment-end" id="163"></span>).
 
 <!-- -->
 
--
-
->  author="Mike Rehder"
->   date="2020-04-30T11:10:00Z"
-> 
-> I think separating augmentation is helpful
->   (as YANG has done). I think it makes it easier to understand the rules
->   that apply for the refining or augmenting
->   scenario
-
-**Augmentation**<span class="comment-end"
+- <span class="comment-start" id="166" author="Mike Rehder"
+  date="2020-04-30T11:10:00Z">I think separating augmentation is helpful
+  (as YANG has done). I think it makes it easier to understand the rules
+  that apply for the refining or augmenting
+  scenario</span>**Augmentation**<span class="comment-end"
   id="166"></span>:
 
 <!-- -->
@@ -2735,47 +2580,23 @@ parent types (according to the derivation rules of that type entity). If
 a keyname definition is inherited, the derived type does not have to
 provide such definition.
 
-##
+## <span class="comment-start" id="172" author="Calin Curescu" date="2020-04-20T18:49:00Z">TBD. Here comes some intro and generic description of the different specification blocks that will build the following sections.</span>TOSCA Service<span class="comment-end" id="172"></span>
 
->  author="Calin Curescu" date="2020-04-20T18:49:00Z"
-> 
-> TBD. Here comes some intro and generic description of the different specification blocks that will build the following sections.
-
-TOSCA Service<span class="comment-end" id="172"></span>
-
-
-
->  author="Michael Rehder"
-> date="2020-12-15T08:38:00Z"
-> 
-> This isn’t true – if a “Service Template”
-> can contain just supporting parts like type definitions then it won’t
-> contain a “TOSCA Service”.  
-> In the end, I think that the term “Service Template” is very confusing
-> as it is never used as a “template”, as an object. It’s a collection of
-> definitions, some of which are supporting and one of which is the
-> working code definition for the service to be realized.  
-> “Service Definition” is a more practical term.
-
-A TOSCA Service is
-specified by a TOSCA Service
-
-> 
-> author="Chris Lauwers" date="2022-12-05T18:44:00Z"
-> 
-> We haven't defined
-> service template yet.
-
-Template<span class="comment-end"
+<span class="comment-start" id="173" author="Michael Rehder"
+date="2020-12-15T08:38:00Z">This isn’t true – if a “Service Template”
+can contain just supporting parts like type definitions then it won’t
+contain a “TOSCA Service”.  
+In the end, I think that the term “Service Template” is very confusing
+as it is never used as a “template”, as an object. It’s a collection of
+definitions, some of which are supporting and one of which is the
+working code definition for the service to be realized.  
+“Service Definition” is a more practical term.</span>A TOSCA Service is
+specified by a TOSCA Service <span class="comment-start" id="174"
+author="Chris Lauwers" date="2022-12-05T18:44:00Z">We haven't defined
+service template yet.</span>Template<span class="comment-end"
 id="174"></span>.<span class="comment-end" id="173"></span>
 
-###
-
->  author="Chris Lauwers" date="2022-06-22T14:26:00Z"
-> 
-> Update to reflect new naming
-
-TOSCA file definition<span class="comment-end" id="178"></span>
+### <span class="comment-start" id="178" author="Chris Lauwers" date="2022-06-22T14:26:00Z">Update to reflect new naming</span>TOSCA file definition<span class="comment-end" id="178"></span>
 
 A TOSCA file contains definitions of building blocks for use in cloud
 applications or complete models of cloud applications. This section
@@ -2798,21 +2619,15 @@ The following is the list of recognized keynames for a TOSCA file:
 <th>Keyname</th>
 <th>Mandatory</th>
 <th>Type</th>
-<th>
-
-> 
-> data-author="Jordan,PM,Paul,TNK6 R" data-date="2020-11-05T10:17:00Z"
-> 
-> The
-> use of the word ‘optional’ in the descriptions is inconsistent. In some
-> rows it occurs before the work ‘map’- in those cases it is repeating the
-> information in the ‘Required’ column. In other rows it occurs after the
-> work ‘map’ and so operates on the elements of the map. In these rows I
-> think it is stating that the element can be declared but not used. Yet
-> other rows do not included the word optional which could be taken to
-> mean they have some third status of optionality.
-
-Description<span
+<th><span class="comment-start" id="181"
+data-author="Jordan,PM,Paul,TNK6 R" data-date="2020-11-05T10:17:00Z">The
+use of the word ‘optional’ in the descriptions is inconsistent. In some
+rows it occurs before the work ‘map’- in those cases it is repeating the
+information in the ‘Required’ column. In other rows it occurs after the
+work ‘map’ and so operates on the elements of the map. In these rows I
+think it is stating that the element can be declared but not used. Yet
+other rows do not included the word optional which could be taken to
+mean they have some third status of optionality.</span>Description<span
 class="comment-end" id="181"></span></th>
 </tr>
 </thead>
@@ -2896,16 +2711,10 @@ file and/or external TOSCA files.</td>
 <td><p>map of</p>
 <p><a href="#capability-type">Capability Types</a></p></td>
 <td>This section contains amap of capability type definitions for use in
-
-
->  data-author="Chris Lauwers"
-> data-date="2021-01-17T00:56:00Z"
-> 
-> Paul Jordan suggest “for use in a
-> service template” (as opposed to “for use in the service
-> template”)
-
-the<span class="comment-end" id="182"></span> TOSCA
+<span class="comment-start" id="182" data-author="Chris Lauwers"
+data-date="2021-01-17T00:56:00Z">Paul Jordan suggest “for use in a
+service template” (as opposed to “for use in the service
+template”)</span>the<span class="comment-end" id="182"></span> TOSCA
 file and/or external TOSCA files.</td>
 </tr>
 <tr class="odd">
@@ -2971,13 +2780,7 @@ TOSCA file and/or external TOSCA files.</td>
 </tbody>
 </table>
 
-####
-
->  author="Chris Lauwers" date="2020-09-01T16:14:00Z"
-> 
-> Tal: do we even need these grammar sections? Often grammar section is out of sync with keynames section, and “notes” section has most of the relevant info.
-
-Grammar<span class="comment-end" id="185"></span>
+#### <span class="comment-start" id="185" author="Chris Lauwers" date="2020-09-01T16:14:00Z">Tal: do we even need these grammar sections? Often grammar section is out of sync with keynames section, and “notes” section has most of the relevant info.</span>Grammar<span class="comment-end" id="185"></span>
 
 The overall structure of a TOSCA file and its top-level keynames is
 shown below:
@@ -2990,22 +2793,10 @@ shown below:
 <tr class="header">
 <th><p># Mandatory TOSCA version string</p>
 <p>tosca_definitions_version: &lt;value&gt; # Mandatory, see section
-
-
->  data-author="Chris Lauwers"
-> data-date="2020-08-31T23:39:00Z"
-> 
-> Update cross references later when
-> document outline is final.
-
-
-
-> 
-> data-author="Chris Lauwers" data-date="2020-09-01T16:16:00Z"
-> 
-> 
-
-3.1
+<span class="comment-start" id="186" data-author="Chris Lauwers"
+data-date="2020-08-31T23:39:00Z">Update cross references later when
+document outline is final.</span><span class="comment-start" id="187"
+data-author="Chris Lauwers" data-date="2020-09-01T16:16:00Z"></span>3.1
 <span class="comment-end" id="186"><span class="comment-end"
 id="187"></span></span>for usage</p>
 <p>profile: &lt;string&gt; # Optional, see section 3.2 for usage</p>
@@ -3015,16 +2806,10 @@ id="187"></span></span>for usage</p>
 <p># Optional description of the definitions inside the file.</p>
 <p>description: &lt;<a href="#TYPE_YAML_STRING">template_
 description</a>&gt;</p>
-<p>
-
->  data-author="Matt Rutkowski"
-> data-date="2015-08-25T21:52:00Z"
-> 
-> Should this appear after imports to
-> assure anchors do not overwrite each other (from imported defn.
-> files)?
-
-dsl_definitions:</p>
+<p><span class="comment-start" id="188" data-author="Matt Rutkowski"
+data-date="2015-08-25T21:52:00Z">Should this appear after imports to
+assure anchors do not overwrite each other (from imported defn.
+files)?</span>dsl_definitions:</p>
 <p># map of YAML alias anchors (or macros)<span class="comment-end"
 id="188"></span></p>
 <p>repositories:</p>
@@ -3066,30 +2851,19 @@ service</p></th>
 
 ##### Requirements
 
-- The key “tosca_definitions_version”
-
->  author="Jordan,PM,Paul,TNK6 R"
->   date="2020-11-05T10:30:00Z"
-> 
-> The document does not state any other
->   requirement on the order of the top-level collations. This clause
->   infers that they can be in any order but I suspect many
->   implementations would expect types to be defined before they are
->   referenced. I suggest the order in 4.2.1.2 is made mandatory
->   explicitly in which case this clause is not required.  
->   In addition this clause uses SHOULD while 4.2.2.1.2 uses
->   MUST
-
-<span class="comment-end" id="191"></span> MUSTbe the first
+- The key “tosca_definitions_version”<span class="comment-start"
+  id="191" author="Jordan,PM,Paul,TNK6 R"
+  date="2020-11-05T10:30:00Z">The document does not state any other
+  requirement on the order of the top-level collations. This clause
+  infers that they can be in any order but I suspect many
+  implementations would expect types to be defined before they are
+  referenced. I suggest the order in 4.2.1.2 is made mandatory
+  explicitly in which case this clause is not required.  
+  In addition this clause uses SHOULD while 4.2.2.1.2 uses
+  MUST</span><span class="comment-end" id="191"></span> MUSTbe the first
   line of each TOSCA file..
 
-#####
-
->  author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> **[TOSCA-246](../customXml/item1.xml): Comments captured**: Perhaps need an advanced concept to define “features” that are not necessarily attached to a particular node. (like things you might include in a manifest). Like the requirement for a global time sync. How do we reference that feature, where is that feature attached to (some node?). perhaps add a new keyword like “cloud” that can hold all these Features that have no immediate Node to attach them to. Perhaps a syntax convention, where we might just list the names of the features (in some precedent order (sequence). Need to answer: -Who requires, it who fulfills it and how do u maintain the relationship? Luc: Environmental requirements. e.g., Python or something similar.
-
-Notes<span class="comment-end" id="194"></span>
+##### <span class="comment-start" id="194" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">**[TOSCA-246](../customXml/item1.xml): Comments captured**: Perhaps need an advanced concept to define “features” that are not necessarily attached to a particular node. (like things you might include in a manifest). Like the requirement for a global time sync. How do we reference that feature, where is that feature attached to (some node?). perhaps add a new keyword like “cloud” that can hold all these Features that have no immediate Node to attach them to. Perhaps a syntax convention, where we might just list the names of the features (in some precedent order (sequence). Need to answer: -Who requires, it who fulfills it and how do u maintain the relationship? Luc: Environmental requirements. e.g., Python or something similar.</span>Notes<span class="comment-end" id="194"></span>
 
 - TOSCA files do not have to contain a service_template and MAY contain
   simply type definitions (e.g., Artifact, Interface, Capability, Node,
@@ -3139,19 +2913,7 @@ A TOSCA file designed using the TOSCA Version 2.0 specification:
 | tosca_definitions_version: tosca_2_0 |
 |--------------------------------------|
 
-#####
-
->  author="Chris Lauwers" date="2020-09-01T02:02:00Z"
-> 
-> Perhaps this should be its own section?
-
-
-
->  author="Chris Lauwers" date="2020-09-01T16:52:00Z"
-> 
-> What happens if files imported by a “profile” file also defines a profile?
-
-profile<span class="comment-end" id="207"><span class="comment-end" id="208"></span></span>
+##### <span class="comment-start" id="207" author="Chris Lauwers" date="2020-09-01T02:02:00Z">Perhaps this should be its own section?</span><span class="comment-start" id="208" author="Chris Lauwers" date="2020-09-01T16:52:00Z">What happens if files imported by a “profile” file also defines a profile?</span>profile<span class="comment-end" id="207"><span class="comment-end" id="208"></span></span>
 
 The profile keyword is used to assign a profile name to the collection
 of types defined in this TOSCA file. TOSCA implementations use profile
@@ -3194,15 +2956,10 @@ keynames with values that can use all types supported by the [YAML 1.2.2
 recommended
 schemas](https://yaml.org/spec/1.2.2/#chapter-10-recommended-schemas)
 \[Yaml-1.2\]. Specifically, the following types can be used for metadata
-values: map, seq, str, null, bool, int,
-
->  author="Chris Lauwers" date="2022-12-06T14:44:00Z"
-> 
-> Did we
-> decide to allow recursive metadata (i.e. maps of
-> maps?)
-
-float<span class="comment-end" id="213"></span>.
+values: map, seq, str, null, bool, int, <span class="comment-start"
+id="213" author="Chris Lauwers" date="2022-12-06T14:44:00Z">Did we
+decide to allow recursive metadata (i.e. maps of
+maps?)</span>float<span class="comment-end" id="213"></span>.
 
 - 
 
@@ -3311,13 +3068,7 @@ macros for use in the TOSCA file.
 </tbody>
 </table>
 
-###### 
-
->  author="Jordan,PM,Paul,TNK6 R" date="2020-11-05T11:18:00Z"
-> 
-> There should also be an example of how to use the macro once defined.
-
-Example<span class="comment-end" id="236"></span>
+###### <span class="comment-start" id="236" author="Jordan,PM,Paul,TNK6 R" date="2020-11-05T11:18:00Z">There should also be an example of how to use the macro once defined.</span>Example<span class="comment-end" id="236"></span>
 
 <table>
 <colgroup>
@@ -3325,15 +3076,9 @@ Example<span class="comment-end" id="236"></span>
 </colgroup>
 <thead>
 <tr class="header">
-<th><p>dsl_
-
-> 
-> data-author="Chris Lauwers" data-date="2022-12-06T14:48:00Z"
-> 
-> Show an
-> example of how these macros are used.
-
-definitions<span
+<th><p>dsl_<span class="comment-start" id="237"
+data-author="Chris Lauwers" data-date="2022-12-06T14:48:00Z">Show an
+example of how these macros are used.</span>definitions<span
 class="comment-end" id="237"></span>:</p>
 <p>ubuntu_image_props: &amp;ubuntu_image_props</p>
 <p>architecture: x86_64</p>
@@ -3381,13 +3126,7 @@ href="#TYPE_YAML_STRING">repository_definition_n</a>&gt;</p></th>
 </tbody>
 </table>
 
-###### 
-
->  author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T08:31:00Z"
-> 
-> This example is repeated in 4.2.3.2.3. It would be better to have an example which showed multiple repo definitions, probably using a mix of syntax the single line syntax.
-
-Example<span class="comment-end" id="248"></span>
+###### <span class="comment-start" id="248" author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T08:31:00Z">This example is repeated in 4.2.3.2.3. It would be better to have an example which showed multiple repo definitions, probably using a mix of syntax the single line syntax.</span>Example<span class="comment-end" id="248"></span>
 
 <table>
 <colgroup>
@@ -3721,16 +3460,10 @@ type_defn_n</a>&gt;</p></th>
 <tr class="header">
 <th><p>relationship_types:</p>
 <p>mycompany.mytypes.myCustomClientServerType:</p>
-<p>derived_from: 
-
-> 
-> data-author="Jordan,PM,Paul,TNK6 R"
-> data-date="2020-11-09T08:39:00Z"
-> 
-> This type is no longer defined so it
-> should not be used in an example
-
-tosca.relationships.HostedOn<span
+<p>derived_from: <span class="comment-start" id="297"
+data-author="Jordan,PM,Paul,TNK6 R"
+data-date="2020-11-09T08:39:00Z">This type is no longer defined so it
+should not be used in an example</span>tosca.relationships.HostedOn<span
 class="comment-end" id="297"></span></p>
 <p>properties:</p>
 <p># more details ...</p>
@@ -3824,13 +3557,7 @@ TOSCA file.
 </tbody>
 </table>
 
-###### 
-
->  author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T08:48:00Z"
-> 
-> There should be a second group definition in the example or it is just a repeat of the group type def example
-
-Example<span class="comment-end" id="316"></span>
+###### <span class="comment-start" id="316" author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T08:48:00Z">There should be a second group definition in the example or it is just a repeat of the group type def example</span>Example<span class="comment-end" id="316"></span>
 
 <table>
 <colgroup>
@@ -3875,13 +3602,7 @@ TOSCA file.
 </tbody>
 </table>
 
-###### 
-
->  author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T08:48:00Z"
-> 
-> There should be a second policy definition in the example or it is just a repeat of the policy type definition example
-
-Example<span class="comment-end" id="327"></span>
+###### <span class="comment-start" id="327" author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T08:48:00Z">There should be a second policy definition in the example or it is just a repeat of the policy type definition example</span>Example<span class="comment-end" id="327"></span>
 
 <table>
 <colgroup>
@@ -4154,57 +3875,33 @@ A number of suggestions for these extensions are currently being
 discussed. Grammar extensions will be included in this document one they
 are agreed upon.
 
-### 
+### <span class="comment-start" id="346" author="Chris Lauwers" date="2020-09-01T00:20:00Z">I don’t know what is meant by “references”.</span>Imports<span class="comment-end" id="346"></span> and Namespaces
 
->  author="Chris Lauwers" date="2020-09-01T00:20:00Z"
-> 
-> I don’t know what is meant by “references”.
-
-Imports<span class="comment-end" id="346"></span> and Namespaces
-
-#### 
-
->  author="Calin Curescu" date="2019-01-30T15:54:00Z"
-> 
-> It would be good to allow also the import of specific types (via their fully qualified names) and also entire namespaces (i.e. types from entire namespaces) from a/the catalogue. That is, in addition to importing from a file: Globally well-known Local catalog File
-
-Import definition<span class="comment-end" id="350"></span>
+#### <span class="comment-start" id="350" author="Calin Curescu" date="2019-01-30T15:54:00Z">It would be good to allow also the import of specific types (via their fully qualified names) and also entire namespaces (i.e. types from entire namespaces) from a/the catalogue. That is, in addition to importing from a file: Globally well-known Local catalog File</span>Import definition<span class="comment-end" id="350"></span>
 
 An import definition is used within a TOSCA file to locate and uniquely
 name another TOSCA file or TOSCA profile that has type, repository, and
-function 
-
->  author="Chris Lauwers"
-> date="2020-09-01T00:21:00Z"
-> 
-> I think it should be illegal to import a
-> service template that contains a topology
-> template.
-
-<span class="comment-end" id="351"></span>definitions to
-be 
-
->  author="Matt Rutkowski"
-> date="2016-09-06T09:49:00Z"
-> 
-> Nodejs has NPM that uses the following to
-> import new package modules:  
-> A package is:  
-> a) a folder containing a program described by a
-> [package.json](numbering.xml) file  
-> b) a gzipped tarball containing (a)  
-> c) a url that resolves to (b)  
-> d) a \<name\>@\<version\> that is published on the registry (see
-> [npm-registry](styles.xml)) with (c)  
-> e) a \<name\>@\<tag\> (see [npm-dist-tag](settings.xml)) that points to
-> (d)  
-> f) a \<name\> that has a "latest" tag satisfying (e)  
-> g) a \<git remote url\> that resolves to (a)  
-> we may want to adopt something similar if TOSCA references service
-> template (packages) from a
-> catalog)
-
-imported<span class="comment-end" id="352"></span>
+function <span class="comment-start" id="351" author="Chris Lauwers"
+date="2020-09-01T00:21:00Z">I think it should be illegal to import a
+service template that contains a topology
+template.</span><span class="comment-end" id="351"></span>definitions to
+be <span class="comment-start" id="352" author="Matt Rutkowski"
+date="2016-09-06T09:49:00Z">Nodejs has NPM that uses the following to
+import new package modules:  
+A package is:  
+a) a folder containing a program described by a
+[package.json](numbering.xml) file  
+b) a gzipped tarball containing (a)  
+c) a url that resolves to (b)  
+d) a \<name\>@\<version\> that is published on the registry (see
+[npm-registry](styles.xml)) with (c)  
+e) a \<name\>@\<tag\> (see [npm-dist-tag](settings.xml)) that points to
+(d)  
+f) a \<name\> that has a "latest" tag satisfying (e)  
+g) a \<git remote url\> that resolves to (a)  
+we may want to adopt something similar if TOSCA references service
+template (packages) from a
+catalog)</span>imported<span class="comment-end" id="352"></span>
 (included) into another TOSCA file.
 
 ##### Keynames
@@ -4252,16 +3949,10 @@ The following multi-line grammar can be used for importing TOSCA files:
 </colgroup>
 <thead>
 <tr class="header">
-<th><p>
-
->  data-author="Matt Rutkowski"
-> data-date="2017-11-21T11:45:00Z"
-> 
-> Import means (import types into global
-> namespace and any sub-topologies are made available for
-> composition.)
-
-imports<span class="comment-end"
+<th><p><span class="comment-start" id="361" data-author="Matt Rutkowski"
+data-date="2017-11-21T11:45:00Z">Import means (import types into global
+namespace and any sub-topologies are made available for
+composition.)</span>imports<span class="comment-end"
 id="361"></span>:</p>
 <p>- url: &lt;file_URI&gt;</p>
 <p>repository: &lt;repository_name&gt;</p>
@@ -4281,16 +3972,10 @@ profiles:
 </colgroup>
 <thead>
 <tr class="header">
-<th><p>
-
->  data-author="Matt Rutkowski"
-> data-date="2017-11-21T11:45:00Z"
-> 
-> Import means (import types into global
-> namespace and any sub-topologies are made available for
-> composition.)
-
-imports<span class="comment-end"
+<th><p><span class="comment-start" id="362" data-author="Matt Rutkowski"
+data-date="2017-11-21T11:45:00Z">Import means (import types into global
+namespace and any sub-topologies are made available for
+composition.)</span>imports<span class="comment-end"
 id="362"></span>:</p>
 <p>- profile: &lt;profile_name&gt;</p>
 <p>namespace: &lt;namespace_name&gt;</p></th>
@@ -4367,16 +4052,10 @@ attempt to import the file referenced by \<file_URI\> as follows:
   \<file_URI\> refers to a TOSCA file located in the repository that
   contains the Service Template file that includes the import
   definition. If the importing service template is located in a
-  
-
->  author="Matt Rutkowski"
->   date="2017-12-05T11:33:00Z"
-> 
-> Claude: Could perhaps add hints to CSAR
->   file to indicate where STs can be imported from (based upon URI or
->   alias).
-
-CSAR <span class="comment-end" id="367"></span>file,
+  <span class="comment-start" id="367" author="Matt Rutkowski"
+  date="2017-12-05T11:33:00Z">Claude: Could perhaps add hints to CSAR
+  file to indicate where STs can be imported from (based upon URI or
+  alias).</span>CSAR <span class="comment-end" id="367"></span>file,
   then that CSAR file should be treated as the repository in which to
   locate the service template file that must be imported.
 
@@ -4510,13 +4189,7 @@ importing template:
 </tbody>
 </table>
 
-#### 
-
->  author="Chris Lauwers" date="2020-09-01T00:19:00Z"
-> 
-> I recommend removing this entire section and rewriting any parts that are still relevant inside the “imports” section.
-
-Namespace<span class="comment-end" id="373"></span>s
+#### <span class="comment-start" id="373" author="Chris Lauwers" date="2020-09-01T00:19:00Z">I recommend removing this entire section and rewriting any parts that are still relevant inside the “imports” section.</span>Namespace<span class="comment-end" id="373"></span>s
 
 When importing TOSCA files or TOSCA profiles, there exists a possibility
 for name collision. For example, an imported file may define a node type
@@ -4781,23 +4454,11 @@ Within each namespace, names must be unique. This means the following:
 
 - Artifacts (artifacts)
 
-- 
-
->  author="Calin Curescu"
->   date="2020-06-08T18:24:00Z"
-> 
-> But requirements assignments support
->   duplicates!
-
-R
-
-> 
->   author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> MUSTFIX: Verify
->   duplicates are NOT allowed!!
-
-equirements
+- <span class="comment-start" id="375" author="Calin Curescu"
+  date="2020-06-08T18:24:00Z">But requirements assignments support
+  duplicates!</span>R<span class="comment-start" id="376"
+  author="Matt Rutkowski" date="2015-08-25T21:52:00Z">MUSTFIX: Verify
+  duplicates are NOT allowed!!</span>equirements
   (requirements)<span class="comment-end" id="375"></span>
 
 - Capabilities (capabilities)<span class="comment-end" id="376"></span>
@@ -4886,13 +4547,7 @@ The following represents a repository definition:
 
 ### Additional information definitions
 
-#### 
-
->  author="Jordan,PM,Paul,TNK6 R" date="2020-11-05T11:16:00Z"
-> 
-> Description is already described in 4.2.1.3.6
-
-Description definition<span class="comment-end" id="394"></span>
+#### <span class="comment-start" id="394" author="Jordan,PM,Paul,TNK6 R" date="2020-11-05T11:16:00Z">Description is already described in 4.2.1.3.6</span>Description definition<span class="comment-end" id="394"></span>
 
 This optional element provides a means include single or multiline
 descriptions within a TOSCA template as a scalar string value.
@@ -4947,23 +4602,11 @@ space</p>
 
 - Use of “folded” style is discouraged for the YAML string type apart
   from when used with the description keyname.
-  .
+  .<span class="comment-start" id="403" author="Jordan,PM,Paul,TNK6 R"
+  date="2020-11-05T11:13:00Z">Can’t I just use a double quoted string
+  for multi-line ?</span><span class="comment-end" id="403"></span>
 
->  author="Jordan,PM,Paul,TNK6 R"
->   date="2020-11-05T11:13:00Z"
-> 
-> Can’t I just use a double quoted string
->   for multi-line ?
-
-<span class="comment-end" id="403"></span>
-
-#### 
-
->  author="Jordan,PM,Paul,TNK6 R" date="2020-11-05T11:17:00Z"
-> 
-> Also covered by 4.2.1.3.2
-
-Metadata<span class="comment-end" id="409"></span>
+#### <span class="comment-start" id="409" author="Jordan,PM,Paul,TNK6 R" date="2020-11-05T11:17:00Z">Also covered by 4.2.1.3.2</span>Metadata<span class="comment-end" id="409"></span>
 
 This optional element provides a means to include optional metadata as a
 map of strings.
@@ -4987,17 +4630,11 @@ Metadata definitions have the following grammar:
 <thead>
 <tr class="header">
 <th><p>metadata:</p>
-<p>
-
->  data-author="Calin Curescu"
-> data-date="2020-06-08T18:58:00Z"
-> 
-> Chris has a problem with the
-> restriction here, it should be able to combine more cases: map of map,
-> or map of list, of string, etc.<br />
-> Tal want to think more if map of string or map of everything…
-
-map
+<p><span class="comment-start" id="414" data-author="Calin Curescu"
+data-date="2020-06-08T18:58:00Z">Chris has a problem with the
+restriction here, it should be able to combine more cases: map of map,
+or map of list, of string, etc.<br />
+Tal want to think more if map of string or map of everything…</span>map
 of &lt;<a href="#TYPE_YAML_STRING">string</a>&gt;<span
 class="comment-end" id="414"></span></p></th>
 </tr>
@@ -5029,13 +4666,7 @@ class="comment-end" id="414"></span></p></th>
 - Data provided within metadata, wherever it appears, MAY be ignored by
   TOSCA Orchestrators and SHOULD NOT affect runtime behavior.
 
-#### 
-
->  author="Jordan,PM,Paul,TNK6 R" date="2020-11-05T11:20:00Z"
-> 
-> Already in 4.2.1.3.7
-
-DSL Definitions<span class="comment-end" id="423"></span>
+#### <span class="comment-start" id="423" author="Jordan,PM,Paul,TNK6 R" date="2020-11-05T11:20:00Z">Already in 4.2.1.3.7</span>DSL Definitions<span class="comment-end" id="423"></span>
 
 TBD.
 
@@ -5106,16 +4737,10 @@ in their respective sections):
   added during derivation.
 
 - Already defined entities that have a type may be
-  
-
->  author="Mike Rehder"
->   date="2020-12-14T14:25:00Z"
-> 
-> New term “redefined”. The sentence is
->   confusing – what is it trying to say? Is it saying that you can change
->   the type of a derived_from type (how?)?
-
-redefined
+  <span class="comment-start" id="427" author="Mike Rehder"
+  date="2020-12-14T14:25:00Z">New term “redefined”. The sentence is
+  confusing – what is it trying to say? Is it saying that you can change
+  the type of a derived_from type (how?)?</span>redefined
   <span class="comment-end" id="427"></span>to have a type derived from
   the original type.
 
@@ -5123,27 +4748,15 @@ redefined
   (i.e. the defined validation clauses do not replace the validation
   clause defined in the parent type but are added to it).
 
-- Some definitions 
-
-> 
->   author="Mike Rehder" date="2020-12-14T14:29:00Z"
-> 
-> Why “should”? Isn’t
->   this “are treated as a new declaration and”?
-
-must be totally
+- Some definitions <span class="comment-start" id="428"
+  author="Mike Rehder" date="2020-12-14T14:29:00Z">Why “should”? Isn’t
+  this “are treated as a new declaration and”?</span>must be totally
   flexible<span class="comment-end" id="428"></span>, so they will
   overwrite the definition in the parent type.
 
-- Some definitions 
-
-> 
->   author="Mike Rehder" date="2020-12-14T14:28:00Z"
-> 
-> Why “should”? Isn’t
->   this “cannot”?
-
-must <span class="comment-end"
+- Some definitions <span class="comment-start" id="429"
+  author="Mike Rehder" date="2020-12-14T14:28:00Z">Why “should”? Isn’t
+  this “cannot”?</span>must <span class="comment-end"
   id="429"></span>not be changed at all once defined (i.e. they
   represent some sort of “signature” fundamental to the type).
 
@@ -5780,13 +5393,7 @@ The multi-line grammar is as follows :
   requirement definition within the \<node_template_name\> declared in
   this mapping.
 
-###### 
-
->  author="Calin Curescu" date="2020-06-17T18:23:00Z"
-> 
-> \### need to revisit this. Example is wrong !!!
-
-Example<span class="comment-end" id="489"></span>
+###### <span class="comment-start" id="489" author="Calin Curescu" date="2020-06-17T18:23:00Z">\### need to revisit this. Example is wrong !!!</span>Example<span class="comment-end" id="489"></span>
 
 The following example shows the definition of a placement policy.
 
@@ -6314,24 +5921,13 @@ have the following meaning:
 </tbody>
 </table>
 
-### 
-
->  author="Michael Rehder" date="2020-12-15T13:33:00Z"
-> 
-> I still think this is simply a Requirement Type – I can’t see why it isn’t and what advantage there is in calling it something else.
-
-Relationship Type<span class="comment-end" id="520"></span>
+### <span class="comment-start" id="520" author="Michael Rehder" date="2020-12-15T13:33:00Z">I still think this is simply a Requirement Type – I can’t see why it isn’t and what advantage there is in calling it something else.</span>Relationship Type<span class="comment-end" id="520"></span>
 
 A Relationship Type is a reusable entity that defines the type of one or
-more relationships between Node Types or 
-
->  author="Michael Rehder" date="2020-12-15T12:12:00Z"
-> 
-> There is no
-> relationship type in a node template so why is this stated
-> here?
-
-Node Templates<span class="comment-end" id="521"></span>.
+more relationships between Node Types or <span class="comment-start"
+id="521" author="Michael Rehder" date="2020-12-15T12:12:00Z">There is no
+relationship type in a node template so why is this stated
+here?</span>Node Templates<span class="comment-end" id="521"></span>.
 
 #### Keynames
 
@@ -6530,22 +6126,16 @@ mycompanytypes.mycapabilities.SomeAppCapability ]</p></th>
 
 ### Relationship Template
 
-
-
->  author="Michael Rehder"
-> date="2020-12-15T13:23:00Z"
-> 
-> My understanding is that this is an
-> alternative to relations defined within node templates.  
-> It’s not clear why this option would be chosen over the node-template
-> option.  
-> If both relations in node-templates and Relationship Templates are used,
-> how are they combined together?  
-> Or is this not recommended?  
-> I can imagine that combination rules would be very difficult to define
-> but if it is possible, it must be defined
-
-A Relationship Template
+<span class="comment-start" id="532" author="Michael Rehder"
+date="2020-12-15T13:23:00Z">My understanding is that this is an
+alternative to relations defined within node templates.  
+It’s not clear why this option would be chosen over the node-template
+option.  
+If both relations in node-templates and Relationship Templates are used,
+how are they combined together?  
+Or is this not recommended?  
+I can imagine that combination rules would be very difficult to define
+but if it is possible, it must be defined</span>A Relationship Template
 specifies the occurrence of a manageable relationship between node
 templates as part of an application’s topology model that is defined in
 a TOSCA Service Template. A Relationship template is an instance of a
@@ -6604,15 +6194,9 @@ Template is based upon.</td>
 <td>An optional description for the Relationship Template.</td>
 </tr>
 <tr class="odd">
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2022-04-18T17:14:00Z"
-> 
-> Add these to the relationship
-> definition as part of the requirement definition
-
-metadata</td>
+<td><span class="comment-start" id="535" data-author="Calin Curescu"
+data-date="2022-04-18T17:14:00Z">Add these to the relationship
+definition as part of the requirement definition</span>metadata</td>
 <td>no</td>
 <td><a href="#tosca-map-type">map</a> of <a
 href="#TYPE_YAML_STRING">string</a></td>
@@ -7110,16 +6694,10 @@ refinement rules when the containing node type is derived:
   but to the definitions in the capability type referred by the type
   keyname (see grammar above for the rules).
 
-- 
-
->  author="Michael Rehder"
->   date="2020-12-15T11:17:00Z"
-> 
-> What are the refinement rules for this? Is
->   it a logical AND of the node types or an intersection set or a
->   replacement?
-
-valid_source_node_types: not applicable to the
+- <span class="comment-start" id="567" author="Michael Rehder"
+  date="2020-12-15T11:17:00Z">What are the refinement rules for this? Is
+  it a logical AND of the node types or an intersection set or a
+  replacement?</span>valid_source_node_types: not applicable to the
   definitions in the parent node type but to the definitions in the
   capability type referred by the type keyname (see grammar above for
   the rules).<span class="comment-end" id="567"></span>
@@ -7335,13 +6913,7 @@ The following example shows a capability assignment:
   creation of a relationship to a target capability, the new
   “allocation” keyname is used within a requirement assignment.
 
-####
-
->  author="Chris Lauwers" date="2022-06-22T20:47:00Z"
-> 
-> It seems to me that the only reason this section is here is to point out a difference with the XML spec. I recommend removing it.
-
-Requirement<span class="comment-end" id="591"></span> Type 
+#### <span class="comment-start" id="591" author="Chris Lauwers" date="2022-06-22T20:47:00Z">It seems to me that the only reason this section is here is to point out a difference with the XML spec. I recommend removing it.</span>Requirement<span class="comment-end" id="591"></span> Type 
 
 Requirement types are not defined in TOSCA. TOSCA seeks to simplify the
 modeling by not declaring specific Requirement Types with nodes
@@ -7386,16 +6958,10 @@ definition:
 <td>The optional description of the Requirement definition.</td>
 </tr>
 <tr class="even">
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2020-06-17T18:53:00Z"
-> 
-> Chris is suggesting the possibility to
-> require several capabilities from one requirement! Need to discuss how
-> that could be solved.
-
-capability<span class="comment-end"
+<td><span class="comment-start" id="597" data-author="Calin Curescu"
+data-date="2020-06-17T18:53:00Z">Chris is suggesting the possibility to
+require several capabilities from one requirement! Need to discuss how
+that could be solved.</span>capability<span class="comment-end"
 id="597"></span></td>
 <td>yes</td>
 <td><a href="#TYPE_YAML_STRING">string</a></td>
@@ -7420,19 +6986,13 @@ been used for the capability keyname, then the node keyname is
 mandatory.</p></td>
 </tr>
 <tr class="even">
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2020-04-18T23:42:00Z"
-> 
-> !!! I think we need to make the
-> relationship mandatory, otherwise we cannot decouple the Simple
-> Profile.<br />
-> For backward compatibility, we can state that for TOSCA &lt; v2.0 if a
-> relationship is not defined then the orchestrator can always fall back
-> to tosca.relationships.Root.
-
-relationship<span class="comment-end"
+<td><span class="comment-start" id="598" data-author="Calin Curescu"
+data-date="2020-04-18T23:42:00Z">!!! I think we need to make the
+relationship mandatory, otherwise we cannot decouple the Simple
+Profile.<br />
+For backward compatibility, we can state that for TOSCA &lt; v2.0 if a
+relationship is not defined then the orchestrator can always fall back
+to tosca.relationships.Root.</span>relationship<span class="comment-end"
 id="598"></span></td>
 <td>conditional</td>
 <td><a href="#TYPE_YAML_STRING">string</a></td>
@@ -7444,15 +7004,9 @@ requirement.</p>
 definition of in the requirement assignment.</p></td>
 </tr>
 <tr class="odd">
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2022-02-22T16:12:00Z"
-> 
-> Node_filter is not in TOSCA 1.3 so we
-> need to check again.
-
-node_filter<span class="comment-end"
+<td><span class="comment-start" id="599" data-author="Calin Curescu"
+data-date="2022-02-22T16:12:00Z">Node_filter is not in TOSCA 1.3 so we
+need to check again.</span>node_filter<span class="comment-end"
 id="599"></span></td>
 <td>no</td>
 <td><a href="#node-filter-definition">node filter</a></td>
@@ -7764,25 +7318,13 @@ requirement at runtime.</p></li>
 <td>relationship</td>
 <td>conditional</td>
 <td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>
-
->  data-author="Michael Rehder"
-> data-date="2020-12-15T13:05:00Z"
-> 
-> What about the type, properties,
-> interfaces keynames below?
-
-The conditional keyname used to provide
+<td><p><span class="comment-start" id="622" data-author="Michael Rehder"
+data-date="2020-12-15T13:05:00Z">What about the type, properties,
+interfaces keynames below?</span>The conditional keyname used to provide
 either the:</p>
 <ul>
-<li><p>
-
->  data-author="Calin Curescu"
-> data-date="2022-04-18T17:21:00Z"
-> 
-> To take out
-
-name of a
+<li><p><span class="comment-start" id="623" data-author="Calin Curescu"
+data-date="2022-04-18T17:21:00Z">To take out</span>name of a
 <strong>Relationship Template</strong> to use to relate <em>this</em>
 node to the <em>target</em> node when fulfilling the requirement.<span
 class="comment-end" id="623"></span></p></li>
@@ -8049,15 +7591,9 @@ have the following meaning:
   > the symbolic name of a capability definition in a target node type,
   > then the capability keyname definition
 
-- 
-
->  author="Michael Rehder"
->   >
-> 
->  date="2020-12-15T13:10:00Z"This is within an assignment so why
->   > would there be anything subsequent?
-
-MUST remain unchanged in
+- <span class="comment-start" id="633" author="Michael Rehder"
+  > date="2020-12-15T13:10:00Z">This is within an assignment so why
+  > would there be anything subsequent?</span>MUST remain unchanged in
   > any subsequent refinements or during
   > assignment.<span class="comment-end" id="633"></span>
 
@@ -8533,15 +8069,9 @@ href="#TYPE_YAML_STRING">string</a>&gt;</p>
 href="#TYPE_YAML_STRING">interface_description</a>&gt;</p>
 <p>inputs:</p>
 <p>&lt;<a href="#parameter-definition">parameter_definitions</a>&gt;</p>
-<p>
-
->  data-author="Chris Lauwers"
-> data-date="2020-06-29T18:10:00Z"
-> 
-> Double-check all the examples to make
-> sure ‘operations’ keyword is used everywhere
-
-operations<span
+<p><span class="comment-start" id="661" data-author="Chris Lauwers"
+data-date="2020-06-29T18:10:00Z">Double-check all the examples to make
+sure ‘operations’ keyword is used everywhere</span>operations<span
 class="comment-end" id="661"></span>:</p>
 <p>&lt;<a href="#operation-definition">operation_definitions</a>&gt;</p>
 <p>notifications:</p>
@@ -9277,16 +8807,10 @@ notification outputs and we can map them to node/relationship attributes
 similarly to the way operation outputs are mapped to attributes. The
 artifact that the orchestrator is registering with in order to receive
 the notification is specified using the implementation keyname in a
-similar way to operations. 
-
-> 
-> author="Chris Lauwers [2]" date="2019-09-05T21:51:00Z"
-> 
-> I think
-> notifications DO need inputs (in order to provide information about the
-> external system they’re monitoring)
-
-As opposed to an operation
+similar way to operations. <span class="comment-start" id="723"
+author="Chris Lauwers [2]" date="2019-09-05T21:51:00Z">I think
+notifications DO need inputs (in order to provide information about the
+external system they’re monitoring)</span>As opposed to an operation
 definition, a notification definition does not include an inputs keyname
 since notifications are not invoked from the
 orchestrator.<span class="comment-end" id="723"></span>
@@ -9657,17 +9181,11 @@ implementation artifact (e.g., a library the script installs or a</p>
 <p>secondary script).</p></td>
 </tr>
 <tr class="odd">
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2020-06-02T16:46:00Z"
-> 
-> Let’s ask Thinh if there is any valid
-> reason to keep the timeout as a “execution directive” for the
-> orchestrator. The people present in WG meeting on 2020-06-02 did not
-> think that.
-
-timeout</td>
+<td><span class="comment-start" id="757" data-author="Calin Curescu"
+data-date="2020-06-02T16:46:00Z">Let’s ask Thinh if there is any valid
+reason to keep the timeout as a “execution directive” for the
+orchestrator. The people present in WG meeting on 2020-06-02 did not
+think that.</span>timeout</td>
 <td>no</td>
 <td>integer</td>
 <td>Timeout value in seconds. Has no meaning and should not be used
@@ -9831,18 +9349,12 @@ addition, the Artifact Type has the following recognized keynames:
 </thead>
 <tbody>
 <tr class="odd">
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2020-05-04T15:06:00Z"
-> 
-> Tal proposes to make it a list of
-> string to cover several mime-types, but maybe this is not needed since
-> it can be freely changed in the derived types and a certain specific
-> file cannot have two mime-types at the same time,
-> no?
-
-mime_type<span class="comment-end" id="775"></span></td>
+<td><span class="comment-start" id="775" data-author="Calin Curescu"
+data-date="2020-05-04T15:06:00Z">Tal proposes to make it a list of
+string to cover several mime-types, but maybe this is not needed since
+it can be freely changed in the derived types and a certain specific
+file cannot have two mime-types at the same time,
+no?</span>mime_type<span class="comment-end" id="775"></span></td>
 <td>no</td>
 <td><a href="#TYPE_YAML_STRING">string</a></td>
 <td>The optional mime type property for the Artifact Type.</td>
@@ -10043,15 +9555,9 @@ repository.</td>
 <td>The optional description for the artifact definition.</td>
 </tr>
 <tr class="odd">
-<td>
-
->  data-author="Chris Lauwers"
-> data-date="2020-06-29T18:45:00Z"
-> 
-> Remove and suggest that property should
-> be used instead?
-
-deploy_path</td>
+<td><span class="comment-start" id="791" data-author="Chris Lauwers"
+data-date="2020-06-29T18:45:00Z">Remove and suggest that property should
+be used instead?</span>deploy_path</td>
 <td>no</td>
 <td><a href="#TYPE_YAML_STRING">string</a></td>
 <td>The file path the associated file will be deployed on within the
@@ -10239,15 +9745,9 @@ names are reserved and cannot be used for custom data types. Note,
 however, that it is possible to derive a custom data type from a
 primitive type in order to add validation clauses.
 
-Primitive Types: (section 4.4.
-
-> 
-> author="Chris Lauwers" date="2020-08-04T16:23:00Z"
-> 
-> Include cross
-> references
-
-1<span class="comment-end" id="803"></span>)
+Primitive Types: (section 4.4.<span class="comment-start" id="803"
+author="Chris Lauwers" date="2020-08-04T16:23:00Z">Include cross
+references</span>1<span class="comment-end" id="803"></span>)
 
 - string
 
@@ -10372,13 +9872,7 @@ around “0.1”:
 </tbody>
 </table>
 
-##### 
-
->  author="Chris Lauwers" date="2020-08-18T23:01:00Z"
-> 
-> (From Tal): Do we want the comparison constraints to work for strings? E.g. should "greater_than" do a sorting-based comparison? I'll just point that it is non-trivial to sort Unicode strings. The most common way is to use the Unicode Collation Algorithm, which involves a database of information. There is a reference implementation in [ICU](webSettings.xml). Good and proper Unicode libraries will support it (e.g. [here is Go's](footnotes.xml)), but I do imagine it may be a burden for some implementations. I suggest we discuss this in the ad hoc and consider the pros and cons.
-
-Notes<span class="comment-end" id="807"></span>:
+##### <span class="comment-start" id="807" author="Chris Lauwers" date="2020-08-18T23:01:00Z">(From Tal): Do we want the comparison constraints to work for strings? E.g. should "greater_than" do a sorting-based comparison? I'll just point that it is non-trivial to sort Unicode strings. The most common way is to use the Unicode Collation Algorithm, which involves a database of information. There is a reference implementation in [ICU](webSettings.xml). Good and proper Unicode libraries will support it (e.g. [here is Go's](footnotes.xml)), but I do imagine it may be a burden for some implementations. I suggest we discuss this in the ad hoc and consider the pros and cons.</span>Notes<span class="comment-end" id="807"></span>:
 
 1.  There are various ways to specify literal !!string data in YAML for
     handling indentation, newlines, as well as convenient support for
@@ -10659,21 +10153,9 @@ Following is a valid example of *not* assigning a value:
 </tbody>
 </table>
 
-### 
+### <span class="comment-start" id="817" author="Chris Lauwers" date="2020-08-04T16:22:00Z">Need to add timestamp type</span>Special<span class="comment-end" id="817"></span> Types
 
->  author="Chris Lauwers" date="2020-08-04T16:22:00Z"
-> 
-> Need to add timestamp type
-
-Special<span class="comment-end" id="817"></span> Types
-
-#### TOSCA 
-
->  author="Chris Lauwers" date="2020-08-18T23:03:00Z"
-> 
-> Tal suggests removing this.
-
-version<span class="comment-end" id="821"></span>
+#### TOSCA <span class="comment-start" id="821" author="Chris Lauwers" date="2020-08-18T23:03:00Z">Tal suggests removing this.</span>version<span class="comment-end" id="821"></span>
 
 A TOSCA version string.
 
@@ -10881,13 +10363,7 @@ concrete types in TOSCA:
 
 These types and their allowed unit values are defined below.
 
-##### scalar-unit.
-
->  author="Chris Lauwers" date="2020-07-27T18:39:00Z"
-> 
-> What don’t we allow multiples of bits
-
-size<span class="comment-end" id="839"></span>
+##### scalar-unit.<span class="comment-start" id="839" author="Chris Lauwers" date="2020-07-27T18:39:00Z">What don’t we allow multiples of bits</span>size<span class="comment-end" id="839"></span>
 
 ###### Recognized Units
 
@@ -10930,15 +10406,9 @@ size<span class="comment-end" id="839"></span>
 - TOSCA treats these unit values as case-insensitive (e.g., a value of
   ‘kB’, ‘KB’ or ‘kb’ is equivalent), but it is considered best practice
   to use the case of these units as prescribed by
-  
-
->  author="Chris Lauwers"
->   date="2020-07-20T18:40:00Z"
-> 
-> Bitrate units are case sensitive. We
->   should make this consistent.
-
-GNU<span class="comment-end"
+  <span class="comment-start" id="843" author="Chris Lauwers"
+  date="2020-07-20T18:40:00Z">Bitrate units are case sensitive. We
+  should make this consistent.</span>GNU<span class="comment-end"
   id="843"></span>.
 
 - Some cloud providers may not support byte-level granularity for
@@ -11072,15 +10542,9 @@ least</p></th>
 #### TOSCA list type
 
 The list type allows for specifying multiple values for a
-
-
->  author="Mike Rehder"
-> date="2020-12-14T14:56:00Z"
-> 
-> What is a “parameter of property”?  
-> Should just say “for a property”.
-
-a parameter of
+<span class="comment-start" id="859" author="Mike Rehder"
+date="2020-12-14T14:56:00Z">What is a “parameter of property”?  
+Should just say “for a property”.</span>a parameter of
 property<span class="comment-end" id="859"></span>. For example, if an
 application allows for being configured to listen on multiple ports, a
 list of ports could be configured using the list data type.
@@ -11377,20 +10841,8 @@ Data Type has the following recognized keynames:
 
 | Keyname      | Mandatory                     | Type                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                                                                    |
 |--------------|-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| validation   | no                            | [validation clause](#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition) | The optional validation clause that must evaluate to True for values of this Data 
-
->  author="Chris Lauwers" date="2021-01-26T03:12:00Z"
-> 
-> Edit suggested by Mike Rehder: Not valid for a type derived from a complex type (parent has property definitions) or a type with property, key_schema or entry_schema definitions.
-
-Type<span class="comment-end" id="904"></span> to be valid. |
-| properties   | no                            | map of [property definitions](#_Schema_Definition)                                                                                                                                                                       | The optional map property definitions that comprise the schema for a complex Data Type in 
-
->  author="Chris Lauwers" date="2021-01-26T03:13:00Z"
-> 
-> Edit suggested by Mike Rehder: Not valid for a type derived from a simple type (parent has no property definitions) or a type with constraint definitions.
-
-TOSCA<span class="comment-end" id="905"></span>.                            |
+| validation   | no                            | [validation clause](#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition) | The optional validation clause that must evaluate to True for values of this Data <span class="comment-start" id="904" author="Chris Lauwers" date="2021-01-26T03:12:00Z">Edit suggested by Mike Rehder: Not valid for a type derived from a complex type (parent has property definitions) or a type with property, key_schema or entry_schema definitions.</span>Type<span class="comment-end" id="904"></span> to be valid. |
+| properties   | no                            | map of [property definitions](#_Schema_Definition)                                                                                                                                                                       | The optional map property definitions that comprise the schema for a complex Data Type in <span class="comment-start" id="905" author="Chris Lauwers" date="2021-01-26T03:13:00Z">Edit suggested by Mike Rehder: Not valid for a type derived from a simple type (parent has no property definitions) or a type with constraint definitions.</span>TOSCA<span class="comment-end" id="905"></span>.                            |
 | key_schema   | conditional (default: string) | [schema definition](#schema-definition)                                                                                                                                                                                  | For data types that derive from the TOSCA map data type, the optional schema definition for the keys used to identify entries in properties of this data type. If not specified, the key_schema defaults to string. For data types that do not derive from the TOSCA map data type, the key_schema is not allowed.                                                                                                             |
 | entry_schema | conditional                   | [schema definition](#schema-definition)                                                                                                                                                                                  | For data types that derive from the TOSCA map or list data types, the mandatory schema definition for the entries in properties of this data type. For data types that do not derive from the TOSCA list or map data type, the entry_schema is not allowed.                                                                                                                                                                    |
 
@@ -11483,15 +10935,9 @@ During Data Type derivation the keyname definitions follow these rules:
 
 #### Additional Requirements
 
-- 
-
->  author="Mike Rehder"
->   date="2020-12-14T15:10:00Z"
-> 
-> This implies that type is optional.
->   However it is listed as required – which is it?
-
-A valid datatype
+- <span class="comment-start" id="910" author="Mike Rehder"
+  date="2020-12-14T15:10:00Z">This implies that type is optional.
+  However it is listed as required – which is it?</span>A valid datatype
   definition **MUST** have either a valid derived_from declaration or at
   least one valid property definition.<span class="comment-end"
   id="910"></span>
@@ -11560,15 +11006,9 @@ phonenumber type</p>
 
 ### Schema definition
 
-
-
->  author="Mike Rehder"
-> date="2020-12-14T15:12:00Z"
-> 
-> Repeats from the map and list primitive
-> section.
-
-All entries in a map or list for one property or
+<span class="comment-start" id="920" author="Mike Rehder"
+date="2020-12-14T15:12:00Z">Repeats from the map and list primitive
+section.</span>All entries in a map or list for one property or
 parameter must be of the same type. Similarly, all keys for map entries
 for one property or parameter must be of the same type as well.
 <span class="comment-end" id="920"></span>A TOSCA schema definition
@@ -11628,16 +11068,10 @@ must be derived originally from string.</p></td>
 href="#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition">validation
 clauses</a>\</td>
 <td>The optional validation clause that must evaluate to True for the
-
-
->  data-author="Chris Lauwers"
-> data-date="2021-01-26T03:17:00Z"
-> 
-> Edit suggested by Mike Rehder: The
-> optional list of constraint clauses for the map or list as a whole (not
-> to its key or entry schema).
-
-property<span class="comment-end"
+<span class="comment-start" id="923" data-author="Chris Lauwers"
+data-date="2021-01-26T03:17:00Z">Edit suggested by Mike Rehder: The
+optional list of constraint clauses for the map or list as a whole (not
+to its key or entry schema).</span>property<span class="comment-end"
 id="923"></span>.</td>
 </tr>
 <tr class="even">
@@ -11733,15 +11167,9 @@ the containing entity type is derived:
 - type: must be derived from (or the same as) the type in the schema
   definition in the parent entity type definition.
 
-- 
-
->  author="Mike Rehder"
->   date="2020-12-14T14:39:00Z"
-> 
-> Description is not inherited for derived
->   type – why is it inherited for schema?
-
-description: a new
+- <span class="comment-start" id="929" author="Mike Rehder"
+  date="2020-12-14T14:39:00Z">Description is not inherited for derived
+  type – why is it inherited for schema?</span>description: a new
   definition is unrestricted and will overwrite the one inherited from
   the schema definition in the parent entity type
   definition.<span class="comment-end" id="929"></span>
@@ -11754,26 +11182,14 @@ description: a new
 - key_schema: may be refined (recursively) according to schema
   refinement rules.
 
-- 
-
->  author="Mike Rehder"
->   date="2020-12-14T14:45:00Z"
-> 
-> What if the derived_from type is a list
->   with a complex data type entry_schema? What are the rules about
->   refinement/augmentation of that complex
->   definition?
-
-entry_schema: may be refined (recursively) according
+- <span class="comment-start" id="930" author="Mike Rehder"
+  date="2020-12-14T14:45:00Z">What if the derived_from type is a list
+  with a complex data type entry_schema? What are the rules about
+  refinement/augmentation of that complex
+  definition?</span>entry_schema: may be refined (recursively) according
   to schema refinement rules.<span class="comment-end" id="930"></span>
 
-### 
-
->  author="Mike Rehder" date="2020-12-14T14:40:00Z"
-> 
-> This should have its own refinement rule section to explain how conflicts are resolved, if at all. For example, if there is “range 0..10” and “greated_than 15” what happens?
-
-Validation clause definition<span class="comment-end" id="939"></span>
+### <span class="comment-start" id="939" author="Mike Rehder" date="2020-12-14T14:40:00Z">This should have its own refinement rule section to explain how conflicts are resolved, if at all. For example, if there is “range 0..10” and “greated_than 15” what happens?</span>Validation clause definition<span class="comment-end" id="939"></span>
 
 A validation clause that must evaluate to True if the value for the
 entity it references is considered valid.
@@ -11967,16 +11383,11 @@ supported.</td>
 <td><a
 href="#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition">validation
 clause</a></td>
-<td>The optional validation clause for the 
-
->  data-author="Chris Lauwers"
-> data-date="2021-01-26T03:20:00Z"
-> 
-> Edit suggested by Mike Rehder:
-> Applicable to simple type property definitions (not derived from a type
-> with propertys).
-
-property<span class="comment-end"
+<td>The optional validation clause for the <span class="comment-start"
+id="955" data-author="Chris Lauwers"
+data-date="2021-01-26T03:20:00Z">Edit suggested by Mike Rehder:
+Applicable to simple type property definitions (not derived from a type
+with propertys).</span>property<span class="comment-end"
 id="955"></span>.</td>
 </tr>
 <tr class="even">
@@ -12004,17 +11415,11 @@ mandatory. For other types, the entry_schema is not allowed.</td>
 <td><p>The optional key that contains a schema definition that TOSCA
 Orchestrators MAY use for validation when the “type” key’s value
 indicates an External schema (e.g., “json”).</p>
-<p>See section “External schema” below for further explanation and 
-
-> <span
-> class="comment-start" id="956" data-author="Chris Lauwers"
-> data-date="2021-01-26T03:21:00Z">
-> 
-> Edit suggested by Mike Rehder:
-> Applicable to simple type property definitions (not derived from a type
-> with propertys).</span>
-
-usage<span class="comment-end"
+<p>See section “External schema” below for further explanation and <span
+class="comment-start" id="956" data-author="Chris Lauwers"
+data-date="2021-01-26T03:21:00Z">Edit suggested by Mike Rehder:
+Applicable to simple type property definitions (not derived from a type
+with propertys).</span>usage<span class="comment-end"
 id="956"></span>.</p></td>
 </tr>
 <tr class="odd">
@@ -12028,13 +11433,7 @@ information.</td>
 </tbody>
 </table>
 
-#### 
-
->  author="Calin Curescu" date="2020-06-09T16:28:00Z"
-> 
-> !!! %%% Move this in the metadata, in a “recommended metadata” section (for profile writing).
-
-Status values<span class="comment-end" id="960"></span>
+#### <span class="comment-start" id="960" author="Calin Curescu" date="2020-06-09T16:28:00Z">!!! %%% Move this in the metadata, in a “recommended metadata” section (for profile writing).</span>Status values<span class="comment-end" id="960"></span>
 
 The following property status values are supported:
 
@@ -12176,15 +11575,9 @@ definitions together:
 - type: must be derived from (or the same as) the type in the property
   definition in the parent entity type definition.
 
-- 
-
->  author="Mike Rehder"
->   date="2020-12-14T14:49:00Z"
-> 
-> Section 4.2.5.2.3 says that description
->   isn’t inherited
-
-description: a new definition is unrestricted
+- <span class="comment-start" id="966" author="Mike Rehder"
+  date="2020-12-14T14:49:00Z">Section 4.2.5.2.3 says that description
+  isn’t inherited</span>description: a new definition is unrestricted
   and will overwrite the one inherited from the property definition in
   the parent entity type definition.<span class="comment-end"
   id="966"></span>
@@ -12202,17 +11595,11 @@ description: a new definition is unrestricted
   type, it may be defined to any type-compatible value; once defined,
   the property cannot be further refined or assigned.
 
-- 
-
->  author="Mike Rehder"
->   date="2020-12-14T14:50:00Z"
-> 
-> I don’t see how this is feasible. If
->   deprecated in the parent, how can a child make it active?  
->   I don’t think this should be allowed to be refined at
->   all.
-
-status: a new definition is unrestricted and will overwrite
+- <span class="comment-start" id="967" author="Mike Rehder"
+  date="2020-12-14T14:50:00Z">I don’t see how this is feasible. If
+  deprecated in the parent, how can a child make it active?  
+  I don’t think this should be allowed to be refined at
+  all.</span>status: a new definition is unrestricted and will overwrite
   the one inherited from the property definition in the parent entity
   type definition.<span class="comment-end" id="967"></span>
 
@@ -12365,15 +11752,9 @@ have the following meaning:
 - property_value, property_value_expression: represent the
   type-compatible value to assign to the property. Property values may
   be provided as the result of the evaluation of
-  
-
->  author="Chris Lauwers"
->   date="2022-11-21T11:36:00Z"
-> 
-> What is the difference between an
->   expression and a function
-
-an expression or a
+  <span class="comment-start" id="983" author="Chris Lauwers"
+  date="2022-11-21T11:36:00Z">What is the difference between an
+  expression and a function</span>an expression or a
   function<span class="comment-end" id="983"></span>.
 
 #### Additional Requirements
@@ -12388,13 +11769,7 @@ an expression or a
 - A non-required property that is not assigned it stays undefined, thus
   the default keyname is irrelevant for a non-required property.
 
-### 
-
->  author="Calin Curescu" date="2020-05-07T23:14:00Z"
-> 
-> %%% !!! To implement this, throughout the specification. Default can have also value_expression! I think we might need also an attribute “value_expresssion” keyname that allows to define an attribute as a function of a different attribute (of the same entity), that we can define when creating node/relationship types, even before template design time.
-
-Attribute definition<span class="comment-end" id="990"></span>
+### <span class="comment-start" id="990" author="Calin Curescu" date="2020-05-07T23:14:00Z">%%% !!! To implement this, throughout the specification. Default can have also value_expression! I think we might need also an attribute “value_expresssion” keyname that allows to define an attribute as a function of a different attribute (of the same entity), that we can define when creating node/relationship types, even before template design time.</span>Attribute definition<span class="comment-end" id="990"></span>
 
 An attribute definition defines a named, typed value that can be
 associated with an entity defined in this specification (e.g., a Node,
@@ -12403,15 +11778,9 @@ Relationship or Capability Type). Specifically, it is used to expose the
 deployed and instantiated (as set by the TOSCA orchestrator). Attribute
 values can be retrieved via the get_attribute function from the instance
 model and used as values to other entities within TOSCA Service
-
-
->  author="Chris Lauwers"
-> date="2022-11-21T11:36:00Z"
-> 
-> Can also be set using operation
-> outputs
-
-Templates<span class="comment-end" id="991"></span>.
+<span class="comment-start" id="991" author="Chris Lauwers"
+date="2022-11-21T11:36:00Z">Can also be set using operation
+outputs</span>Templates<span class="comment-end" id="991"></span>.
 
 #### Attribute and Property reflection 
 
@@ -12440,15 +11809,9 @@ definition:
 <th>Keyname</th>
 <th>Mandatory</th>
 <th>Type</th>
-<th>
-
->  data-author="Mike Rehder"
-> data-date="2020-12-14T15:23:00Z"
-> 
-> Similar comments as for property
-> definition
-
-Description<span class="comment-end"
+<th><span class="comment-start" id="996" data-author="Mike Rehder"
+data-date="2020-12-14T15:23:00Z">Similar comments as for property
+definition</span>Description<span class="comment-end"
 id="996"></span></th>
 </tr>
 </thead>
@@ -13076,53 +12439,35 @@ definition:
 </colgroup>
 <thead>
 <tr class="header">
-<th><p>
-
-> 
-> data-author="Jacques Durand" data-date="2015-08-25T21:52:00Z"
-> 
-> In v1.0,
-> output parameters are associated with Plans or operations. The semantics
-> of having “outputs” defined here in at the top of a topology, should be
-> clarified: are we saying that these outputs are automatically settled
-> after some initial deployment/provisioning of a new instance? Who is
-> supposed to use these “outputs”? Can a single node define its own
-> outputs, available as soon as this node is deployed? Could these outputs
-> change e.g. after some reconfiguration of the instance?
-
-
-
-> <span
-> class="comment-start" id="1034" data-author="Thomas Spatzier"
-> data-date="2016-01-13T09:39:00Z">
-> 
-> Compared to v1.0 those outputs kind of
-> correspond to the Properties in the BoundaryDefinitiions of a
-> ServiceTemplate.<br />
-> It represents data that you want to expose to the user of the template
-> to avoid him having to scan the internals of the template in order to
-> get information important to him (like a web URL).<br />
-> This features becomes important also for nested templates (I am working
-> on it).<br />
-> Single nodes cannot expose outputs. It is a decision of the template
-> author which ones shall be exposed outside of the template.<br />
-> And yes, the values could change, since they are linked to node
-> properties.</span>
-
-outputs<span class="comment-end" id="1033"><span
+<th><p><span class="comment-start" id="1033"
+data-author="Jacques Durand" data-date="2015-08-25T21:52:00Z">In v1.0,
+output parameters are associated with Plans or operations. The semantics
+of having “outputs” defined here in at the top of a topology, should be
+clarified: are we saying that these outputs are automatically settled
+after some initial deployment/provisioning of a new instance? Who is
+supposed to use these “outputs”? Can a single node define its own
+outputs, available as soon as this node is deployed? Could these outputs
+change e.g. after some reconfiguration of the instance?</span><span
+class="comment-start" id="1034" data-author="Thomas Spatzier"
+data-date="2016-01-13T09:39:00Z">Compared to v1.0 those outputs kind of
+correspond to the Properties in the BoundaryDefinitiions of a
+ServiceTemplate.<br />
+It represents data that you want to expose to the user of the template
+to avoid him having to scan the internals of the template in order to
+get information important to him (like a web URL).<br />
+This features becomes important also for nested templates (I am working
+on it).<br />
+Single nodes cannot expose outputs. It is a decision of the template
+author which ones shall be exposed outside of the template.<br />
+And yes, the values could change, since they are linked to node
+properties.</span>outputs<span class="comment-end" id="1033"><span
 class="comment-end" id="1034"></span></span>:</p>
 <p>server_ip:</p>
 <p>description: The private IP address of the provisioned server.</p>
-<p>value: { $get_attribute: [ my_server, private_
-
-> <span
-> class="comment-start" id="1035" data-author="Chris Lauwers"
-> data-date="2020-07-27T18:57:00Z">
-> 
-> Needs to be discussed in the context of
-> substitution mapping</span>
-
-address<span class="comment-end"
+<p>value: { $get_attribute: [ my_server, private_<span
+class="comment-start" id="1035" data-author="Chris Lauwers"
+data-date="2020-07-27T18:57:00Z">Needs to be discussed in the context of
+substitution mapping</span>address<span class="comment-end"
 id="1035"></span> ] }</p></th>
 </tr>
 </thead>
@@ -13263,17 +12608,11 @@ could include an output value that sets an attribute to an initial
 value, and the subsequence *configure* operation could then update that
 same attribute to a new value.
 
-
-
->  author="Calin Curescu"
-> date="2020-04-22T12:28:00Z"
-> 
-> !!! I would prefer this to be avoided, since
-> it creates confusion, it’s better to use the default value of a
-> parameter definition for that.  
-> %%% This is not allowed !!!
-
-It is also possible that a node
+<span class="comment-start" id="1050" author="Calin Curescu"
+date="2020-04-22T12:28:00Z">!!! I would prefer this to be avoided, since
+it creates confusion, it’s better to use the default value of a
+parameter definition for that.  
+%%% This is not allowed !!!</span>It is also possible that a node
 template assigns a value to an attribute that has an operation output
 mapped to it (including a value that is the result of calling an
 intrinsic function). <span class="comment-end"
@@ -13532,16 +12871,10 @@ list of signature definitions as follows:
 </table>
 
 Only the signatures keyname is mandatory and must provide at least one
-
-
->  author="Calin Curescu"
-> date="2022-09-20T16:21:00Z"
-> 
-> Put an example of an empty signature that
-> means the function takes no parameters and my return any result. Put
-> also of this example with variadic: true.
-
-signature
+<span class="comment-start" id="1055" author="Calin Curescu"
+date="2022-09-20T16:21:00Z">Put an example of an empty signature that
+means the function takes no parameters and my return any result. Put
+also of this example with variadic: true.</span>signature
 definition<span class="comment-end" id="1055"></span>. Note that the
 signatures are tested in the order of their definition. The first
 matching implementation is used.
@@ -13987,18 +13320,12 @@ the node_type to inputs of the service template.</td>
 <td>attributes</td>
 <td>no</td>
 <td>map of attribute mappings</td>
-<td>
-
->  data-author="Michael Rehder"
-> data-date="2020-12-15T16:45:00Z"
-> 
-> If these are optional, what happens if
-> they are not defined?<br />
-> Is there an assumption of name match across the node type and topology
-> template inputs?<br />
-> This needs to be described.
-
-The optional map of attribute mappings
+<td><span class="comment-start" id="1061" data-author="Michael Rehder"
+data-date="2020-12-15T16:45:00Z">If these are optional, what happens if
+they are not defined?<br />
+Is there an assumption of name match across the node type and topology
+template inputs?<br />
+This needs to be described.</span>The optional map of attribute mappings
 allowing to map outputs from the service template to attributes of the
 node_type.<span class="comment-end" id="1061"></span></td>
 </tr>
@@ -14118,18 +13445,12 @@ The single-line grammar of a property_mapping is as follows:
 </colgroup>
 <thead>
 <tr class="header">
-<th><p>&lt;property_name&gt;: 
-
-> 
-> data-author="Luc Boutier" data-date="2017-06-13T14:05:00Z"
-> 
-> Do we want to
-> allow such definition for non-list properties ?<br />
-> Such notation will be prohibited for list properties values to avoid
-> collision with the single line grammar of a node property
-> mapping.
-
-&lt;property_value&gt;<span class="comment-end"
+<th><p>&lt;property_name&gt;: <span class="comment-start" id="1076"
+data-author="Luc Boutier" data-date="2017-06-13T14:05:00Z">Do we want to
+allow such definition for non-list properties ?<br />
+Such notation will be prohibited for list properties values to avoid
+collision with the single line grammar of a node property
+mapping.</span>&lt;property_value&gt;<span class="comment-end"
 id="1076"></span> # This use is deprecated</p>
 <p>&lt;property_name&gt;: [ &lt;input_name&gt; ]</p></th>
 </tr>
@@ -14223,13 +13544,7 @@ A capability mapping allows to map the capability of one of the nodes of
 the service template to the capability of the node type the service
 template offers an implementation for.
 
-#### 
-
->  author="Calin Curescu [2]" date="2018-08-23T07:37:00Z"
-> 
-> Here at the end we should add also the occurences keyname that should allow assignement as for properties and attributes (see capability assignment changes to be made)
-
-Keynames<span class="comment-end" id="1091"></span>
+#### <span class="comment-start" id="1091" author="Calin Curescu [2]" date="2018-08-23T07:37:00Z">Here at the end we should add also the occurences keyname that should allow assignement as for properties and attributes (see capability assignment changes to be made)</span>Keynames<span class="comment-end" id="1091"></span>
 
 The following is the list of recognized keynames for a TOSCA capability
 mapping:
@@ -14261,49 +13576,25 @@ template.</td>
 <tr class="even">
 <td>properties</td>
 <td>no</td>
-<td>
-
->  data-author="Luc Boutier"
-> data-date="2017-06-13T14:31:00Z"
-> 
-> Do we want to allow the usage of
-> property mapping ?<br />
-> To map properties of various nodes, capabilities from within the
-> template to create the capability ?
-
-map of property
+<td><span class="comment-start" id="1092" data-author="Luc Boutier"
+data-date="2017-06-13T14:31:00Z">Do we want to allow the usage of
+property mapping ?<br />
+To map properties of various nodes, capabilities from within the
+template to create the capability ?</span>map of property
 assignment<span class="comment-end" id="1092"></span>s</td>
-<td>
-
->  data-author="Chris Lauwers"
-> data-date="2020-08-03T18:25:00Z"
-> 
-> This needs to be cleaned up since it is
-> wrong. This is an oversight left over from 1.3
-
-This field is
+<td><span class="comment-start" id="1093" data-author="Chris Lauwers"
+data-date="2020-08-03T18:25:00Z">This needs to be cleaned up since it is
+wrong. This is an oversight left over from 1.3</span>This field is
 mutually exclusive<span class="comment-end" id="1093"></span> with the
-mapping keyname and allows to provide a capability 
-
-> <span
-> class="comment-start" id="1094" data-author="Chris Lauwers"
-> data-date="2020-08-03T18:20:00Z">
-> 
-> What is the direction of the property
-> mapping? Value of abstract node is propagated to substituting template,
-> or the other way around?</span>
-
-assignment<span class="comment-end"
-id="1094"></span> for the 
-
-> 
-> data-author="Chris Lauwers" data-date="2020-08-03T18:22:00Z"
-> 
-> Should we
-> support mapping of properties of capabilities to inputs of the
-> substituting template?
-
-template<span class="comment-end"
+mapping keyname and allows to provide a capability <span
+class="comment-start" id="1094" data-author="Chris Lauwers"
+data-date="2020-08-03T18:20:00Z">What is the direction of the property
+mapping? Value of abstract node is propagated to substituting template,
+or the other way around?</span>assignment<span class="comment-end"
+id="1094"></span> for the <span class="comment-start" id="1095"
+data-author="Chris Lauwers" data-date="2020-08-03T18:22:00Z">Should we
+support mapping of properties of capabilities to inputs of the
+substituting template?</span>template<span class="comment-end"
 id="1095"></span> and specify it’s related properties.</td>
 </tr>
 <tr class="odd">
@@ -14376,13 +13667,7 @@ A requirement mapping allows to map the requirement of one of the nodes
 of the service template to the requirement of the node type the service
 template offers an implementation for.
 
-#### 
-
->  author="Calin Curescu [2]" date="2018-08-23T07:47:00Z"
-> 
-> The properties and attributes are totally wrong here as a requirement does not have them. One should not be able to assign a requirement without having a real dependency to match. The last two rows should be deleted!
-
-Keynames<span class="comment-end" id="1102"></span>
+#### <span class="comment-start" id="1102" author="Calin Curescu [2]" date="2018-08-23T07:47:00Z">The properties and attributes are totally wrong here as a requirement does not have them. One should not be able to assign a requirement without having a real dependency to match. The last two rows should be deleted!</span>Keynames<span class="comment-end" id="1102"></span>
 
 The following is the list of recognized keynames for a TOSCA requirement
 mapping:
@@ -14390,13 +13675,7 @@ mapping:
 | Keyname    | Mandatory | Type                          | Description                                                                                                                                                                                                                                                                                                            |
 |------------|-----------|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | mapping    | no        | list of strings (2 members)   | A list of strings with 2 elements, the first one being the name of a node template, the second the name of a requirement of the specified node template.                                                                                                                                                               |
-| properties | no        | List of property assignment   | This field is 
-
->  author="Chris Lauwers" date="2020-08-03T18:36:00Z"
-> 
-> These need to be removed.
-
-mutually<span class="comment-end" id="1103"></span> exclusive with the mapping keyname and allow to provide a requirement for the template and specify it’s related properties. |
+| properties | no        | List of property assignment   | This field is <span class="comment-start" id="1103" author="Chris Lauwers" date="2020-08-03T18:36:00Z">These need to be removed.</span>mutually<span class="comment-end" id="1103"></span> exclusive with the mapping keyname and allow to provide a requirement for the template and specify it’s related properties. |
 | attributes | no        | List of attributes assignment | This field is mutually exclusive with the mapping keyname and allow to provide a requirement for the template and specify it’s related attributes.                                                                                                                                                                     |
 
 #### Grammar
@@ -14459,22 +13738,11 @@ An interface mapping allows to map a workflow of the service template to
 an operation of the node type the service template offers an
 implementation for.
 
-#### 
+#### <span class="comment-start" id="1110" author="Calin Curescu [2]" date="2018-08-23T08:33:00Z">This could change if we introduce the operations keyname in the interface definitions</span>Grammar<span class="comment-end" id="1110"></span>
 
->  author="Calin Curescu [2]" date="2018-08-23T08:33:00Z"
-> 
-> This could change if we introduce the operations keyname in the interface definitions
-
-Grammar<span class="comment-end" id="1110"></span>
-
-The grammar of an interface_mapping is as 
-
->  author="Chris Lauwers" date="2020-08-03T18:40:00Z"
-> 
-> What about
-> notification mappings?
-
-follows<span class="comment-end"
+The grammar of an interface_mapping is as <span class="comment-start"
+id="1111" author="Chris Lauwers" date="2020-08-03T18:40:00Z">What about
+notification mappings?</span>follows<span class="comment-end"
 id="1111"></span>:
 
 <table>
@@ -14483,16 +13751,10 @@ id="1111"></span>:
 </colgroup>
 <thead>
 <tr class="header">
-<th><p>&lt;interface_
-
-> 
-> data-author="Chris Lauwers" data-date="2020-08-03T18:41:00Z"
-> 
-> Do we need
-> to add support for mapping operation name to an operation on a node in
-> the substituting template?
-
-name<span class="comment-end"
+<th><p>&lt;interface_<span class="comment-start" id="1112"
+data-author="Chris Lauwers" data-date="2020-08-03T18:41:00Z">Do we need
+to add support for mapping operation name to an operation on a node in
+the substituting template?</span>name<span class="comment-end"
 id="1112"></span>&gt;:</p>
 <p>&lt;operation_name&gt;: &lt;workflow_name&gt;</p></th>
 </tr>
@@ -14529,27 +13791,15 @@ have the following meaning:
   replace the usual operation_call activity by an inline activity using
   the specified workflow.
 
-## Groups and 
-
->  author="Chris Lauwers" date="2021-01-17T02:44:00Z"
-> 
-> Language suggested by Paul Jordan: In TOSCA Policy is used to affect or govern an application or service’s topology at some stage of its lifecycle, but is not explicitly part of the topology itself. The policy scope can be limited to a collection of Nodes or Node Types by using Groups and Group Types.
-
-Policies<span class="comment-end" id="1117"></span>
+## Groups and <span class="comment-start" id="1117" author="Chris Lauwers" date="2021-01-17T02:44:00Z">Language suggested by Paul Jordan: In TOSCA Policy is used to affect or govern an application or service’s topology at some stage of its lifecycle, but is not explicitly part of the topology itself. The policy scope can be limited to a collection of Nodes or Node Types by using Groups and Group Types.</span>Policies<span class="comment-end" id="1117"></span>
 
 ### Group Type
 
 A Group Type defines logical grouping types for nodes, typically for
 different management purposes. Conceptually, group definitions allow the
-
-
->  author="Chris Lauwers"
-> date="2020-08-03T18:44:00Z"
-> 
-> Edit to remove the implication that these
-> are similar to “TOSCA relationships”
-
-creation of logical
+<span class="comment-start" id="1121" author="Chris Lauwers"
+date="2020-08-03T18:44:00Z">Edit to remove the implication that these
+are similar to “TOSCA relationships”</span>creation of logical
 “membership” relationships <span class="comment-end" id="1121"></span>to
 nodes in a service template that are not a part of the application’s
 explicit requirement dependencies in the service template (i.e. those
@@ -14557,36 +13807,24 @@ required to actually get the application deployed and running). Instead,
 such logical membership allows for the introduction of things such as
 group management and uniform application of policies (i.e. requirements
 that are also not bound to the application itself) to the group’s
-
-
->  author="Chris Lauwers"
-> date="2021-01-17T02:47:00Z"
-> 
-> Alternative language suggested by PJ: A
-> Group Type defines logical grouping types for nodes for purposes of
-> uniform application of policies to collections of nodes. Conceptually,
-> group definitions allow the creation of logical “membership”
-> relationships to nodes in a service template that are not a part of the
-> application’s explicit requirement dependencies in the topology template
-> (i.e. those required to actually get the application deployed and
-> running). Instead, such logical membership allows for the introduction
-> of things such as group management and uniform application of policies
-> (i.e. requirements that are also not bound to the application itself) to
-> the group’s members.
-
-members<span class="comment-end"
-id="1122"></span>. .
-
-> 
-> author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T08:56:00Z"
-> 
-> I don’t think
-> the text definitions of group and group type are sufficiently different.
-> So I’ve added some suggested new text but will leave it to the editors
-> to consider how much of the existing text can be
-> removed.
-
-<span class="comment-end" id="1123"></span>
+<span class="comment-start" id="1122" author="Chris Lauwers"
+date="2021-01-17T02:47:00Z">Alternative language suggested by PJ: A
+Group Type defines logical grouping types for nodes for purposes of
+uniform application of policies to collections of nodes. Conceptually,
+group definitions allow the creation of logical “membership”
+relationships to nodes in a service template that are not a part of the
+application’s explicit requirement dependencies in the topology template
+(i.e. those required to actually get the application deployed and
+running). Instead, such logical membership allows for the introduction
+of things such as group management and uniform application of policies
+(i.e. requirements that are also not bound to the application itself) to
+the group’s members.</span>members<span class="comment-end"
+id="1122"></span>. .<span class="comment-start" id="1123"
+author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T08:56:00Z">I don’t think
+the text definitions of group and group type are sufficiently different.
+So I’ve added some suggested new text but will leave it to the editors
+to consider how much of the existing text can be
+removed.</span><span class="comment-end" id="1123"></span>
 
 #### Keynames
 
@@ -14603,21 +13841,15 @@ Group Type has the following recognized keynames:
 </colgroup>
 <thead>
 <tr class="header">
-<th>
-
->  data-author="Matt Rutkowski"
-> data-date="2018-02-20T12:36:00Z"
-> 
-> TBD, MUSTFIX<br />
-> v1.3 – We clearly need artifact defns. On yGroup defn. Do we need to add
-> to Group Type (allowed) Artifact Types?<br />
-> This impacts how we allow adding Artifact defintions to Node Types
-> today… we should not have allowed artifact defns. On Types (only Types
-> on Types, Defns. On Defns. Within a topology template).<br />
-> Chris L. has some v1.3 goals that may address these
-> issues.
-
-Keyname<span class="comment-end" id="1126"></span></th>
+<th><span class="comment-start" id="1126" data-author="Matt Rutkowski"
+data-date="2018-02-20T12:36:00Z">TBD, MUSTFIX<br />
+v1.3 – We clearly need artifact defns. On yGroup defn. Do we need to add
+to Group Type (allowed) Artifact Types?<br />
+This impacts how we allow adding Artifact defintions to Node Types
+today… we should not have allowed artifact defns. On Types (only Types
+on Types, Defns. On Defns. Within a topology template).<br />
+Chris L. has some v1.3 goals that may address these
+issues.</span>Keyname<span class="comment-end" id="1126"></span></th>
 <th>Mandatory</th>
 <th>Type</th>
 <th>Description</th>
@@ -14632,16 +13864,10 @@ Keyname<span class="comment-end" id="1126"></span></th>
 <td>An optional map of property definitions for the Group Type.</td>
 </tr>
 <tr class="even">
-<td>
-
-> 
-> data-author="Chris Lauwers [2]" data-date="2019-02-12T11:05:00Z"
-> 
-> What is
-> the use case for having properties and attributes in
-> groups?
-
-attributes<span class="comment-end" id="1127"></span></td>
+<td><span class="comment-start" id="1127"
+data-author="Chris Lauwers [2]" data-date="2019-02-12T11:05:00Z">What is
+the use case for having properties and attributes in
+groups?</span>attributes<span class="comment-end" id="1127"></span></td>
 <td>no</td>
 <td><p>map of</p>
 <p><a
@@ -14816,17 +14042,11 @@ information.</td>
 <td>no</td>
 <td><p>map of</p>
 <p><a href="#property-assignment">property assignments</a></p></td>
-<td>
-
->  data-author="Michael Rehder"
-> data-date="2020-12-15T16:26:00Z"
-> 
-> Shouldn’t there be a mention of what
-> could be the source of the assignment?<br />
-> There is no “input” section like in a Topology Template so what can be
-> the source definitions?
-
-An optional map of property value
+<td><span class="comment-start" id="1139" data-author="Michael Rehder"
+data-date="2020-12-15T16:26:00Z">Shouldn’t there be a mention of what
+could be the source of the assignment?<br />
+There is no “input” section like in a Topology Template so what can be
+the source definitions?</span>An optional map of property value
 assignments for the group definition.<span class="comment-end"
 id="1139"></span></td>
 </tr>
@@ -14960,16 +14180,10 @@ addition, the Policy Type has the following recognized keynames:
 </thead>
 <tbody>
 <tr class="odd">
-<td>
-
->  data-author="Chris Lauwers"
-> data-date="2022-10-03T19:54:00Z"
-> 
-> How/where can these properties be used?
-> They cannot be referenced using $get_property
-> functions.
-
-properties</td>
+<td><span class="comment-start" id="1149" data-author="Chris Lauwers"
+data-date="2022-10-03T19:54:00Z">How/where can these properties be used?
+They cannot be referenced using $get_property
+functions.</span>properties</td>
 <td>no</td>
 <td><p>map of</p>
 <p><a href="#_Schema_Definition">property definitions</a></p></td>
@@ -14977,55 +14191,31 @@ properties</td>
 class="comment-end" id="1149"></span></td>
 </tr>
 <tr class="even">
-<td>
-
->  data-author="Matt Rutkowski"
-> data-date="2016-01-27T10:41:00Z"
-> 
-> <strong>MUSTFIX, TODO</strong>:
-> tosca-parser throws an expecction if this is empty / zero-length. Should
-> we allow an empty list here?
-
-
-
-> 
-> data-author="Chris Lauwers" data-date="2022-10-03T19:53:00Z"
-> 
-> The
-> description says that "a policy affects or governs an application or
-> service's topology". What do "targets" mean in this context? Isn't the
-> entire service topology the target?
-
-targets<span
+<td><span class="comment-start" id="1150" data-author="Matt Rutkowski"
+data-date="2016-01-27T10:41:00Z"><strong>MUSTFIX, TODO</strong>:
+tosca-parser throws an expecction if this is empty / zero-length. Should
+we allow an empty list here?</span><span class="comment-start" id="1151"
+data-author="Chris Lauwers" data-date="2022-10-03T19:53:00Z">The
+description says that "a policy affects or governs an application or
+service's topology". What do "targets" mean in this context? Isn't the
+entire service topology the target?</span>targets<span
 class="comment-end" id="1150"></span></td>
 <td>no</td>
 <td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of valid 
-
-> 
-> data-author="Matt Rutkowski"
-> data-date="2016-01-27T10:46:00Z"
-> 
-> <strong>MUSTFIX</strong>,
-> <strong>TODO</strong>: tosca-parser assumes the list is either group
-> types &lt;or&gt; node types, but not both (mixed). Is this a correct
-> interpretation?
-
-Node Types or Group Types <span
+<td>An optional list of valid <span class="comment-start" id="1152"
+data-author="Matt Rutkowski"
+data-date="2016-01-27T10:46:00Z"><strong>MUSTFIX</strong>,
+<strong>TODO</strong>: tosca-parser assumes the list is either group
+types &lt;or&gt; node types, but not both (mixed). Is this a correct
+interpretation?</span>Node Types or Group Types <span
 class="comment-end" id="1152"></span>the Policy Type can be applied
 to.<span class="comment-end" id="1151"></span></td>
 </tr>
 <tr class="odd">
-<td>
-
->  data-author="Chris Lauwers"
-> data-date="2022-10-03T19:55:00Z"
-> 
-> Triggers require a service topology as
-> context. It does not make any sense to define triggers in a Policy Type
-> outside of a service template.
-
-triggers</td>
+<td><span class="comment-start" id="1153" data-author="Chris Lauwers"
+data-date="2022-10-03T19:55:00Z">Triggers require a service topology as
+context. It does not make any sense to define triggers in a Policy Type
+outside of a service template.</span>triggers</td>
 <td>no</td>
 <td>map of <a href="#trigger-definition">trigger definitions</a></td>
 <td>An optional map of policy triggers for the Policy Type.<span
@@ -15130,13 +14320,7 @@ The following represents a Policy Type definition:
 </tbody>
 </table>
 
-### 
-
->  author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T09:55:00Z"
-> 
-> I know that TMF have a branch of their information model to describe policy but that it is not used much and that MEF have recently been more active in specializing policy for access control and for IP forwarding rules. It is possible that TOSCA could draw on this work to make TOSCA policy framework more useful.
-
-Policy definition<span class="comment-end" id="1164"></span>
+### <span class="comment-start" id="1164" author="Jordan,PM,Paul,TNK6 R" date="2020-11-09T09:55:00Z">I know that TMF have a branch of their information model to describe policy but that it is not used much and that MEF have recently been more active in specializing policy for access control and for IP forwarding rules. It is possible that TOSCA could draw on this work to make TOSCA policy framework more useful.</span>Policy definition<span class="comment-end" id="1164"></span>
 
 A policy definition defines a policy that can be associated with a TOSCA
 service or top-level entity definition (e.g., group definition, node
@@ -15145,16 +14329,10 @@ template, etc.).
 #### Keynames
 
 The following is the list of recognized keynames for a TOSCA policy
-
-
->  author="Chris Lauwers"
-> date="2022-10-03T19:59:00Z"
-> 
-> Policies apply to entire service templates,
-> not to individual node templates. What was the intended use of targets
-> in policy definitions?
-
-definition<span class="comment-end"
+<span class="comment-start" id="1167" author="Chris Lauwers"
+date="2022-10-03T19:59:00Z">Policies apply to entire service templates,
+not to individual node templates. What was the intended use of targets
+in policy definitions?</span>definition<span class="comment-end"
 id="1167"></span>:
 
 <table>
@@ -15195,15 +14373,9 @@ href="#TYPE_YAML_STRING">string</a></td>
 information.</td>
 </tr>
 <tr class="even">
-<td>
-
->  data-author="Chris Lauwers"
-> data-date="2022-10-03T20:00:00Z"
-> 
-> How/where can these properties be
-> used?
-
-properties</td>
+<td><span class="comment-start" id="1168" data-author="Chris Lauwers"
+data-date="2022-10-03T20:00:00Z">How/where can these properties be
+used?</span>properties</td>
 <td>no</td>
 <td><p>map of</p>
 <p><a href="#property-assignment">property assignments</a></p></td>
@@ -15218,19 +14390,13 @@ definition.<span class="comment-end" id="1168"></span></td>
 applied to.</td>
 </tr>
 <tr class="even">
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2020-05-06T10:51:00Z"
-> 
-> !!! What is the meaning of these
-> triggers here w.r.t. the triggers defined in the policy type?<br />
-> I assume we should allow the definition of new triggers, that are used
-> in addition to the triggers defined in the policy type.<br />
-> In interface we did not allow to add new operations or
-> notifications
-
-triggers</td>
+<td><span class="comment-start" id="1169" data-author="Calin Curescu"
+data-date="2020-05-06T10:51:00Z">!!! What is the meaning of these
+triggers here w.r.t. the triggers defined in the policy type?<br />
+I assume we should allow the definition of new triggers, that are used
+in addition to the triggers defined in the policy type.<br />
+In interface we did not allow to add new operations or
+notifications</span>triggers</td>
 <td>no</td>
 <td>map of <a href="#trigger-definition">trigger definitions</a></td>
 <td>An optional map of trigger definitions to invoke when the policy is
@@ -15284,16 +14450,10 @@ have the following meaning:
   assignments](#property-assignment) for the policy definition that
   provide values for properties defined in its declared Policy Type.
 
-- list_of_policy_targets: r
-
-> 
->   author="Luc Boutier [2]" date="2016-05-03T06:45:00Z"
-> 
-> Do we have prose
->   to say that node template names and group names are unique all
->   together ?
-
-epresents the optional list of names of node
+- list_of_policy_targets: r<span class="comment-start" id="1172"
+  author="Luc Boutier [2]" date="2016-05-03T06:45:00Z">Do we have prose
+  to say that node template names and group names are unique all
+  together ?</span>epresents the optional list of names of node
   templates or groups that the policy is to applied
   to.<span class="comment-end" id="1172"></span>
 
@@ -15307,19 +14467,13 @@ epresents the optional list of names of node
 
 <!-- -->
 
-- 
-
->  author="Calin Curescu"
->   date="2020-05-06T10:56:00Z"
-> 
-> !!! What is the meaning of these triggers
->   here w.r.t. the triggers defined in the policy type?  
->   I assume we should allow the definition of new triggers, that are used
->   in addition to the triggers defined in the policy type.  
->   But, in interface we did not allow to add new operations or
->   notifications.
-
-trigger_definitions: represents the optional map
+- <span class="comment-start" id="1173" author="Calin Curescu"
+  date="2020-05-06T10:56:00Z">!!! What is the meaning of these triggers
+  here w.r.t. the triggers defined in the policy type?  
+  I assume we should allow the definition of new triggers, that are used
+  in addition to the triggers defined in the policy type.  
+  But, in interface we did not allow to add new operations or
+  notifications.</span>trigger_definitions: represents the optional map
   of [trigger definitions](#trigger-definition) for the policy; these
   triggers apply in addition to the triggers defined in the policy
   type.<span class="comment-end" id="1173"></span>
@@ -15352,13 +14506,7 @@ servers</p>
 A trigger definition defines the event, condition and action that is
 used to “trigger” a policy with which it is associated.
 
-#### 
-
->  author="Matt Rutkowski" date="2017-09-26T11:38:00Z"
-> 
-> RECALL; Policy type defn were to be consumed by a “Policy Engine” that would create events on a known event monitoring service. We need to create diagram and explain the event-condition-action flow of policy (defn.)
-
-Keynames<span class="comment-end" id="1181"></span>
+#### <span class="comment-start" id="1181" author="Matt Rutkowski" date="2017-09-26T11:38:00Z">RECALL; Policy type defn were to be consumed by a “Policy Engine” that would create events on a known event monitoring service. We need to create diagram and explain the event-condition-action flow of policy (defn.)</span>Keynames<span class="comment-end" id="1181"></span>
 
 The following is the list of recognized keynames for a TOSCA trigger
 definition:
@@ -15366,23 +14514,11 @@ definition:
 | Keyname     | Mandatory | Type                                                 | Description                                                                                                                                                                                                                                                                                                      |
 |-------------|-----------|------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | description | no        | [[string](#TYPE_YAML_STRING)](#TYPE_YAML_STRING)     | The optional description string for the trigger.                                                                                                                                                                                                                                                                 |
-| event       | yes       | [string](#TYPE_YAML_STRING)                          | The mandatory 
-
->  author="Chris Lauwers" date="2022-10-03T20:01:00Z"
-> 
-> We need to clarify the context in which event names can be interpreted. Are they globally scoped?
-
-name<span class="comment-end" id="1182"></span> of the event that activates the trigger’s action. |
+| event       | yes       | [string](#TYPE_YAML_STRING)                          | The mandatory <span class="comment-start" id="1182" author="Chris Lauwers" date="2022-10-03T20:01:00Z">We need to clarify the context in which event names can be interpreted. Are they globally scoped?</span>name<span class="comment-end" id="1182"></span> of the event that activates the trigger’s action. |
 | condition   | no        | [condition clause](#BKM_Condition_Clause_Def)        | The optional condition that must evaluate to true in order for the trigger’s action to be performed. Note: this is optional since sometimes the event occurrence itself is enough to trigger the action.                                                                                                         |
 | action      | yes       | list of [activity definition](#activity-definitions) | The list of sequential activities to be performed when the event is triggered, and the condition is met (i.e., evaluates to true).                                                                                                                                                                               |
 
-#### 
-
->  author="Calin Curescu" date="2020-05-06T11:29:00Z"
-> 
-> This does not make any sense. Needs to be deleted.
-
-<span class="comment-end" id="1185"></span>Grammar
+#### <span class="comment-start" id="1185" author="Calin Curescu" date="2020-05-06T11:29:00Z">This does not make any sense. Needs to be deleted.</span><span class="comment-end" id="1185"></span>Grammar
 
 Trigger definitions have the following grammars:
 
@@ -15395,25 +14531,13 @@ Trigger definitions have the following grammars:
 <th><p>&lt;<a href="#TYPE_YAML_STRING">trigger_name</a>&gt;:</p>
 <p>description: &lt;<a
 href="#TYPE_YAML_STRING">trigger_description</a>&gt;</p>
-<p>
-
->  data-author="Matt Rutkowski"
-> data-date="2016-01-13T11:20:00Z"
-> 
-> TBD: Add “simple” grammar which accepts
-> a single line “type” only and no other child properties.
-
-event:
+<p><span class="comment-start" id="1186" data-author="Matt Rutkowski"
+data-date="2016-01-13T11:20:00Z">TBD: Add “simple” grammar which accepts
+a single line “type” only and no other child properties.</span>event:
 <span class="comment-end" id="1186"></span>&lt;event_name&gt;</p>
-<p>
-
->  data-author="Matt Rutkowski"
-> data-date="2016-01-13T11:53:00Z"
-> 
-> TBD: Again, a simple grammar and
-> extended/full grammar is needed for the condition.
-
-condition<span
+<p><span class="comment-start" id="1187" data-author="Matt Rutkowski"
+data-date="2016-01-13T11:53:00Z">TBD: Again, a simple grammar and
+extended/full grammar is needed for the condition.</span>condition<span
 class="comment-end" id="1187"></span>: &lt;<a
 href="#BKM_Condition_Clause_Def">condition_clause</a>&gt;</p>
 <p>action:</p>
@@ -15425,16 +14549,10 @@ href="#activity-definitions">list_of_activity_definition</a>&gt;</p></th>
 </tbody>
 </table>
 
-
-
->  author="Calin Curescu"
-> date="2020-05-06T11:30:00Z"
-> 
-> !!! This corresponds to the additional
-> keynames and makes no sense. Needs to be
-> removed.
-
-<span class="comment-end" id="1188"></span>In the above
+<span class="comment-start" id="1188" author="Calin Curescu"
+date="2020-05-06T11:30:00Z">!!! This corresponds to the additional
+keynames and makes no sense. Needs to be
+removed.</span><span class="comment-end" id="1188"></span>In the above
 grammar, the pseudo values that appear in angle brackets have the
 following meaning:
 
@@ -15911,19 +15029,13 @@ keyname is mutually exclusive with the <strong>steps</strong> keyname
 above.</td>
 </tr>
 <tr class="odd">
-<td>
-
->  data-author="Calin Curescu"
-> data-date="2019-01-30T17:51:00Z"
-> 
-> I think we should leave the declaration
-> of output values to v1.4. As last discussed it was not clear to what
-> they should be mapped.<br />
-> Also, if this is an externally invoked workflow, then should we allow
-> for the case that the outputs are only only returned
-> externally?
-
-outputs</td>
+<td><span class="comment-start" id="1246" data-author="Calin Curescu"
+data-date="2019-01-30T17:51:00Z">I think we should leave the declaration
+of output values to v1.4. As last discussed it was not clear to what
+they should be mapped.<br />
+Also, if this is an externally invoked workflow, then should we allow
+for the case that the outputs are only only returned
+externally?</span>outputs</td>
 <td>no</td>
 <td><p>map of</p>
 <p>attribute mappings</p></td>
@@ -16041,17 +15153,11 @@ refers to a relationship rather than a node or group. Note that this is
 applicable only if the target is a node.</td>
 </tr>
 <tr class="odd">
-<td>
-
->  data-author="Chris Lauwers"
-> data-date="2022-10-03T20:27:00Z"
-> 
-> We should remove this keyname. It has
-> been removed in operation implementation definitions as well, since
-> presumable the "operation host" is always the orchestrator
-> host.
-
-operation_host<span class="comment-end"
+<td><span class="comment-start" id="1260" data-author="Chris Lauwers"
+data-date="2022-10-03T20:27:00Z">We should remove this keyname. It has
+been removed in operation implementation definitions as well, since
+presumable the "operation host" is always the orchestrator
+host.</span>operation_host<span class="comment-end"
 id="1260"></span></td>
 <td>no</td>
 <td><a href="#TYPE_YAML_STRING">string</a></td>
@@ -16066,36 +15172,18 @@ or target node.</p>
 <p>If not specified the operation will be triggered on every node of the
 group.</p>
 <p>If specified the valid_value is a node_type or the name of a node
-template.
-
-> 
-> data-author="Luc Boutier [2]"
-> data-date="2016-05-03T12:06:00Z"
-> 
-> Alternative would be to add this
-> information on the interface for a relationship or group.
-
-<span
+template.<span class="comment-start" id="1261"
+data-author="Luc Boutier [2]"
+data-date="2016-05-03T12:06:00Z">Alternative would be to add this
+information on the interface for a relationship or group.</span><span
 class="comment-end" id="1261"></span></p></td>
 </tr>
 <tr class="even">
-<td>
-
->  data-author="Chris Lauwers"
-> data-date="2022-10-03T20:28:00Z"
-> 
-> What is the expected behavior if the
-> filter evaluates to False?
-
-
-
-> 
-> data-author="Chris Lauwers" data-date="2022-10-03T20:27:00Z"
-> 
-> Should this
-> be replaced with condition clauses as well?
-
-filter</td>
+<td><span class="comment-start" id="1262" data-author="Chris Lauwers"
+data-date="2022-10-03T20:28:00Z">What is the expected behavior if the
+filter evaluates to False?</span><span class="comment-start" id="1263"
+data-author="Chris Lauwers" data-date="2022-10-03T20:27:00Z">Should this
+be replaced with condition clauses as well?</span>filter</td>
 <td>no</td>
 <td>list of <a
 href="#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition">validation
@@ -16179,21 +15267,9 @@ have the following meaning:
 - **target_step_name**: represents the name of another step of the
   workflow.
 
-# TOSCA built-in f
+# TOSCA built-in f<span class="comment-start" id="1315" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-214](endnotes.xml) – New functions: get_node_instance( node_template_name, node_filter)      returns ( node_instance_id \| failure ) invoke_node_operations( node_instance_id, operation_name, operation_input_parms)     returns ( operation_outputs \| failure ) create_node_instance( node_template_name, input_parameters )     returns ( node_instance_id \| failure ) delete_node_instance( node_instance_id)     returns result (success \| failure ) set_instance_properties( node_instance_id, property_name, ..., property_name_x, property_value )     returns ( success \| failure )</span>unctions<span class="comment-end" id="1315"></span>
 
->  author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> [TOSCA-214](endnotes.xml) – New functions: get_node_instance( node_template_name, node_filter)      returns ( node_instance_id \| failure ) invoke_node_operations( node_instance_id, operation_name, operation_input_parms)     returns ( operation_outputs \| failure ) create_node_instance( node_template_name, input_parameters )     returns ( node_instance_id \| failure ) delete_node_instance( node_instance_id)     returns result (success \| failure ) set_instance_properties( node_instance_id, property_name, ..., property_name_x, property_value )     returns ( success \| failure )
-
-unctions<span class="comment-end" id="1315"></span>
-
-## 
-
->  author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> [TOSCA-146](media/image1.png): WD02: Need to include grammar and examples for each function.
-
-Representation graph query functions<span class="comment-end" id="1316"></span>
+## <span class="comment-start" id="1316" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-146](media/image1.png): WD02: Need to include grammar and examples for each function.</span>Representation graph query functions<span class="comment-end" id="1316"></span>
 
 ### get_input 
 
@@ -16268,16 +15344,10 @@ The following snippet shows an example of the simple get_input grammar:
 <p>type: integer</p>
 <p>node_templates:</p>
 <p>my_server:</p>
-<p>type: 
-
-> 
-> data-author="Jordan,PM,Paul,TNK6 R" data-date="2020-11-09T12:09:00Z"
-> 
-> No
-> longer defined so may be confusing to include in an
-> example
-
-tosca.nodes.Compute<span class="comment-end"
+<p>type: <span class="comment-start" id="1317"
+data-author="Jordan,PM,Paul,TNK6 R" data-date="2020-11-09T12:09:00Z">No
+longer defined so may be confusing to include in an
+example</span>tosca.nodes.Compute<span class="comment-end"
 id="1317"></span></p>
 <p>capabilities:</p>
 <p>host:</p>
@@ -16302,16 +15372,10 @@ the complex input data.
 <tr class="header">
 <th><p>data_types:</p>
 <p>NetworkInfo:</p>
-<p>derived_from: 
-
-> 
-> data-author="Jordan,PM,Paul,TNK6 R" data-date="2020-11-09T12:09:00Z"
-> 
-> No
-> longer defined so may be confusing to include in an
-> example
-
-tosca.Data.Root<span class="comment-end"
+<p>derived_from: <span class="comment-start" id="1318"
+data-author="Jordan,PM,Paul,TNK6 R" data-date="2020-11-09T12:09:00Z">No
+longer defined so may be confusing to include in an
+example</span>tosca.Data.Root<span class="comment-end"
 id="1318"></span></p>
 <p>properties:</p>
 <p>name:</p>
@@ -16355,15 +15419,9 @@ id="1318"></span></p>
 
 The get_property function is used to retrieve property values of
 modelable entities in the representation graph.
-
-
->  author="Calin Curescu"
-> date="2022-05-16T17:16:00Z"
-> 
-> This is wrong, the representation graph is
-> still traversed !!!
-
-Note that the get_property function may only
+<span class="comment-start" id="1320" author="Calin Curescu"
+date="2022-05-16T17:16:00Z">This is wrong, the representation graph is
+still traversed !!!</span>Note that the get_property function may only
 retrieve the static values of parameter or property definitions of a
 TOSCA application as defined in the TOSCA Service Template.
 <span class="comment-end" id="1320"></span>The get_attribute function
@@ -16371,13 +15429,7 @@ should be used to retrieve values for attribute definitions (or property
 definitions reflected as attribute definitions) from the representation
 graph of the TOSCA application (as realized by the TOSCA orchestrator).
 
-#### 
-
->  author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> [TOSCA-169](comments.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.
-
-Grammar <span class="comment-end" id="1321"></span>
+#### <span class="comment-start" id="1321" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-169](comments.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.</span>Grammar <span class="comment-end" id="1321"></span>
 
 | \$get_property: \[ \<tosca_traversal_path\>, \<property_name\>, \<nested_property_name_or_index_1\>, ..., \<nested_property_name_or_index_n\> \] |
 |--------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -16536,13 +15588,7 @@ expression from v1.3 to v2.0:
 
 - The initial TARGET, … becomes SELF, TARGET, …
 
-#### 
-
->  author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> WD03: TODO: Need examples for returning simple types and complex/nested structures (e.g., Maps of Maps)
-
-Examples<span class="comment-end" id="1322"></span>
+#### <span class="comment-start" id="1322" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">WD03: TODO: Need examples for returning simple types and complex/nested structures (e.g., Maps of Maps)</span>Examples<span class="comment-end" id="1322"></span>
 
 The following example shows how to use the get_property function with an
 actual Node Template name:
@@ -16630,29 +15676,17 @@ capability:
 <p>$get_property:</p>
 <p>- SELF</p>
 <p>- RELATIONSHIP</p>
-<p>- 
-
-> 
-> data-author="Chris Lauwers [3]" data-date="2015-08-25T21:52:00Z"
-> 
-> In this
-> example, get_property refers to the database_endpoint requirement on the
-> wordpress node template, which is satisfied by the mysql_database node
-> template. mysql_database is of type tosca.nodes.Database, and does not
-> have a port property. The database_endpoint capability in
-> tosca.nodes.Database has a port, however. How do we know we’re referring
-> to the capability in mysql_database, and not to the mysql_database node
-> template?
-
-
-
-> 
-> data-author="Calin Curescu" data-date="2022-05-24T19:06:00Z"
-> 
-> Solved with
-> the new syntax.
-
-database_endpoint<span class="comment-end"
+<p>- <span class="comment-start" id="1323"
+data-author="Chris Lauwers [3]" data-date="2015-08-25T21:52:00Z">In this
+example, get_property refers to the database_endpoint requirement on the
+wordpress node template, which is satisfied by the mysql_database node
+template. mysql_database is of type tosca.nodes.Database, and does not
+have a port property. The database_endpoint capability in
+tosca.nodes.Database has a port, however. How do we know we’re referring
+to the capability in mysql_database, and not to the mysql_database node
+template?</span><span class="comment-start" id="1324"
+data-author="Calin Curescu" data-date="2022-05-24T19:06:00Z">Solved with
+the new syntax.</span>database_endpoint<span class="comment-end"
 id="1323"><span class="comment-end" id="1324"></span></span></p>
 <p>- 0</p>
 <p>- CAPABILITY</p>
@@ -16713,15 +15747,9 @@ admin_credential property:
 </tbody>
 </table>
 
-
-
->  author="Calin Curescu"
-> date="2023-01-04T16:11:00Z"
-> 
-> TODO more examples: TODO: An example of
-> second index (i.e. 1) and index ALL !!!
-
-TODO: An example of second
+<span class="comment-start" id="1325" author="Calin Curescu"
+date="2023-01-04T16:11:00Z">TODO more examples: TODO: An example of
+second index (i.e. 1) and index ALL !!!</span>TODO: An example of second
 index (i.e. 1) and index ALL !!\!<span class="comment-end"
 id="1325"></span>
 
@@ -16734,13 +15762,7 @@ nodes or relationships can be referenced by their name as assigned in
 the service template or relative to the context where they are being
 invoked.
 
-#### 
-
->  author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> [TOSCA-169](commentsExtended.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.
-
-Grammar <span class="comment-end" id="1326"></span>
+#### <span class="comment-start" id="1326" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-169](commentsExtended.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.</span>Grammar <span class="comment-end" id="1326"></span>
 
 | \$get_attribute: \[\<tosca_traversal_path\>, \<attribute_name\>, \<nested_attribute_name_or_index_1\>, ..., \<nested_attribute_name_or_index_n\> \] |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -16795,14 +15817,8 @@ previous parameter) to return.</p></td>
 
 #### Examples:
 
-
-
->  author="Matt Rutkowski"
-> date="2015-08-25T21:52:00Z"
-> 
-> Is this always true?
-
-The attribute
+<span class="comment-start" id="1327" author="Matt Rutkowski"
+date="2015-08-25T21:52:00Z">Is this always true?</span>The attribute
 functions are used in the same way as the equivalent Property functions
 described above. Please see their examples and replace “get_property”
 with “get_attribute” function name.<span class="comment-end"
@@ -16853,31 +15869,19 @@ from. See section B.1 for valid keywords.</td>
 value from.</td>
 </tr>
 <tr class="odd">
-<td>
-
-> 
-> data-author="Chris Lauwers [3]" data-date="2015-08-25T21:52:00Z"
-> 
-> These
-> values are very confusing. When we specify “LOCAL_FILE”, don’t we really
-> mean “UNSPECIFIED”, which means we should leave it up to the
-> orchestrator to decide? Also, what is the expected behavior when the
-> artifact definition includes a “deploy_path” that is different from the
-> “location” specified here?
-
-&lt;location&gt; | LOCAL_FILE<span
+<td><span class="comment-start" id="1328"
+data-author="Chris Lauwers [3]" data-date="2015-08-25T21:52:00Z">These
+values are very confusing. When we specify “LOCAL_FILE”, don’t we really
+mean “UNSPECIFIED”, which means we should leave it up to the
+orchestrator to decide? Also, what is the expected behavior when the
+artifact definition includes a “deploy_path” that is different from the
+“location” specified here?</span>&lt;location&gt; | LOCAL_FILE<span
 class="comment-end" id="1328"></span></td>
-<td>
-
-> 
-> data-author="Chris Lauwers [3]" data-date="2015-08-25T21:52:00Z"
-> 
-> Either
-> this value must be required or we must specify what the default is.
-> Alternatively, we should specify the behavior when this value isn’t
-> set.
-
-no<span class="comment-end" id="1329"></span></td>
+<td><span class="comment-start" id="1329"
+data-author="Chris Lauwers [3]" data-date="2015-08-25T21:52:00Z">Either
+this value must be required or we must specify what the default is.
+Alternatively, we should specify the behavior when this value isn’t
+set.</span>no<span class="comment-end" id="1329"></span></td>
 <td><a href="#TYPE_YAML_STRING">string</a></td>
 <td><p>Location value must be either a valid path e.g.
 ‘/etc/var/my_file’ or ‘LOCAL_FILE’.</p>
@@ -17007,15 +16011,9 @@ implementation script:
 <p>create:</p>
 <p>implementation: wordpress_install.sh</p>
 <p>inputs</p>
-<p>
-
->  data-author="Matt Rutkowski"
-> data-date="2015-08-25T21:52:00Z"
-> 
-> TBD: Would this not simpky be the path
-> and not include the filename?
-
-wp_zip: { $get_artifact: [ SELF,
+<p><span class="comment-start" id="1330" data-author="Matt Rutkowski"
+data-date="2015-08-25T21:52:00Z">TBD: Would this not simpky be the path
+and not include the filename?</span>wp_zip: { $get_artifact: [ SELF,
 zip, C:/wpdata/wp.zip ] }<span class="comment-end" id="1330"></span></p>
 <p>artifacts:</p>
 <p>zip: /data/wordpress.zip</p></th>
@@ -17029,13 +16027,7 @@ In such implementation the TOSCA orchestrator must provide the
 wordpress.zip archive as a local path (example: C:/wpdata/wp.zip ) and
 **will let it** after the operation is completed.
 
-### 
-
->  author="Calin Curescu" date="2023-01-04T16:12:00Z"
-> 
-> Section missing…
-
-value<span class="comment-end" id="1331"></span>
+### <span class="comment-start" id="1331" author="Calin Curescu" date="2023-01-04T16:12:00Z">Section missing…</span>value<span class="comment-end" id="1331"></span>
 
 This function is used as an argument inside validation functions. It
 returns the value of the property, attribute, or parameter for which the
@@ -17075,13 +16067,7 @@ parameter) to return.</p></td>
 </tbody>
 </table>
 
-## Boolean
-
->  author="Calin Curescu" date="2022-12-06T16:00:00Z"
-> 
-> I would not call them condition functions since they can appear also outside conditions.
-
- Functions<span class="comment-end" id="1332"></span>
+## Boolean<span class="comment-start" id="1332" author="Calin Curescu" date="2022-12-06T16:00:00Z">I would not call them condition functions since they can appear also outside conditions.</span> Functions<span class="comment-end" id="1332"></span>
 
 TOSCA includes a number of functions that return Boolean values. These
 functions are used in validation expressions and in condition clauses in
@@ -17156,15 +16142,9 @@ The following is the list of recognized comparison functions.
 
 - Also note that Unicode string comparisons are implementation specific.
 
-- 
-
->  author="Calin Curescu"
->   date="2023-01-04T16:19:00Z"
-> 
-> TODO explanation on how versions are
->   compared!!!
-
-TODO explanation on how versions are
+- <span class="comment-start" id="1333" author="Calin Curescu"
+  date="2023-01-04T16:19:00Z">TODO explanation on how versions are
+  compared!!!</span>TODO explanation on how versions are
   compared!!\!<span class="comment-end" id="1333"></span>
 
 #### equal
@@ -17383,19 +16363,7 @@ second argument which is equal to a key in the first argument.
 | \$has_any_key: \[ \<map_type_arg1\>, \<list_type_arg2\> \] |
 |------------------------------------------------------------|
 
-## String, list, and map functions
-
->  author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> [TOSCA-212](commentsIds.xml) – Concat intrinsic function
-
-<span class="comment-end" id="1334"></span>
-
->  author="Chris Lauwers" date="2022-10-10T20:39:00Z"
-> 
-> We should rename this section to String Manipulation Functions
-
-<span class="comment-end" id="1335"></span>
+## String, list, and map functions<span class="comment-start" id="1334" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-212](commentsIds.xml) – Concat intrinsic function</span><span class="comment-end" id="1334"></span><span class="comment-start" id="1335" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1335"></span>
 
 ### length
 
@@ -17452,14 +16420,8 @@ is of type list of strings and the second (optional) argument is of type
 string. It returns a string that is the joining of the entries in the
 first argument while adding an optional delimiter between the strings.
 
-
-
->  author="Calin Curescu"
-> date="2023-01-17T17:54:00Z"
-> 
-> Make a better example.
-
-!!! Make an
+<span class="comment-start" id="1336" author="Calin Curescu"
+date="2023-01-17T17:54:00Z">Make a better example.</span>!!! Make an
 example for concat and join where the differences are
 clear!!\!<span class="comment-end" id="1336"></span>
 
@@ -17500,17 +16462,11 @@ clear!!\!<span class="comment-end" id="1336"></span>
 <tr class="odd">
 <td>&lt;list of strings&gt;</td>
 <td>yes</td>
-<td><p>
-
-> 
-> data-author="Matt Rutkowski" data-date="2017-04-18T12:03:00Z"
-> 
-> MUSTFIX:
-> Inclusive of values in YAML that can be treated as string such as int,
-> etc.<br />
-> MUSTFIX: Optional delimter like an underscore ‘_’
-
-list of</p>
+<td><p><span class="comment-start" id="1337"
+data-author="Matt Rutkowski" data-date="2017-04-18T12:03:00Z">MUSTFIX:
+Inclusive of values in YAML that can be treated as string such as int,
+etc.<br />
+MUSTFIX: Optional delimter like an underscore ‘_’</span>list of</p>
 <p><a href="#TYPE_YAML_STRING">string</a> or</p>
 <p><a href="#TYPE_YAML_STRING">string</a> value expressions<span
 class="comment-end" id="1337"></span></p></td>
@@ -17580,49 +16536,25 @@ characters within a larger string.
 <p>webserver_port:</p>
 <p>description: the port provided at the end of my server’s endpoint’s
 IP address</p>
-<p>value: { 
-
-> 
-> data-author="Matt Rutkowski" data-date="2015-08-25T21:52:00Z"
-> 
-> TBD:
-> document behavior when token not found in string or index represents a
-> token that does not exist (e.g., input string does not contain that many
-> tokens, array index out of bounds).
-
-token<span class="comment-end"
+<p>value: { <span class="comment-start" id="1338"
+data-author="Matt Rutkowski" data-date="2015-08-25T21:52:00Z">TBD:
+document behavior when token not found in string or index represents a
+token that does not exist (e.g., input string does not contain that many
+tokens, array index out of bounds).</span>token<span class="comment-end"
 id="1338"></span>: [ $get_attribute: [ my_server, data_endpoint,
 ip_address ],</p>
 <p>‘:’,</p>
-<p>
-
->  data-author="Matt Rutkowski"
-> data-date="2015-08-25T21:52:00Z"
-> 
-> Alternatives:<br />
-> tokenize to a list (array)<br />
-> 
-
-1 ] }<span class="comment-end" id="1339"></span></p></th>
+<p><span class="comment-start" id="1339" data-author="Matt Rutkowski"
+data-date="2015-08-25T21:52:00Z">Alternatives:<br />
+tokenize to a list (array)<br />
+</span>1 ] }<span class="comment-end" id="1339"></span></p></th>
 </tr>
 </thead>
 <tbody>
 </tbody>
 </table>
 
-## Set functions
-
->  author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> [TOSCA-212](commentsExtensible.xml) – Concat intrinsic function
-
-<span class="comment-end" id="1340"></span>
-
->  author="Chris Lauwers" date="2022-10-10T20:39:00Z"
-> 
-> We should rename this section to String Manipulation Functions
-
-<span class="comment-end" id="1341"></span>
+## Set functions<span class="comment-start" id="1340" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-212](commentsExtensible.xml) – Concat intrinsic function</span><span class="comment-end" id="1340"></span><span class="comment-start" id="1341" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1341"></span>
 
 !!!Note: We should discuss order!!!!
 
@@ -17638,15 +16570,9 @@ meant that no two entries in the result list are equal.
 | \$union: \[ \<list_arg1\>, … \] |
 |---------------------------------|
 
-
-
->  author="Chris Lauwers"
-> date="2022-10-10T20:39:00Z"
-> 
-> We should rename this section to String
-> Manipulation Functions
-
-<span class="comment-end" id="1342"></span>
+<span class="comment-start" id="1342" author="Chris Lauwers"
+date="2022-10-10T20:39:00Z">We should rename this section to String
+Manipulation Functions</span><span class="comment-end" id="1342"></span>
 
 #### Note 
 
@@ -17671,13 +16597,7 @@ The intersection applied to only one list will return a result where all
 the duplicate entries of the argument list are eliminated. Note also
 that the order of the elements in the result list is not specified.
 
-## Arithmetic functions
-
->  author="Matt Rutkowski" date="2015-08-25T21:52:00Z"
-> 
-> [TOSCA-212](https://www.oasis-open.org/committees/tosca/) – Concat intrinsic function
-
-<span class="comment-end" id="1343"></span>
+## Arithmetic functions<span class="comment-start" id="1343" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-212](https://www.oasis-open.org/committees/tosca/) – Concat intrinsic function</span><span class="comment-end" id="1343"></span>
 
 ### sum
 
@@ -17806,18 +16726,12 @@ its overall structure. Except for the examples, this section is
 
 ## Overall Structure of a CSAR
 
-
-
->  author="Calin Curescu"
-> date="2020-06-09T17:00:00Z"
-> 
-> Thinh would like to have this resolved
-> before publishing TOSCA v2.0. What is zip? We need to give a clearer
-> definition of the zip format. What version. Thinh will get back with a
-> more specific definition.  
-> Tal: look at java **jar specification**? It is zip...
-
-A CSAR is a
+<span class="comment-start" id="1367" author="Calin Curescu"
+date="2020-06-09T17:00:00Z">Thinh would like to have this resolved
+before publishing TOSCA v2.0. What is zip? We need to give a clearer
+definition of the zip format. What version. Thinh will get back with a
+more specific definition.  
+Tal: look at java **jar specification**? It is zip...</span>A CSAR is a
 zip file <span class="comment-end" id="1367"></span>where TOSCA
 definitions along with all accompanying artifacts (e.g. scripts,
 binaries, configuration files) can be packaged together. The zip file
@@ -17826,21 +16740,15 @@ the ISO/IEC 21320-1 "Document Container File — Part 1: Core" standard
 \[[ISO-IEC-21320-1](#CIT_ISO_IEC_21320_1)\]. A CSAR zip file MUST
 contain one of the following:
 
-- A
-
->  author="Calin Curescu"
->   date="2019-01-30T15:18:00Z"
-> 
-> Why keep a mandatory directory for only
->   one file. I think we should allow to have the TOSCA.meta file also in
->   the root of the archive.  
->   Then the processor should do the following:  
->   Look for the TOSCA-Metadata directory. If found, look for the
->   TOSCA.meta inside. If latter not found give an error.  
->   Else look for the TOSCA.meta file in the root of the archive  
->   Look for the a .yml or . yaml file in the root directory
-
-
+- A<span class="comment-start" id="1368" author="Calin Curescu"
+  date="2019-01-30T15:18:00Z">Why keep a mandatory directory for only
+  one file. I think we should allow to have the TOSCA.meta file also in
+  the root of the archive.  
+  Then the processor should do the following:  
+  Look for the TOSCA-Metadata directory. If found, look for the
+  TOSCA.meta inside. If latter not found give an error.  
+  Else look for the TOSCA.meta file in the root of the archive  
+  Look for the a .yml or . yaml file in the root directory</span>
   **TOSCA.meta** metadata file that provides entry information for a
   TOSCA orchestrator processing the CSAR file.<span class="comment-end"
   id="1368"></span> The **TOSCA.meta** file may be located either at the
@@ -17882,17 +16790,11 @@ file is as follows:
 </colgroup>
 <thead>
 <tr class="header">
-<th><p>
-
-> 
-> data-author="Matt Rutkowski" data-date="2018-03-06T12:31:00Z"
-> 
-> MUSTFIX:
-> bump<br />
-> 1.2? (independent)<br />
-> 1.3? (match spec. level)
-
-CSAR-Version: digit.digit</p>
+<th><p><span class="comment-start" id="1380"
+data-author="Matt Rutkowski" data-date="2018-03-06T12:31:00Z">MUSTFIX:
+bump<br />
+1.2? (independent)<br />
+1.3? (match spec. level)</span>CSAR-Version: digit.digit</p>
 <p>Created-By: string</p>
 <p>Entry-Definitions: string</p>
 <p>Other-Definitions: string</p></th>
@@ -17913,18 +16815,12 @@ he name/value pairs are as follows:
 
 - **Entry-Definitions**: This references the TOSCA definitions file that
   SHOULD be used as entry point for processing the contents of the CSAR
-  (e.g. the main 
-
-> 
->   author="Calin Curescu" date="2020-06-02T17:15:00Z"
-> 
-> Tal: this is not
->   necessary a service template may be only used for type definitions or
->   potentially to artifact definitions. This is a terminology problem. To
->   revisit that. Tal suggests that the **Entry-Definitions** should not
->   be required.
-
-TOSCA service template<span class="comment-end"
+  (e.g. the main <span class="comment-start" id="1381"
+  author="Calin Curescu" date="2020-06-02T17:15:00Z">Tal: this is not
+  necessary a service template may be only used for type definitions or
+  potentially to artifact definitions. This is a terminology problem. To
+  revisit that. Tal suggests that the **Entry-Definitions** should not
+  be required.</span>TOSCA service template<span class="comment-end"
   id="1381"></span>).
 
 - **Other-Definitions**: This references an unambiguous set of files
@@ -17940,33 +16836,27 @@ TOSCA service template<span class="comment-end"
   contain blank spaces, the filename should be enclosed by double
   quotation marks (“)
 
-
-
->  author="Calin Curescu"
-> date="2019-01-30T16:36:00Z"
-> 
-> MustFix.  
-> In version 1.0 (pre YAML) the subsequent blocks that contained
-> definitions were used to provide definitions for types imported in the
-> service template, that is these files were parsed instead of taking the
-> definitions from external repositoris.  
-> Since 1.0 yaml, the files are specified explicitly in the imports
-> statements.  
-> Nevertheless, by allowing the other definition blocks (as per this
-> paragraph formulation) we allow also the old style of imports by the
-> definitions in the other blocks.  
-> I think this puts a burden on the implementation of orchestrators and
-> quite confusing. So we should deprecate the usage of definitions in the
-> other blocks.  
-> Moreover, the other blocks can contain other file type decriptions (for
-> artifacts) in the other blocks. E.g:  
-> Name: Plans/AddUser.bpmn  
-> Content-Type: application/vnd.oasis.bpmn  
-> These also seem obsolete and useless.  
-> I think we should deprecate the other blocks in the TOSCA.meta
-> file
-
-Note that any further TOSCA definitions files required by the
+<span class="comment-start" id="1382" author="Calin Curescu"
+date="2019-01-30T16:36:00Z">MustFix.  
+In version 1.0 (pre YAML) the subsequent blocks that contained
+definitions were used to provide definitions for types imported in the
+service template, that is these files were parsed instead of taking the
+definitions from external repositoris.  
+Since 1.0 yaml, the files are specified explicitly in the imports
+statements.  
+Nevertheless, by allowing the other definition blocks (as per this
+paragraph formulation) we allow also the old style of imports by the
+definitions in the other blocks.  
+I think this puts a burden on the implementation of orchestrators and
+quite confusing. So we should deprecate the usage of definitions in the
+other blocks.  
+Moreover, the other blocks can contain other file type decriptions (for
+artifacts) in the other blocks. E.g:  
+Name: Plans/AddUser.bpmn  
+Content-Type: application/vnd.oasis.bpmn  
+These also seem obsolete and useless.  
+I think we should deprecate the other blocks in the TOSCA.meta
+file</span>Note that any further TOSCA definitions files required by the
 definitions specified by **Entry-Definitions** or **Other-Definitions**
 can be found by a TOSCA orchestrator by processing respective
 **imports** statements. Note also that artifact files (e.g. scripts,
@@ -18003,17 +16893,11 @@ to this TOSCA specification.
 </colgroup>
 <thead>
 <tr class="header">
-<th><p>
-
-> 
-> data-author="Matt Rutkowski" data-date="2018-03-06T12:31:00Z"
-> 
-> MUSTFIX:
-> bump<br />
-> 1.2? (independent)<br />
-> 1.3? (match spec. level)
-
-CSAR-Version: 2.0</p>
+<th><p><span class="comment-start" id="1393"
+data-author="Matt Rutkowski" data-date="2018-03-06T12:31:00Z">MUSTFIX:
+bump<br />
+1.2? (independent)<br />
+1.3? (match spec. level)</span>CSAR-Version: 2.0</p>
 <p>Created-By: OASIS TOSCA TC</p>
 <p>Entry-Definitions: tosca_elk.yaml</p>
 <p>Other-Definitions: definitions/tosca_moose.yaml
@@ -18122,14 +17006,8 @@ publication.)</span>
 
 ## Conformance Targets
 
-
-
->  author="Matt Rutkowski"
-> date="2015-12-03T11:41:00Z"
-> 
-> Fixed typo and section reference.
-
-The
+<span class="comment-start" id="2410" author="Matt Rutkowski"
+date="2015-12-03T11:41:00Z">Fixed typo and section reference.</span>The
 implementations subject to conformance are those introduced in Section
 11.3 “Implementations”. They are listed here for
 convenience:<span class="comment-end" id="2410"></span>
