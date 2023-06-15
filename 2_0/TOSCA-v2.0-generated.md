@@ -1651,11 +1651,13 @@ definitions
 [Appendix C. Revision History
 [172](#revision-history)](#revision-history)
 
-# Introduction
+Introduction
+============
 
 \[All text is normative unless otherwise labeled\]
 
-## IPR Policy
+IPR Policy
+----------
 
 This specification is provided under the [RF on Limited
 Terms](https://www.oasis-open.org/policies-guidelines/ipr#RF-on-Limited-Mode)
@@ -1667,7 +1669,8 @@ implementing this specification, and any offers of patent licensing
 terms, please refer to the Intellectual Property Rights section of the
 TC’s web page (<https://www.oasis-open.org/committees/tosca/ipr.php>).
 
-## Terminology
+Terminology
+-----------
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -1675,7 +1678,8 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 \[[RFC2119](#RFC2119)\] and \[[RFC8174](#RFC8174)\] when, and only when,
 they appear in all capitals, as shown here.
 
-## Normative References
+Normative References
+--------------------
 
 \[RFC2119\] Bradner, S., "Key words for use in RFCs to Indicate
 Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997,
@@ -1696,7 +1700,8 @@ Ben-Kiki, Clark Evans, Ingy döt Net
 ISO/IEC 21320-1 "Document Container File — Part 1: Core",
 <https://www.iso.org/standard/60101.html> 
 
-## Non-Normative References
+Non-Normative References
+------------------------
 
 \[Apache\] Apache Server, https://httpd.apache.org/
 
@@ -1795,9 +1800,11 @@ approved citation formats at:
 <span class="mark">Remove this note before submitting for
 publication.)</span>
 
-# Overview
+Overview
+========
 
-## Objective
+Objective
+---------
 
 <span class="comment-start" id="45" author="Chris Lauwers"
 date="2020-05-31T00:44:00Z">This prose has been copied from the TOSCA
@@ -1815,7 +1822,8 @@ deployment of services and their management throughout the complete
 service lifecycle (e.g. scaling, patching, monitoring,
 etc.).<span class="comment-end" id="45"></span>
 
-## TOSCA <span class="comment-start" id="47" author="Chris Lauwers" date="2021-06-28T23:04:00Z">This section has been moved here from the Operational Model chapter in the previous draft. It may need to be consolidated with the "Objective" section to create a new "What is TOSCA" subsection.</span>Scope<span class="comment-end" id="47"></span>
+TOSCA <span class="comment-start" id="47" author="Chris Lauwers" date="2021-06-28T23:04:00Z">This section has been moved here from the Operational Model chapter in the previous draft. It may need to be consolidated with the "Objective" section to create a new "What is TOSCA" subsection.</span>Scope<span class="comment-end" id="47"></span>
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 TOSCA is a domain-specific language for designing services and for
 defining the deployment and run-time management aspects of these
@@ -1845,7 +1853,8 @@ lifecycle management functionality to external (non-TOSCA)
 orchestrators. Other implementations may decide to use TOSCA for all
 three phases of the service lifecycle.
 
-## Application Domains
+Application Domains
+-------------------
 
 TOSCA can be used to specify automated lifecycle management of the
 following:
@@ -1877,7 +1886,8 @@ This list is by no means intended to be exhaustive and only serves to
 demonstrate the breadth of application domains that can benefit from
 TOSCA’s automated lifecycle management capabilities.
 
-## Implementations
+Implementations
+---------------
 
 Different kinds of processors and artifacts qualify as implementations
 of TOSCA. Those that this specification is explicitly mentioning or
@@ -1905,7 +1915,8 @@ The above list is not exclusive. The above definitions should be
 understood as referring to and implementing TOSCA as described in this
 document.
 
-## Glossary
+Glossary
+--------
 
 The following terms are used throughout this specification and have the
 following definitions when used in context of this document.
@@ -1984,7 +1995,8 @@ templates for those node templates.</td>
 </tbody>
 </table>
 
-# TOSCA core concepts
+TOSCA core concepts
+===================
 
 The TOSCA language introduces a YAML-based grammar for creating service
 templates that define the lifecycle management of
@@ -2002,7 +2014,8 @@ objectives, performance objectives, and security constraints, and allow
 for closed-loop automation. The major elements defining a service are
 depicted in Figure 1.
 
-## Service Templates, Node Templates, and Relationships
+Service Templates, Node Templates, and Relationships
+----------------------------------------------------
 
 Within a TOSCA file, a Service Template defines the topology model of a
 service as a directed acyclic graph. Each node in this graph is
@@ -2062,7 +2075,8 @@ engine Node Template to the application server Node Template with the
 meaning “hosted by”, and from the process model Node Template to the
 process engine Node Template with meaning “deployed on”.
 
-## Interfaces, Operations, and Artifacts
+Interfaces, Operations, and Artifacts
+-------------------------------------
 
 Both node and relationship types may define lifecycle *operations* that
 implement the behavior an orchestration engine can invoke when
@@ -2092,7 +2106,8 @@ properties) will also be provided along with the artifact. This metadata
 might be needed to properly process the artifact, for example by
 describing the appropriate execution environment.
 
-## Workflows
+Workflows
+---------
 
 A deployed service is an instance of a service
 template<span class="comment-start" id="101" author="Michael Rehder"
@@ -2128,7 +2143,8 @@ Template will be instantiated by deploying the process model on that
 process engine (as indicated by the “deployed on” relationship
 template).
 
-## Requirements and Capabilities
+Requirements and Capabilities
+-----------------------------
 
 We discussed earlier how relationships are used to link node templates
 together into a service topology graph. However, it may not always be
@@ -2195,7 +2211,8 @@ discussion about this issue – how are the relations defined in the
 topology template related to the relations of the substituted node
 type?</span><span class="comment-end" id="108"></span>
 
-## Decomposition of Service Templates
+Decomposition of Service Templates
+----------------------------------
 
 TOSCA provides support for decomposing service components using the
 Substitution Mapping feature. For example, a <span class="comment-start"
@@ -2233,7 +2250,8 @@ For example, a Service Template for a single node application server
 tier and a Service Template for a clustered application server tier
 might exist, and the appropriate option can be selected per deployment.
 
-## Policies in TOSCA
+Policies in TOSCA
+-----------------
 
 Non-functional behavior or quality-of-services are defined in TOSCA by
 means of policies. A Policy can express such diverse things like
@@ -2263,7 +2281,8 @@ Policy Template defines the invariant properties of a Policy, while the
 Policy sets the variant properties resulting from the actual usage of a
 Policy Template in a Node Template.
 
-## Archive Format for Cloud Applications
+Archive Format for Cloud Applications
+-------------------------------------
 
 In order to support in a certain environment for the execution and
 management of the lifecycle of a cloud application, all corresponding
@@ -2282,7 +2301,8 @@ content is specific for a particular cloud application. CSARs are zip
 files, typically compressed. A CSAR may contain a file called TOSCA.meta
 that describes the organization of the CSAR.
 
-## TOSCA <span class="comment-start" id="129" author="Chris Lauwers" date="2021-06-28T23:14:00Z">This subsection has been moved here from the Operational Model chapter. We need to revisit where exactly it belongs to make sure the document flows correctly.</span><span class="comment-start" id="130" author="Chris Lauwers" date="2021-06-28T23:14:00Z">Alternatively, we could also move this section into Chapter 5</span>Entities<span class="comment-end" id="129"><span class="comment-end" id="130"></span></span>
+TOSCA <span class="comment-start" id="129" author="Chris Lauwers" date="2021-06-28T23:14:00Z">This subsection has been moved here from the Operational Model chapter. We need to revisit where exactly it belongs to make sure the document flows correctly.</span><span class="comment-start" id="130" author="Chris Lauwers" date="2021-06-28T23:14:00Z">Alternatively, we could also move this section into Chapter 5</span>Entities<span class="comment-end" id="129"><span class="comment-end" id="130"></span></span>
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 When defining services using TOSCA, we must distinguish between four
 kinds of entities:
@@ -2314,7 +2334,8 @@ kinds of entities:
     management must keep their internal service representations in sync
     with the actual state of the external implementations.
 
-# TOSCA Operational Model
+TOSCA Operational Model
+=======================
 
 This section presents a TOSCA Functional Architecture and an associated
 operational model that supports the three service lifecycle phases
@@ -2359,7 +2380,8 @@ The functional architecture defines the following three blocks:
 The remainder of this section describes each of these functional blocks
 in more detail.
 
-## TOSCA Processor
+TOSCA Processor
+---------------
 
 At the core of a compliant TOSCA implementation is a TOSCA Processor
 that can create service representations from TOSCA service templates. A
@@ -2398,7 +2420,8 @@ A resolver performs the following functions
 
 #### Substitution Mapping
 
-## Orchestrator
+Orchestrator
+------------
 
 An orchestrator performs the following actions:
 
@@ -2416,13 +2439,15 @@ An orchestrator performs the following actions:
 - (Optionally) changes the node representations themselves for day 2
   transformations.
 
-# TOSCA definitions
+TOSCA definitions
+=================
 
 Except for the examples, this section is **normative** and describes the
 YAML grammar, definitions, and semantics for all keynames that are
 defined in the TOSCA Version 2.0 specification.
 
-## TOSCA <span class="comment-start" id="157" author="Chris Lauwers" date="2022-06-25T17:36:00Z">Inconsistent capitalization</span><span class="comment-start" id="158" author="Chris Lauwers" date="2022-06-25T17:36:00Z">This section should be moved into the previous chapter</span><span class="comment-start" id="159" author="Chris Lauwers" date="2022-12-05T18:42:00Z">What is a metamodel?</span>Metamodel<span class="comment-end" id="157"><span class="comment-end" id="158"><span class="comment-end" id="159"></span></span></span>
+TOSCA <span class="comment-start" id="157" author="Chris Lauwers" date="2022-06-25T17:36:00Z">Inconsistent capitalization</span><span class="comment-start" id="158" author="Chris Lauwers" date="2022-06-25T17:36:00Z">This section should be moved into the previous chapter</span><span class="comment-start" id="159" author="Chris Lauwers" date="2022-12-05T18:42:00Z">What is a metamodel?</span>Metamodel<span class="comment-end" id="157"><span class="comment-end" id="158"><span class="comment-end" id="159"></span></span></span>
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 This section defines the models and the modeling goals that comprise the
 TOSCA Version 2.0 specification.
@@ -2580,7 +2605,8 @@ parent types (according to the derivation rules of that type entity). If
 a keyname definition is inherited, the derived type does not have to
 provide such definition.
 
-## <span class="comment-start" id="172" author="Calin Curescu" date="2020-04-20T18:49:00Z">TBD. Here comes some intro and generic description of the different specification blocks that will build the following sections.</span>TOSCA Service<span class="comment-end" id="172"></span>
+<span class="comment-start" id="172" author="Calin Curescu" date="2020-04-20T18:49:00Z">TBD. Here comes some intro and generic description of the different specification blocks that will build the following sections.</span>TOSCA Service<span class="comment-end" id="172"></span>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 <span class="comment-start" id="173" author="Michael Rehder"
 date="2020-12-15T08:38:00Z">This isn’t true – if a “Service Template”
@@ -5450,7 +5476,8 @@ architecture ]</p>
 </tbody>
 </table>
 
-## Nodes and Relationships
+Nodes and Relationships
+-----------------------
 
 ### Node Type
 
@@ -9726,7 +9753,8 @@ href="http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2">h
 </tbody>
 </table>
 
-## Properties, Attributes, and Parameters
+Properties, Attributes, and Parameters
+--------------------------------------
 
 This section presents handling data in TOSCA via properties, attributes,
 and parameters.
@@ -13268,7 +13296,8 @@ empty list is used for the arguments.
 </tbody>
 </table>
 
-## Substitution
+Substitution
+------------
 
 ### Substitution mapping
 
@@ -13791,7 +13820,8 @@ have the following meaning:
   replace the usual operation_call activity by an inline activity using
   the specified workflow.
 
-## Groups and <span class="comment-start" id="1117" author="Chris Lauwers" date="2021-01-17T02:44:00Z">Language suggested by Paul Jordan: In TOSCA Policy is used to affect or govern an application or service’s topology at some stage of its lifecycle, but is not explicitly part of the topology itself. The policy scope can be limited to a collection of Nodes or Node Types by using Groups and Group Types.</span>Policies<span class="comment-end" id="1117"></span>
+Groups and <span class="comment-start" id="1117" author="Chris Lauwers" date="2021-01-17T02:44:00Z">Language suggested by Paul Jordan: In TOSCA Policy is used to affect or govern an application or service’s topology at some stage of its lifecycle, but is not explicitly part of the topology itself. The policy scope can be limited to a collection of Nodes or Node Types by using Groups and Group Types.</span>Policies<span class="comment-end" id="1117"></span>
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Group Type
 
@@ -14954,7 +14984,8 @@ notation):
 </tbody>
 </table>
 
-## Workflows
+Workflows
+---------
 
 ### Imperative Workflow definition
 
@@ -15267,9 +15298,11 @@ have the following meaning:
 - **target_step_name**: represents the name of another step of the
   workflow.
 
-# TOSCA built-in f<span class="comment-start" id="1315" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-214](endnotes.xml) – New functions: get_node_instance( node_template_name, node_filter)      returns ( node_instance_id \| failure ) invoke_node_operations( node_instance_id, operation_name, operation_input_parms)     returns ( operation_outputs \| failure ) create_node_instance( node_template_name, input_parameters )     returns ( node_instance_id \| failure ) delete_node_instance( node_instance_id)     returns result (success \| failure ) set_instance_properties( node_instance_id, property_name, ..., property_name_x, property_value )     returns ( success \| failure )</span>unctions<span class="comment-end" id="1315"></span>
+TOSCA built-in f<span class="comment-start" id="1315" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-214](endnotes.xml) – New functions: get_node_instance( node_template_name, node_filter)      returns ( node_instance_id \| failure ) invoke_node_operations( node_instance_id, operation_name, operation_input_parms)     returns ( operation_outputs \| failure ) create_node_instance( node_template_name, input_parameters )     returns ( node_instance_id \| failure ) delete_node_instance( node_instance_id)     returns result (success \| failure ) set_instance_properties( node_instance_id, property_name, ..., property_name_x, property_value )     returns ( success \| failure )</span>unctions<span class="comment-end" id="1315"></span>
+===========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
 
-## <span class="comment-start" id="1316" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-146](media/image1.png): WD02: Need to include grammar and examples for each function.</span>Representation graph query functions<span class="comment-end" id="1316"></span>
+<span class="comment-start" id="1316" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-146](media/image1.png): WD02: Need to include grammar and examples for each function.</span>Representation graph query functions<span class="comment-end" id="1316"></span>
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### get_input 
 
@@ -16067,7 +16100,8 @@ parameter) to return.</p></td>
 </tbody>
 </table>
 
-## Boolean<span class="comment-start" id="1332" author="Calin Curescu" date="2022-12-06T16:00:00Z">I would not call them condition functions since they can appear also outside conditions.</span> Functions<span class="comment-end" id="1332"></span>
+Boolean<span class="comment-start" id="1332" author="Calin Curescu" date="2022-12-06T16:00:00Z">I would not call them condition functions since they can appear also outside conditions.</span> Functions<span class="comment-end" id="1332"></span>
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 TOSCA includes a number of functions that return Boolean values. These
 functions are used in validation expressions and in condition clauses in
@@ -16363,7 +16397,8 @@ second argument which is equal to a key in the first argument.
 | \$has_any_key: \[ \<map_type_arg1\>, \<list_type_arg2\> \] |
 |------------------------------------------------------------|
 
-## String, list, and map functions<span class="comment-start" id="1334" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-212](commentsIds.xml) – Concat intrinsic function</span><span class="comment-end" id="1334"></span><span class="comment-start" id="1335" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1335"></span>
+String, list, and map functions<span class="comment-start" id="1334" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-212](commentsIds.xml) – Concat intrinsic function</span><span class="comment-end" id="1334"></span><span class="comment-start" id="1335" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1335"></span>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### length
 
@@ -16554,7 +16589,8 @@ tokenize to a list (array)<br />
 </tbody>
 </table>
 
-## Set functions<span class="comment-start" id="1340" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-212](commentsExtensible.xml) – Concat intrinsic function</span><span class="comment-end" id="1340"></span><span class="comment-start" id="1341" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1341"></span>
+Set functions<span class="comment-start" id="1340" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-212](commentsExtensible.xml) – Concat intrinsic function</span><span class="comment-end" id="1340"></span><span class="comment-start" id="1341" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1341"></span>
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 !!!Note: We should discuss order!!!!
 
@@ -16597,7 +16633,8 @@ The intersection applied to only one list will return a result where all
 the duplicate entries of the argument list are eliminated. Note also
 that the order of the elements in the result list is not specified.
 
-## Arithmetic functions<span class="comment-start" id="1343" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-212](https://www.oasis-open.org/committees/tosca/) – Concat intrinsic function</span><span class="comment-end" id="1343"></span>
+Arithmetic functions<span class="comment-start" id="1343" author="Matt Rutkowski" date="2015-08-25T21:52:00Z">[TOSCA-212](https://www.oasis-open.org/committees/tosca/) – Concat intrinsic function</span><span class="comment-end" id="1343"></span>
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### sum
 
@@ -16718,13 +16755,15 @@ argument.
 | \$ceil: \[ \<float_type_arg\> \] |
 |----------------------------------|
 
-# TOSCA Cloud Service Archive (CSAR) format
+TOSCA Cloud Service Archive (CSAR) format
+=========================================
 
 This section defines the metadata of a cloud service archive as well as
 its overall structure. Except for the examples, this section is
 **normative.**
 
-## Overall Structure of a CSAR
+Overall Structure of a CSAR
+---------------------------
 
 <span class="comment-start" id="1367" author="Calin Curescu"
 date="2020-06-09T17:00:00Z">Thinh would like to have this resolved
@@ -16762,7 +16801,8 @@ contain one of the following:
 The CSAR file MAY contain other directories and files with arbitrary
 names and contents.
 
-## TOSCA Meta File
+TOSCA Meta File
+---------------
 
 A TOSCA meta file consists of name/value pairs. The name-part of a
 name/value pair is followed by a colon, followed by a blank, followed by
@@ -16917,7 +16957,8 @@ templates can be found in the files **tosca_moose.yaml** and
 **tosca_deer.yaml** found in the directory called **definitions** in the
 root of the CSAR file.
 
-## Archive without TOSCA-Metadata
+Archive without TOSCA-Metadata
+------------------------------
 
 In case the archive doesn’t contains a **TOSCA.meta** file the archive
 is required to contains a single YAML file at the root of the archive
@@ -16955,7 +16996,8 @@ Entry-Definitions file in an archive without TOSCA-Metadata directory.
 </tbody>
 </table>
 
-# Security Considerations
+Security Considerations
+=======================
 
 <span class="mark">(**Note:** OASIS strongly recommends that Technical
 Committees consider issues that could affect security when implementing
@@ -16982,7 +17024,8 @@ this subject to read *Guidelines for Writing RFC Text on Security
 Considerations,* IETF \[[RFC3552](#RFC3552)\], for more
 information.)</span>
 
-# Conformance
+Conformance
+===========
 
 <span class="mark">(**Note**: The [OASIS TC
 Process](https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsConfClause)
@@ -17004,7 +17047,8 @@ Terms](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2017-0
 <span class="mark">Remove this note before submitting for
 publication.)</span>
 
-## Conformance Targets
+Conformance Targets
+-------------------
 
 <span class="comment-start" id="2410" author="Matt Rutkowski"
 date="2015-12-03T11:41:00Z">Fixed typo and section reference.</span>The
@@ -17022,7 +17066,8 @@ convenience:<span class="comment-end" id="2410"></span>
 
 - TOSCA archive
 
-## Conformance Clause 1: TOSCA YAML service template
+Conformance Clause 1: TOSCA YAML service template
+-------------------------------------------------
 
 A document conforms to this specification as TOSCA YAML service template
 if it satisfies all the statements below:
@@ -17041,7 +17086,8 @@ if it satisfies all the statements below:
     definitions”, it is valid according to the definitions given in
     section 5.
 
-## Conformance Clause 2: TOSCA processor
+Conformance Clause 2: TOSCA processor
+-------------------------------------
 
 A processor or program conforms to this specification as TOSCA processor
 if it satisfies all the statements below:
@@ -17067,7 +17113,8 @@ if it satisfies all the statements below:
 25. It normalizes string values as described in section 5.4.9.3
     (Additional Requirements)
 
-## Conformance Clause 3: TOSCA orchestrator
+Conformance Clause 3: TOSCA orchestrator
+----------------------------------------
 
 A processor or program conforms to this specification as TOSCA
 orchestrator if it satisfies all the statements below:
@@ -17098,7 +17145,8 @@ orchestrator if it satisfies all the statements below:
     2.10 (Using node template substitution for chaining subsystems), 5.4
     (Capabilities Types) and 5.7 (Interface Types).).
 
-## Conformance Clause 4: TOSCA generator
+Conformance Clause 4: TOSCA generator
+-------------------------------------
 
 A processor or program conforms to this specification as TOSCA generator
 if it satisfies at least one of the statements below:
@@ -17112,7 +17160,8 @@ if it satisfies at least one of the statements below:
 32. When requested to generate a TOSCA archive, it always produces a
     conforming TOSCA archive, as defined in Clause 5: TOSCA archive.
 
-## Conformance Clause 5: TOSCA archive
+Conformance Clause 5: TOSCA archive
+-----------------------------------
 
 A package artifact conforms to this specification as TOSCA archive if it
 satisfies all the statements below:
@@ -17120,7 +17169,8 @@ satisfies all the statements below:
 1.  It is valid according to the structure and rules defined in section
     6 “TOSCA Cloud Service Archive (CSAR) format”.
 
-# Acknowledgments
+Acknowledgments
+===============
 
 <span class="mark">(**Note:** A Work Product approved by the TC must
 include a list of people who participated in the development of the Work
@@ -17242,11 +17292,13 @@ Wayne Witzel (<wayne.witzel@canonical.com>), Canonical
 
 Yaron Parasol (<yaronpa@gigaspaces.com>), Gigaspaces
 
-# Example Title
+Example Title
+=============
 
 text
 
-## Subsidiary section
+Subsidiary section
+------------------
 
 text
 
@@ -17262,7 +17314,8 @@ text
 
 text
 
-# Revision History
+Revision History
+================
 
 <table>
 <colgroup>
