@@ -1535,7 +1535,6 @@ defined in TOSCA profiles are used as follows:
 
 - Types defined in a TOSCA profile provide reusable building blocks from
   which services can be composed.
-
 - Artifacts and service templates defined in a TOSCA profile provide
   implementations for the TOSCA types defined in the profile. Whereas
   artifacts provide interface operation implementations for concrete
@@ -1589,25 +1588,21 @@ TOSCA does not impose naming conventions for profile names, but as a
 best practice we recommend a domain-name-like structure as used for Java
 package naming. For example, the following profile statement is used to
 define TOSCA Simple Profile Version 2.0 types:
-
-| profile: org.oasis-open.tosca.simple:2.0 |
-|------------------------------------------|
-
+```
+profile: org.oasis-open.tosca.simple:2.0 
+```
 TOSCA parsers MUST process profile definitions according to the
 following rules:
 
 - TOSCA files that define a profile (i.e., that contain a profile
   keyname) MUST NOT also define a service template.
-
 - If the parser encounters the profile keyname in a TOSCA file, then the
   corresponding profile name will be applied to all types defined in
   that file as well as to types defined in any imported TOSCA files.
-
 - If one of those imported files also defines the profile keyname—and
   that profile name is different from the name of the importing
   profile—then that profile name overrides the profile name value from
   that point in the import tree onward, recursively.
-
 - TOSCA service templates defined in profiles MUST advertise
   substitution mapping to allow them to be used as implementations for
   abstract nodes defined using profile types.
@@ -1916,19 +1911,13 @@ attempt to import the file referenced by \<file_URI\> as follows:
   the resource identified by \<file_URL\> represents a valid TOSCA file,
   then it SHOULD cause the remote Service Template to be imported.
 
-<!-- -->
-
 - Note that if in addition to a URL with a URL scheme, the import
   definition also specifies a \<repository_name\> (using the repository
   key), then that import definition SHOULD be considered invalid.
 
-<!-- -->
-
 - If the \<file_URI\> does not include a URL scheme, it is a considered
   a relative path URL. The TOSCA orchestrator or processor SHOULD handle
   such a \<file_URI\> as follows:
-
-<!-- -->
 
 - If the import definition also specifies a \<repository_name\> (using
   the repository keyname), then \<file_URI\> refers to the path name of
@@ -1941,8 +1930,6 @@ attempt to import the file referenced by \<file_URI\> as follows:
   file, then that CSAR file should be treated as the repository in which
   to locate the service template file that must be imported.
 
-<!-- -->
-
 - If \<file_URI\> starts with a leading slash (‘/’) then \<file_URI\>
   specifies a path name starting at the root of the repository.
 
@@ -1950,8 +1937,6 @@ attempt to import the file referenced by \<file_URI\> as follows:
   specifies a path that is relative to the importing document’s location
   within the repository. Double dot notation (‘../’) can be used to
   refer to parent directories in a file path name.
-
-<!-- -->
 
 - If \<file_URI\> does not reference a valid TOSCA file file, then the
   import SHOULD be considered a failure.
@@ -2071,10 +2056,9 @@ importing template:
 </tbody>
 </table>
 
-#### Namespace
+#### Namespaces
 <!----
 {"id": "373", "author": "Chris Lauwers", "date": "2020-09-01T00:19:00Z", "comment": "I recommend removing this entire section and rewriting any parts that are still relevant inside the \u201cimports\u201d section.", "target": "Namespace"}-->
-s
 
 When importing TOSCA files or TOSCA profiles, there exists a possibility
 for name collision. For example, an imported file may define a node type
@@ -2147,16 +2131,14 @@ To address this issue, TOSCA uses the concept of namespaces:
 
 - When a TOSCA file imports other templates, it has two options:
 
-<!-- -->
+  - It can import any type definitions from the imported templates into
+    its root namespace
 
-- It can import any type definitions from the imported templates into
-  its root namespace
-
-- Or it can import type definitions from the imported templates into a
-  separate named namespace. This is done using the namespace keyname in
-  the associated import statement. When using types imported into a
-  named namespace, those type names must be qualified using the
-  namespace name.
+  - Or it can import type definitions from the imported templates into a
+    separate named namespace. This is done using the namespace keyname in
+    the associated import statement. When using types imported into a
+    named namespace, those type names must be qualified using the
+    namespace name.
 
 The following snippets update the previous example using namespaces to
 disambiguate between the two MyNode type definitions. This first snippet
@@ -2293,8 +2275,6 @@ Within each namespace, names must be unique. This means the following:
   considered an error. These include, but are not limited to duplicate
   names found for the following definitions:
 
-<!-- -->
-
 - Repositories (repositories)
 
 - Data Types (data_types)
@@ -2309,13 +2289,9 @@ Within each namespace, names must be unique. This means the following:
 
 - Interface Types (interface_types)
 
-<!-- -->
-
 - Duplicate Template names within a Service Template SHALL be considered
   an error. These include, but are not limited to duplicate names found
   for the following template types:
-
-<!-- -->
 
 - Node Templates (node_templates)
 
@@ -2325,13 +2301,9 @@ Within each namespace, names must be unique. This means the following:
 
 - Outputs (outputs)
 
-<!-- -->
-
 - Duplicate names for the following keynames within Types or Templates
   SHALL be considered an error. These include, but are not limited to
   duplicate names found for the following keynames:
-
-<!-- -->
 
 - Properties (properties)
 
@@ -2345,7 +2317,6 @@ Within each namespace, names must be unique. This means the following:
   (requirements)
 <!----
 {"id": "375", "author": "Calin Curescu", "date": "2020-06-08T18:24:00Z", "comment": "But requirements assignments support\n  duplicates!", "target": "R<span class=\"comment-start\" id=\"376\"\n  author=\"Matt Rutkowski\" date=\"2015-08-25T21:52:00Z\">MUSTFIX: Verify\n  duplicates are NOT allowed!!</span>equirements\n  (requirements)"}-->
-
 
 - Capabilities (capabilities)<span class="comment-end" id="376"></span>
 
@@ -2437,7 +2408,6 @@ The following represents a repository definition:
 <!----
 {"id": "394", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:16:00Z", "comment": "Description is already described in 4.2.1.3.6", "target": "Description definition"}-->
 
-
 This optional element provides a means include single or multiline
 descriptions within a TOSCA template as a scalar string value.
 
@@ -2445,26 +2415,24 @@ descriptions within a TOSCA template as a scalar string value.
 
 The following keyname is used to provide a description within the TOSCA
 specification:
-
-| description |
-|-------------|
-
+```
+description 
+```
 ##### Grammar
 
 Description definitions have the following grammar:
-
-| description: \<[description_string](#TYPE_YAML_STRING)\> |
-|----------------------------------------------------------|
+```
+description: <[description_string](#TYPE_YAML_STRING)> 
+```
 
 ##### Examples
 
 Simple descriptions are treated as a single literal that includes the
 entire contents of the line that immediately follows the description
 key:
-
-| description: This is an example of a single line description (no folding). |
-|----------------------------------------------------------------------------|
-
+```
+description: This is an example of a single line description (no folding). 
+```
 The YAML “folded” style may also be used for multi-line descriptions
 which “folds” line breaks as space characters.
 
@@ -2491,15 +2459,13 @@ space</p>
 
 - Use of “folded” style is discouraged for the YAML string type apart
   from when used with the description keyname.
-  .
+
 <!----
 {"id": "403", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:13:00Z", "comment": "Can\u2019t I just use a double quoted string\n  for multi-line ?", "target": ""}-->
-
 
 #### Metadata
 <!----
 {"id": "409", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:17:00Z", "comment": "Also covered by 4.2.1.3.2", "target": "Metadata"}-->
-
 
 This optional element provides a means to include optional metadata as a
 map of strings.
@@ -2508,10 +2474,9 @@ map of strings.
 
 The following keyname is used to provide metadata within the TOSCA
 specification:
-
-| metadata |
-|----------|
-
+```
+metadata 
+```
 ##### Grammar
 
 Metadata definitions have the following grammar:
@@ -3246,9 +3211,9 @@ The following example shows the definition of a placement policy.
 ###### requirement_mapping
 
 The grammar of a requirement_mapping is as follows:
-
-| \<requirement_name\>: \[ \<node_template_name\>, \<node_template_requirement_name\> \] |
-|----------------------------------------------------------------------------------------|
+```
+<requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
+```
 
 The multi-line grammar is as follows :
 
@@ -3518,8 +3483,6 @@ During Node Type derivation the keyname definitions follow these rules:
 
 - artifacts: existing artifact definitions (identified by their symbolic
   name) may be redefined; new artifact definitions may be added.
-
-<!-- -->
 
 - note that an artifact is created for a specific purpose and
   corresponds to a specific file (with e.g. a path name and checksum);
@@ -3817,12 +3780,10 @@ have the following meaning:
 <!----
 {"id": "520", "author": "Michael Rehder", "date": "2020-12-15T13:33:00Z", "comment": "I still think this is simply a Requirement Type \u2013 I can\u2019t see why it isn\u2019t and what advantage there is in calling it something else.", "target": "Relationship Type"}-->
 
-
 A Relationship Type is a reusable entity that defines the type of one or
 more relationships between Node Types or Node Templates
 <!----
 {"id": "521", "author": "Michael Rehder", "date": "2020-12-15T12:12:00Z", "comment": "There is no\nrelationship type in a node template so why is this stated\nhere?", "target": "Node Templates"}-->
-.
 
 #### Keynames
 
@@ -4030,7 +3991,6 @@ operations that complement and change the defaults provided by its
 Relationship Type and its implementations.
 <!----
 {"id": "532", "author": "Michael Rehder", "date": "2020-12-15T13:23:00Z", "comment": "My understanding is that this is an\nalternative to relations defined within node templates.  \nIt\u2019s not clear why this option would be chosen over the node-template\noption.  \nIf both relations in node-templates and Relationship Templates are used,\nhow are they combined together?  \nOr is this not recommended?  \nI can imagine that combination rules would be very difficult to define\nbut if it is possible, it must be defined", "target": "A Relationship Template\nspecifies the occurrence of a manageable relationship between node\ntemplates as part of an application\u2019s topology model that is defined in\na TOSCA Service Template. A Relationship template is an instance of a\nspecified Relationship Type and can provide customized properties, or\noperations that complement and change the defaults provided by its\nRelationship Type and its implementations."}-->
-
 
 Relations between Node Templates can be defined either using
 Relationship Templates or Requirements and Capability definitions within
@@ -4481,9 +4441,9 @@ Capability definitions have one of the following grammars:
 The following single-line grammar may be used when only the capability
 type needs to be declared, without further refinement of the definitions
 in the capability type:
-
-| \<[capability_definition_name](#TYPE_YAML_STRING)\>: \<[capability_type](#capability-type)\> |
-|----------------------------------------------------------------------------------------------|
+```
+<[capability_definition_name](#TYPE_YAML_STRING)>: <[capability_type](#capability-type)> 
+```
 
 ###### Extended notation
 
@@ -4912,9 +4872,9 @@ additional parameter definitions to be used as inputs/outputs).
 Requirement definitions have one of the following grammars:
 
 ###### Simple grammar (Capability Type only)
-
-| \<[requirement_definition_name](#TYPE_YAML_STRING)\>: \<[capability_type_name](#TYPE_YAML_STRING)\> |
-|-----------------------------------------------------------------------------------------------------|
+```
+<[requirement_definition_name](#TYPE_YAML_STRING)>: <[capability_type_name](#TYPE_YAML_STRING)> 
+```
 
 ###### Extended grammar (with Node and Relationship Types)
 
