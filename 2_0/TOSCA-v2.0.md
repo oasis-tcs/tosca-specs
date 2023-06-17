@@ -2294,98 +2294,25 @@ parameters, output parameters as well as grouping of node templates.
 The following is the list of recognized keynames for a TOSCA service
 template:
 
-<table>
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 14%" />
-<col style="width: 23%" />
-<col style="width: 37%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description for the service template.</td>
-</tr>
-<tr class="even">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td>An optional map of input parameters (i.e., as parameter definitions)
-for the service template.</td>
-</tr>
-<tr class="odd">
-<td>node_templates</td>
-<td>yes</td>
-<td><p>map of</p>
-<p><a href="#node-template">node templates</a></p></td>
-<td>A mandatory map of node template definitions for the service
-template.</td>
-</tr>
-<tr class="even">
-<td>relationship_templates</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#relationship-template">relationship templates</a></p></td>
-<td>An optional map of relationship templates for the service
-template.</td>
-</tr>
-<tr class="odd">
-<td>groups</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#group-definition">group definitions</a></p></td>
-<td>An optional map of Group definitions whose members are node
-templates defined within this same service template.</td>
-</tr>
-<tr class="even">
-<td>policies</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a
-href="#i-know-that-tmf-have-a-branch-of-their-information-model-to-describe-policy-but-that-it-is-not-used-much-and-that-mef-have-recently-been-more-active-in-specializing-policy-for-access-control-and-for-ip-forwarding-rules.-it-is-possible-that-tosca-could-draw-on-this-work-to-make-tosca-policy-framework-more-useful.policy-definition">policy
-definitions</a></p></td>
-<td>An optional list of Policy definitions for the service
-template.</td>
-</tr>
-<tr class="odd">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td>An optional map of output parameters (i.e., as parameter
-definitions) for the service template.</td>
-</tr>
-<tr class="even">
-<td>substitution_mappings</td>
-<td>no</td>
-<td>substitution_mapping</td>
-<td><p>An optional declaration that exports the service template as an
-implementation of a Node type.</p>
-<p>This also includes the mappings between the external Node Types
-capabilities and requirements to existing implementations of those
-capabilities and requirements on Node templates declared within the
-service template.</p></td>
-</tr>
-<tr class="odd">
-<td>workflows</td>
-<td>no</td>
-<td>map of imperative workflow definitions</td>
-<td>An optional map of imperative workflow definition for the service
-template.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in the TOSCA file |
+|profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information.  Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations. |
+|description|no|string|Declares a description for this TOSCA file and its contents.|
+|dsl_definitions|no |N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout the TOSCA file.|
+|repositories|no|map of Repository definitions|Declares the map of external repositories that contain artifacts that are referenced in the TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
+|imports|no|list of Import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
+|artifact_types|no|map of Artifact Types|This section contains amap of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
+|data_types|no|map of Data Types|Declares a map of TOSCA Data Type definitions for use in the TOSCA file and/or external TOSCA files.|
+|capability_types|no|map of Capability Types|This section contains amap of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
+|interface_types|no|map of Interface Types|This section contains amap of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
+|relationship_types|no|map of Relationship Types|This section contains a map of relationship type definitions for use in the TOSCA file and/or external TOSCA files.|
+|node_types|no|map of Node Types|This section contains a map of node type definitions for use in the TOSCA file and/or external TOSCA files.|
+|group_types|no|map of Group Types|This section contains a map of group type definitions for use in the TOSCA file and/or external TOSCA files.|
+|policy_types|no|map of Policy Types|This section contains a map of policy type definitions for use in the TOSCA file and/or external TOSCA files.|
+|service_template|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application’s or service’s components, as well as relationship templates representing relations between these components.|
+|Functions|no|map of function definitions|This section contains a map of function definitions for use in the TOSCA file and/or external TOSCA files.|
 
 #### Grammar
 
@@ -2730,70 +2657,14 @@ The Node Type is a TOSCA type entity and has the common keynames listed
 in Section 4.2.5.2 Common keynames in type definitions. In addition, the
 Node Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 12%" />
-<col style="width: 14%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Node Type.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a
-href="#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition">attribute
-definitions</a></p></td>
-<td>An optional map of attribute definitions for the Node Type.</td>
-</tr>
-<tr class="odd">
-<td>capabilities</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#capability-definition">capability definitions</a></p></td>
-<td>An optional map of capability definitions for the Node Type.</td>
-</tr>
-<tr class="even">
-<td>requirements</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a href="#requirement-definition">requirement
-definitions</a></p></td>
-<td>An optional list of requirement definitions for the Node Type.</td>
-</tr>
-<tr class="odd">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-definition">interface definitions</a></p></td>
-<td>An optional map of interface definitions supported by the Node
-Type.</td>
-</tr>
-<tr class="even">
-<td>artifacts</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#artifact-definition">artifact definitions</a></p></td>
-<td>An optional map of artifact definitions for the Node Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|properties|no|map of property definitions|An optional map of property definitions for the Node Type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Node Type.|
+|capabilities|no|map of capability definitions|An optional map of capability definitions for the Node Type.|
+|requirements|no|list of requirement definitions|An optional list of requirement definitions for the Node Type.|
+|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Node Type.|
+|artifacts|no|map of artifact definitions|An optional map of artifact definitions for the Node Type.|
 
 #### Grammar 
 
@@ -2925,114 +2796,20 @@ that complement and change the defaults provided by its Node Type.
 The following is the list of recognized keynames for a TOSCA Node
 Template definition:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 12%" />
-<col style="width: 18%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the Node Type the Node Template is based
-upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional description for the Node Template.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="even">
-<td>directives</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of directive values to provide processing
-instructions to orchestrators and tooling.</td>
-</tr>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional map of property value assignments for the Node
-Template.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-assignment">attribute assignments</a></p></td>
-<td>An optional map of attribute value assignments for the Node
-Template.</td>
-</tr>
-<tr class="odd">
-<td>requirements</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a href="#requirement-assignment">requirement
-assignments</a></p></td>
-<td>An optional list of requirement assignments for the Node
-Template.</td>
-</tr>
-<tr class="even">
-<td>capabilities</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#capability-assignment">capability assignments</a></p></td>
-<td>An optional map of capability assignments for the Node
-Template.</td>
-</tr>
-<tr class="odd">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-assignment">interface assignments</a></p></td>
-<td>An optional map of interface assignments for the Node Template.</td>
-</tr>
-<tr class="even">
-<td>artifacts</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#artifact-definition">artifact definitions</a></p></td>
-<td>An optional map of artifact definitions for the Node Template.</td>
-</tr>
-<tr class="odd">
-<td>node_filter</td>
-<td>no</td>
-<td><a href="#node-filter-definition">node filter</a></td>
-<td>The optional filter definition that TOSCA orchestrators will use to
-select the correct target node.</td>
-</tr>
-<tr class="even">
-<td>copy</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional (symbolic) name of another node template to copy into
-(all keynames and values) and use as a basis for this node
-template.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory name of the Node Type the Node Template is based upon.|
+|description|no|string|An optional description for the Node Template.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|directives|no|list of string|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
+|properties|no|map of property assignments|An optional map of property value assignments for the Node Template.|
+|attributes|no|map of attribute assignments|An optional map of attribute value assignments for the Node Template.|
+|requirements|no|list of requirement assignments|An optional list of requirement assignments for the Node Template.|
+|capabilities|no|map of capability assignments|An optional map of capability assignments for the Node Template.|
+|interfaces|no|map of interface assignments|An optional map of interface assignments for the Node Template.|
+|artifacts|no|map of  artifact definitions|An optional map of artifact definitions for the Node Template.|
+|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select the correct target node.  |
+|copy|no|string|The optional (symbolic) name of another node template to copy into (all keynames and values) and use as a basis for this node template.|
 
 #### Grammar 
 
@@ -3158,74 +2935,14 @@ The Relationship Type is a TOSCA type entity and has the common keynames
 listed in Section 4.2.5.2 Common keynames in type definitions. In
 addition, the Relationship Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 13%" />
-<col style="width: 16%" />
-<col style="width: 47%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Definition/Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Relationship
-Type.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a
-href="#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition">attribute
-definitions</a></p></td>
-<td>An optional map of attribute definitions for the Relationship
-Type.</td>
-</tr>
-<tr class="odd">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-definition">interface definitions</a></p></td>
-<td>An optional map of interface definitions supported by the
-Relationship Type.</td>
-</tr>
-<tr class="even">
-<td>valid_capability_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more names of Capability Types that are
-valid targets for this relationship. If undefined, all Capability Types
-are valid.</td>
-</tr>
-<tr class="odd">
-<td>valid_target_node_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more names of Node Types that are valid
-targets for this relationship. If undefined, all Node Types are valid
-targets.</td>
-</tr>
-<tr class="even">
-<td>valid_source_node_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more names of Node Types that are valid
-sources for this relationship. If undefined, all Node Types are valid
-sources.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Definition/Type|Description|
+| :---- | :------ | :---- | :------ |
+|properties|no|map of property definitions|An optional map of property definitions for the Relationship Type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Relationship Type.|
+|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Relationship Type.|
+|valid_capability_types|no|list of string|An optional list of one or more names of Capability Types that are valid targets for this relationship. If undefined, all Capability Types are valid.|
+|valid_target_node_types|no|list of string|An optional list of one or more names of Node Types that are valid targets for this relationship. If undefined, all Node Types are valid targets.|
+|valid_source_node_types|no|list of string|An optional list of one or more names of Node Types that are valid sources for this relationship. If undefined, all Node Types are valid sources.|
 
 #### Grammar
 
@@ -3349,77 +3066,15 @@ requirements definition. This topic needs further work.
 The following is the list of recognized keynames for a TOSCA
 Relationship Template definition:
 
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 18%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the Relationship Type the Relationship
-Template is based upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional description for the Relationship Template.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="even">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional map of property assignments for the Relationship
-Template.</td>
-</tr>
-<tr class="odd">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-assignment">attribute assignments</a></p></td>
-<td>An optional map of attribute assignments for the Relationship
-Template.</td>
-</tr>
-<tr class="even">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-assignment">interface assignments</a></p></td>
-<td>An optional map of interface assignments for the relationship
-template.</td>
-</tr>
-<tr class="odd">
-<td>copy</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional (symbolic) name of another relationship template to
-copy into (all keynames and values) and use as a basis for this
-relationship template.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory name of the Relationship Type the Relationship Template is based upon.|
+|description|no|string|An optional description for the Relationship Template.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|properties|no|map of property assignments|An optional map of property assignments for the Relationship Template.|
+|attributes|no|map of attribute assignments|An optional map of attribute assignments for the Relationship Template.|
+|interfaces|no|map of interface assignments|An optional map of interface assignments for the relationship template.|
+|copy|no|string|The optional (symbolic) name of another relationship template to copy into (all keynames and values) and use as a basis for this relationship template.|
 
 #### Grammar
 ```
@@ -3496,58 +3151,12 @@ The Capability Type is a TOSCA type entity and has the common keynames
 listed in Section 4.2.5.2 Common keynames in type definitions. In
 addition, the Capability Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 52%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td>map of<br />
-<a href="#_Schema_Definition">property definitions</a></td>
-<td>An optional map of property definitions for the Capability
-Type.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-definition">attribute definitions</a></p></td>
-<td>An optional map of attribute definitions for the Capability
-Type.</td>
-</tr>
-<tr class="odd">
-<td>valid_source_node_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more valid names of Node Types that are
-supported as valid sources of any relationship established to the
-declared Capability Type. If undefined, all Node Types are valid
-sources.</td>
-</tr>
-<tr class="even">
-<td>valid_relationship_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more valid names of Relationship Types
-that are supported as valid types of any relationship established to the
-declared Capability Type. If undefined, all Relationship Types are
-valid.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|properties|no|map of property definitions|An optional map of property definitions for the Capability Type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Capability Type.|
+|valid_source_node_types|no|list of string|An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability Type. If undefined, all Node Types are valid sources.|
+|valid_relationship_types|no|list of string|An optional list of one or more valid names of Relationship Types that are supported as valid types of any relationship established to the declared Capability Type. If undefined, all Relationship Types are valid.|
 
 ##### Grammar
 
@@ -3641,81 +3250,14 @@ definition and may be refined during Node Type derivation.
 The following is the list of recognized keynames for a TOSCA capability
 definition:
 
-<table style="width:100%;">
-<colgroup>
-<col style="width: 27%" />
-<col style="width: 15%" />
-<col style="width: 14%" />
-<col style="width: 42%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the Capability Type this capability definition
-is based upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description of the Capability definition.</td>
-</tr>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property refinements</a></p></td>
-<td>An optional map of property refinements for the Capability
-definition. The referred properties must have been defined in the
-Capability Type definition referred by the type keyword. New properties
-may not be added.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-definition">attribute refinements</a></p></td>
-<td>An optional map of attribute refinements for the Capability
-definition. The referred attributes must have been defined in the
-Capability Type definition referred by the type keyword. New attributes
-may not be added.</td>
-</tr>
-<tr class="odd">
-<td>valid_source_node_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>An optional list of one or more valid names of Node Types that
-are supported as valid sources of any relationship established to the
-declared Capability Type. If undefined, all node types are valid
-sources.</p>
-<p>If valid_source_node_types is defined in the Capability Type, each
-element in this list must either be or derived from an element in the
-list defined in the type.</p></td>
-</tr>
-<tr class="even">
-<td>valid_relationship_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>An optional list of one or more valid names of Relationship Types
-that are supported as valid types of any relationship established to the
-declared Capability Type. If undefined, all Relationship Types are
-valid.</p>
-<p>If valid_relationship_types is defined in the Capability Type, each
-element in this list must either be or derived from an element in the
-list defined in the type.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory name of the Capability Type this capability definition is based upon.|
+|description|no|string|The optional description of the Capability definition.|
+|properties|no|map of property refinements|An optional map of property refinements for the Capability definition. The referred properties must have been defined in the Capability Type definition referred by the type keyword. New properties may not be added.|
+|attributes|no|map of attribute refinements|An optional map of attribute refinements for the Capability definition. The referred attributes must have been defined in the Capability Type definition referred by the type keyword. New attributes may not be added.|
+|valid_source_node_types|no|list of string|An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability Type. If undefined, all node types are valid sources. If valid_source_node_types is defined in the Capability Type, each element in this list must either be or derived from an element in the list defined in the type.|
+|valid_relationship_types|no|list of string|An optional list of one or more valid names of Relationship Types that are supported as valid types of any relationship established to the declared Capability Type. If undefined, all Relationship Types are valid. If valid_relationship_types is defined in the Capability Type, each element in this list must either be or derived from an element in the list defined in the type.|
 
 ##### Grammar
 
@@ -3855,59 +3397,11 @@ capability occurrences.
 The following is the list of recognized keynames for a TOSCA capability
 assignment:
 
-<table>
-<colgroup>
-<col style="width: 31%" />
-<col style="width: 12%" />
-<col style="width: 13%" />
-<col style="width: 42%" />
-<col style="width: 0%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td colspan="2">An optional map of property assignments for the
-Capability definition.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-assignment">attribute assignments</a></p></td>
-<td colspan="2">An optional map of attribute assignments for the
-Capability definition.</td>
-</tr>
-<tr class="odd">
-<td>directives</td>
-<td><p>no</p>
-<p>default: [internal, external]</p></td>
-<td><p>list of string</p>
-<p>valid string values:</p>
-<p>“internal”,</p>
-<p>“external”</p></td>
-<td>Describes if the fulfillment of this capability assignment should
-use relationships with source nodes created within this template
-(“internal”) or should use source nodes created outside this template as
-available to the TOSCA environment ("external”) or if it should use a
-combination of the above. If so, the order of the strings in the list
-defines which scope should be attempted first. If no scope is defined,
-the default value is [internal, external]. If no directives are defined,
-the default value is left to the particular implementation.</td>
-<td></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|properties|no|map of  property assignments|An optional map of property assignments for the Capability definition.|
+|attributes|no|map of attribute assignments|An optional map of attribute assignments for the Capability definition.|
+|directives|no default: [internal, external] |list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this capability assignment should use relationships with source nodes created within this template (“internal”) or should use source nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which scope should be attempted first. If no scope is defined, the default value is [internal, external]. If no directives are defined, the default value is left to the particular implementation."|
 
 ##### Grammar
 
@@ -3998,83 +3492,14 @@ derivation.
 The following is the list of recognized keynames for a TOSCA requirement
 definition:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 18%" />
-<col style="width: 12%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description of the Requirement definition.</td>
-</tr>
-<tr class="even">
-<td>capability</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The mandatory keyname used to provide either the:</p>
-<ul>
-<li><p>symbolic name of a <strong>Capability definition</strong> within
-a <em>target</em> Node Type that can fulfill the requirement.</p></li>
-<li><p>name of a <strong>Capability Type</strong> that the TOSCA
-orchestrator will use to select a type-compatible <em>target</em> node
-to fulfill the requirement at runtime.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>node</td>
-<td>conditional</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The optional keyname used to provide the name of a valid <a
-href="#node-type">Node Type</a> that contains the capability definition
-that can be used to fulfill the requirement.</p>
-<p>If a symbolic name of a <strong>Capability definition</strong> has
-been used for the capability keyname, then the node keyname is
-mandatory.</p></td>
-</tr>
-<tr class="even">
-<td>relationship</td>
-<td>conditional</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The optional keyname used to provide the name of a valid <a
-href="#relationship-type">Relationship Type</a> to construct a
-relationship when fulfilling the requirement.</p>
-<p>The relationship definition is mandatory either in the requirement
-definition of in the requirement assignment.</p></td>
-</tr>
-<tr class="odd">
-<td>node_filter</td>
-<td>no</td>
-<td><a href="#node-filter-definition">node filter</a></td>
-<td>The optional filter definition that TOSCA orchestrators will use to
-select a type-compatible <em>target</em> node that can fulfill the
-associated abstract requirement at runtime.</td>
-</tr>
-<tr class="even">
-<td>count_range</td>
-<td>no</td>
-<td><a href="#TYPE_TOSCA_RANGE">range</a> of <a
-href="#TYPE_YAML_INTEGER">integer</a></td>
-<td><p>The optional minimum required and maximum allowed number of
-relationships created by the requirement. If this key is not specified,
-the implied default of [0, UNBOUNDED] will be used.</p>
-<p>Note: the keyword UNBOUNDED is also supported to represent any
-positive integer.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|description|no|string|The optional description of the Requirement definition.|
+|capability|yes|string|The mandatory keyname used to provide either the: ·         symbolic name of a Capability definition within a target Node Type that can fulfill the requirement. ·         name of a Capability Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
+|node|conditional|string|The optional keyname used to provide the name of a valid Node Type that contains the capability definition that can be used to fulfill the requirement.  If a symbolic name of a Capability definition has been used for the capability keyname, then the node keyname is mandatory.|
+|relationship|conditional|string|The optional keyname used to provide the name of a valid Relationship Type to construct a relationship when fulfilling the requirement.  The relationship definition is mandatory either in the requirement definition of in the requirement assignment.|
+|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill the associated abstract requirement at runtime.|
+|count_range|no|range of integer|The optional minimum required and maximum allowed number of relationships created by the requirement. If this key is not specified, the implied default of [0, UNBOUNDED] will be used. Note: the keyword UNBOUNDED is also supported to represent any positive integer.|
 
 ###### Additional keynames for multi-line relationship grammar
 
@@ -4286,147 +3711,16 @@ the corresponding Requirement definition.
 The following is the list of recognized keynames for a TOSCA requirement
 assignment:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 12%" />
-<col style="width: 61%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>capability</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The optional keyname used to provide either the:</p>
-<ul>
-<li><p>symbolic name of a <strong>Capability definition</strong> within
-a <em>target</em> node that can fulfill the requirement.</p></li>
-<li><p>name of a <strong>Capability Type</strong> that the TOSCA
-orchestrator will use to select a type-compatible <em>target</em> node
-to fulfill the requirement at runtime.</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>node</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The optional keyname used to identify the target node of a
-relationship; specifically, it is used to provide either the:</p>
-<ul>
-<li><p>name of a <strong>Node Template</strong> that can fulfill the
-<em>target</em> node requirement.</p></li>
-<li><p>name of a <strong>Node Type</strong> that the TOSCA orchestrator
-will use to select a type-compatible <em>target</em> node to fulfill the
-requirement at runtime.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>relationship</td>
-<td>conditional</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The conditional keyname used to provide either the:</p>
-<ul>
-<li><p>name of a <strong>Relationship Template</strong> to use to relate
-<em>this</em> node to the <em>target</em> node when fulfilling the
-requirement.</p></li>
-<li><p>name of a <strong>Relationship Type</strong> that the TOSCA
-orchestrator will use to create a relationship to relate <em>this</em>
-node to the <em>target</em> node when fulfilling the
-requirement.</p></li>
-<li><p>Details of a <strong>Relationship Type</strong> and its property
-and interface assignments that the TOSCA orchestrator will use to create
-a relationship to relate <em>this</em> node to the <em>target</em> node
-when fulfilling the requirement.</p></li>
-</ul>
-<p>The relationship definition is mandatory either in the requirement
-definition of in the requirement assignment.</p></td>
-</tr>
-<tr class="even">
-<td>allocation</td>
-<td>no</td>
-<td>allocation block</td>
-<td><p>The optional keyname that allows the inclusion of an allocation
-block. The allocation block contains a map of property assignments that
-semantically represent “allocations” from the property with the same
-name in the target capability.</p>
-<ul>
-<li><p>The allocation acts as a “capacity filter” for the target
-capability in the target node. When the requirement is resolved, a
-capability in a node is a valid target for the requirement relationship
-if for each property of the target capability, the sum of all existing
-allocations plus the current allocation is less_or_equal to the property
-value.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>node_filter</td>
-<td>no</td>
-<td><a href="#node-filter-definition">node filter</a></td>
-<td>The optional filter definition that TOSCA orchestrators will use to
-select a type-compatible <em>target</em> node that can fulfill the
-requirement at runtime.</td>
-</tr>
-<tr class="even">
-<td>count</td>
-<td>no</td>
-<td>non-negative <a href="#TYPE_YAML_INTEGER">integer</a></td>
-<td><p>An optional keyname that sets the cardinality of the requirement
-assignment, that is how many relationships to be established from this
-requirement assignment specification.</p>
-<p>If not defined, the assumed count for an assignment is 1.</p>
-<p>Note that there can be multiple requirement assignments for a
-requirement with a specific symbolic name.</p>
-<ul>
-<li><p>The sum of all count values of assignments for a requirement with
-a specific symbolic name must be within the count_range defined in the
-requirement definition.</p></li>
-<li><p>Moreover, the sum of all count values of non-optional assignments
-for a requirement with a specific symbolic name must also be within the
-count_range defined in the requirement definition.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>directives</td>
-<td>no</td>
-<td><p>list of string</p>
-<p>valid string values:</p>
-<p>“internal”,</p>
-<p>“external”</p></td>
-<td>Describes if the fulfillment of this requirement assignment should
-use relationships with target nodes created within this template
-(“internal”) or should use target nodes created outside this template as
-available to the TOSCA environment ("external”) or if it should use a
-combination of the above. If so, the order of the strings in the list
-defines which directive should be attempted first. If no directives are
-defined, the default value is left to the particular
-implementation.</td>
-</tr>
-<tr class="even">
-<td>optional</td>
-<td><p>no</p>
-<p>default:</p>
-<p>false</p></td>
-<td>boolean</td>
-<td><p>Describes if the fulfillment of this requirement assignment is
-optional (true) or not (false).</p>
-<p>If not specified, the requirement assignment must be fulfilled, i.e.
-the default value is false.</p>
-<p>Note also, that non-optional requirements have precedence, thus
-during a service deployment, the optional requirements for all nodes
-should be resolved only after the non-optional requirements for all
-nodes have been resolved.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|capability|no|string|The optional keyname used to provide either the: ·         symbolic name of a Capability definition within a target node that can fulfill the requirement. ·         name of a Capability Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
+|node|no|string|The optional keyname used to identify the target node of a relationship; specifically, it is used to provide either the: ·         name of a Node Template that can fulfill the target node requirement. ·         name of a Node Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
+|relationship|conditional|string|The conditional keyname used to provide either the: ·         name of a Relationship Template to use to relate this node to the target node when fulfilling the requirement. ·         name of a Relationship Type that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. ·         Details of a Relationship Type and its property and interface assignments that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. The relationship definition is mandatory either in the requirement definition of in the requirement assignment.|
+|allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent “allocations” from the property with the same name in the target capability.  ·         The allocation acts as a “capacity filter” for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
+|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill the requirement at runtime.|
+|count|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships to be established from this requirement assignment specification. If not defined, the assumed count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name.  ·         The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. ·         Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
+|directives|no|list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this requirement assignment should use relationships with target nodes created within this template (“internal”) or should use target nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which directive should be attempted first. If no directives are defined, the default value is left to the particular implementation."|
+|optional|no. default: FALSE|boolean|Describes if the fulfillment of this requirement assignment is optional (true) or not (false).  If not specified, the requirement assignment must be fulfilled, i.e. the default value is false.  Note also, that non-optional requirements have precedence, thus during a service deployment, the optional requirements for all nodes should be resolved only after the non-optional requirements for all nodes have been resolved.|
 
 The following is the list of recognized keynames for a TOSCA requirement
 assignment’s relationship keyname which is used when property
