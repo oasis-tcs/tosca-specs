@@ -143,3 +143,12 @@
 |count|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships to be established from this requirement assignment specification. If not defined, the assumed count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name.  ·         The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. ·         Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
 |directives|no|list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this requirement assignment should use relationships with target nodes created within this template (“internal”) or should use target nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which directive should be attempted first. If no directives are defined, the default value is left to the particular implementation."|
 |optional|no. default: FALSE|boolean|Describes if the fulfillment of this requirement assignment is optional (true) or not (false).  If not specified, the requirement assignment must be fulfilled, i.e. the default value is false.  Note also, that non-optional requirements have precedence, thus during a service deployment, the optional requirements for all nodes should be resolved only after the non-optional requirements for all nodes have been resolved.|
+
+# Requirement Assignment Extra
+
+Keyname|Mandatory|Type|Description
+type|no|string|The optional keyname used to provide the name of the Relationship Type for the Requirement assignment’s relationship.
+properties|no|map of property assignments|An optional keyname providing property assignments for the relationship.
+|||
+interfaces|no|map of interface assignments|The optional keyname providing Interface assignments for the corresponding Interface definitions in the Relationship Type.
+|||
