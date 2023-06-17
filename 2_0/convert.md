@@ -21,6 +21,7 @@
 # TOSCA Service Template
 
 |Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
 |tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in the TOSCA file |
 |profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
 |metadata|no|map of YAML values|Defines a section used to declare additional metadata information.  Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations. |
@@ -43,16 +44,18 @@
 # Node Type
 
 |Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
 |properties|no|map of property definitions|An optional map of property definitions for the Node Type.|
 |attributes|no|map of attribute definitions|An optional map of attribute definitions for the Node Type.|
 |capabilities|no|map of capability definitions|An optional map of capability definitions for the Node Type.|
-||requirements|no|list of requirement definitions|An optional list of requirement definitions for the Node Type.|
-||interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Node Type.|
-||artifacts|no|map of artifact definitions|An optional map of artifact definitions for the Node Type.|
+|requirements|no|list of requirement definitions|An optional list of requirement definitions for the Node Type.|
+|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Node Type.|
+|artifacts|no|map of artifact definitions|An optional map of artifact definitions for the Node Type.|
 
 # Node Template
 
 |Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory name of the Node Type the Node Template is based upon.|
 |description|no|string|An optional description for the Node Template.|
 |metadata|no|map of string|Defines a section used to declare additional metadata information. |
@@ -69,6 +72,7 @@
 # relationship type
 
 |Keyname|Mandatory|Definition/Type|Description|
+| :---- | :------ | :---- | :------ |
 |properties|no|map of property definitions|An optional map of property definitions for the Relationship Type.|
 |attributes|no|map of attribute definitions|An optional map of attribute definitions for the Relationship Type.|
 |interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Relationship Type.|
@@ -79,6 +83,7 @@
 # Relationship template
 
 |Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory name of the Relationship Type the Relationship Template is based upon.|
 |description|no|string|An optional description for the Relationship Template.|
 |metadata|no|map of string|Defines a section used to declare additional metadata information. |
@@ -90,6 +95,7 @@
 # Capability Type
 
 |Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
 |properties|no|map of property definitions|An optional map of property definitions for the Capability Type.|
 |attributes|no|map of attribute definitions|An optional map of attribute definitions for the Capability Type.|
 |valid_source_node_types|no|list of string|An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability Type. If undefined, all Node Types are valid sources.|
@@ -98,6 +104,7 @@
 # Capability Definition
 
 |Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory name of the Capability Type this capability definition is based upon.|
 |description|no|string|The optional description of the Capability definition.|
 |properties|no|map of property refinements|An optional map of property refinements for the Capability definition. The referred properties must have been defined in the Capability Type definition referred by the type keyword. New properties may not be added.|
@@ -108,6 +115,7 @@
 # Capability assignment
 
 |Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
 |properties|no|map of  property assignments|An optional map of property assignments for the Capability definition.|
 |attributes|no|map of attribute assignments|An optional map of attribute assignments for the Capability definition.|
 |directives|no default: [internal, external] |list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this capability assignment should use relationships with source nodes created within this template (“internal”) or should use source nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which scope should be attempted first. If no scope is defined, the default value is [internal, external]. If no directives are defined, the default value is left to the particular implementation."|
@@ -115,6 +123,7 @@
 # Requirement definition
 
 |Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
 |description|no|string|The optional description of the Requirement definition.|
 |capability|yes|string|The mandatory keyname used to provide either the: ·         symbolic name of a Capability definition within a target Node Type that can fulfill the requirement. ·         name of a Capability Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
 |node|conditional|string|The optional keyname used to provide the name of a valid Node Type that contains the capability definition that can be used to fulfill the requirement.  If a symbolic name of a Capability definition has been used for the capability keyname, then the node keyname is mandatory.|
@@ -125,6 +134,7 @@
 # Requirement Assignment
 
 |Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
 |capability|no|string|The optional keyname used to provide either the: ·         symbolic name of a Capability definition within a target node that can fulfill the requirement. ·         name of a Capability Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
 |node|no|string|The optional keyname used to identify the target node of a relationship; specifically, it is used to provide either the: ·         name of a Node Template that can fulfill the target node requirement. ·         name of a Node Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
 |relationship|conditional|string|The conditional keyname used to provide either the: ·         name of a Relationship Template to use to relate this node to the target node when fulfilling the requirement. ·         name of a Relationship Type that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. ·         Details of a Relationship Type and its property and interface assignments that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. The relationship definition is mandatory either in the requirement definition of in the requirement assignment.|
