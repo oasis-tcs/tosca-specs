@@ -3711,47 +3711,11 @@ assignments or interface assignments (for e.g. changing the
 implementation keyname or declare additional parameter definitions to be
 used as inputs/outputs) need to be provided:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 10%" />
-<col style="width: 62%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional keyname used to provide the name of the Relationship
-Type for the Requirement assignment’s relationship.</td>
-</tr>
-<tr class="even">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional keyname providing property assignments for the
-relationship.</td>
-</tr>
-<tr class="odd">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-assignment">interface assignments</a></p></td>
-<td>The optional keyname providing Interface assignments for the
-corresponding Interface definitions in the Relationship Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|no|string|The optional keyname used to provide the name of the Relationship Type for the Requirement assignment’s relationship.|
+|properties|no|map of property assignments|An optional keyname providing property assignments for the relationship.|
+|interfaces|no|map of interface assignments|The optional keyname providing Interface assignments for the corresponding Interface definitions in the Relationship Type.|
 
 ##### Grammar
 

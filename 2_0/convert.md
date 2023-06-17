@@ -146,9 +146,8 @@
 
 # Requirement Assignment Extra
 
-Keyname|Mandatory|Type|Description
-type|no|string|The optional keyname used to provide the name of the Relationship Type for the Requirement assignment’s relationship.
-properties|no|map of property assignments|An optional keyname providing property assignments for the relationship.
-|||
-interfaces|no|map of interface assignments|The optional keyname providing Interface assignments for the corresponding Interface definitions in the Relationship Type.
-|||
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|no|string|The optional keyname used to provide the name of the Relationship Type for the Requirement assignment’s relationship.|
+|properties|no|map of property assignments|An optional keyname providing property assignments for the relationship.|
+|interfaces|no|map of interface assignments|The optional keyname providing Interface assignments for the corresponding Interface definitions in the Relationship Type.|
