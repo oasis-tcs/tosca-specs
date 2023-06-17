@@ -532,6 +532,7 @@ that describes the organization of the CSAR.
 
 TOSCA Entities
 --------------
+<!----
 {"id": "129", "author": "Chris Lauwers", "date": "2021-06-28T23:14:00Z", "comment": "This subsection has been moved here from the Operational Model chapter. We need to revisit where exactly it belongs to make sure the document flows correctly.", "target": "<span class=\"comment-start\" id=\"130\" author=\"Chris Lauwers\" date=\"2021-06-28T23:14:00Z\">Alternatively, we could also move this section into Chapter 5</span>Entities"}-->
 
 When defining services using TOSCA, we must distinguish between four
@@ -584,10 +585,9 @@ The functional architecture defines the following three blocks:
 1.  **TOSCA Processor**: This functional block defines functionality
     that must be provided by all TOSCA implementations. TOSCA processors
     convert TOSCA-based service definitions into service
-    representations 
+    representations that can be processed by an Orchestrator.
 <!----
 {"id": "132", "author": "Chris Lauwers", "date": "2021-06-28T23:19:00Z", "comment": "We need to better define the concept of\n    \"representations\"", "target": "representations "}-->
-that can be processed by an Orchestrator.
 2.  **Orchestrator**: This functional block creates external
     implementations on various resource platforms based on the service
     representations created by a TOSCA processor. The orchestration
