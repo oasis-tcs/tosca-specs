@@ -819,159 +819,25 @@ are allowed to appear in a TOSCA file.
 
 The following is the list of recognized keynames for a TOSCA file:
 
-<table>
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 49%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>tosca_definitions_version</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines the version of the TOSCA specification used in the TOSCA
-file</td>
-</tr>
-<tr class="even">
-<td>profile</td>
-<td>no</td>
-<td>string</td>
-<td>The profile name that can be used by other TOSCA files to import the
-type definitions in this document.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of YAML values</td>
-<td>Defines a section used to declare additional metadata information.
-Domain-specific TOSCA profile specifications may define keynames that
-are mandatory for their implementations.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>Declares a description for this TOSCA file and its contents.</td>
-</tr>
-<tr class="odd">
-<td>dsl_definitions</td>
-<td>no</td>
-<td>N/A</td>
-<td>Defines reusable YAML macros (i.e., YAML alias anchors) for use
-throughout the TOSCA file.</td>
-</tr>
-<tr class="even">
-<td>repositories</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#namespaces">Repository definitions</a></p></td>
-<td>Declares the map of external repositories that contain artifacts
-that are referenced in the TOSCA file along with the addresses used to
-connect to them in order to retrieve the artifacts.</td>
-</tr>
-<tr class="odd">
-<td>imports</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a href="#import-definition">Import definitions</a></p></td>
-<td>Declares a list of import statements pointing to external TOSCA
-files or well-known profiles. For example, these may be file locations
-or URIs relative to the TOSCA file within the same TOSCA CSAR file.</td>
-</tr>
-<tr class="even">
-<td>artifact_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#artifact-type">Artifact Types</a></p></td>
-<td>This section contains amap of artifact type definitions for use in
-the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="odd">
-<td>data_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#data-type">Data Types</a></p></td>
-<td>Declares a map of TOSCA Data Type definitions for use in the TOSCA
-file and/or external TOSCA files.</td>
-</tr>
-<tr class="even">
-<td>capability_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#capability-type">Capability Types</a></p></td>
-<td>This section contains amap of capability type definitions for use in
-the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="odd">
-<td>interface_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-type">Interface Types</a></p></td>
-<td>This section contains amap of interface type definitions for use in
-the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="even">
-<td>relationship_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#relationship-type">Relationship Types</a></p></td>
-<td>This section contains a map of relationship type definitions for use
-in the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="odd">
-<td>node_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#node-type">Node Types</a></p></td>
-<td>This section contains a map of node type definitions for use in the
-TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="even">
-<td>group_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#group-type">Group Types</a></p></td>
-<td>This section contains a map of group type definitions for use in the
-TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="odd">
-<td>policy_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#policy-type">Policy Types</a></p></td>
-<td>This section contains a map of policy type definitions for use in
-the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="even">
-<td>service_template</td>
-<td>no</td>
-<td><a href="#service-template-definition">service template
-definition</a></td>
-<td>Defines a template from which to create a mode/representation of an
-application or service. Service templates consist of node templates that
-represent the application’s or service’s components, as well as
-relationship templates representing relations between these
-components.</td>
-</tr>
-<tr class="odd">
-<td>Functions</td>
-<td>no</td>
-<td>map of function definitions</td>
-<td>This section contains a map of function definitions for use in the
-TOSCA file and/or external TOSCA files.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in the TOSCA file |
+|profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information.  Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations. |
+|description|no|string|Declares a description for this TOSCA file and its contents.|
+|dsl_definitions|no |N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout the TOSCA file.|
+|repositories|no|map of Repository definitions|Declares the map of external repositories that contain artifacts that are referenced in the TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
+|imports|no|list of Import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
+|artifact_types|no|map of Artifact Types|This section contains amap of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
+|data_types|no|map of Data Types|Declares a map of TOSCA Data Type definitions for use in the TOSCA file and/or external TOSCA files.|
+|capability_types|no|map of Capability Types|This section contains amap of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
+|interface_types|no|map of Interface Types|This section contains amap of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
+|relationship_types|no|map of Relationship Types|This section contains a map of relationship type definitions for use in the TOSCA file and/or external TOSCA files.|
+|node_types|no|map of Node Types|This section contains a map of node type definitions for use in the TOSCA file and/or external TOSCA files.|
+|group_types|no|map of Group Types|This section contains a map of group type definitions for use in the TOSCA file and/or external TOSCA files.|
+|policy_types|no|map of Policy Types|This section contains a map of policy type definitions for use in the TOSCA file and/or external TOSCA files.|
+|service_template|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application's or service's components, as well as relationship templates representing relations between these components.|
+|functions|no|map of function definitions|This section contains a map of function definitions for use in the TOSCA file and/or external TOSCA files.|
 
 #### Grammar
 
