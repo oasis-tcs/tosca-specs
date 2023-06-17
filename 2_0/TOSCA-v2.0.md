@@ -2803,9 +2803,9 @@ The multi-line grammar is as follows :
 <!----
 {"id": "489", "author": "Calin Curescu", "date": "2020-06-17T18:23:00Z", "comment": "\\### need to revisit this. Example is wrong !!!", "target": "Example"}-->
 
-The following example shows a requirement mapping.
+The following example shows a substitution mapping.
 ```
-
+service_template:
 inputs:
    cpus: 
      type: integer
@@ -2932,45 +2932,26 @@ Type.</td>
 #### Grammar 
 
 Node Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">node_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_node_type_name</a>&gt;</p>
-<p>version: &lt;<a
-href="#tosca-tal-suggests-removing-this.version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">node_type_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a
-href="#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition">attribute_definitions</a>&gt;</p>
-<p>capabilities:</p>
-<p>&lt;<a
-href="#capability-definition">capability_definitions</a>&gt;</p>
-<p>requirements:</p>
-<p>- &lt;<a
-href="#requirement-definition">requirement_definitions</a>&gt;</p>
-<p>interfaces:</p>
-<p>&lt;<a href="#interface-definition">interface_definitions</a>&gt;</p>
-<p>artifacts:</p>
-<p>&lt;<a
-href="#artifact-definition">artifact_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<node_type_name>:  
+  derived_from: <parent_node_type_name> 
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <node_type_description>
+  properties:
+    <property_definitions>
+  attributes:
+    <attribute_definitions>
+  capabilities:
+    <capability_definitions>
+  requirements: 
+    - <requirement_definitions>
+  interfaces: 
+    <interface_definitions> 
+  artifacts:
+    <artifact_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -3026,15 +3007,15 @@ During Node Type derivation the keyname definitions follow these rules:
 - artifacts: existing artifact definitions (identified by their symbolic
   name) may be redefined; new artifact definitions may be added.
 
-- note that an artifact is created for a specific purpose and
-  corresponds to a specific file (with e.g. a path name and checksum);
-  if it cannot meet its purpose in a derived type then a new artifact
-  should be defined and used.
+  - note that an artifact is created for a specific purpose and
+    corresponds to a specific file (with e.g. a path name and checksum);
+    if it cannot meet its purpose in a derived type then a new artifact
+    should be defined and used.
 
-- thus, if an artifact defined in a parent node type does not correspond
-  anymore with the needs in the child node type, its definition may be
-  completely redefined; thus, an existing artifact definition is not
-  refined, but completely overwritten.
+  - thus, if an artifact defined in a parent node type does not correspond
+    anymore with the needs in the child node type, its definition may be
+    completely redefined; thus, an existing artifact definition is not
+    refined, but completely overwritten.
 
 #### Additional Requirements
 
@@ -3043,39 +3024,28 @@ During Node Type derivation the keyname definitions follow these rules:
   resolved (processed) in sequence by TOSCA Orchestrators.
 
 #### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>my_company.my_types.my_app_node_type:</p>
-<p>derived_from: tosca.nodes.SoftwareComponent</p>
-<p>description: My company’s custom applicaton</p>
-<p>properties:</p>
-<p>my_app_password:</p>
-<p>type: string</p>
-<p>description: application password</p>
-<p>validation:</p>
-<p>$and:</p>
-<p>- { $min_length: [ $value, 6 ] }</p>
-<p>- { $max_length: [ $value, 10 ] }</p>
-<p>attributes:</p>
-<p>my_app_port:</p>
-<p>type: integer</p>
-<p>description: application port number</p>
-<p>requirements:</p>
-<p>- some_database:</p>
-<p>capability: EndPoint.Database</p>
-<p>node: Database</p>
-<p>relationship: ConnectsTo</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+my_company.my_types.my_app_node_type:
+  derived_from: tosca.nodes.SoftwareComponent
+  description: My company’s custom applicaton
+  properties:
+    my_app_password:
+      type: string
+      description: application password
+      validation:
+        $and: 
+          - { $min_length: [ $value, 6 ] }
+          - { $max_length: [ $value, 10 ] }
+  attributes:
+    my_app_port:
+      type: integer
+      description: application port number
+  requirements:
+    - some_database:
+        capability: EndPoint.Database
+        node: Database    
+        relationship: ConnectsTo
+```
 ### Node Template
 
 A Node Template specifies the occurrence of a manageable component as
@@ -3293,31 +3263,20 @@ have the following meaning:
   template).
 
 #### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>properties:</p>
-<p>root_password: { $get_input: my_mysql_rootpw }</p>
-<p>port: { $get_input: my_mysql_port }</p>
-<p>requirements:</p>
-<p>- host: db_server</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>operations:</p>
-<p>configure: scripts/my_own_configure.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_templates:
+  mysql:
+    type: tosca.nodes.DBMS.MySQL
+    properties:
+      root_password: { $get_input: my_mysql_rootpw }
+      port: { $get_input: my_mysql_port }
+    requirements:
+      - host: db_server
+    interfaces:
+      Standard:
+        operations:
+          configure: scripts/my_own_configure.sh
+```
 ### Relationship Type
 <!----
 {"id": "520", "author": "Michael Rehder", "date": "2020-12-15T13:33:00Z", "comment": "I still think this is simply a Requirement Type \u2013 I can\u2019t see why it isn\u2019t and what advantage there is in calling it something else.", "target": "Relationship Type"}-->
@@ -3405,41 +3364,23 @@ sources.</td>
 #### Grammar
 
 Relationship Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_relationship_type_name</a>&gt;</p>
-<p>version: &lt;<a
-href="#tosca-tal-suggests-removing-this.version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">relationship_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a
-href="#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition">attribute_definitions</a>&gt;</p>
-<p>interfaces:</p>
-<p>&lt;<a href="#interface-definition">interface_definitions</a>&gt;</p>
-<p>valid_capability_types: [ &lt;<a
-href="#TYPE_YAML_STRING">capability_type_names</a>&gt; ]</p>
-<p>valid_target_node_types: [ &lt;target_node_type_names&gt; ]</p>
-<p>valid_source_node_types: [ &lt;source_node_type_names&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<relationship_type_name>:
+  derived_from: <parent_relationship_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <relationship_description>
+  properties: 
+    <property_definitions>
+  attributes:
+    <attribute_definitions>
+  interfaces: 
+    <interface_definitions>
+  valid_capability_types: [ <capability_type_names> ]
+  valid_target_node_types: [ <target_node_type_names> ]
+  valid_source_node_types: [ <source_node_type_names> ]
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -3505,23 +3446,11 @@ rules:
   valid_capability_types
 
 #### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>mycompanytypes.myrelationships.AppDependency:</p>
-<p>derived_from: tosca.relationships.DependsOn</p>
-<p>valid_capability_types: [
-mycompanytypes.mycapabilities.SomeAppCapability ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+mycompanytypes.myrelationships.AppDependency:
+  derived_from: tosca.relationships.DependsOn
+  valid_capability_types: [ mycompanytypes.mycapabilities.SomeAppCapability ]
+```
 ### Relationship Template
 
 A Relationship Template
@@ -3627,36 +3556,21 @@ relationship template.</td>
 </table>
 
 #### Grammar
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;relationship_template_name&gt;:</p>
-<p>type: &lt;<a
-href="#relationship-type">relationship_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_description</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-assignment">attribute_assignments</a>&gt;</p>
-<p>interfaces:</p>
-<p>&lt;<a href="#interface-assignment">interface_assignments</a>&gt;</p>
-<p>copy:</p>
-<p>&lt;<a
-href="#TYPE_YAML_STRING">source_relationship_template_name</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<relationship_template_name>: 
+  type: <relationship_type_name>
+  description: <relationship_type_description>
+  metadata: 
+    <map of string>
+  properties:
+    <property_assignments>
+  attributes:
+    <attribute_assignments>
+  interfaces:
+    <interface_assignments>
+  copy:
+    <source_relationship_template_name>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -3693,24 +3607,13 @@ have the following meaning:
   another relationship template).
 
 #### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_templates:</p>
-<p>storage_attachment:</p>
-<p>type: AttachesTo</p>
-<p>properties:</p>
-<p>location: /my_mount_point</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_templates:
+  storage_attachment:
+    type: AttachesTo
+    properties:
+      location: /my_mount_point
+```
 ### Capabilities and Requirements
 
 #### Capability Type
@@ -3783,33 +3686,18 @@ valid.</td>
 ##### Grammar
 
 Capability Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">capability_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_capability_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">capability_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-definition">attribute_definitions</a>&gt;</p>
-<p>valid_source_node_types: [ &lt;<a
-href="#TYPE_YAML_STRING">node_type_names</a>&gt; ]</p>
-<p>valid_relationship_types: [ &lt;relationship_type_names&gt;
-]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<capability_type_name>:
+  derived_from: <parent_capability_type_name>
+  version: <version_number>
+  description: <capability_description>
+  properties:
+    <property_definitions>
+  attributes:
+    <attribute_definitions>
+  valid_source_node_types: [ <node_type_names> ]
+  valid_relationship_types: [ <relationship_type_names> ]
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -3865,27 +3753,16 @@ rules:
   valid_source_node_types.
 
 ##### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>mycompany.mytypes.myapplication.MyFeature:</p>
-<p>derived_from: tosca.capabilities.Root</p>
-<p>description: a custom feature of my company’s application</p>
-<p>properties:</p>
-<p>my_feature_setting:</p>
-<p>type: string</p>
-<p>my_feature_value:</p>
-<p>type: integer</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+mycompany.mytypes.myapplication.MyFeature:
+  derived_from: tosca.capabilities.Root
+  description: a custom feature of my company’s application
+  properties:
+    my_feature_setting:
+      type: string
+    my_feature_value:
+      type: integer
+```
 #### Capability definition
 
 A Capability definition defines a typed set of data that a node can
@@ -3986,36 +3863,21 @@ in the capability type:
 ```
 <[capability_definition_name](#TYPE_YAML_STRING)>: <[capability_type](#capability-type)> 
 ```
-
 ###### Extended notation
 
 The following multi-line grammar may be used when additional information
 on the capability definition is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">capability_definition_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">capability_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">capability_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_refinements</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-definition">attribute_refinements</a>&gt;</p>
-<p>valid_source_node_types: [ &lt;node_type_names&gt; ]</p>
-<p>valid_relationship_types: [ &lt;relationship_type_names&gt;
-]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<capability_definition_name>:
+  type: <capability_type>
+  description: <capability_description>
+  properties:
+    <property_refinements>
+  attributes:
+    <attribute_refinements>
+  valid_source_node_types: [ <node_type_names> ]
+  valid_relationship_types: [ <relationship_type_names> ]
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4040,20 +3902,20 @@ have the following meaning:
   node types that the capability definition supports as valid sources
   for a successful relationship to be established to said capability
 
-- if valid_source_node_types is defined in the capability type, each
-  > element in this list MUST either be in that list or derived from an
-  > element in that list; if valid_source_types is not defined in the
-  > capability type then no restrictions are applied.
+  - if valid_source_node_types is defined in the capability type, each
+    element in this list MUST either be in that list or derived from an
+    element in that list; if valid_source_types is not defined in the
+    capability type then no restrictions are applied.
 
 - relationship_type_names: represents the optional list of one or more
   names of relationship types that the capability definition supports as
   valid type for a successful relationship to be established to said
   capability
 
-- if valid_relationship_types is defined in the capability type, each
-  > element in this list MUST either be in that list or derived from an
-  > element in that list; if valid_source_types is not defined in the
-  > capability type then no restrictions are applied.
+  - if valid_relationship_types is defined in the capability type, each
+    element in this list MUST either be in that list or derived from an
+    element in that list; if valid_source_types is not defined in the
+    capability type then no restrictions are applied.
 
 ##### Refinement rules
 
@@ -4089,41 +3951,19 @@ The following examples show capability definitions in both simple and
 full forms:
 
 ###### Simple notation example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Simple notation, no properties need to be refined</p>
-<p>some_capability: mytypes.mycapabilities.MyCapabilityTypeName</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Simple notation, no properties need to be refined
+some_capability: mytypes.mycapabilities.MyCapabilityTypeName
+```
 ###### Full notation example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Full notation, refining properties</p>
-<p>some_capability:</p>
-<p>type: mytypes.mycapabilities.MyCapabilityTypeName</p>
-<p>properties:</p>
-<p>limit:</p>
-<p>default: 100</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Full notation, refining properties
+some_capability: 
+  type: mytypes.mycapabilities.MyCapabilityTypeName
+  properties:
+    limit: 
+      default: 100
+```
 ##### Additional requirements
 
 - Capability symbolic names SHALL be unique; it is an error if a
@@ -4206,26 +4046,14 @@ the default value is left to the particular implementation.</td>
 ##### Grammar
 
 Capability assignments have one of the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">capability_definition_name</a>&gt;:</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-assignment">attribute_assignments</a>&gt;</p>
-<p>directives: &lt;directives_list&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<capability_definition_name>:
+  properties:
+    <property_assignments>
+  attributes:
+    <attribute_assignments>
+  directives: <directives_list>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4243,45 +4071,34 @@ have the following meaning:
 - directives_list: represents the optional list of strings that defines
   directives for this capability:
 
-- valid values for the strings:
+  - valid values for the strings:
 
-- “internal” – relationships to this capability can be created from
-  > source nodes created within this template.
+    - “internal” – relationships to this capability can be created from
+      source nodes created within this template.
 
-- “external” – relationships to this capability can be created from
-  > source nodes created outside this template as available to the TOSCA
-  > environment.
+    - “external” – relationships to this capability can be created from
+      source nodes created outside this template as available to the TOSCA
+      environment.
 
-- the order of the strings in the list defines which scope should be
-  > attempted first when fulfilling the assignment.
+  - the order of the strings in the list defines which scope should be
+    attempted first when fulfilling the assignment.
 
-- If no directives are defined, the default value is left to the
-  > particular implementation.
+  - If no directives are defined, the default value is left to the
+    particular implementation.
 
 ##### Example
 
 The following example shows a capability assignment:
 
 ###### Notation example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>some_node_template:</p>
-<p>capabilities:</p>
-<p>some_capability:</p>
-<p>properties:</p>
-<p>limit: 100</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_templates:
+  some_node_template:
+    capabilities:
+      some_capability: 
+        properties:
+          limit: 100
+```
 ##### Note
 
 - The occurrences keyname is deprecated in TOSCA 2.0. By default, the
@@ -4419,59 +4236,28 @@ Requirement definitions have one of the following grammars:
 ```
 
 ###### Extended grammar (with Node and Relationship Types)
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">requirement_definition_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">requirement_description</a>&gt;</p>
-<p>capability: &lt;<a
-href="#TYPE_YAML_STRING">capability_symbolic_name</a>&gt; | &lt;<a
-href="#TYPE_YAML_STRING">capability_type_name</a>&gt;</p>
-<p>node: &lt;<a href="#TYPE_YAML_STRING">node_type_name</a>&gt;</p>
-<p>relationship: &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;</p>
-<p>node_filter: &lt;<a
-href="#node-filter-definition">node_filter_definition</a>&gt;</p>
-<p>count_range: [ &lt;min_count&gt;, &lt;max_count&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_definition_name>: 
+  description: <requirement_description>
+  capability: <capability_symbolic_name> | <capability_type_name>
+  node: <node_type_name>
+  relationship: <relationship_type_name>
+  node_filter: <node_filter_definition>
+  count_range: [ <min_count>, <max_count> ]
+```
 ###### Extended grammar for declaring Parameter Definitions on the relationship’s Interfaces
 
 The following additional multi-line grammar is provided for the
 relationship keyname in order to declare new parameter definitions for
 inputs/outputs of known Interface definitions of the declared
 Relationship Type.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">requirement_definition_name</a>&gt;:</p>
-<p># Other keynames omitted for brevity</p>
-<p>relationship:</p>
-<p>type: &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;</p>
-<p>interfaces: &lt;<a
-href="#interface-definition">interface_refinements</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_definition_name>: 
+  # Other keynames omitted for brevity
+  relationship:
+    type: <relationship_type_name>
+    interfaces: <interface_refinements>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4507,22 +4293,22 @@ have the following meaning:
 - min_count, max_count: represents the optional range between a minimum
   required and maximum allowed count of the requirement
 
-- this range constrains how many relationships from this requirement
-  > towards target capabilities (in target nodes) are created, and that
-  > number MUST be within the range specified here.
+  - this range constrains how many relationships from this requirement
+    towards target capabilities (in target nodes) are created, and that
+    number MUST be within the range specified here.
 
-- by default (i.e. if count_range is undefined here), a requirement
-  > shall form exactly one relationship ( \[1, 1\] i.e. allowed at least
-  > one, and at most one).
+  - by default (i.e. if count_range is undefined here), a requirement
+    shall form exactly one relationship ( \[1, 1\] i.e. allowed at least
+    one, and at most one).
 
 - interface_refinements: represents refinements for one or more already
   declared interface definitions in the Relationship Type (as declared
   on the type keyname)
 
-- allowing for the declaration of new parameter definitions for these
-  > interfaces or for specific operation or notification definitions of
-  > these interfaces or for the change of the description or
-  > implementation definitions.
+  - allowing for the declaration of new parameter definitions for these
+    interfaces or for specific operation or notification definitions of
+    these interfaces or for the change of the description or
+    implementation definitions.
 
 ##### Refinement rules
 
@@ -4537,18 +4323,18 @@ definition refinement rules when the containing node type is derived:
   same as) the capability type in the requirement definition in the
   parent node type definition.
 
-- if the capability was specified using the symbolic name of a
-  > capability definition in the target node type, then the capability
-  > keyname definition MUST remain unchanged in any subsequent
-  > refinements or during assignment.
+  - if the capability was specified using the symbolic name of a
+    capability definition in the target node type, then the capability
+    keyname definition MUST remain unchanged in any subsequent
+    refinements or during assignment.
 
 - node: must be derived from (or the same as) the node type in the
   requirement definition in the parent node type definition; if node is
   not defined in the parent type then no restrictions are applied;
 
-- the node type specified by the node keyname must also contain a
-  > capability definition that fulfills the requirement set via the
-  > capability keyname above.
+  - the node type specified by the node keyname must also contain a
+    capability definition that fulfills the requirement set via the
+    capability keyname above.
 
 - relationship: must be derived from (or the same as) the relationship
   type in the requirement definition in the parent node type definition;
@@ -4585,11 +4371,9 @@ A requirement definition allows type designers to govern which types are
 allowed (valid) for fulfillment using three levels of specificity with
 only the Capability definition or Capability Type being mandatory.
 
-5.  Node Type (mandatory/optional)
-
-6.  Relationship Type (optional)
-
-7.  Capability definition or Capability Type (mandatory)
+1.  Node Type (mandatory/optional)
+2.  Relationship Type (optional)
+3.  Capability definition or Capability Type (mandatory)
 
 The first level allows selection, as shown in both the simple or complex
 grammar, simply providing the node’s type using the node keyname. The
@@ -4834,70 +4618,37 @@ Requirement assignments have one of the following grammars:
 
 The following single-line grammar may be used if only a concrete Node
 Template for the target node needs to be declared in the requirement:
-
-| \<[requirement_name](#TYPE_YAML_STRING)\>: \<[node_template_name](#TYPE_YAML_STRING)\> |
-|----------------------------------------------------------------------------------------|
-
+```
+<[requirement_name](#TYPE_YAML_STRING)>: <[node_template_name](#TYPE_YAML_STRING)> 
+```
 ###### Extended notation:
 
 The following grammar should be used if the requirement assignment needs
 to provide more information than just the Node Template name:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">requirement_name</a>&gt;:</p>
-<p>capability: &lt;<a
-href="#TYPE_YAML_STRING">capability_symbolic_name</a>&gt; | &lt;<a
-href="#TYPE_YAML_STRING">capability_type_name</a>&gt;</p>
-<p>node: &lt;<a href="#TYPE_YAML_STRING">node_template_name</a>&gt; |
-&lt;<a href="#TYPE_YAML_STRING">node_type_name</a>&gt;</p>
-<p>relationship: &lt;<a
-href="#TYPE_YAML_STRING">relationship_template_name</a>&gt; | &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;</p>
-<p>node_filter: &lt;<a
-href="#node-filter-definition">node_filter_definition</a>&gt;</p>
-<p>count: &lt;<a href="#TYPE_YAML_INTEGER">count</a>_value&gt;</p>
-<p>directives: &lt;directives_list&gt;</p>
-<p>optional: &lt;is_optional&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>:
+  capability: <capability_symbolic_name> | <capability_type_name>
+  node: <node_template_name> | <node_type_name>
+  relationship: <relationship_template_name> | <relationship_type_name>
+  node_filter: <node_filter_definition>
+  count: <count_value>
+  directives: <directives_list>
+  optional: <is_optional>
+```
 ###### Extended grammar with Property Assignments and Interface Assignments for the relationship
 
 The following additional multi-line grammar is provided for the
 relationship keyname in order to provide new Property assignments and
 Interface assignments for the created relationship of the declared
 Relationship.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">requirement_name</a>&gt;:</p>
-<p># Other keynames omitted for brevity</p>
-<p>relationship:</p>
-<p>type: &lt;<a
-href="#TYPE_YAML_STRING">relationship_template_name</a>&gt; | &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;</p>
-<p>properties: &lt;<a
-href="#property-assignment">property_assignments</a>&gt;</p>
-<p>interfaces: &lt;<a
-href="#interface-assignment">interface_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>:
+  # Other keynames omitted for brevity
+  relationship: 
+    type: <relationship_template_name> | <relationship_type_name>
+    properties: <property_assignments>
+    interfaces: <interface_assignments>
+```
 ###### Extended grammar with capacity allocation 
 
 The following additional multi-line grammar is provided for capacity
@@ -4920,24 +4671,12 @@ same name in the target capability.
 
 - Of course, allocations can be defined only for integer, float, or
   scalar property types.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;requirement_name&gt;:</p>
-<p># Other keynames omitted for brevity</p>
-<p>allocation:</p>
-<p>properties: &lt;<a
-href="#property-assignment">allocation_property_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>:
+  # Other keynames omitted for brevity
+  allocation: 
+    properties: <allocation_property_assignments>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4947,57 +4686,57 @@ have the following meaning:
 - capability_symbolic_name: represents the optional name of the
   Capability definition within the target Node Type or Node Template;
 
-- if the capability in the Requirement definition was specified using
-  > the symbolic name of a capability definition in a target node type,
-  > then the capability keyname definition
+  - if the capability in the Requirement definition was specified using
+    the symbolic name of a capability definition in a target node type,
+    then the capability keyname definition
 
-- MUST remain unchanged in any subsequent refinements or during
-  > assignment.
+  - MUST remain unchanged in any subsequent refinements or during
+    assignment.
 
-- if the capability in the Requirement definition was specified using
-  > the name of a Capability Type, then the Capability definition
-  > referred here by the capability_symbolic_name must be of a type that
-  > is the same as or derived from the said Capability Type in the
-  > Requirement definition.
+  - if the capability in the Requirement definition was specified using
+    the name of a Capability Type, then the Capability definition
+    referred here by the capability_symbolic_name must be of a type that
+    is the same as or derived from the said Capability Type in the
+    Requirement definition.
 
 - capability_type_name: represents the optional name of a Capability
   Type definition within the target Node Type or Node Template this
   requirement needs to form a relationship with;
 
-- may not be used if the capability in the Requirement definition was
-  > specified using the symbolic name of a capability definition in a
-  > target node type.
+  - may not be used if the capability in the Requirement definition was
+    specified using the symbolic name of a capability definition in a
+    target node type.
 
-- otherwise the capability_type_name must be of a type that is the same
-  > as or derived from the type defined by the capability keyname in the
-  > Requirement definition.
+  - otherwise the capability_type_name must be of a type that is the same
+    as or derived from the type defined by the capability keyname in the
+    Requirement definition.
 
 - node_template_name: represents the optional name of a Node Template
   that contains the capability this requirement will be fulfilled by;
 
-- in addition, the Node Type of the Node Template must be of a type that
-  > is the same as or derived from the type defined by the node keyname
-  > (if the node keyname is defined) in the Requirement definition,
+  - in addition, the Node Type of the Node Template must be of a type that
+    is the same as or derived from the type defined by the node keyname
+    (if the node keyname is defined) in the Requirement definition,
 
-- in addition, the Node Template must fulfill the node filter
-  > requirements of the node_filter (if a node_filter is defined) in the
-  > Requirement definition.
+  - in addition, the Node Template must fulfill the node filter
+    requirements of the node_filter (if a node_filter is defined) in the
+    Requirement definition.
 
 - node_type_name: represents the optional name of a Node Type that
   contains the capability this Requirement will be fulfilled by;
 
-- in addition, the node_type_name must be of a type that is the same as
-  > or derived from the type defined by the node keyname (if the node
-  > keyname is defined) in the Requirement definition.
+  - in addition, the node_type_name must be of a type that is the same as
+    or derived from the type defined by the node keyname (if the node
+    keyname is defined) in the Requirement definition.
 
 - relationship_template_name: represents the optional name of a
   Relationship Template to be used when relating the Requirement to the
   Capability in the target node.
 
-- in addition, the Relationship Type of the Relationship Template must
-  > be of a type that is the same as or derived from the type defined by
-  > the relationship keyname (if the relationship keyname is defined) in
-  > the Requirement definition.
+  - in addition, the Relationship Type of the Relationship Template must
+    be of a type that is the same as or derived from the type defined by
+    the relationship keyname (if the relationship keyname is defined) in
+    the Requirement definition.
 
 - relationship_type_name: represents the optional name of a Relationship
   Type that is compatible with the Capability Type in the target node;
@@ -5005,10 +4744,10 @@ have the following meaning:
   Type when relating the Requirement to the Capability in the target
   node.
 
-- in addition, the relationship_type_name must be of a type that is the
-  > same as or derived from the type defined by the relationship keyname
-  > (if the relationship keyname is defined) in the Requirement
-  > definition.
+  - in addition, the relationship_type_name must be of a type that is the
+    same as or derived from the type defined by the relationship keyname
+    (if the relationship keyname is defined) in the Requirement
+    definition.
 
 - property_assignments: within the relationship declaration, it
   represents the optional map of property assignments for the declared
@@ -5025,23 +4764,23 @@ have the following meaning:
   target capability. Syntactically their form is the same as for a
   normal property assignments.
 
-- The allocation acts as a “capacity filter” for the target capability
-  > in the target node. When the requirement is resolved, a capability
-  > in a node is a valid target for the requirement relationship if for
-  > each property of the target capability, the sum of all existing
-  > allocations plus the current allocation is less_or_equal to the
-  > property value.
+  - The allocation acts as a “capacity filter” for the target capability
+    in the target node. When the requirement is resolved, a capability
+    in a node is a valid target for the requirement relationship if for
+    each property of the target capability, the sum of all existing
+    allocations plus the current allocation is less_or_equal to the
+    property value.
 
-- Intuitively, the sum of “allocations” from all the incoming
-  > relationships for a certain capability property cannot exceed the
-  > value of the property.
+    - Intuitively, the sum of “allocations” from all the incoming
+      relationships for a certain capability property cannot exceed the
+      value of the property.
 
-- If the “allocation” refers (via its name) to a property that does not
-  > exist in a capability, then that capability cannot be a valid
-  > target.
+    - If the “allocation” refers (via its name) to a property that does not
+      exist in a capability, then that capability cannot be a valid
+      target.
 
-- Of course, allocations can be defined only for integer, float, or
-  > scalar property types.
+    - Of course, allocations can be defined only for integer, float, or
+      scalar property types.
 
 - node_filter_definition: represents the optional node filter TOSCA
   orchestrators will use to fulfill the requirement for selecting a
@@ -5049,54 +4788,54 @@ have the following meaning:
   assignment, the TOSCA orchestrator verifies that the specified node
   template fulfills the node filter.
 
-- this node_filter does not replace the node_filter definition in the
-  > Requirement definition, it is applied in addition to that.
+  - this node_filter does not replace the node_filter definition in the
+    Requirement definition, it is applied in addition to that.
 
 - count_value: represents the optional cardinality of this requirement
   assignment, that is how many relationships are to be established from
   this requirement assignment specification.
 
-- If count is not defined, the assumed count_value for an assignment is
-  > 1.
+  - If count is not defined, the assumed count_value for an assignment is
+    1.
 
-- Note that there can be multiple requirement assignments for a
-  > requirement with a specific symbolic name.
+  - Note that there can be multiple requirement assignments for a
+    requirement with a specific symbolic name.
 
-- The sum of all count values of assignments for a requirement with a
-  > specific symbolic name must be within the count_range defined in the
-  > requirement definition.
+  - The sum of all count values of assignments for a requirement with a
+    specific symbolic name must be within the count_range defined in the
+    requirement definition.
 
-- Moreover, the sum of all count values of non-optional assignments for
-  > a requirement with a specific symbolic name must also be within the
-  > count_range defined in the requirement definition.
+  - Moreover, the sum of all count values of non-optional assignments for
+    a requirement with a specific symbolic name must also be within the
+    count_range defined in the requirement definition.
 
 - directives: represents the optional list of strings that defines
   directives for this requirement assignment:
 
-- valid values for the strings:
+  - valid values for the strings:
 
-- “internal” – relationship created by this requirement assignment use
-  > target nodes created within this template.
+    - “internal” – relationship created by this requirement assignment use
+       target nodes created within this template.
 
-- “external” – relationship created by this requirement assignment use
-  > target nodes created outside this template as available to the TOSCA
-  > environment.
+    - “external” – relationship created by this requirement assignment use
+       target nodes created outside this template as available to the TOSCA
+       environment.
 
-- the order of the strings in the list defines which directive should be
-  > attempted first when fulfilling the assignment.
+  - the order of the strings in the list defines which directive should be
+    attempted first when fulfilling the assignment.
 
-- If no directives are defined, the default value is left to the
-  > particular implementation.
+  - If no directives are defined, the default value is left to the
+    particular implementation.
 
 - is_optional: represents the optional boolean value specifying if this
   requirement assignment is optional or not.
 
-- If is_optional is false, the assignment MUST be fulfilled.
+  - If is_optional is false, the assignment MUST be fulfilled.
 
-- If is_optional is true, the assignment SHOULD be fulfilled, but if not
-  > possible the service deployment is still considered valid.
+  - If is_optional is true, the assignment SHOULD be fulfilled, but if not
+    possible the service deployment is still considered valid.
 
-- The default value for is_optional is false.
+  - The default value for is_optional is false.
 
 ##### Notes
 
@@ -5106,17 +4845,17 @@ have the following meaning:
   in the requirement definition in the corresponding node type is
   assumed.
 
-- Additionally, the count_value is assumed to be equal to the min_count
-  > value of the requirement definition in the corresponding node type.
+  - Additionally, the count_value is assumed to be equal to the min_count
+    value of the requirement definition in the corresponding node type.
 
 - For all explicit requirement assignments with the same symbolic name:
 
-- the sum of the count_value must be within the count_range specified in
-  > the corresponding requirement definition.
+  - the sum of the count_value must be within the count_range specified in
+    the corresponding requirement definition.
 
-- the sum of the count_value for all non-optional requirements
-  > assignments must be within the count_range specified in the
-  > corresponding requirement definition.
+  - the sum of the count_value for all non-optional requirements
+    assignments must be within the count_range specified in the
+    corresponding requirement definition.
 
 - Non-optional requirements have precedence, thus during a service
   deployment, the optional requirements for all nodes should be resolved
@@ -5148,28 +4887,16 @@ include:
 A web application node template named ‘my_application_node_template’ of
 type WebApplication declares a requirement named ‘host’ that needs to be
 fulfilled by any node that derives from the node type WebServer.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Example of a requirement fulfilled by a specific web server
-node template</p>
-<p>node_templates:</p>
-<p>my_application_node_template:</p>
-<p>type: tosca.nodes.WebApplication</p>
-<p>...</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node: tosca.nodes.WebServer</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Example of a requirement fulfilled by a specific web server node template
+node_templates:
+  my_application_node_template:
+    type: tosca.nodes.WebApplication
+    ...
+    requirements:
+      - host: 
+          node: tosca.nodes.WebServer
+```
 In this case, the node template’s type is WebApplication which already
 declares the Relationship Type HostedOn to use to relate to the target
 node and the Capability Type of Container to be the specific target of
@@ -5183,71 +4910,47 @@ a database endpoint (Endpoint.Database) Capability Type in a node
 template (my_database). However, the connection requires a custom
 Relationship Type (my.types.CustomDbConnection’) declared on the keyname
 ‘relationship’.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Example of a (database) requirement that is fulfilled by a node
-template named</p>
-<p># “my_database”, but also requires a custom database connection
-relationship</p>
-<p>my_application_node_template:</p>
-<p>requirements:</p>
-<p>- database:</p>
-<p>node: my_database</p>
-<p>capability: Endpoint.Database</p>
-<p>relationship: my.types.CustomDbConnection</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Example of a (database) requirement that is fulfilled by a node template named 
+# “my_database”, but also requires a custom database connection relationship
+my_application_node_template:
+  requirements:
+    - database: 
+        node: my_database
+        capability: Endpoint.Database
+        relationship: my.types.CustomDbConnection
+```
 ###### Example 3 - Requirement for a Compute node with additional selection criteria (filter) 
 
 This example shows how to extend an abstract ‘host’ requirement for a
 Compute node with a filter definition that further constrains TOSCA
 orchestrators to include additional properties and capabilities on the
 target node when fulfilling the requirement.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node: tosca.nodes.Compute</p>
-<p>node_filter:</p>
-<p>capabilities:</p>
-<p>- host:</p>
-<p>properties:</p>
-<p>- num_cpus: { in_range: [ 1, 4 ] }</p>
-<p>- mem_size: { greater_or_equal: 512 MB }</p>
-<p>- os:</p>
-<p>properties:</p>
-<p>- architecture: { equal: x86_64 }</p>
-<p>- type: { equal: linux }</p>
-<p>- distribution: { equal: ubuntu }</p>
-<p>- mytypes.capabilities.compute.encryption:</p>
-<p>properties:</p>
-<p>- algorithm: { equal: aes }</p>
-<p>- keylength: { valid_values: [ 128, 256 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_templates:
+  mysql:
+   type: tosca.nodes.DBMS.MySQL
+    properties:
+      # omitted here for brevity
+    requirements:
+      - host:
+          node: tosca.nodes.Compute
+          node_filter:
+            capabilities:
+              - host:
+                  properties:
+                    - num_cpus: { in_range: [ 1, 4 ] }
+                    - mem_size: { greater_or_equal: 512 MB }
+              - os:
+                  properties:
+                    - architecture: { equal: x86_64 }
+                    - type: { equal: linux }
+                    - distribution: { equal: ubuntu }
+              - mytypes.capabilities.compute.encryption:
+                  properties:
+                    - algorithm: { equal: aes }
+                    - keylength: { valid_values: [ 128, 256 ] }
+```
 ###### Example 4 - Requirement assignment for definition with count_range: \[2,2\]
 
 This example shows how the assignments can look if the Requirement
@@ -5259,26 +4962,14 @@ keyname for each assignment is not declared (i.e. the default value of 1
 is used) and that the sum of the count values of both assignments is 2
 which is in the range of \[2,2\] as specified in the Requirement
 definition.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Example of a (redundant_database) requirement that is fulfilled
-by</p>
-<p># two node templates named “database1” and “database1</p>
-<p>my_critical_application_node_template:</p>
-<p>requirements:</p>
-<p>- redundant_database: database1</p>
-<p>- redundant_database: database2</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Example of a (redundant_database) requirement that is fulfilled by 
+# two node templates named “database1” and “database1
+my_critical_application_node_template:
+  requirements:
+    - redundant_database: database1
+    - redundant_database: database2
+```
 ###### Example 5 - Requirement assignment for definition with capacity allocation
 
 This example shows how the assignment can look if the requirement is
@@ -5300,40 +4991,27 @@ Another node with num_cpu with value 2 could not be a valid target since
 1 (existing) + 2 (current) = 3, and that is larger than the property
 value which is 2. Of course, similar calculations must be done for the
 mem_size allocation.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Example of a (redundant_database) requirement that is fulfilled
-by</p>
-<p># two node templates named “database1” and “database1</p>
-<p>my_critical_application_node_template:</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node: tosca.nodes.Compute</p>
-<p>allocation:</p>
-<p>properties:</p>
-<p>num_cpu: 2</p>
-<p>mem_size: 128 MB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Example of a (redundant_database) requirement that is fulfilled by 
+# two node templates named “database1” and “database1
+my_critical_application_node_template:
+  requirements:
+    - host:
+        node: tosca.nodes.Compute
+        allocation:
+          properties:
+            num_cpu: 2
+            mem_size: 128 MB
+```
 #### Node Filter definition
 
 ##### Grammar
 
 Node filters are defines using condition clauses as shown in the
 following grammar:
-
-| node_filter: \<condition_clause\> |
-|-----------------------------------|
-
+```
+node_filter: <condition_clause> 
+```
 In the above grammar, the condition_clause represents a Boolean
 expression that will be used to select (filter) TOSCA nodes that are
 valid candidates for fulfilling the requirement that defines the node
@@ -5359,31 +5037,20 @@ node based upon the values of its defined capabilities. Specifically,
 this filter will select Compute nodes that support a specific range of
 CPUs (i.e., num_cpus value between 1 and 4) and memory size (i.e.,
 mem_size of 2 or greater) from its declared “host” capability.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>my_node_template:</p>
-<p># other details omitted for brevity</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node_filter:</p>
-<p>$and:</p>
-<p>- $in_range:</p>
-<p>- $get_property: [ SELF, CAPABILITY, num_cpus ]</p>
-<p>- [ 1, 4 ]</p>
-<p>- $greater_or_equal:</p>
-<p>- $get_property: [ SELF, CAPABILITY, mem_size ]</p>
-<p>- 512 MB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+my_node_template:
+  # other details omitted for brevity
+  requirements:
+    - host:
+        node_filter:
+          $and:
+            - $in_range:
+              - $get_property: [ SELF, CAPABILITY, num_cpus ]
+              - [ 1, 4 ]
+            - $greater_or_equal:
+              - $get_property: [ SELF, CAPABILITY, mem_size ]
+              - 512 MB 
+```
 ### Interfaces
 
 #### Interface Type
@@ -5407,35 +5074,20 @@ addition, the Interface Type has the following recognized keynames:
 ##### Grammar
 
 Interface Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">interface_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_interface_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">interface_description</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a href="#parameter-definition">parameter_definitions</a>&gt;</p>
-<p>operations:</p>
-<p>&lt;<a href="#operation-definition">operation_definitions</a>&gt;</p>
-<p>notifications:</p>
-<p>&lt;<a href="#notification-definition">Notification
-definition</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<interface_type_name>:
+  derived_from: <parent_interface_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <interface_description>
+  inputs: 
+    <parameter_definitions>
+  operations:
+    <operation_definitions>
+  notifications:
+    <Notification definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5480,30 +5132,19 @@ rules:
 
 The following example shows a custom interface used to define multiple
 configure operations.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>mycompany.mytypes.myinterfaces.MyConfigure:</p>
-<p>derived_from: tosca.interfaces.relationship.Root</p>
-<p>description: My custom configure Interface Type</p>
-<p>inputs:</p>
-<p>mode:</p>
-<p>type: string</p>
-<p>operations:</p>
-<p>pre_configure_service:</p>
-<p>description: pre-configure operation for my service</p>
-<p>post_configure_service:</p>
-<p>description: post-configure operation for my service</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+mycompany.mytypes.myinterfaces.MyConfigure:
+  derived_from: tosca.interfaces.relationship.Root
+  description: My custom configure Interface Type
+  inputs:
+    mode:
+      type: string
+  operations:
+    pre_configure_service:
+      description: pre-configure operation for my service
+    post_configure_service:
+      description: post-configure operation for my service
+```
 ##### Additional Requirements
 
 - Interface Types **MUST NOT** include any implementations for defined
@@ -5588,32 +5229,17 @@ definition.</td>
 
 Interface definitions in Node or Relationship Type definitions have the
 following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">interface_definition_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">interface_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">interface_description</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions_and_refinements</a>&gt;</p>
-<p>operations:</p>
-<p>&lt;<a href="#operation-definition">operation_refinements</a>&gt;</p>
-<p>notifications:</p>
-<p>&lt;<a href="#notification-definition">notification
-definition</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<interface_definition_name>:
+  type: <interface_type_name>
+  description: <interface_description>
+  inputs: 
+    <parameter_definitions_and_refinements>
+  operations:
+    <operation_refinements>
+  notifications:
+    <notification definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5632,13 +5258,13 @@ have the following meaning:
   their values will be accessible to the implementation artifacts (e.g.,
   scripts) associated to each operation during their execution
 
-- the map represents a mix of parameter refinements (for parameters
-  > already defined in the Interface Type) and new parameter
-  > definitions.
+  - the map represents a mix of parameter refinements (for parameters
+    already defined in the Interface Type) and new parameter
+    definitions.
 
-- with the new parameter definitions, we can flexibly add new parameters
-  > when changing the implementation of operations and notifications
-  > during refinements or assignments.
+  - with the new parameter definitions, we can flexibly add new parameters
+    when changing the implementation of operations and notifications
+    during refinements or assignments.
 
 - operation_refinements: represents the optional map of operation
   definition refinements for this interface; the referred operations
@@ -5695,29 +5321,15 @@ definition:
 ##### Grammar
 
 Interface assignments have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">interface_definition_name</a>&gt;:</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment">parameter_value_assignments</a>&gt;</p>
-<p>operations:</p>
-<p>&lt;<a href="#operation-definition">operation_assignments</a>&gt;</p>
-<p>notifications:</p>
-<p>&lt;<a
-href="#notification-definition">notification_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<interface_definition_name>:
+  inputs: 
+    <parameter_value_assignments>
+  operations:
+    <operation_assignments>
+  notifications:
+    <notification_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5728,8 +5340,8 @@ have the following meaning:
   value assignments for passing input parameter values to all interface
   operations
 
-- template authors MAY provide new parameter assignments for interface
-  > inputs that are not defined in the Interface definition.
+  - template authors MAY provide new parameter assignments for interface
+    inputs that are not defined in the Interface definition.
 
 - operation_assignments: represents the optional map of operation
   assignments for operations defined in the Interface definition.
@@ -5822,37 +5434,22 @@ The following single-line grammar may be used when the operation’s
 implementation definition is the only keyname that is needed, and when
 the operation implementation definition itself can be specified using a
 single line grammar:
-
-| \<[operation_name](#TYPE_YAML_STRING)\>: \<[operation_implementation_definition](# BKM_Implementation_Oper_Notif_Def)\> |
-|-------------------------------------------------------------------------------------------------------------------------|
-
+```
+<[operation_name](#TYPE_YAML_STRING)>: <[operation_implementation_definition](# BKM_Implementation_Oper_Notif_Def)>
+```
 ###### Extended notation 
 
 The following multi-line grammar may be used when additional information
 about the operation is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">operation_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">operation_description</a>&gt;</p>
-<p>implementation: &lt;<a
-href="#operation-and-notification-implementation-definition">operation_implementation_definition</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a href="#parameter-definition">parameter_definitions</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<operation_name>:
+   description: <operation_description>
+   implementation: <operation_implementation_definition>
+   inputs: 
+     <parameter_definitions>
+   outputs:
+     <parameter_definitions>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5924,71 +5521,38 @@ following refinement rules when the containing entity type is derived:
 ##### Examples
 
 ###### Single-line example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interfaces:</p>
-<p>Standard:</p>
-<p>start: scripts/start_server.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interfaces:
+  Standard:
+    start: scripts/start_server.sh
+```
 ###### Multi-line example with shorthand implementation definitions
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interfaces:</p>
-<p>Configure:</p>
-<p>pre_configure_source:</p>
-<p>implementation:</p>
-<p>primary: scripts/pre_configure_source.sh</p>
-<p>dependencies:</p>
-<p>- scripts/setup.sh</p>
-<p>- binaries/library.rpm</p>
-<p>- scripts/register.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interfaces:
+  Configure:
+    pre_configure_source:
+      implementation: 
+        primary: scripts/pre_configure_source.sh
+        dependencies: 
+          - scripts/setup.sh
+          - binaries/library.rpm
+          - scripts/register.py
+```
 ###### Multi-line example with extended implementation definitions
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interfaces:</p>
-<p>Configure:</p>
-<p>pre_configure_source:</p>
-<p>implementation:</p>
-<p>primary:</p>
-<p>file: scripts/pre_configure_source.sh</p>
-<p>type: tosca.artifacts.Implementation.Bash</p>
-<p>repository: my_service_catalog</p>
-<p>dependencies:</p>
-<p>- file : scripts/setup.sh</p>
-<p>type : tosca.artifacts.Implementation.Bash</p>
-<p>repository : my_service_catalog</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interfaces:
+  Configure:
+    pre_configure_source:
+      implementation: 
+        primary: 
+          file: scripts/pre_configure_source.sh
+          type: tosca.artifacts.Implementation.Bash
+          repository: my_service_catalog
+        dependencies:
+           - file : scripts/setup.sh
+             type : tosca.artifacts.Implementation.Bash
+             repository : my_service_catalog
+```
 #### Operation assignment
 
 An operation assignment may be used to assign values for input
