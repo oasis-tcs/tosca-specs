@@ -2812,46 +2812,29 @@ Template definition:
 |copy|no|string|The optional (symbolic) name of another node template to copy into (all keynames and values) and use as a basis for this node template.|
 
 #### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">node_template_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">node_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">node_template_description</a>&gt;</p>
-<p>directives: [&lt;<a href="#TYPE_YAML_STRING">directives</a>&gt;]</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-assignment">attribute_assignments</a>&gt;</p>
-<p>requirements:</p>
-<p>- &lt;<a
-href="#requirement-assignment">requirement_assignments</a>&gt;</p>
-<p>capabilities:</p>
-<p>&lt;<a
-href="#capability-assignment">capability_assignments</a>&gt;</p>
-<p>interfaces:</p>
-<p>&lt;<a href="#interface-assignment">interface_assignments</a>&gt;</p>
-<p>artifacts:</p>
-<p>&lt;<a href="#artifact-definition">artifact_definitions</a>&gt;</p>
-<p>node_filter:</p>
-<p>&lt;<a
-href="#node-filter-definition">node_filter_definition</a>&gt;</p>
-<p>copy: &lt;<a
-href="#TYPE_YAML_STRING">source_node_template_name</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<node_template_name>: 
+  type: <node_type_name>
+  description: <node_template_description>
+  directives: [<directives>]
+  metadata: 
+    <map of string>
+  properties:
+    <property_assignments>
+  attributes:
+    <attribute_assignments>
+  requirements: 
+    - <requirement_assignments>
+  capabilities:
+    <capability_assignments>
+  interfaces:
+    <interface_assignments>
+  artifacts:
+    <artifact_definitions>
+  node_filter:
+    <node_filter_definition>
+  copy: <source_node_template_name>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
