@@ -1,5 +1,5 @@
 |Keyname|Mandatory|Type|Description|
-------------------------------------
+| :---- | :------ | :---- | :------ |
 |tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in the TOSCA file |
 |profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
 |metadata|no|map of YAML values|Defines a section used to declare additional metadata information.  Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations. |
