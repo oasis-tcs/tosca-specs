@@ -655,7 +655,7 @@ An orchestrator performs the following actions:
 
 -------
 
-TOSCA definitions
+TOSCA Definitions
 =================
 
 Except for the examples, this section is **normative** and describes the
@@ -670,23 +670,24 @@ TOSCA Metamodel
 This section defines the models and the modeling goals that comprise the
 TOSCA Version 2.0 specification.
 
-### Modeling concepts and goals
+### Modeling Concepts and Goals
 
-TBD. Here we should have selected core concepts of TOSCA 1.0 from
-section “[3   Core Concepts and Usage
-Pattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)”
-and this section should be a more in-depth section than section 2.1 in
-this document.
+> TBD. Here we should have selected core concepts of TOSCA 1.0 from
+> section “[3   Core Concepts and Usage
+> Pattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)”
+> and this section should be a more in-depth section than section 2.1
+> in this document.
+
 <!----
 {"id": "161", "author": "Calin Curescu", "date": "2020-04-16T12:53:00Z", "comment": "This section needs completion before submitting the TOSCA 2.0.", "target": "Modeling concepts and goals\n\nTBD. Here we should have selected core concepts of TOSCA 1.0 from\nsection \u201c[3\u00a0\u00a0\u00a0Core Concepts and Usage\nPattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)\u201d\nand this section should be a more in-depth section than section 2.1 in\nthis document."}-->
 
 
-Add a metamodel picture
+> Add a metamodel picture
 
-Explain separation of concerns and different roles. Refer to email from
-Peter.
+> Explain separation of concerns and different roles. Refer to email
+> from Peter.
 
-### Modeling definitions and reuse
+### Modeling Definitions and Reuse
 
 The TOSCA metamodel includes complex definitions used in types and
 templates. Reuse concepts simplify the design of TOSCA templates by
@@ -696,90 +697,70 @@ are clarified next:
 
 - **Definition**:
 
-<!-- -->
+  - The TOSCA specification is based on defining modeling entities.
 
-- The TOSCA specification is based on defining modeling entities.
+  - Entity definitions are based on different sets of keynames (with
+    specific syntax and semantics) that are associated with values (of a
+    specific format).
 
-- Entity definitions are based on different sets of keynames (with
-  specific syntax and semantics) that are associated with values (of a
-  specific format
 <!----
 {"id": "163", "author": "Chris Lauwers", "date": "2021-01-17T00:51:00Z", "comment": "Alternative language proposed by PJ:\n  Entity definitions comprise pairs of keynames and values. Each entity\n  has it own syntax, semantics and set of\n  keynames.", "target": "format"}-->
-).
-
-<!-- -->
 
 - **Derivation**:
 
-<!-- -->
+  - Specific TOSCA entities support a type definition.
 
-- Specific TOSCA entities support a type definition.
+  - When defining a type, it can be derived from a parent type and inherit
+    all the definitions of the parent type.
 
-- When defining a type, it can be derived from a parent type and inherit
-  all the definitions of the parent type.
-
-- The derivation rules describe what (keyname) definitions are inherited
-  from the parent type and further if and how they can be expanded or
+  - The derivation rules describe what (keyname) definitions are inherited
+    from the parent type and further if and how they can be expanded or modified. Note
+    that some definitions (for example, “version”) and intrinsic to the
+    type declaration and so are not inherited.
   
 <!----
 {"id": "164", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:42:00Z", "comment": "Expansion and modification is part of\n  Refinement not Derivation. This bullet point should be\n  removed", "target": ""}-->
-modified. Note
-  that some definitions (for example, “version”) and intrinsic to the
-  type declaration and so are not inherited.
 
-- A parent type can in turn be derived from a parent type. There is no
-  limit to the depth of a chain of derivations.
-
-<!-- -->
+  - A parent type can in turn be derived from a parent type. There is no
+    limit to the depth of a chain of derivations.
 
 - **Refinement**:
 
-<!-- -->
+  - Definitions within a type definition consist of the definition of
+    keynames and other TOSCA entities (e.g. properties, requirements,
+    capabilities, etc.). 
+    Definitions within a parent type can be refined (adjusted) to better
+    suit the needs of the referencing type.
 
-- Definitions within a type definition consist of the definition of
-  keynames and other TOSCA entities (e.g. properties, requirements,
-  capabilities, etc.). 
 <!----
 {"id": "165", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:43:00Z", "comment": "Type\n  definition is part of Definition not\n  Refinement", "target": ""}-->
 
-  Definitions within a parent type can be refined (adjusted) to better
-  suit the needs of the referencing type.
+  - The refinement rules pertaining to an entity describe how such entity
+    definitions that are inherited from the parent type during a type
+    derivation can be expanded or modified.
 
-- The refinement rules pertaining to an entity describe how such entity
-  definitions that are inherited from the parent type during a type
-  derivation can be expanded or modified.
-
-<!-- -->
-
-- **Augmentation**
+- **Augmentation**:
 <!----
 {"id": "166", "author": "Mike Rehder", "date": "2020-04-30T11:10:00Z", "comment": "I think separating augmentation is helpful\n  (as YANG has done). I think it makes it easier to understand the rules\n  that apply for the refining or augmenting\n  scenario", "target": "**Augmentation**"}-->
-:
 
-<!-- -->
+  - Definitions within a parent type can be expanded, which is the
+    addition of properties, to better suit the requirements of the
+    referencing type.
 
-- Definitions within a parent type can be expanded, which is the
-  addition of properties, to better suit the requirements of the
-  referencing type.
-
-- The augmentation rules pertaining to an entity describe how the
-  inherited parent type during a type derivation can be added to.
-
-<!-- -->
+  - The augmentation rules pertaining to an entity describe how the
+    inherited parent type during a type derivation can be added to.
 
 - **Assignment**:
 
-<!-- -->
+  - When creating a service template, we specify several entities that are
+    part of the template (e.g., nodes, relationships, groups, etc.).
 
-- When creating a service template, we specify several entities that are
-  part of the template (e.g., nodes, relationships, groups, etc.).
+  - When adding such an entity in the service template, for some
+    definitions that appear in the corresponding entity type (e.g.,
+    properties, operations, requirements, etc.) we may (or must) assign a
+    certain specification (or value).
 
-- When adding such an entity in the service template, for some
-  definitions that appear in the corresponding entity type (e.g.,
-  properties, operations, requirements, etc.) we may (or must) assign a
-  certain specification (or value).
-
-### Goal of the derivation and refinement rules
+### Goal of the Derivation and Refinement Rules
 
 The main reason for derivation and refinement rules is to create a
 framework useful for a consistent TOSCA type profile creation. The
@@ -1059,8 +1040,8 @@ service</p></th>
 
 ##### Requirements
 
-- The key “tosca_definitions_version” MUSTbe the first line of each
-  TOSCA file..
+- The key `tosca_definitions_version` MUST be the first line of each
+  TOSCA file.
 
 ##### Notes
 <!----
@@ -1083,13 +1064,15 @@ file.
 
 ###### Keyname
 
-| tosca_definitions_version |
-|---------------------------|
+```
+tosca_definitions_version 
+```
 
 ###### Grammar
 
-| tosca_definitions_version: \<tosca\_ version\> |
-|------------------------------------------------|
+```
+tosca_definitions_version: <tosca_version> 
+```
 
 TOSCA uses the following version strings for the various revisions of
 the TOSCA specification:
@@ -1110,9 +1093,9 @@ support older versions of the TOSCA specifications.
 ###### Examples:
 
 A TOSCA file designed using the TOSCA Version 2.0 specification:
-
-| tosca_definitions_version: tosca_2_0 |
-|--------------------------------------|
+```
+tosca_definitions_version: tosca_2_0
+```
 
 ##### profile
 <!----
@@ -1125,14 +1108,14 @@ profiles can then be imported by other TOSCA files using the profile
 keyword in their import statement.
 
 ###### Keyname
-
-| profile |
-|---------|
+```
+profile
+```
 
 ###### Grammar
-
-| profile: \<string_value\> |
-|---------------------------|
+```
+profile: <string_value\> 
+```
 
 TOSCA does not place any restrictions on the value of the profile name
 string. However, we encourage a Java-style reverse-domain notation with
@@ -1142,14 +1125,14 @@ version as a best-practice convention.
 
 The following is an example of a TOSCA file that defines TOSCA Simple
 Profile Version 2.0 types:
-
-| profile: org.oasis-open.tosca.simple:2.0 |
-|------------------------------------------|
+```
+profile: org.oasis-open.tosca.simple:2.0 
+```
 
 The following defines a domain-specific profile for Kubernetes:
-
-| profile: io.kubernetes:1.18 |
-|-----------------------------|
+```
+profile: io.kubernetes:1.18 
+```
 
 ##### metadata
 
@@ -1167,9 +1150,9 @@ values: map, seq, str, null, bool, int, float
 - 
 
 ###### Keyname
-
-| metadata |
-|----------|
+```
+metadata 
+```
 
 ###### Grammar
 
@@ -1211,21 +1194,21 @@ This optional keyname provides a means to include single or multiline
 descriptions within a TOSCA template as a scalar string value.
 
 ###### Keyname
-
-| description |
-|-------------|
+```
+description 
+```
 
 ###### Grammar
-
-| description: \<description\> |
-|------------------------------|
+```
+description: <description>
+```
 
 ###### Example
 
 Single line example
-
-| description: A simple example service template |
-|------------------------------------------------|
+```
+description: A simple example service template 
+```
 
 Multi-line example
 
@@ -1249,9 +1232,9 @@ This optional keyname provides a section to define macros YAML-style
 macros for use in the TOSCA file.
 
 ###### Keyname
-
-| dsl_definitions |
-|-----------------|
+```
+dsl_definitions 
+```
 
 ###### Grammar 
 
@@ -1305,9 +1288,9 @@ that may contain artifacts or other TOSCA files that might be referenced
 or imported by this TOSCA file.
 
 ###### Keyname
-
-| repositories |
-|--------------|
+```
+repositories 
+```
 
 ###### Grammar 
 
@@ -1360,9 +1343,9 @@ companies and organizations to define domain-specific types and/or
 describe their software applications for reuse in other TOSCA files.
 
 ###### Keyname
-
-| imports |
-|---------|
+```
+imports 
+```
 
 ###### Grammar 
 
@@ -1412,9 +1395,9 @@ This optional keyname lists the Artifact Types that are defined by this
 TOSCA file..
 
 ###### Keyname
-
-| artifact_types |
-|----------------|
+```
+artifact_types 
+```
 
 ###### Grammar 
 
@@ -1457,9 +1440,9 @@ This optional keyname provides a section to define new data types in
 TOSCA.
 
 ###### Keyname
-
-| data_types |
-|------------|
+```
+data_types 
+```
 
 ###### Grammar 
 
@@ -1522,9 +1505,9 @@ reusable type definitions that can be used to describe features of nodes
 that can be used to fulfill requirements of other nodes.
 
 ###### Keyname
-
-| capability_types |
-|------------------|
+```
+capability_types 
+```
 
 ###### Grammar 
 
@@ -1575,9 +1558,9 @@ reusable type definitions that can be used to describe operations
 exposed by TOSCA relationships and nodes.
 
 ###### Keyname
-
-| interface_types |
-|-----------------|
+```
+interface_types 
+```
 
 ###### Grammar 
 
@@ -1627,9 +1610,9 @@ reusable type definitions that can be used to describe dependent
 relationships between nodes.
 
 ###### Keyname
-
-| relationship_types |
-|--------------------|
+```
+relationship_types 
+```
 
 ###### Grammar 
 
@@ -1681,9 +1664,9 @@ This optional keyname lists the Node Types that provide the reusable
 type definitions for nodes in a service.
 
 ###### Keyname
-
-| node_types |
-|------------|
+```
+node_types
+```
 
 ###### Grammar 
 
@@ -1733,9 +1716,9 @@ This optional keyname lists the Group Types that are defined by this
 TOSCA file.
 
 ###### Keyname
-
-| group_types |
-|-------------|
+```
+group_types 
+```
 
 ###### Grammar 
 
@@ -1756,7 +1739,6 @@ TOSCA file.
 </table>
 
 ###### Example
-
 
 <table>
 <colgroup>
@@ -1779,9 +1761,9 @@ This optional keyname lists the Policy Types that are defined by this
 TOSCA file.
 
 ###### Keyname
-
-| policy_types |
-|--------------|
+```
+policy_types 
+```
 
 ###### Grammar 
 
@@ -1804,7 +1786,6 @@ TOSCA file.
 ###### Example
 <!----
 {"id": "327", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:48:00Z", "comment": "There should be a second policy definition in the example or it is just a repeat of the policy type definition example", "target": "Example"}-->
-
 
 <table>
 <colgroup>
