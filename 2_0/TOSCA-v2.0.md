@@ -1292,41 +1292,19 @@ TOSCA file..
 artifact_types 
 ```
 
-###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>artifact_types:</p>
-<p>&lt;<a href="#artifact-type">artifact_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#artifact-type">artifact type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+###### Grammar
+```
+artifact_types:
+  <artifact_type_defn_1>
+  ...
+  <artifact type_defn_n>
+```
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>artifact_types:</p>
-<p>mycompany.artifacttypes.myFileType:</p>
-<p>derived_from: tosca.artifacts.File</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+artifact_types:
+  mycompany.artifacttypes.myFileType:
+    derived_from: tosca.artifacts.File
+```
 ##### data_types
 
 This optional keyname provides a section to define new data types in
@@ -1338,59 +1316,39 @@ data_types
 ```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p>&lt;<a href="#data-type">tosca_datatype_def_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#data-type">tosca_datatype_def_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+data_types:
+   <tosca_datatype_def_1>
+   ...
+   <tosca_datatype_def_n>
+```
 
 ###### Example
+```
+data_types:
+  # A complex datatype definition
+  simple_contactinfo_type:
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      phone:
+        type: string
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p># A complex datatype definition</p>
-<p>simple_contactinfo_type:</p>
-<p>properties:</p>
-<p>name:</p>
-<p>type: string</p>
-<p>email:</p>
-<p>type: string</p>
-<p>phone:</p>
-<p>type: string</p>
-<p># datatype definition derived from an existing type</p>
-<p>full_contact_info:</p>
-<p>derived_from: simple_contact_info</p>
-<p>properties:</p>
-<p>street_address:</p>
-<p>type: string</p>
-<p>city:</p>
-<p>type: string</p>
-<p>state:</p>
-<p>type: string</p>
-<p>postalcode:</p>
-<p>type: string</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  # datatype definition derived from an existing type
+  full_contact_info:
+    derived_from: simple_contact_info
+    properties:
+      street_address:
+        type: string
+      city: 
+        type: string
+      state:
+        type: string
+      postalcode:
+        type: string
+```
 ##### capability_types
 
 This optional keyname lists the Capability Types that provide the
@@ -1403,47 +1361,25 @@ capability_types
 ```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>capability_types:</p>
-<p>&lt;<a href="#capability-type">capability_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#capability-type">capability
-type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+capability_types:
+  <capability_type_defn_1>
+  ...
+  <capability type_defn_n>
+```
 ###### Example
+```
+capability_types:
+  mycompany.mytypes.myCustomEndpoint:
+    derived_from: tosca.capabilities.Endpoint
+    properties:
+      # more details ...
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>capability_types:</p>
-<p>mycompany.mytypes.myCustomEndpoint:</p>
-<p>derived_from: tosca.capabilities.Endpoint</p>
-<p>properties:</p>
-<p># more details ...</p>
-<p>mycompany.mytypes.myCustomFeature:</p>
-<p>derived_from: tosca.capabilities.Feature</p>
-<p>properties:</p>
-<p># more details ...</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  mycompany.mytypes.myCustomFeature:
+    derived_from: tosca.capabilities.Feature
+    properties:
+      # more details ...
+```
 ##### interface_types
 
 This optional keyname lists the Interface Types that provide the
@@ -1456,46 +1392,22 @@ interface_types
 ```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interface_types:</p>
-<p>&lt;<a href="#interface-type">interface_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#interface-type">interface type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interface_types:
+  <interface_type_defn_1>
+  ...
+  <interface type_defn_n>
+```
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interface_types:</p>
-<p>mycompany.interfaces.service.Signal:</p>
-<p>operations:</p>
-<p>signal_begin_receive:</p>
-<p>description: Operation to signal start of some message
-processing.</p>
-<p>signal_end_receive:</p>
-<p>description: Operation to signal end of some message
-processed.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interface_types:
+  mycompany.interfaces.service.Signal:
+    operations:
+      signal_begin_receive:
+        description: Operation to signal start of some message processing.
+      signal_end_receive:
+        description: Operation to signal end of some message processed.
+```
 ##### relationship_types
 
 This optional keyname lists the Relationship Types that provide the
@@ -1508,49 +1420,25 @@ relationship_types
 ```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_types:</p>
-<p>&lt;<a
-href="#i-still-think-this-is-simply-a-requirement-type-i-cant-see-why-it-isnt-and-what-advantage-there-is-in-calling-it-something-else.relationship-type">relationship_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a
-href="#i-still-think-this-is-simply-a-requirement-type-i-cant-see-why-it-isnt-and-what-advantage-there-is-in-calling-it-something-else.relationship-type">relationship
-type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_types:
+  <relationship_type_defn_1>
+  ...
+  <relationship type_defn_n>
+```
 ###### Example
+```
+relationship_types:
+  mycompany.mytypes.myCustomClientServerType:
+    derived_from: tosca.relationships.HostedOn
+    properties:
+      # more details ...
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_types:</p>
-<p>mycompany.mytypes.myCustomClientServerType:</p>
-<p>derived_from: tosca.relationships.HostedOn</p>
-<p>properties:</p>
-<p># more details ...</p>
-<p>mycompany.mytypes.myCustomConnectionType:</p>
-<p>derived_from: tosca.relationships.ConnectsTo</p>
-<p>properties:</p>
-<p># more details ...</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  mycompany.mytypes.myCustomConnectionType:
+    derived_from: tosca.relationships.ConnectsTo
+    properties:
+      # more details ...
+```
 ##### node_types
 
 This optional keyname lists the Node Types that provide the reusable
@@ -1562,47 +1450,26 @@ node_types
 ```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>&lt;<a href="#node-type">node_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#node-type">node_type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_types:
+  <node_type_defn_1>
+  ...
+  <node_type_defn_n>
+```
 ###### Example
+```
+node_types:
+  my_webapp_node_type:
+    derived_from: WebApplication
+    properties:
+      my_port:
+        type: integer
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>my_webapp_node_type:</p>
-<p>derived_from: WebApplication</p>
-<p>properties:</p>
-<p>my_port:</p>
-<p>type: integer</p>
-<p>my_database_node_type:</p>
-<p>derived_from: Database</p>
-<p>capabilities:</p>
-<p>mytypes.myfeatures.transactSQL</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  my_database_node_type:
+    derived_from: Database
+    capabilities:
+      mytypes.myfeatures.transactSQL
+```
 ##### group_types
 
 This optional keyname lists the Group Types that are defined by this
@@ -1614,39 +1481,19 @@ group_types
 ```
 
 ###### Grammar 
+```
+group_types:
+  <group_type_defn_1>
+  ...
+  <group type_defn_n>
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>group_types:</p>
-<p>&lt;<a href="#group-type">group_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#group-type">group type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>group_types:</p>
-<p>mycompany.mytypes.myScalingGroup:</p>
-<p>derived_from: tosca.groups.Root</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+group_types:
+  mycompany.mytypes.myScalingGroup:
+    derived_from: tosca.groups.Root
+```
 
 ##### policy_types
 
@@ -1659,42 +1506,20 @@ policy_types
 ```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policy_types:</p>
-<p>&lt;<a href="#group-type">policy_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#group-type">policy type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policy_types:
+  <policy_type_defn_1>
+  ...
+  <policy type_defn_n>
+```
 ###### Example
 <!----
 {"id": "327", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:48:00Z", "comment": "There should be a second policy definition in the example or it is just a repeat of the policy type definition example", "target": "Example"}-->
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policy_types:</p>
-<p>mycompany.mytypes.myScalingPolicy:</p>
-<p>derived_from: tosca.policies.Scaling</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policy_types:
+  mycompany.mytypes.myScalingPolicy:
+    derived_from: tosca.policies.Scaling
+```
 ### Profiles
 
 A profile is a named collection of TOSCA type definitions, artifacts,
