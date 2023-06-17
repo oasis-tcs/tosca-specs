@@ -238,6 +238,8 @@ The above list is not exclusive. The above definitions should be
 understood as referring to and implementing TOSCA as described in this
 document.
 
+-------
+
 TOSCA core concepts
 ===================
 
@@ -532,6 +534,7 @@ that describes the organization of the CSAR.
 
 TOSCA Entities
 --------------
+
 <!----
 {"id": "129", "author": "Chris Lauwers", "date": "2021-06-28T23:14:00Z", "comment": "This subsection has been moved here from the Operational Model chapter. We need to revisit where exactly it belongs to make sure the document flows correctly.", "target": "<span class=\"comment-start\" id=\"130\" author=\"Chris Lauwers\" date=\"2021-06-28T23:14:00Z\">Alternatively, we could also move this section into Chapter 5</span>Entities"}-->
 
@@ -561,7 +564,7 @@ kinds of entities:
     with the actual state of the external implementations.
 
 TOSCA Operational Model
-=======================
+-----------------------
 
 This section presents a TOSCA Functional Architecture and an associated
 operational model that supports the three service lifecycle phases
@@ -600,14 +603,13 @@ The functional architecture defines the following three blocks:
 The remainder of this section describes each of these functional blocks
 in more detail.
 
-TOSCA Processor
----------------
+### TOSCA Processor
 
 At the core of a compliant TOSCA implementation is a TOSCA Processor
 that can create service representations from TOSCA service templates. A
 TOSCA Processor contains the following functional blocks:
 
-### Parser
+#### Parser
 
 - Accepts a single TOSCA file plus imported TOSCA files (files without a
   “service_template”)
@@ -616,11 +618,11 @@ TOSCA Processor contains the following functional blocks:
 - Outputs valid normalized node templates and <u>unresolved</u>
   requirements (one-to-one equivalency)
 
-### Resolver
+#### Resolver
 
 A resolver performs the following functions
 
-#### Creating Service Representations
+##### Creating Service Representations
 
 - Applies service inputs.
 - Converts normalized node templates to node representations (one-to-one
@@ -629,15 +631,14 @@ A resolver performs the following functions
 - Calls intrinsic functions (on demand for all the above) using the
   graph of node representations.
 
-#### Requirement Fulfillment
+##### Requirement Fulfillment
 
 - Satisfies all requirements and creates the relationship graph (an
   unsatisfied requirement results in an error)
 
-#### Substitution Mapping
+##### Substitution Mapping
 
-Orchestrator
-------------
+### Orchestrator
 
 An orchestrator performs the following actions:
 
