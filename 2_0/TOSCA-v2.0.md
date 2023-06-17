@@ -1575,7 +1575,7 @@ defines Virtualized Network Function Descriptors (VNFDs), Network
 Service Descriptors (NSDs) and a Physical Network Function Descriptors
 (PNFDs).
 
-We should give a couple of additional examples.
+> We should give a couple of additional examples.
 
 #### Defining Profiles
 
@@ -1617,10 +1617,10 @@ a version qualifier to distinguish between different versions of their
 profiles, and service template designers must use the proper string name
 to make sure they import the desired versions of these profiles.
 
-Do we impose a structure on profile names that distinguishes the version
-qualifier from the base profile name? If so, is there a specific
-separator character or string (in which case the use of the separator
-must be escaped somehow (or disallowed) in profile names.
+> Do we impose a structure on profile names that distinguishes the version
+> qualifier from the base profile name? If so, is there a specific
+> separator character or string (in which case the use of the separator
+> must be escaped somehow (or disallowed) in profile names.
 
 When multiple versions of the same profile exist, it is possibly that
 service templates could mix and match different versions of a profile in
@@ -1630,132 +1630,88 @@ scenario:
 Assume a profile designer creates version 1 of a base profile that
 defines (among other things) a **Host** capability type and a
 corresponding **HostedOn** relationship type as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>profile: org.base.v1</p>
-<p>capability_types:</p>
-<p>Host:</p>
-<p>description: Hosting capability</p>
-<p>relationship_types:</p>
-<p>HostedOn:</p>
-<p>valid_capability_types: [ Host ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+profile: org.base.v1
+capability_types:
+  Host:
+    description: Hosting capability
+relationship_types:
+  HostedOn:
+    valid_capability_types: [ Host ]
+```
 Now let’s assume a different profile designer creates a
 platform-specific profile that defines (among other things) a
 **Platform** node type. The Platform node type defines a capability of
 type **Host**. Since the **Host** capability is defined in the
 **org.base.v1** profile, that profile must be imported as shown in the
 snippet below:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>profile: org.platform</p>
-<p>imports:</p>
-<p>- profile: org.base.v1</p>
-<p>namespace: p1</p>
-<p>node_types:</p>
-<p>Platform:</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>type: p1:Host</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+profile: org.platform
+imports:
+  - profile: org.base.v1
+    namespace: p1
+node_types:
+  Platform:
+    capabilities:
+      host:
+        type: p1:Host
+```
 At some later point of time, the original profile designer updates the
 **org.base** profile to Version 2. The updated version of this profile
 just adds a **Credential** data type (in addition to defining the
 **Host** capability type and the **HostedOn** relationship type), as
 follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>profile: org.base.v2</p>
-<p>capability_types:</p>
-<p>Host:</p>
-<p>description: Hosting capability</p>
-<p>relationship_types:</p>
-<p>HostedOn:</p>
-<p>valid_capability_types: [ Host ]</p>
-<p>data_types:</p>
-<p>Credential:</p>
-<p>properties:</p>
-<p>key:</p>
-<p>type: string</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+profile: org.base.v2
+capability_types:
+  Host:
+    description: Hosting capability
+relationship_types:
+  HostedOn:
+    valid_capability_types: [ Host ]
+data_types:
+  Credential:
+    properties:
+      key:
+        type: string
+```
 Finally, let’s assume a service designer creates a template for a
 service that is to be hosted on the platform defined in the
 **org.platform** profile. The template introduces a **Service** node
 type that has a requirement for the platform’s **Host** capability. It
 also has a credential property of type **Credential** as defined in
 **org.base.v2**:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>imports:</p>
-<p>- profile: org.base.v2</p>
-<p>namespace: p2</p>
-<p>- profile: org.platform</p>
-<p>namespace: pl</p>
-<p>node_types:</p>
-<p>Service:</p>
-<p>properties:</p>
-<p>credential:</p>
-<p>type: p2:Credential</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>capability: p2:Host</p>
-<p>relationship: p2:HostedOn</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>service:</p>
-<p>type: Service</p>
-<p>properties:</p>
-<p>credential:</p>
-<p>key: password</p>
-<p>requirements:</p>
-<p>- host: platform</p>
-<p>platform:</p>
-<p>type: pl:Platform</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+imports:
+  - profile: org.base.v2
+    namespace: p2
+  - profile: org.platform
+    namespace: pl
+node_types:
+  Service:
+    properties:
+      credential:
+        type: p2:Credential
+    requirements:
+      - host:
+          capability: p2:Host
+          relationship: p2:HostedOn
+service_template:
+  node_templates:
+    service:
+      type: Service
+      properties:
+        credential:
+          key: password
+      requirements:
+        - host: platform
+    platform:
+      type: pl:Platform
+```
 This service template is invalid, since the **platform** node template
 does not define a capability of a type that is compatible with the
 **valid_capability_types** specified by the **host** requirement in the
@@ -1767,9 +1723,9 @@ The example in this section illustrates a general version compatibility
 issue that exists when different versions of the same profile are used
 in a TOSCA service.
 
-A number of suggestions for these extensions are currently being
-discussed. Grammar extensions will be included in this document one they
-are agreed upon.
+> A number of suggestions for these extensions are currently being
+> discussed. Grammar extensions will be included in this document one they
+> are agreed upon.
 
 ### Imports
 <!----
@@ -1780,7 +1736,6 @@ are agreed upon.
 <!----
 {"id": "350", "author": "Calin Curescu", "date": "2019-01-30T15:54:00Z", "comment": "It would be good to allow also the import of specific types (via their fully qualified names) and also entire namespaces (i.e. types from entire namespaces) from a/the catalogue. That is, in addition to importing from a file: Globally well-known Local catalog File", "target": "Import definition"}-->
 
-
 An import definition is used within a TOSCA file to locate and uniquely
 name another TOSCA file or TOSCA profile that has type, repository, and
 function 
@@ -1790,7 +1745,6 @@ definitions to
 be imported
 <!----
 {"id": "352", "author": "Matt Rutkowski", "date": "2016-09-06T09:49:00Z", "comment": "Nodejs has NPM that uses the following to\nimport new package modules:  \nA package is:  \na) a folder containing a program described by a\n[package.json](numbering.xml) file  \nb) a gzipped tarball containing (a)  \nc) a url that resolves to (b)  \nd) a \\<name\\>@\\<version\\> that is published on the registry (see\n[npm-registry](styles.xml)) with (c)  \ne) a \\<name\\>@\\<tag\\> (see [npm-dist-tag](settings.xml)) that points to\n(d)  \nf) a \\<name\\> that has a \"latest\" tag satisfying (e)  \ng) a \\<git remote url\\> that resolves to (a)  \nwe may want to adopt something similar if TOSCA references service\ntemplate (packages) from a\ncatalog)", "target": "imported"}-->
-
 (included) into another TOSCA file.
 
 ##### Keynames
@@ -1810,62 +1764,28 @@ definition:
 Import definitions have one the following grammars:
 
 ###### Single-line grammar:
-
 When using the single-line grammar, the url keyword is assumed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>imports:</p>
-<p>- &lt;URI_1&gt;</p>
-<p>- &lt;URI_2&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+imports:
+  - <URI_1>
+  - <URI_2>
+```
 ###### Multi-line grammar
 
 The following multi-line grammar can be used for importing TOSCA files:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>imports:</p>
-<p>- url: &lt;file_URI&gt;</p>
-<p>repository: &lt;repository_name&gt;</p>
-<p>namespace: &lt;namespace_name&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+imports:  
+  - url: <file_URI>   
+    repository: <repository_name>
+    namespace: <namespace_name>
+```
 The following multi-line grammar can be used for importing TOSCA
 profiles:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>imports:</p>
-<p>- profile: &lt;profile_name&gt;</p>
-<p>namespace: &lt;namespace_name&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+imports:  
+  - profile: <profile_name>   
+    namespace: <namespace_name>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -1911,32 +1831,32 @@ attempt to import the file referenced by \<file_URI\> as follows:
   the resource identified by \<file_URL\> represents a valid TOSCA file,
   then it SHOULD cause the remote Service Template to be imported.
 
-- Note that if in addition to a URL with a URL scheme, the import
-  definition also specifies a \<repository_name\> (using the repository
-  key), then that import definition SHOULD be considered invalid.
+  - Note that if in addition to a URL with a URL scheme, the import
+    definition also specifies a \<repository_name\> (using the repository
+    key), then that import definition SHOULD be considered invalid.
 
 - If the \<file_URI\> does not include a URL scheme, it is a considered
   a relative path URL. The TOSCA orchestrator or processor SHOULD handle
   such a \<file_URI\> as follows:
 
-- If the import definition also specifies a \<repository_name\> (using
-  the repository keyname), then \<file_URI\> refers to the path name of
-  a file relative to the root of the named repository
+  - If the import definition also specifies a \<repository_name\> (using
+    the repository keyname), then \<file_URI\> refers to the path name of
+    a file relative to the root of the named repository
 
-- If the import definition does not specify a \<profile_name\> then
-  \<file_URI\> refers to a TOSCA file located in the repository that
-  contains the Service Template file that includes the import
-  definition. If the importing service template is located in a CSAR
-  file, then that CSAR file should be treated as the repository in which
-  to locate the service template file that must be imported.
+  - If the import definition does not specify a \<profile_name\> then
+    \<file_URI\> refers to a TOSCA file located in the repository that
+    contains the Service Template file that includes the import
+    definition. If the importing service template is located in a CSAR
+    file, then that CSAR file should be treated as the repository in which
+    to locate the service template file that must be imported.
 
-- If \<file_URI\> starts with a leading slash (‘/’) then \<file_URI\>
-  specifies a path name starting at the root of the repository.
+    - If \<file_URI\> starts with a leading slash (‘/’) then \<file_URI\>
+     specifies a path name starting at the root of the repository.
 
-- If \<file_URI\> does not start with a leading slash, then \<file_URI\>
-  specifies a path that is relative to the importing document’s location
-  within the repository. Double dot notation (‘../’) can be used to
-  refer to parent directories in a file path name.
+    - If \<file_URI\> does not start with a leading slash, then \<file_URI\>
+     specifies a path that is relative to the importing document’s location
+     within the repository. Double dot notation (‘../’) can be used to
+     refer to parent directories in a file path name.
 
 - If \<file_URI\> does not reference a valid TOSCA file file, then the
   import SHOULD be considered a failure.
@@ -1945,117 +1865,51 @@ attempt to import the file referenced by \<file_URI\> as follows:
 
 The first example shows how to use an import definition import a
 well-known profile by name:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Importing a profile</p>
-<p>imports:</p>
-<p>- profile: org.oasis-open.tosca.simple:2.0</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Importing a profile
+imports:
+- profile: org.oasis-open.tosca.simple:2.0
+```
 The next example shows an import definition used to import a
 network-accessible resource using the https protocol:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Absolute URL with scheme</p>
-<p>imports:</p>
-<p>- url: https://myorg.org/tosca/types/mytypes.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-The following represents shows an import definition used to import a
+```
+# Absolute URL with scheme
+imports:
+- url: https://myorg.org/tosca/types/mytypes.yaml
+```
+The following shows an import definition used to import a
 service template in the same repository as the importing template. The
 template to be imported is referenced using a path name that is relative
 to the location of the importing template. This example shows the short
 notation:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Short notation supported</p>
-<p>imports:</p>
-<p>- ../types/mytypes.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Short notation supported
+imports:
+- ../types/mytypes.yaml 
+```
 The following shows the same example but using the long notation:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Long notation</p>
-<p>imports:</p>
-<p>- url: ../types/mytypes.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Long notation
+imports:
+- url: ../types/mytypes.yaml
+```
 The following example shows how to import service templates using
 absolute path names (i.e. path names that start at the root of the
 repository):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Root file</p>
-<p>imports:</p>
-<p>- url: /base.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Root file
+imports:
+- url: /base.yaml
+```
 And finally, the following shows how to import templates from a
 repository that is different than the repository that contains the
 importing template:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># External repository</p>
-<p>imports:</p>
-<p>- url: types/mytypes.yaml</p>
-<p>repository: my_repository</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# External repository
+imports:
+- url: types/mytypes.yaml
+  repository: my_repository
+```
 #### Namespaces
 <!----
 {"id": "373", "author": "Chris Lauwers", "date": "2020-09-01T00:19:00Z", "comment": "I recommend removing this entire section and rewriting any parts that are still relevant inside the \u201cimports\u201d section.", "target": "Namespace"}-->
@@ -2068,57 +1922,39 @@ For example, let say we have two TOSCA files, A and B, both of which
 contain a Node Type definition for “MyNode”:
 
 **TOSCA File B**
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: TOSCA File B</p>
-<p>node_types:</p>
-<p>MyNode:</p>
-<p>derived_from: SoftwareComponent</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>capabilities:</p>
-<p># omitted here for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+description: TOSCA File B
+  
+node_types:
+  MyNode:
+    derived_from: SoftwareComponent
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+```
 **TOSCA File A**
+```
+tosca_definitions_version: tosca_2_0
+description: TOSCA File A
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: TOSCA File A</p>
-<p>imports:</p>
-<p>- url: /templates/ServiceTemplateB.yaml</p>
-<p>node_types:</p>
-<p>MyNode:</p>
-<p>derived_from: Root</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>capabilities:</p>
-<p># omitted here for brevity</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>my_node:</p>
-<p>type: MyNode</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+imports:
+  - url: /templates/ServiceTemplateB.yaml
 
+node_types:
+  MyNode:
+    derived_from: Root
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+
+service_template:
+  node_templates:
+    my_node:
+      type: MyNode
+```
 As you can see, TOSCA file A imports TOSCA file B which results in
 duplicate definitions of the MyNode node type. In this example, it is
 not clear which type is intended to be used for the my_node node
@@ -2144,74 +1980,50 @@ The following snippets update the previous example using namespaces to
 disambiguate between the two MyNode type definitions. This first snippet
 shows the scenario where the MyNode definition from TOSCA file B is
 intended to be used:
-
+```
 tosca_definitions_version: tosca_2_0
-
 description: TOSCA file A
 
 imports:
-
-\- url: /templates/ServiceTemplateB.yaml
-
-namespace: templateB
+  - url: /templates/ServiceTemplateB.yaml
+    namespace: templateB
 
 node_types:
-
-MyNode:
-
-derived_from: Root
-
-properties:
-
-\# omitted here for brevity
-
-capabilities:
-
-\# omitted here for brevity
+  MyNode:
+    derived_from: Root
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
 
 service_template:
-
-node_templates:
-
-my_node:
-
-type: templateB:MyNode
-
+  node_templates:
+    my_node:
+      type: templateB:MyNode
+```
 The second snippet shows the scenario where the MyNode definition from
 TOSCA file A is intended to be used:
-
+```
 tosca_definitions_version: tosca_2_0
-
 description: TOSCA file A
 
 imports:
-
-\- url: /templates/ServiceTemplateB.yaml
-
-namespace: templateB
+  - url: /templates/ServiceTemplateB.yaml
+    namespace: templateB
 
 node_types:
-
-MyNode:
-
-derived_from: Root
-
-properties:
-
-\# omitted here for brevity
-
-capabilities:
-
-\# omitted here for brevity
+  MyNode:
+    derived_from: Root
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
 
 service_template:
-
-node_templates:
-
-my_node:
-
-type: MyNode
-
+  node_templates:
+    my_node:
+      type: MyNode
+```
 In many scenarios, imported TOSCA files may in turn import their own
 TOSCA files, and introduce their own namespaces to avoid name
 collisions. In those scenarios, nested namespace names are used to
@@ -2221,52 +2033,38 @@ The following example shows a mytypes.yaml TOSCA file that imports a
 Kubernetes profile into the k8s namespace. It defines a SuperPod node
 type that derives from the Pod node type defined in that Kubernetes
 profile:
-
+```
 tosca_definitions_version: tosca_2_0
-
 description: mytypes.yaml
 
 imports:
-
-\- profile: io.kubernetes:1.18
-
-namespace: k8s
+- profile: io.kubernetes:1.18
+  namespace: k8s
 
 node_types:
-
-MyNode: {}
-
-SuperPod:
-
-derived_from: k8s:Pod
-
+  MyNode: {}
+  SuperPod:
+    derived_from: k8s:Pod
+```
 The mytypes.yaml template is then imported into the main.yaml TOSCA
 file, which defines both a node template of type SuperPod as well as a
 node template of type Pod. Nested namespace names are used to identify
 the Pod node type from the Kubernetes profile:
-
+```
 tosca_definitions_version: tosca_2_0
-
 description: main.yaml
 
 imports:
-
-\- url: mytypes.yaml
-
-namespace: my
+- url: mytypes.yaml
+  namespace: my
 
 service_template:
-
-node_templates:
-
-mynode:
-
-type: my:MyType
-
-pod:
-
-type: my:k8s:Pod
-
+  node_templates:
+    mynode:
+      type: my:MyType
+    pod:
+      type: my:k8s:Pod
+```
 ##### Additional Requirements
 
 Within each namespace, names must be unique. This means the following:
@@ -2275,56 +2073,56 @@ Within each namespace, names must be unique. This means the following:
   considered an error. These include, but are not limited to duplicate
   names found for the following definitions:
 
-- Repositories (repositories)
+  - Repositories (repositories)
 
-- Data Types (data_types)
+  - Data Types (data_types)
 
-- Node Types (node_types)
+  - Node Types (node_types)
 
-- Relationship Types (relationship_types)
+  - Relationship Types (relationship_types)
 
-- Capability Types (capability_types)
+  - Capability Types (capability_types)
 
-- Artifact Types (artifact_types)
+  - Artifact Types (artifact_types)
 
-- Interface Types (interface_types)
+  - Interface Types (interface_types)
 
 - Duplicate Template names within a Service Template SHALL be considered
   an error. These include, but are not limited to duplicate names found
   for the following template types:
 
-- Node Templates (node_templates)
+  - Node Templates (node_templates)
 
-- Relationship Templates (relationship_templates)
+  - Relationship Templates (relationship_templates)
 
-- Inputs (inputs)
+  - Inputs (inputs)
 
-- Outputs (outputs)
+  - Outputs (outputs)
 
 - Duplicate names for the following keynames within Types or Templates
   SHALL be considered an error. These include, but are not limited to
   duplicate names found for the following keynames:
 
-- Properties (properties)
+  - Properties (properties)
 
-- Attributes (attributes)
+  - Attributes (attributes)
 
-- Artifacts (artifacts)
+  - Artifacts (artifacts)
 
-- R<span class="comment-start" id="376"
-  author="Matt Rutkowski" date="2015-08-25T21:52:00Z">MUSTFIX: Verify
-  duplicates are NOT allowed!!</span>equirements
-  (requirements)
+  - R<span class="comment-start" id="376"
+    author="Matt Rutkowski" date="2015-08-25T21:52:00Z">MUSTFIX: Verify
+    duplicates are NOT allowed!!</span>equirements
+    (requirements)
 <!----
 {"id": "375", "author": "Calin Curescu", "date": "2020-06-08T18:24:00Z", "comment": "But requirements assignments support\n  duplicates!", "target": "R<span class=\"comment-start\" id=\"376\"\n  author=\"Matt Rutkowski\" date=\"2015-08-25T21:52:00Z\">MUSTFIX: Verify\n  duplicates are NOT allowed!!</span>equirements\n  (requirements)"}-->
 
-- Capabilities (capabilities)<span class="comment-end" id="376"></span>
+  - Capabilities (capabilities)<span class="comment-end" id="376"></span>
 
-- Interfaces (interfaces)
+  - Interfaces (interfaces)
 
-- Policies (policies)
+  - Policies (policies)
 
-- Groups (groups)
+  - Groups (groups)
 
 #### Repository definition
 
@@ -2347,29 +2145,15 @@ definition:
 Repository definitions have one the following grammars:
 
 ###### Single-line grammar:
-
-| \<[repository_name](#TYPE_YAML_STRING)\>: \<repository_address\> |
-|------------------------------------------------------------------|
-
+```
+<repository_name>: <repository_address>
+```
 ###### Multi-line grammar
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">repository_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">repository_description</a>&gt;</p>
-<p>url: &lt;<a
-href="#TYPE_YAML_STRING">repository_address</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<repository_name>:
+  description: <repository_description>
+  url: <repository_address>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -2385,23 +2169,12 @@ have the following meaning:
 ##### Example
 
 The following represents a repository definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>repositories:</p>
-<p>my_code_repo:</p>
-<p>description: My project’s code repository in GitHub</p>
-<p>url: https://github.com/my-project/</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+repositories:
+  my_code_repo:
+    description: My project’s code repository in GitHub
+    url: https://github.com/my-project/
+```
 ### Additional information definitions
 
 #### Description definition
@@ -2435,26 +2208,14 @@ description: This is an example of a single line description (no folding).
 ```
 The YAML “folded” style may also be used for multi-line descriptions
 which “folds” line breaks as space characters.
+```
+description: >
+  This is an example of a multi-line description using YAML. It permits for line        
+  breaks for easier readability...
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>description: &gt;</p>
-<p>This is an example of a multi-line description using YAML. It permits
-for line</p>
-<p>breaks for easier readability...</p>
-<p>if needed. However, (multiple) line breaks are folded into a single
-space</p>
-<p>character when processed into a single string value.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  if needed.  However, (multiple) line breaks are folded into a single space   
+  character when processed into a single string value.
+```
 ##### Notes
 
 - Use of “folded” style is discouraged for the YAML string type apart
@@ -2480,39 +2241,17 @@ metadata
 ##### Grammar
 
 Metadata definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>metadata:</p>
-<p>map of &lt;<a href="#TYPE_YAML_STRING">string</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+metadata: 
+  map of <string>
+```
 ##### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>metadata:</p>
-<p>foo1: bar1</p>
-<p>foo2: bar2</p>
-<p>...</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+metadata:
+  foo1: bar1
+  foo2: bar2
+  ...
+```
 ##### Notes
 
 - Data provided within metadata, wherever it appears, MAY be ignored by
@@ -2633,28 +2372,14 @@ definitions:
 ##### Grammar
 
 The common keynames in type definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;type_name&gt;:</p>
-<p>derived_from: &lt;parent_type_name&gt;</p>
-<p>version: &lt;<a
-href="#tosca-tal-suggests-removing-this.version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a
-href="#also-covered-by-4.2.1.3.2metadata">metadata_map</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">type_description</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<type_name>:
+  derived_from: <parent_type_name>
+  version: <version_number>
+  metadata: 
+    <metadata_map>
+  description: <type_description>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -2799,36 +2524,24 @@ template.</td>
 #### Grammar
 
 The overall grammar of the service_template section is shown
-below.Detailed grammar definitions are provided in subsequent
+below. Detailed grammar definitions are provided in subsequent
 subsections.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>service_template:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">template_description</a>&gt;</p>
-<p>inputs: &lt;input_parameters&gt;</p>
-<p>outputs: &lt;output_parameters&gt;</p>
-<p>node_templates: &lt;node_templates&gt;</p>
-<p>relationship_templates: &lt;relationship_templates&gt;</p>
-<p>groups: &lt;group_definitions&gt;</p>
-<p>policies:</p>
-<p>- &lt;policy_definition_list&gt;</p>
-<p>workflows: &lt;workflows&gt;</p>
-<p># Optional declaration that exports the service template</p>
-<p># as an implementation of a Node Type.</p>
-<p>substitution_mappings:</p>
-<p>&lt;substitution_mappings&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+service_template:
+  description: <template_description>
+  inputs: <input_parameters>
+  outputs: <output_parameters>
+  node_templates: <node_templates>
+  relationship_templates: <relationship_templates>
+  groups: <group_definitions>
+  policies: 
+    - <policy_definition_list>
+  workflows: <workflows>
+  # Optional declaration that exports the service template 
+  # as an implementation of a Node Type.
+  substitution_mappings:
+    <substitution_mappings>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -2891,66 +2604,32 @@ defined. If no input is provided, then the default value is used.
 ###### Grammar
 
 The grammar of the inputs section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+inputs:
+  <parameter_definitions>
+```
 ###### Examples
 
 This section provides a set of examples for the single elements of a
 service template.
 
 Simple inputs example without any validation clauses:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>fooName:</p>
-<p>type: string</p>
-<p>description: Simple string parameter without a validation clause.</p>
-<p>default: bar</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+inputs:
+  fooName:
+    type: string
+    description: Simple string parameter without a validation clause.
+    default: bar
+```
 Example of inputs with a validation clause:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>SiteName:</p>
-<p>type: string</p>
-<p>description: String parameter with validation clause.</p>
-<p>default: My Site</p>
-<p>validation: { $min_length: [ $value, 9 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+inputs:
+  SiteName:
+    type: string
+    description: String parameter with validation clause.
+    default: My Site
+    validation: { $min_length: [ $value, 9 ] }
+```
 ##### node_templates
 
 The node_templates section lists the Node Templates that describe the
@@ -2959,44 +2638,23 @@ The node_templates section lists the Node Templates that describe the
 ###### grammar
 
 The grammar of the node_templates section is a follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>&lt;<a href="#node-template">node_template_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#node-template">node_template_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_templates:
+  <node_template_defn_1>
+  ...
+  <node_template_defn_n>
+```
 ###### Example
 
 Example of node_templates section:
+```
+node_templates:
+  my_webapp_node_template:
+    type: WebApplication
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>my_webapp_node_template:</p>
-<p>type: WebApplication</p>
-<p>my_database_node_template:</p>
-<p>type: Database</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  my_database_node_template:
+    type: Database
+```
 ##### relationship_templates
 
 The relationship_templates section lists the Relationship Templates that
@@ -3011,48 +2669,24 @@ requirements sections of node templates.
 ###### Grammar
 
 The grammar of the relationship_templates section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_templates:</p>
-<p>&lt;<a
-href="#relationship-template">relationship_template_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a
-href="#relationship-template">relationship_template_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_templates:
+  <relationship_template_defn_1>
+  ...
+  <relationship_template_defn_n>
+```
 ###### Example
 
 Example of relationship_templates section:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_templates:</p>
-<p>my_connectsto_relationship:</p>
-<p>type: tosca.relationships.ConnectsTo</p>
-<p>interfaces:</p>
-<p>Configure:</p>
-<p>inputs:</p>
-<p>speed: { $$get_attribute: [ SELF, SOURCE, connect_speed ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_templates:
+  my_connectsto_relationship:
+    type: tosca.relationships.ConnectsTo
+    interfaces:
+      Configure:
+        inputs:
+          speed: { $$get_attribute: [ SELF, SOURCE, connect_speed ] }      
+```
 ##### outputs
 
 The outputs section provides a means to define the output parameters
@@ -3063,44 +2697,19 @@ containing service_template to users of a service.
 ###### Grammar
 
 The grammar of the outputs section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+  <parameter_definitions>
+```
 ###### Example
 
 Example of the outputs section:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>server_address:</p>
-<p>description: The first private IP address for the provisioned
-server.</p>
-<p>value: { $get_attribute: [ node5, networks, private, addresses, 0 ]
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+  server_address:
+    description: The first private IP address for the provisioned server.
+    value: { $get_attribute: [ node5, networks, private, addresses, 0 ] }
+```
 ##### groups
 
 The groups section allows for grouping one or more node templates within
@@ -3110,56 +2719,37 @@ policies to the group.
 ###### Grammar
 
 The grammar of the groups section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>groups:</p>
-<p>&lt;<a href="#group-definition">group_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#group-definition">group_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+groups:
+  <group_defn_1>
+  ...
+  <group_defn_n>
+```
 ###### Example
 
 The following example shows the definition of three Compute nodes in the
 node_templates section of a service_template as well as the grouping of
 two of the Compute nodes in a group server_group_1.
+```
+node_templates:
+  server1:
+    type: tosca.nodes.Compute
+    # more details ...
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>server1:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># more details ...</p>
-<p>server2:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># more details ...</p>
-<p>server3:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># more details ...</p>
-<p>groups:</p>
-<p># server2 and server3 are part of the same group</p>
-<p>server_group_1:</p>
-<p>type: tosca.groups.Root</p>
-<p>members: [ server2, server3 ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  server2:
+    type: tosca.nodes.Compute
+    # more details ...
 
+  server3:
+    type: tosca.nodes.Compute
+    # more details ...
+
+groups:
+  # server2 and server3 are part of the same group
+  server_group_1:
+    type: tosca.groups.Root
+    members: [ server2, server3 ]
+```
 ##### policies
 
 The policies section allows for declaring policies that can be applied
@@ -3168,44 +2758,20 @@ to entities in the service template.
 ###### Grammar
 
 The grammar of the policies section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policies:</p>
-<p>- &lt;<a
-href="#i-know-that-tmf-have-a-branch-of-their-information-model-to-describe-policy-but-that-it-is-not-used-much-and-that-mef-have-recently-been-more-active-in-specializing-policy-for-access-control-and-for-ip-forwarding-rules.-it-is-possible-that-tosca-could-draw-on-this-work-to-make-tosca-policy-framework-more-useful.policy-definition">policy_defn_1</a>&gt;</p>
-<p>- ...</p>
-<p>- &lt;<a
-href="#i-know-that-tmf-have-a-branch-of-their-information-model-to-describe-policy-but-that-it-is-not-used-much-and-that-mef-have-recently-been-more-active-in-specializing-policy-for-access-control-and-for-ip-forwarding-rules.-it-is-possible-that-tosca-could-draw-on-this-work-to-make-tosca-policy-framework-more-useful.policy-definition">policy_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policies:
+  - <policy_defn_1>
+  - ...
+  - <policy_defn_n>
+```
 ###### Example
 
 The following example shows the definition of a placement policy.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policies:</p>
-<p>- my_placement_policy:</p>
-<p>type: mycompany.mytypes.policy.placement</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policies:
+  - my_placement_policy:
+      type: mycompany.mytypes.policy.placement
+```
 ##### substitution_mapping
 
 ###### requirement_mapping
@@ -3214,26 +2780,13 @@ The grammar of a requirement_mapping is as follows:
 ```
 <requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
 ```
-
 The multi-line grammar is as follows :
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;requirement_name&gt;:</p>
-<p>mapping: [ &lt;node_template_name&gt;,
-&lt;node_template_capability_name&gt; ]</p>
-<p>properties:</p>
-<p>&lt;property_name&gt;: &lt;property_value&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>: 
+  mapping: [ <node_template_name>, <node_template_capability_name> ]
+  properties:
+    <property_name>: <property_value>
+```
 - requirement_name: represents the name of the requirement as it appears
   in the Node Type definition for the Node Type (name) that is declared
   as the value for on the substitution_mappings’ “node_type” key.
@@ -3250,62 +2803,51 @@ The multi-line grammar is as follows :
 <!----
 {"id": "489", "author": "Calin Curescu", "date": "2020-06-17T18:23:00Z", "comment": "\\### need to revisit this. Example is wrong !!!", "target": "Example"}-->
 
+The following example shows a requirement mapping.
+```
 
-The following example shows the definition of a placement policy.
+inputs:
+   cpus: 
+     type: integer
+     validation: { $less_than: [ $value, 2 ] } # OR use “defaults” key
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>service_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>validation: { $less_than: [ $value, 2 ] } # OR use “defaults” key</p>
-<p>substitution_mappings:</p>
-<p>node_type: MyService</p>
-<p>properties: # Do not care if running or matching (e.g., Compute
-node)</p>
-<p># get from outside? Get from contsraint?</p>
-<p>num_cpus: cpus # Implied “PUSH”</p>
-<p># get from some node in the topology…</p>
-<p>num_cpus: [ &lt;node&gt;, &lt;cap&gt;, &lt;property&gt; ]</p>
-<p># 1) Running</p>
-<p>architecture:</p>
-<p># a) Explicit</p>
-<p>value: { $get_property: [some_service, architecture] }</p>
-<p># b) implicit</p>
-<p>value: [ some_service, &lt;req | cap name&gt;, &lt;property name&gt;
-architecture ]</p>
-<p>default: “amd”</p>
-<p># c) INPUT mapping?</p>
-<p>???</p>
-<p># 2) Catalog (Matching)</p>
-<p>architecture:</p>
-<p>contraints: equals: “x86”</p>
-<p>capabilities:</p>
-<p>bar: [ some_service, bar ]</p>
-<p>requirements:</p>
-<p>foo: [ some_service, foo ]</p>
-<p>node_templates:</p>
-<p>some_service:</p>
-<p>type: MyService</p>
-<p>properties:</p>
-<p>rate: 100</p>
-<p>capabilities:</p>
-<p>bar:</p>
-<p>...</p>
-<p>requirements:</p>
-<p>- foo:</p>
-<p>...</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+substitution_mappings:
+    node_type: MyService
+    properties:  # Do not care if running or matching (e.g., Compute node)
+      # get from outside?  Get from contsraint?
+      num_cpus: cpus # Implied “PUSH”
+      # get from some node in the topology…
+      num_cpus: [ <node>, <cap>, <property> ]
+      # 1) Running 
+      architecture: 
+        # a) Explicit
+        value: { $get_property: [some_service, architecture] }
+        # b) implicit
+        value: [ some_service, <req | cap name>, <property name> architecture ] 
+        default: “amd”
+        # c) INPUT mapping?
+        ???
+      # 2) Catalog (Matching)
+      architecture: 
+         contraints: equals: “x86”
+ 
+    capabilities:
+      bar: [ some_service, bar ]
+    requirements:
+      foo: [ some_service, foo ]
 
+  node_templates:
+    some_service:
+      type: MyService
+      properties: 
+        rate: 100
+      capabilities:
+        bar:
+          ...
+      requirements:
+        - foo: 
+            ...
+```
 Nodes and Relationships
 -----------------------
 
