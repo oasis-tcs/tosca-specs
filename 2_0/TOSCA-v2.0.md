@@ -681,7 +681,6 @@ TOSCA Version 2.0 specification.
 <!----
 {"id": "161", "author": "Calin Curescu", "date": "2020-04-16T12:53:00Z", "comment": "This section needs completion before submitting the TOSCA 2.0.", "target": "Modeling concepts and goals\n\nTBD. Here we should have selected core concepts of TOSCA 1.0 from\nsection \u201c[3\u00a0\u00a0\u00a0Core Concepts and Usage\nPattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)\u201d\nand this section should be a more in-depth section than section 2.1 in\nthis document."}-->
 
-
 > Add a metamodel picture
 
 > Explain separation of concerns and different roles. Refer to email
@@ -719,7 +718,6 @@ are clarified next:
   
 <!----
 {"id": "164", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:42:00Z", "comment": "Expansion and modification is part of\n  Refinement not Derivation. This bullet point should be\n  removed", "target": ""}-->
-
 
 - **Refinement**:
 
@@ -979,59 +977,59 @@ TOSCA file and/or external TOSCA files.</td>
 
 The overall structure of a TOSCA file and its top-level keynames is
 shown below:
+```
+# Mandatory TOSCA version string
+tosca_definitions_version: <value>  # Mandatory, see section 3.1 for usage
+profile: <string>                   # Optional, see section 3.2 for usage
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Mandatory TOSCA version string</p>
-<p>tosca_definitions_version: &lt;value&gt; # Mandatory, see section 3.1
-for usage</p>
-<p>profile: &lt;string&gt; # Optional, see section 3.2 for usage</p>
-<p># Optional metadata keyname: value pairs</p>
-<p>metadata:</p>
-<p># map of YAML values</p>
-<p># Optional description of the definitions inside the file.</p>
-<p>description: &lt;<a href="#TYPE_YAML_STRING">template_
-description</a>&gt;</p>
-<p>dsl_definitions:</p>
-<p># map of YAML alias anchors (or macros)</p>
-<p>repositories:</p>
-<p># map of external repository definitions which host TOSCA
-artifacts</p>
-<p>imports:</p>
-<p># ordered list of <a href="#import-definition">import
-definitions</a></p>
-<p>artifact_types:</p>
-<p># map of <a href="#artifact-type">artifact type</a> definitions</p>
-<p>data_types:</p>
-<p># map of <a href="#data-type">datatype</a> definitions</p>
-<p>capability_types:</p>
-<p># map of <a href="#capability-type">capability type</a>
-definitions</p>
-<p>interface_types</p>
-<p># map of <a href="#interface-type">interface type</a> definitions</p>
-<p>relationship_types:</p>
-<p># map of <a href="#relationship-type">relationship type</a>
-definitions</p>
-<p>node_types:</p>
-<p># map of <a href="#node-type">node type</a> definitions</p>
-<p>group_types:</p>
-<p># map of <a href="#group-type">group type</a> definitions</p>
-<p>policy_types:</p>
-<p># map of <a href="#policy-type">policy type</a> definitions</p>
-<p>functions:</p>
-<p># map of function definitions`</p>
-<p>service_template:</p>
-<p># service template definition of the cloud application or
-service</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+# Optional metadata keyname: value pairs
+metadata:
+  
+  # map of YAML values
+
+# Optional description of the definitions inside the file.
+description: <template_ description>
+
+dsl_definitions:
+  # map of YAML alias anchors (or macros)
+
+repositories:
+  # map of external repository definitions which host TOSCA artifacts
+
+imports:
+  # ordered list of import definitions 
+
+artifact_types:
+  # map of artifact type definitions
+
+data_types:
+  # map of datatype definitions
+
+capability_types:
+  # map of capability type definitions
+
+interface_types
+  # map of interface type definitions
+
+relationship_types:
+  # map of relationship type definitions
+
+node_types:
+  # map of node type definitions
+
+group_types:
+  # map of group type definitions
+
+policy_types:
+  # map of policy type definitions
+
+functions:
+  # map of function definitions`
+
+service_template:
+  # service template definition of the cloud application or service
+
+```
 
 ##### Requirements
 
@@ -1058,9 +1056,9 @@ TOSCA grammar that should be used to parse the remainder of the TOSCA
 file.
 
 ###### Keyname
-
-       tosca_definitions_version 
-
+```
+tosca_definitions_version 
+```
 ###### Grammar
 
 ```
@@ -1135,12 +1133,9 @@ keynames with values that can use all types supported by the [YAML 1.2.2
 recommended
 schemas](https://yaml.org/spec/1.2.2/#chapter-10-recommended-schemas)
 \[Yaml-1.2\]. Specifically, the following types can be used for metadata
-values: map, seq, str, null, bool, int, float
+values: map, seq, str, null, bool, int, float.
 <!----
 {"id": "213", "author": "Chris Lauwers", "date": "2022-12-06T14:44:00Z", "comment": "Did we\ndecide to allow recursive metadata (i.e. maps of\nmaps?)", "target": "float"}-->
-.
-
-- 
 
 ###### Keyname
 ```
@@ -1148,38 +1143,18 @@ metadata
 ```
 
 ###### Grammar
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>metadata:</p>
-<p>&lt;map_of_yaml_values&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+metadata: 
+  <map_of_yaml_values>
+```
 
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>metadata:</p>
-<p>creation_date: 2015-04-14</p>
-<p>date_updated: 2015-05-01</p>
-<p>status: developmental</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+metadata: 
+  creation_date: 2015-04-14
+  date_updated: 2015-05-01
+  status: developmental  
+```
 
 ##### description
 
@@ -1204,20 +1179,10 @@ description: A simple example service template
 ```
 
 Multi-line example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>description: "A multiline description</p>
-<p>using a quoted string”</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+description: "A multiline description 
+using a quoted string”
+```
 
 ##### dsl_definitions
 
@@ -1230,49 +1195,30 @@ dsl_definitions
 ```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>dsl_definitions:</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">dsl_definition_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">dsl_definition_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+dsl_definitions:
+   <dsl_definition_1>
+   ...
+   <dsl_definition_n>
+```
 
 ###### Example
 <!----
 {"id": "236", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:18:00Z", "comment": "There should also be an example of how to use the macro once defined.", "target": "Example"}-->
+```
+dsl_definitions:
+    ubuntu_image_props: &ubuntu_image_props
+      architecture: x86_64
+      type: linux
+      distribution: ubuntu
+      os_version: 14.04
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>dsl_definitions:</p>
-<p>ubuntu_image_props: &amp;ubuntu_image_props</p>
-<p>architecture: x86_64</p>
-<p>type: linux</p>
-<p>distribution: ubuntu</p>
-<p>os_version: 14.04</p>
-<p>redhat_image_props: &amp;redhat_image_props</p>
-<p>architecture: x86_64</p>
-<p>type: linux</p>
-<p>distribution: rhel</p>
-<p>os_version: 6.6</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+    redhat_image_props: &redhat_image_props
+      architecture: x86_64
+      type: linux
+      distribution: rhel
+      os_version: 6.6
+```
 
 ##### repositories
 
@@ -1286,44 +1232,21 @@ repositories
 ```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>repositories:</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">repository_definition_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a
-href="#TYPE_YAML_STRING">repository_definition_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+repositories:
+   <repository_definition_1>
+   ...
+   <repository_definition_n>
+```
 
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>repositories:</p>
-<p>my_project_artifact_repo:</p>
-<p>description: development repository for TAR archives and Bash
-scripts</p>
-<p>url: <a
-href="http://mycompany.com/repository/myproject/">http://mycompany.com/repository/myproject/</a></p>
-<p>external_repo: https://foo.bar</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+repositories:
+  my_project_artifact_repo:
+    description: development repository for TAR archives and Bash scripts
+    url: http://mycompany.com/repository/myproject/
+  external_repo: https://foo.bar
+```
 
 ##### imports
 
@@ -1341,46 +1264,23 @@ imports
 ```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>imports:</p>
-<p>- &lt;<a
-href="#it-would-be-good-to-allow-also-the-import-of-specific-types-via-their-fully-qualified-names-and-also-entire-namespaces-i.e.-types-from-entire-namespaces-from-athe-catalogue.-that-is-in-addition-to-importing-from-a-file-globally-well-known-local-catalog-fileimport-definition">import_definition_1</a>&gt;</p>
-<p>- ...</p>
-<p>- &lt;<a
-href="#it-would-be-good-to-allow-also-the-import-of-specific-types-via-their-fully-qualified-names-and-also-entire-namespaces-i.e.-types-from-entire-namespaces-from-athe-catalogue.-that-is-in-addition-to-importing-from-a-file-globally-well-known-local-catalog-fileimport-definition">import_definition_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+imports:
+   - <import_definition_1>
+   - ...
+   - <import_definition_n>
+```
 
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># An example import of TOSCA files from a location relative to
-the</p>
-<p># file location of the TOSCA file declaring the import.</p>
-<p>imports:</p>
-<p>- relative_path/my_defns/my_typesdefs_1.yaml</p>
-<p>- url: my_defns/my_typesdefs_n.yaml</p>
-<p>repository: my_company_repo</p>
-<p>namespace: mycompany</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+# An example import of TOSCA files from a location relative to the 
+# file location of the TOSCA file declaring the import.
+imports:
+  - relative_path/my_defns/my_typesdefs_1.yaml
+  - url: my_defns/my_typesdefs_n.yaml    
+    repository: my_company_repo
+    namespace: mycompany
+```
 
 ##### artifact_types
 
