@@ -123,7 +123,6 @@ following definitions when used in context of this document.
 | Topology Model         | A Topology Model defines the structure of a service in the context of a Service Template. A Topology model consists of a set of Node Template and Relationship Template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
 | Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
 
-
 ### 1.2.2 Acronyms and abbreviations
 
 ### 1.2.3 Document conventions
@@ -172,11 +171,9 @@ lifecycle:
     services as topology graphs that consist of nodes and relationships.
     Nodes model the components of which a service is composed, and
     relationships model dependencies between these service components.
-
-2.  ***Day 1—*Service *Deployment***: TOSCA can also be used to define
+2.  **Day 1—Service Deployment**: TOSCA can also be used to define
     mechanisms for deploying TOSCA service topologies on external
     platforms.
-
 3.  **Day 2—Service Management**: TOSCA can enable run-time management
     of services by providing support for updating and/or upgrading
     deployed services and by providing service assurance functionality.
@@ -197,23 +194,17 @@ following:
 - Infrastructure-as-a-Service Clouds: automate the deployment and
   management of workloads in IaaS clouds such as OpenStack, Amazon Web
   Services, Microsoft Azure, and others.
-
 - Cloud-native applications: deploy containerized applications and
   micro-services, for example by interfacing to orchestration platforms
   such as Kubernetes.
-
 - Network Functions Virtualization: define the management of Virtual
   Network Functions and their composition into complex network services.
-
 - Software Defined Networking: support on-demand creation of network
   services (for example SD-WAN).
-
 - Functions-as-a-Service: define abstract software applications without
   any deployment or operational considerations.
-
 - IoT and Edge computing: deploy services at the network edge with the
   goal of minimizing latency.
-
 - Process automation: support open and interoperable process control
   architectures.
 
@@ -232,15 +223,12 @@ referring to fall into the following categories:
   parsing and interpreting a TOSCA service template for a particular
   purpose. For example, the purpose could be validation, translation or
   visual rendering.
-
 - TOSCA orchestrator (also called orchestration engine): A TOSCA
   processor that interprets a TOSCA file or a TOSCA CSAR in order to
   instantiate, deploy, and manage the described application in a Cloud.
-
 - TOSCA translator: A tool that translates TOSCA files into documents
   that use another language, such as Kubernetes Helm charts or Amazon
   CloudFormation templates.
-
 - TOSCA template generator: A tool that generates a TOSCA file. An
   example of generator is a modeling tool capable of generating or
   editing a TOSCA file (often such a tool would also be a TOSCA
@@ -249,6 +237,8 @@ referring to fall into the following categories:
 The above list is not exclusive. The above definitions should be
 understood as referring to and implementing TOSCA as described in this
 document.
+
+-------
 
 TOSCA core concepts
 ===================
@@ -279,15 +269,13 @@ manipulate the component. Node Types are defined separately for reuse
 purposes. In a service template a Node Template assigns values to the
 properties defined in the Node Type.
 
-<img src="media/image2.png" style="width:6.58577in;height:3.41667in" /><img src="media/image3.png" style="width:6in;height:3.11in" />
+![TOSCA File](images/tosca_file.png)
 
-Figure : Structural Elements of a Service Template and their Relations
+Figure : Structural Elements of a TOSCA File
 
-For
-example
 <!----
 {"id": "94", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:20:00Z", "comment": "A diagram of the example would help", "target": "\nexample"}-->
-, consider a service
+For example, consider a service
 that consists of an application server, a process engine, and a process
 model. A Service Template defining that service would include one Node
 Template of Node Type “application server”, another Node Template of
@@ -309,20 +297,18 @@ types.</span>*relationships*
 to
 other node templates in the Service Template. Relationships represent
 the edges in the service topology
-graph
+graph.
 <!----
 {"id": "97", "author": "Michael Rehder", "date": "2020-12-15T08:49:00Z", "comment": "New term! It\u2019s\nconfusing to have \u201cService Template\u201d and \u201cService Topology Graph\u201d and\n\u201cTopology Template\u201d.", "target": "service topology\ngraph"}-->
-.
-The
 <!----
 {"id": "98", "author": "Chris Lauwers", "date": "2021-01-18T18:17:00Z", "comment": "Should we introduce \u201cservice topology graph\u201d\nwhen what we mean is really the \u201cinstance\nmodel\u201d.", "target": "The"}-->
- node template
+The node template
 that includes the relationship definition is implicitly defined as the
 source node of the relationship and the target node is explicitly
 specified as part of the relationship definition. Each relationship
 definition refers to a Relationship Type that defines the semantics and
 any properties of the relationship. Relationship Types are defined
-separately for reuse purposes. <span class="comment-end" id="95"></span>
+separately for reuse purposes.
 
 In the example above, a relationship can be established from the process
 engine Node Template to the application server Node Template with the
@@ -363,11 +349,10 @@ describing the appropriate execution environment.
 Workflows
 ---------
 
-A deployed service is an instance of a service
-template
 <!----
 {"id": "101", "author": "Michael Rehder", "date": "2020-12-15T08:46:00Z", "comment": "This isn\u2019t correct as this document says\nthat a \u201cService Template\u201d is merely a TOSCA document and so could just\nhave type definitions within it.", "target": ""}-->
-. More precisely, the instance is created by
+A deployed service is an instance of a service
+template. More precisely, the instance is created by
 instantiating the Service Template of its TOSCA file by running
 workflows that are most often automatically created by the orchestrator
 and that invoke the interface operations of the Node Types or the Node
@@ -399,14 +384,13 @@ template).
 Requirements and Capabilities
 -----------------------------
 
+<!----
+{"id": "107", "author": "Michael Rehder", "date": "2020-12-15T09:11:00Z", "comment": "Confusing \u2013 \u201cservice topology\u201d is a new\nterm. It\u2019s a \u201ctopology template\u201d but not all \u201cservice template\u201d are a\n\u201ctopology template\u201d.", "target": "service topology within a single service\ntemplate"}-->
 We discussed earlier how relationships are used to link node templates
 together into a service topology graph. However, it may not always be
 possible to define all node templates for a given
 service topology within a single service
-template
-<!----
-{"id": "107", "author": "Michael Rehder", "date": "2020-12-15T09:11:00Z", "comment": "Confusing \u2013 \u201cservice topology\u201d is a new\nterm. It\u2019s a \u201ctopology template\u201d but not all \u201cservice template\u201d are a\n\u201ctopology template\u201d.", "target": "service topology within a single service\ntemplate"}-->
-. For example, modular
+template. For example, modular
 design practices may dictate that different service subcomponents be
 modeled using separate service templates. This may result in
 relationships that need to be established across multiple service
@@ -443,7 +427,7 @@ used in the context of several Node Types. Requirement definitions can
 specify the relationship type that will be used when creating the
 relationship that fulfills the requirement.
 
-<img src="media/image4.png" style="width:3.35in;height:2.1in" />
+![Requirements and Capabilities](images/requirements_and_capabilities.png)
 
 Figure : Requirements and Capabilities
 
@@ -462,15 +446,13 @@ instantiation.
 <!----
 {"id": "108", "author": "Michael Rehder", "date": "2020-12-15T16:33:00Z", "comment": "There should be some\ndiscussion about this issue \u2013 how are the relations defined in the\ntopology template related to the relations of the substituted node\ntype?", "target": ""}-->
 
-
 Decomposition of Service Templates
 ----------------------------------
 
-TOSCA provides support for decomposing service components using the
-Substitution Mapping feature. For example, a Service Template
-
 <!----
 {"id": "114", "author": "Michael Rehder", "date": "2020-12-15T16:17:00Z", "comment": "Another\nplace where I find the use of the term \u201cService Template\u201d overly\nconfusing. It should say \u201cTopology Template\u201d as that is the construct in\nthe end that is supporting the substitution.  \nSection 4.5.1 says \u201ctopology template\u201d so I think this change is in line\nwith the practical definitions in the document.", "target": "Service Template\n"}-->
+TOSCA provides support for decomposing service components using the
+Substitution Mapping feature. For example, a Service Template
 for a business application
 that is hosted on an application server tier might focus on defining the
 structure and manageability behavior of the business application itself.
@@ -480,9 +462,9 @@ specialized in deploying and managing application servers. This approach
 enables separation of concerns and re-use of common infrastructure
 templates.
 
-<img src="media/image5.png" style="width:3.75in;height:2.77in" />
+![Service Decomposition](images/service_decomposition.png)
 
-Figure : Service Template Decomposition
+Figure : Service Decomposition
 
 From the point of view of a Service Template (e.g. the business
 application Service Template from the example above) that uses another
@@ -550,11 +532,11 @@ content is specific for a particular cloud application. CSARs are zip
 files, typically compressed. A CSAR may contain a file called TOSCA.meta
 that describes the organization of the CSAR.
 
-TOSCA <span class="comment-start" id="130" author="Chris Lauwers" date="2021-06-28T23:14:00Z">Alternatively, we could also move this section into Chapter 5</span>Entities
+TOSCA Entities
+--------------
+
 <!----
 {"id": "129", "author": "Chris Lauwers", "date": "2021-06-28T23:14:00Z", "comment": "This subsection has been moved here from the Operational Model chapter. We need to revisit where exactly it belongs to make sure the document flows correctly.", "target": "<span class=\"comment-start\" id=\"130\" author=\"Chris Lauwers\" date=\"2021-06-28T23:14:00Z\">Alternatively, we could also move this section into Chapter 5</span>Entities"}-->
-</span>
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 When defining services using TOSCA, we must distinguish between four
 kinds of entities:
@@ -563,23 +545,18 @@ kinds of entities:
     can be used during service design. For example, TOSCA Node Types
     define reusable service components, including their configurable
     properties.
-
-<!-- -->
-
 2.  **TOSCA Templates**: TOSCA templates define (typed) components of a
     service. For example, service templates include node templates that
     assign specific values (often using TOSCA intrinsic functions) to
     the configurable properties defined in the corresponding node types.
     It is not uncommon to have multiple node templates of the same node
     type in a service template.
-
 3.  **Representations**: At deployment time, TOSCA implementations
     combine TOSCA service templates with deployment-specific input
     values to create run-time representations of the service that is to
     be deployed and managed. Note that TOSCA does not standardize an
     object model for representations. Instead, such models are
     implementation specific.
-
 4.  **External Implementations**: These are the actual entities in the
     external world that correspond to the representations managed by the
     orchestrator. TOSCA implementations that provide runtime service
@@ -587,7 +564,7 @@ kinds of entities:
     with the actual state of the external implementations.
 
 TOSCA Operational Model
-=======================
+-----------------------
 
 This section presents a TOSCA Functional Architecture and an associated
 operational model that supports the three service lifecycle phases
@@ -602,8 +579,7 @@ anticipate all three and must include support for all four kinds of
 TOSCA entities. The TOSCA architecture defined here illustrates how the
 various TOSCA entities are used and how they are related.
 
-<img src="media/image6.png" style="width:6.45in;height:1.8in"
-alt="Timeline Description automatically generated with medium confidence" />
+![TOSCA Functional Architecture](images/functional_architecture.png)
 
 Figure : TOSCA Functional Architecture
 
@@ -612,84 +588,72 @@ The functional architecture defines the following three blocks:
 1.  **TOSCA Processor**: This functional block defines functionality
     that must be provided by all TOSCA implementations. TOSCA processors
     convert TOSCA-based service definitions into service
-    representations 
+    representations that can be processed by an Orchestrator.
 <!----
 {"id": "132", "author": "Chris Lauwers", "date": "2021-06-28T23:19:00Z", "comment": "We need to better define the concept of\n    \"representations\"", "target": "representations "}-->
-that can be processed by an Orchestrator.
-
-<!-- -->
-
-3.  **Orchestrator**: This functional block creates external
+2.  **Orchestrator**: This functional block creates external
     implementations on various resource platforms based on the service
     representations created by a TOSCA processor. The orchestration
     functionality can itself be defined using TOSCA or can be provided
     by external (non-TOSCA) orchestration platforms.
-
-4.  **Platform**: In the context of a TOSCA architecture, platforms
+3.  **Platform**: In the context of a TOSCA architecture, platforms
     represent external cloud, networking, or other infrastructure
     resources on top of which service entities can be created.
 
 The remainder of this section describes each of these functional blocks
 in more detail.
 
-TOSCA Processor
----------------
+### TOSCA Processor
 
 At the core of a compliant TOSCA implementation is a TOSCA Processor
 that can create service representations from TOSCA service templates. A
 TOSCA Processor contains the following functional blocks:
 
-### Parser
+#### Parser
 
 - Accepts a single TOSCA file plus imported TOSCA files (files without a
   “service_template”)
-
 - Can (optionally) import these units from one or more repositories,
   either individually or as complete profiles
-
 - Outputs valid normalized node templates and <u>unresolved</u>
   requirements (one-to-one equivalency)
 
-### Resolver
+#### Resolver
 
 A resolver performs the following functions
 
-#### Creating Service Representations
+##### Creating Service Representations
 
 - Applies service inputs.
-
 - Converts normalized node templates to node representations (one-to-one
   equivalency *\[cardinality?\]*) *\[a full TOSCA orchestrator can
   manage these instead of the external orchestrator/platform\]*
-
 - Calls intrinsic functions (on demand for all the above) using the
   graph of node representations.
 
-#### Requirement Fulfillment
+##### Requirement Fulfillment
 
 - Satisfies all requirements and creates the relationship graph (an
   unsatisfied requirement results in an error)
 
-#### Substitution Mapping
+##### Substitution Mapping
 
-Orchestrator
-------------
+### Orchestrator
 
 An orchestrator performs the following actions:
 
 - (Continuously) turns node representations into zero or more node
   implementations (one-to-any)
-
 - (Continuously) updates node representation attribute values (error if
   they do not adhere to TOSCA type validation clauses or property
   definition validation clauses) *\[we still don’t know how to handle
   multiplicity\]*
-
 - (Continuously) reactivates the resolver: outputs and even satisfaction
   of requirements may change.
-
 - (Optionally) changes the node representations themselves for day 2
   transformations.
+
+-------
 
 TOSCA definitions
 =================
