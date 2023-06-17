@@ -4417,7 +4417,7 @@ of a Requirement assignment in a Node Template).
 ##### Keynames
 
 The following is the list of recognized keynames for a TOSCA interface
-definition:
+assignment:
 
 | Keyname       | Mandatory | Type                                                              | Description                                                                                                                                                                          |
 |---------------|-----------|-------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4743,37 +4743,22 @@ The following single-line grammar may be used when the operation’s
 implementation definition is the only keyname that is needed, and when
 the operation implementation definition itself can be specified using a
 single line grammar:
-
-| \<[operation_name](#TYPE_YAML_STRING)\>: \<[operation_implementation_definition](#operation-and-notification-implementation-definition)\> |
-|-------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+<[operation_name](#TYPE_YAML_STRING)>: <[operation_implementation_definition](#operation-and-notification-implementation-definition)> 
+```
 ###### Extended notation
 
 The following multi-line grammar may be used in Node or Relationship
 Template definitions when additional information about the operation is
 needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">operation_name</a>&gt;:</p>
-<p>implementation: &lt;<a
-href="#operation-and-notification-implementation-definition">operation_implementation_definition</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment">parameter_value_assignments</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;<a
-href="#parameter-mapping-assignment">parameter_mapping_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<operation_name>:
+   implementation: <operation_implementation_definition>
+   inputs: 
+     <parameter_value_assignments>
+   outputs:
+     <parameter_mapping_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4783,22 +4768,22 @@ have the following meaning:
 - operation_implementation_definition: represents the optional
   specification of the operation’s implementation
 
-- the implementation declared here overrides the implementation provided
-  > at operation definition.
+  - the implementation declared here overrides the implementation provided
+    at operation definition.
 
 - parameter_value_assignments: represents the optional map of parameter
   value assignments for passing input parameter values to operations.
 
-- assignments for operation inputs that are not defined in the operation
-  > definition may be provided
+  - assignments for operation inputs that are not defined in the operation
+    definition may be provided
 
 - parameter_mapping_assignments: represents the optional map of
   parameter mapping assignments that consists of named output values
   returned by operation implementations (i.e. artifacts) and associated
   attributes into which this output value must be stored
 
-- assignments for operation outputs that are not defined in the
-  > operation definition may be provided.
+  - assignments for operation outputs that are not defined in the
+    operation definition may be provided.
 
 ##### Additional requirements
 
@@ -4913,35 +4898,20 @@ The following single-line grammar may be used when the notification’s
 implementation definition is the only keyname that is needed and when
 the notification implementation definition itself can be specified using
 a single line grammar:
-
-| \<[notification_name](#TYPE_YAML_STRING)\>: \<[notification_implementation_definition](#operation-and-notification-implementation-definition)\> |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+<[notification_name](#TYPE_YAML_STRING)>: <[notification_implementation_definition](#operation-and-notification-implementation-definition)> 
+```
 ###### Extended notation 
 
 The following multi-line grammar may be used when additional information
 about the notification is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;notification_name&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">notification_description</a>&gt;</p>
-<p>implementation: &lt;<a
-href="#operation-and-notification-implementation-definition">notification_implementation_definition</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<notification_name>:
+  description: <notification_description>
+  implementation: <notification_implementation_definition>
+  outputs: 
+    <parameter_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5079,34 +5049,20 @@ The following single-line grammar may be used when the notification’s
 implementation definition is the only keyname that is needed, and when
 the notification implementation definition itself can be specified using
 a single line grammar:
-
-| \<[notification_name](#TYPE_YAML_STRING)\>: \<[notification_implementation_definition](#operation-and-notification-implementation-definition)\> |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+<[notification_name](#TYPE_YAML_STRING)>: <[notification_implementation_definition](#operation-and-notification-implementation-definition)> 
+```
 ###### Extended notation
 
 The following multi-line grammar may be used in Node or Relationship
 Template definitions when additional information about the notification
 is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">notification_name</a>&gt;:</p>
-<p>implementation: &lt;<a
-href="#operation-and-notification-implementation-definition">notification_implementation_definition</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;<a
-href="#parameter-mapping-assignment">parameter_mapping_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<notification_name>:
+  implementation: <notification_implementation_definition>
+  outputs: 
+    <parameter_mapping_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5117,16 +5073,16 @@ have the following meaning:
   specification of the notification implementation (i.e. the external
   artifact that is may send notifications)
 
-- the implementation declared here overrides the implementation provided
-  > at notification definition.
+  - the implementation declared here overrides the implementation provided
+    at notification definition.
 
 - parameter_mapping_assignments: represents the optional map of
   parameter_mapping_assignments that consists of named output values
   returned by operation implementations (i.e. artifacts) and associated
   attributes into which this output value must be stored
 
-- assignments for notification outputs that are not defined in the
-  > operation definition may be provided.
+  - assignments for notification outputs that are not defined in the
+    operation definition may be provided.
 
 ##### Additional requirements
 
@@ -5219,10 +5175,9 @@ definitions have the following grammar:
 
 The following single-line grammar may be used when only a primary
 implementation artifact name is needed:
-
-| [implementation](#TYPE_YAML_STRING): \<[primary_artifact_name](#TYPE_YAML_STRING)\> |
-|-------------------------------------------------------------------------------------|
-
+```
+[implementation](#TYPE_YAML_STRING): <[primary_artifact_name](#TYPE_YAML_STRING)> 
+```
 This notation can be used when the primary artifact name uniquely
 identifies the artifact, either because it refers to an artifact
 specified in the artifacts section of a type or template, or because it
@@ -5234,26 +5189,12 @@ definition.
 The following multi-line short-hand grammar may be used when multiple
 artifacts are needed, but each of the artifacts can be uniquely
 identified by name as before:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>implementation:</p>
-<p>primary: &lt;<a
-href="#TYPE_YAML_STRING">primary_artifact_name</a>&gt;</p>
-<p>dependencies:</p>
-<p>- &lt;<a
-href="#TYPE_YAML_STRING">list_of_dependent_artifact_names</a>&gt;</p>
-<p>timeout: 60</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  primary: <primary_artifact_name>
+  dependencies:
+    - <list_of_dependent_artifact_names>
+  timeout: 60
+```
 ###### Extended notation for use with single artifact
 
 The following multi-line grammar may be used in Node or Relationship
@@ -5262,51 +5203,26 @@ additional information about the primary artifact is needed (e.g. to
 specify the repository from which to obtain the artifact, or to specify
 the artifact type when it cannot be derived from the artifact file
 extension):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>implementation:</p>
-<p>primary:</p>
-<p>&lt;<a
-href="#artifact-definition">primary_artifact_definition</a>&gt;</p>
-<p>timeout: 100</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+implementation: 
+  primary:
+    <primary_artifact_definition>
+  timeout: 100
+```
 ###### Extended notation for use with multiple artifacts
 
 The following multi-line grammar may be used in Node or Relationship
 Type or Template definitions when there are multiple artifacts that may
 be needed for the operation to be implemented and additional information
 about each of the artifacts is required:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>implementation:</p>
-<p>primary:</p>
-<p>&lt;<a
-href="#artifact-definition">primary_artifact_definition</a>&gt;</p>
-<p>dependencies:</p>
-<p>- &lt;<a href="#artifact-definition">list_of_dependent_artifact
-definitions</a>&gt;</p>
-<p>timeout: 120</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+implementation: 
+  primary: 
+    <primary_artifact_definition>   
+  dependencies: 
+    - <list_of_dependent_artifact definitions>
+  timeout: 120
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5388,35 +5304,18 @@ addition, the Artifact Type has the following recognized keynames:
 ##### Grammar
 
 Artifact Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">artifact_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_artifact_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">artifact_description</a>&gt;</p>
-<p>mime_type: &lt;<a
-href="#TYPE_YAML_STRING">mime_type_string</a>&gt;</p>
-<p>file_ext: [ &lt;<a href="#TYPE_YAML_STRING">file_extensions</a>&gt;
-]</p>
-<p>properties:</p>
-<p>&lt;<a
-href="#_Schema_Definition">property_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<artifact_type_name>:
+  derived_from: <parent_artifact_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <artifact_description>
+  mime_type: <mime_type_string>
+  file_ext: [ <file_extensions> ]
+  properties:     
+    <property_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5457,34 +5356,22 @@ rules:
   definitions may be added.
 
 ##### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>my_artifact_type:</p>
-<p>description: Java Archive artifact type</p>
-<p>derived_from: tosca.artifact.Root</p>
-<p>mime_type: application/java-archive</p>
-<p>file_ext: [ jar ]</p>
-<p>properties:</p>
-<p>id:</p>
-<p>description: Identifier of the jar</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>creator:</p>
-<p>description: Vendor of the java implementation on which the jar is
-based</p>
-<p>type: string</p>
-<p>required: false</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+my_artifact_type:
+  description: Java Archive artifact type
+  derived_from: tosca.artifact.Root
+  mime_type: application/java-archive
+  file_ext: [ jar ]
+  properties:
+    id: 
+      description: Identifier of the jar
+      type: string
+      required: true
+    creator:
+      description: Vendor of the java implementation on which the jar is based
+      type: string
+      required: false
+```
 ##### Additional Requirements
 
 - The ‘mime_type’ keyname is meant to have values that are Apache mime
@@ -5615,40 +5502,25 @@ Artifact definitions have one of the following grammars:
 
 The following single-line grammar may be used when the artifact’s type
 and mime type can be inferred from the file URI:
-
-| \<[artifact_name](#TYPE_YAML_STRING)\>: \<[artifact_file_URI](#TYPE_YAML_STRING)\> |
-|------------------------------------------------------------------------------------|
-
+```
+<[artifact_name](#TYPE_YAML_STRING)>: <[artifact_file_URI](#TYPE_YAML_STRING)> 
+```
 ###### Extended notation:
 
 The following multi-line grammar may be used when the artifact’s
 definition’s type and mime type need to be explicitly declared:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">artifact_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">artifact_description</a>&gt;</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">artifact_type_name</a>&gt;</p>
-<p>file: &lt;<a href="#TYPE_YAML_STRING">artifact_file_URI</a>&gt;</p>
-<p>repository: &lt;<a
-href="#TYPE_YAML_STRING">artifact_repository_name</a>&gt;</p>
-<p>deploy_path: &lt;<a
-href="#TYPE_YAML_STRING">file_deployment_path</a>&gt;</p>
-<p>version: &lt;artifact _version&gt;</p>
-<p>checksum: &lt;artifact_checksum&gt;</p>
-<p>checksum_algorithm: &lt;artifact_checksum_algorithm&gt;</p>
-<p>properties: &lt;property assignments&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<artifact_name>: 
+  description: <artifact_description>
+  type: <artifact_type_name>
+  file: <artifact_file_URI>
+  repository: <artifact_repository_name>
+  deploy_path: <file_deployment_path>
+  version: <artifact _version>
+  checksum: <artifact_checksum>
+  checksum_algorithm: <artifact_checksum_algorithm>
+  properties: <property assignments>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5699,40 +5571,27 @@ redefined.
 ##### Examples
 
 The following represents an artifact definition:
-
-| my_file_artifact: ../my_apps_files/operation_artifact.txt |
-|-----------------------------------------------------------|
-
+```
+my_file_artifact: ../my_apps_files/operation_artifact.txt 
+```
 The following example represents an artifact definition with property
 assignments:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>artifacts:</p>
-<p>sw_image:</p>
-<p>description: Image for virtual machine</p>
-<p>type: tosca.artifacts.Deployment.Image.VM</p>
-<p>file: <a
-href="http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2">http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2</a></p>
-<p>checksum: ba411cafee2f0f702572369da0b765e2</p>
-<p>version: 3.2</p>
-<p>checksum_algorithm: MD5</p>
-<p>properties:</p>
-<p>name: vSRX</p>
-<p>container_format: BARE</p>
-<p>disk_format: QCOW2</p>
-<p>min_disk: 1 GB</p>
-<p>size: 649 MB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+artifacts:
+  sw_image:
+    description: Image for virtual machine
+    type: tosca.artifacts.Deployment.Image.VM
+    file: http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2
+    checksum: ba411cafee2f0f702572369da0b765e2
+    version: 3.2
+    checksum_algorithm: MD5
+    properties:
+      name: vSRX
+      container_format: BARE
+      disk_format: QCOW2
+      min_disk: 1 GB
+      size: 649 MB
+```
 Properties, Attributes, and Parameters
 --------------------------------------
 
