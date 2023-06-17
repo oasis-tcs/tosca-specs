@@ -698,7 +698,6 @@ are clarified next:
 - **Definition**:
 
   - The TOSCA specification is based on defining modeling entities.
-
   - Entity definitions are based on different sets of keynames (with
     specific syntax and semantics) that are associated with values (of a
     specific format).
@@ -709,20 +708,18 @@ are clarified next:
 - **Derivation**:
 
   - Specific TOSCA entities support a type definition.
-
   - When defining a type, it can be derived from a parent type and inherit
     all the definitions of the parent type.
-
   - The derivation rules describe what (keyname) definitions are inherited
     from the parent type and further if and how they can be expanded or modified. Note
     that some definitions (for example, “version”) and intrinsic to the
     type declaration and so are not inherited.
+  - A parent type can in turn be derived from a parent type. There is no
+    limit to the depth of a chain of derivations.
   
 <!----
 {"id": "164", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:42:00Z", "comment": "Expansion and modification is part of\n  Refinement not Derivation. This bullet point should be\n  removed", "target": ""}-->
 
-  - A parent type can in turn be derived from a parent type. There is no
-    limit to the depth of a chain of derivations.
 
 - **Refinement**:
 
@@ -731,30 +728,28 @@ are clarified next:
     capabilities, etc.). 
     Definitions within a parent type can be refined (adjusted) to better
     suit the needs of the referencing type.
-
-<!----
-{"id": "165", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:43:00Z", "comment": "Type\n  definition is part of Definition not\n  Refinement", "target": ""}-->
-
   - The refinement rules pertaining to an entity describe how such entity
     definitions that are inherited from the parent type during a type
     derivation can be expanded or modified.
 
-- **Augmentation**:
 <!----
-{"id": "166", "author": "Mike Rehder", "date": "2020-04-30T11:10:00Z", "comment": "I think separating augmentation is helpful\n  (as YANG has done). I think it makes it easier to understand the rules\n  that apply for the refining or augmenting\n  scenario", "target": "**Augmentation**"}-->
+{"id": "165", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:43:00Z", "comment": "Type\n  definition is part of Definition not\n  Refinement", "target": ""}-->
+
+- **Augmentation**:
 
   - Definitions within a parent type can be expanded, which is the
     addition of properties, to better suit the requirements of the
     referencing type.
-
   - The augmentation rules pertaining to an entity describe how the
     inherited parent type during a type derivation can be added to.
+
+<!----
+{"id": "166", "author": "Mike Rehder", "date": "2020-04-30T11:10:00Z", "comment": "I think separating augmentation is helpful\n  (as YANG has done). I think it makes it easier to understand the rules\n  that apply for the refining or augmenting\n  scenario", "target": "**Augmentation**"}-->
 
 - **Assignment**:
 
   - When creating a service template, we specify several entities that are
     part of the template (e.g., nodes, relationships, groups, etc.).
-
   - When adding such an entity in the service template, for some
     definitions that appear in the corresponding entity type (e.g.,
     properties, operations, requirements, etc.) we may (or must) assign a
@@ -1064,9 +1059,7 @@ file.
 
 ###### Keyname
 
-```
-tosca_definitions_version 
-```
+       tosca_definitions_version 
 
 ###### Grammar
 
