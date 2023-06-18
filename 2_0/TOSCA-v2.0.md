@@ -9906,15 +9906,13 @@ The get_input function is used to retrieve the values of parameters
 declared within the inputs section of a TOSCA Service Template.
 
 #### Grammar 
-
-| \$get_input: \<input_parameter_name\> |
-|---------------------------------------|
-
+```
+$get_input: <input_parameter_name>
+```
 or
-
-| \$get_input: \[ \<input_parameter_name\>, \<nested_input_parameter_name_or_index_1\>, ..., \<nested_input_parameter_name_or_index_n\> \] |
-|------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+$get_input: [ <input_parameter_name>, <nested_input_parameter_name_or_index_1>, ..., <nested_input_parameter_name_or_index_n> ]
+```
 Note that the first signature does not conform to the custom function
 definition, but it does not have to as it is a TOSCA built-in function.
 
@@ -9961,81 +9959,63 @@ previous parameter) to return.</p></td>
 #### Examples
 
 The following snippet shows an example of the simple get_input grammar:
+```
+inputs:
+  cpus:
+    type: integer
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>num_cpus: { $get_input: cpus }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+node_templates:
+  my_server:
+    type: tosca.nodes.Compute
+    capabilities:
+      host:
+        properties:
+          num_cpus: { $get_input: cpus }
+```
 The following template shows an example of the nested get_input grammar.
 The template expects two input values, each of which has a complex data
 type. The get_input function is used to retrieve individual fields from
 the complex input data.
+```
+data_types:
+  NetworkInfo:
+    derived_from: tosca.Data.Root
+    properties:
+      name:
+        type: string
+      gateway:
+        type: string
+        
+  RouterInfo:
+    derived_from: tosca.Data.Root
+    properties:
+      ip:
+        type: string
+      external:
+        type: string
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p>NetworkInfo:</p>
-<p>derived_from: tosca.Data.Root</p>
-<p>properties:</p>
-<p>name:</p>
-<p>type: string</p>
-<p>gateway:</p>
-<p>type: string</p>
-<p>RouterInfo:</p>
-<p>derived_from: tosca.Data.Root</p>
-<p>properties:</p>
-<p>ip:</p>
-<p>type: string</p>
-<p>external:</p>
-<p>type: string</p>
-<p>service_template:</p>
-<p>inputs:</p>
-<p>management_network:</p>
-<p>type: NetworkInfo</p>
-<p>router:</p>
-<p>type: RouterInfo</p>
-<p>node_templates:</p>
-<p>Bono_Main:</p>
-<p>type: vRouter.Cisco</p>
-<p>directives: [ substitutable ]</p>
-<p>properties:</p>
-<p>mgmt_net_name: { $get_input: [management_network, name]}</p>
-<p>mgmt_cp_v4_fixed_ip: { $get_input: [router, ip]}</p>
-<p>mgmt_cp_gateway_ip: { $get_input: [management_network, gateway]}</p>
-<p>mgmt_cp_external_ip: { $get_input: [router, external]}</p>
-<p>requirements:</p>
-<p>- lan_port:</p>
-<p>node: host_with_net</p>
-<p>capability: virtualBind</p>
-<p>- mgmt_net: mgmt_net</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  inputs:
+    management_network:
+      type: NetworkInfo
+    router:
+      type: RouterInfo
+      
+  node_templates:
+    Bono_Main:
+      type: vRouter.Cisco
+      directives: [ substitutable ]
+      properties:
+        mgmt_net_name: { $get_input: [management_network, name]}
+        mgmt_cp_v4_fixed_ip: { $get_input: [router, ip]}
+        mgmt_cp_gateway_ip: { $get_input: [management_network, gateway]}
+        mgmt_cp_external_ip: { $get_input: [router, external]}
+      requirements:
+        - lan_port: 
+            node: host_with_net
+            capability: virtualBind
+        - mgmt_net: mgmt_net
+```
 ### get_property
 
 The get_property function is used to retrieve property values of
@@ -10050,11 +10030,9 @@ graph of the TOSCA application (as realized by the TOSCA orchestrator).
 #### Grammar 
 <!----
 {"id": "1321", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-169](comments.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.", "target": "Grammar "}-->
-
-
-| \$get_property: \[ \<tosca_traversal_path\>, \<property_name\>, \<nested_property_name_or_index_1\>, ..., \<nested_property_name_or_index_n\> \] |
-|--------------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+$get_property: [ <tosca_traversal_path>, <property_name>, <nested_property_name_or_index_1>, ..., <nested_property_name_or_index_n> ]
+```
 #### Arguments
 
 <table>
@@ -10104,47 +10082,27 @@ previous parameter) to return.</p></td>
 </table>
 
 ##### The simplified TOSCA_PATH definition in BNF format
-
-*\<tosca_traversal_path\> ::= \<initial_context\>, \<node_context\> \|*
-
-> *\<initial_context\>, \<rel_context\>*
-
-*\<initial_context\> ::= \<node_symbolic_name\> \|*
-
-*\<relationship_symbolic_name\>* \|
-
-*SELF*
-
-*\<rel_context\> ::= SOURCE, \<node_context\> \| *
-
-*TARGET, \<node_context\> \| *
-
-*CAPABILITY \|*
-
-*\<empty\>*
-
-*\<node_context\> ::= RELATIONSHIP, \<requirement_name\>,
-\<idx_of_out_rel_in_req\>, \<rel_context\> \|*
-
-*CAPABILITY, \<capability_name\>, RELATIONSHIP, \<idx_of_incoming_rel\>,
-\<rel_context\> \|*
-
-*CAPABILITY, \<capability_name\> \|*
-
-*\<empty\>*
-
-*\<idx_of_out_rel_in_req\> ::= \<integer_index\> \| *
-
-*ALL \| *
-
-*\<empty\>*
-
-*\< idx_of_incoming_rel \> ::= \<integer_index\> \| *
-
-*ALL \| *
-
-*\<empty\>*
-
+```
+<tosca_path> ::=         <initial_context>, <node_context> |
+                         <initial_context>, <rel_context>
+<initial_context> ::=    <node_symbolic_name> | 
+                         <relationship_symbolic_name> |
+                         SELF 
+<rel_context> ::=        SOURCE, <node_context> | 
+                         TARGET, <node_context> | 
+                         CAPABILITY |
+                         <empty>
+<node_context> ::=       RELATIONSHIP, <requirement_name>, <id_of_outgoing_rel>, <rel_context> |
+                         CAPABILITY, <capability_name>, RELATIONSHIP, <id_of_incoming_rel>, <rel_context> |
+                         CAPABILITY, <capability_name> |
+                         <empty>
+<id_of_outgoing_rel> ::= <integer_index> | 
+                         ALL | 
+                         <empty>
+<id_of_incoming_rel> ::= <integer_index> |
+                         ALL | 
+                         <empty>
+```
 The initial context (if we refer to a node or relationship) determines
 if the next context is a relationship context or a node context. Then,
 each *\<node_context\>* can further resolve to a *\<rel_context\>* and
@@ -10203,113 +10161,81 @@ expression from v1.3 to v2.0:
 
 - Changed the following syntax to work better in multi-step traversal:
 
-<!-- -->
+  - The initial SOURCE, … becomes SELF, SOURCE, …
 
-- The initial SOURCE, … becomes SELF, SOURCE, …
-
-- The initial TARGET, … becomes SELF, TARGET, …
+  - The initial TARGET, … becomes SELF, TARGET, …
 
 #### Examples
 <!----
 {"id": "1322", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "WD03: TODO: Need examples for returning simple types and complex/nested structures (e.g., Maps of Maps)", "target": "Examples"}-->
 
-
 The following example shows how to use the get_property function with an
 actual Node Template name:
+```
+node_templates:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql_database:</p>
-<p>type: tosca.nodes.Database</p>
-<p>properties:</p>
-<p>name: sql_database1</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>...</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>inputs:</p>
-<p>wp_db_name: { $get_property: [ mysql_database, name ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  mysql_database:
+    type: tosca.nodes.Database
+    properties:
+      name: sql_database1
 
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          inputs:
+            wp_db_name: { $get_property: [ mysql_database, name ] }
+```
 The following example shows how to use the get_property function
 traversing from the relationship to its target node:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_templates:</p>
-<p>my_connection:</p>
-<p>type: ConnectsTo</p>
-<p>interfaces:</p>
-<p>Configure:</p>
-<p>inputs:</p>
-<p>targets_value: { $get_property: [ SELF, TARGET, value ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_templates:
+    my_connection:
+      type: ConnectsTo
+      interfaces:
+        Configure:
+          inputs: 
+            targets_value: { $get_property: [ SELF, TARGET, value ] }
+```
 The following example shows how to use the get_property function using
 the SELF keyword, and traversing from a wordpress node (via the first
 relationship of the database_endpoint requirement to the target
 capability in the target node) and accessing the port property of that
 capability:
+```
+node_templates:  
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql_database:</p>
-<p>type: tosca.nodes.Database</p>
-<p>...</p>
-<p>capabilities:</p>
-<p>database_endpoint:</p>
-<p>properties:</p>
-<p>port: 3306</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>requirements:</p>
-<p>...</p>
-<p>- database_endpoint: mysql_database</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: wordpress_install.sh</p>
-<p>configure:</p>
-<p>implementation: wordpress_configure.sh</p>
-<p>inputs:</p>
-<p>...</p>
-<p>wp_db_port:</p>
-<p>$get_property:</p>
-<p>- SELF</p>
-<p>- RELATIONSHIP</p>
-<p>- database_endpoint</p>
-<p>- 0</p>
-<p>- CAPABILITY</p>
-<p>- port</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  mysql_database:
+    type: tosca.nodes.Database
+    ...
+    capabilities:
+      database_endpoint:
+        properties:
+          port: 3306
 
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    requirements:
+      ...
+      - database_endpoint: mysql_database
+    interfaces:
+      Standard:
+        create: wordpress_install.sh
+        configure: 
+          implementation: wordpress_configure.sh            
+          inputs:
+            ...
+            wp_db_port:
+              $get_property:
+               - SELF
+               - RELATIONSHIP
+               - database_endpoint
+               - 0
+               - CAPABILITY
+               - port
+```
 NOTE that in the above example the index 0 is used but can also be
 omitted with the same semantic meaning.
 
@@ -10317,50 +10243,41 @@ The following example shows how to use the get_property function to
 traverse over two requirement relationships, from the wordpress node to
 its database node and further to its DBMS host to get its
 admin_credential property:
+```
+node_templates:  
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql_database:</p>
-<p>type: tosca.nodes.Database</p>
-<p>...</p>
-<p>capabilities:</p>
-<p>database_endpoint:</p>
-<p>properties:</p>
-<p>port: 3306</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>requirements:</p>
-<p>...</p>
-<p>- database_endpoint: mysql_database</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: wordpress_install.sh</p>
-<p>configure:</p>
-<p>implementation: wordpress_configure.sh</p>
-<p>inputs:</p>
-<p>...</p>
-<p>host_dbms_admin_credential:</p>
-<p>$get_property:</p>
-<p>- SELF</p>
-<p>- RELATIONSHIP</p>
-<p>- database_endpoint</p>
-<p>- TARGET</p>
-<p>- RELATIONSHIP</p>
-<p>- host</p>
-<p>- TARGET</p>
-<p>- admin_credential</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  mysql_database:
+    type: tosca.nodes.Database
+    ...
+    capabilities:
+      database_endpoint:
+        properties:
+          port: 3306
 
-TODO: An example of second index (i.e. 1) and index ALL !!!
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    requirements:
+      ...
+      - database_endpoint: mysql_database
+    interfaces:
+      Standard:
+        create: wordpress_install.sh
+        configure: 
+          implementation: wordpress_configure.sh            
+          inputs:
+            ...
+            host_dbms_admin_credential:
+              $get_property:
+               - SELF
+               - RELATIONSHIP
+               - database_endpoint
+               - TARGET
+               - RELATIONSHIP
+               - host
+               - TARGET
+               - admin_credential
+```
+> TODO: An example of second index (i.e. 1) and index ALL !!!
 
 ### get_attribute
 
@@ -10374,11 +10291,9 @@ invoked.
 #### Grammar 
 <!----
 {"id": "1326", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-169](commentsExtended.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.", "target": "Grammar "}-->
-
-
-| \$get_attribute: \[\<tosca_traversal_path\>, \<attribute_name\>, \<nested_attribute_name_or_index_1\>, ..., \<nested_attribute_name_or_index_n\> \] |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+$get_attribute: [<tosca_traversal_path>, <attribute_name>, <nested_attribute_name_or_index_1>, ..., <nested_attribute_name_or_index_n> ]
+```
 #### Arguments
 
 <table>
@@ -10439,15 +10354,12 @@ with “get_attribute” function name.
 
 ### get_artifact
 
-
-
-modelable entities defined in the same service template.
+The get_artifact function is used to retrieve artifact location between modelable entities defined in the same service template.
 
 #### Grammar 
-
-| \$get_artifact: \[ \<modelable_entity_name\>, \<artifact_name\>, \<location\>, \<remove\> \] |
-|----------------------------------------------------------------------------------------------|
-
+```
+$get_artifact: [ <modelable_entity_name>, <artifact_name>, <location>, <remove> ]
+```
 #### Arguments
 
 <table>
@@ -10520,32 +10432,22 @@ The following example uses a snippet of a WordPress
 get_artifact function with an actual Node Template name:
 
 ##### Example: Retrieving artifact without specified location
+```
+node_templates:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>...</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>create:</p>
-<p>implementation: wordpress_install.sh</p>
-<p>inputs</p>
-<p>wp_zip: { $get_artifact: [ SELF, zip ] }</p>
-<p>artifacts:</p>
-<p>zip: /data/wordpress.zip</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          create:
+            implementation: wordpress_install.sh
+            inputs
+              wp_zip: { $get_artifact: [ SELF, zip ] }
+    artifacts:
+      zip: /data/wordpress.zip
+```
 In such implementation the TOSCA orchestrator may provide the
 wordpress.zip archive as
 
@@ -10561,32 +10463,22 @@ wordpress.zip archive as
 
 The following example explains how to force the orchestrator to copy the
 file locally before calling the operation’s implementation script:
+```
+node_templates:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>...</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>create:</p>
-<p>implementation: wordpress_install.sh</p>
-<p>inputs</p>
-<p>wp_zip: { $get_artifact: [ SELF, zip, LOCAL_FILE] }</p>
-<p>artifacts:</p>
-<p>zip: /data/wordpress.zip</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          create:
+            implementation: wordpress_install.sh
+            inputs
+              wp_zip: { $get_artifact: [ SELF, zip, LOCAL_FILE] }
+    artifacts:
+      zip: /data/wordpress.zip
+```
 In such implementation the TOSCA orchestrator must provide the
 wordpress.zip archive as a local path (example:
 [/tmp/wordpress.zip](file:///\\home\user\wordpress.zip)) and **will
@@ -10597,32 +10489,22 @@ remove it** after the operation is completed.
 The following example explains how to force the orchestrator to copy the
 file locally to a specific location before calling the operation’s
 implementation script:
+```
+node_templates:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>...</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>create:</p>
-<p>implementation: wordpress_install.sh</p>
-<p>inputs</p>
-<p>wp_zip: { $get_artifact: [ SELF, zip, C:/wpdata/wp.zip ] }</p>
-<p>artifacts:</p>
-<p>zip: /data/wordpress.zip</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          create:
+            implementation: wordpress_install.sh
+            inputs
+              wp_zip: { $get_artifact: [ SELF, zip, C:/wpdata/wp.zip ] }
+    artifacts:
+      zip: /data/wordpress.zip
+```
 In such implementation the TOSCA orchestrator must provide the
 wordpress.zip archive as a local path (example: C:/wpdata/wp.zip ) and
 **will let it** after the operation is completed.
@@ -10634,10 +10516,9 @@ returns the value of the property, attribute, or parameter for which the
 validation clause is defined.
 
 #### Grammar 
-
-| \$value: \[\<nested_value_name_or_index\>, ... \] |
-|---------------------------------------------------|
-
+```
+$value: [<nested_value_name_or_index>, ... ]
+```
 #### Arguments
 
 <table>
@@ -10668,10 +10549,9 @@ parameter) to return.</p></td>
 </table>
 
 Boolean Functions
+-----------------
 <!----
 {"id": "1332", "author": "Calin Curescu", "date": "2022-12-06T16:00:00Z", "comment": "I would not call them condition functions since they can appear also outside conditions.", "target": " Functions"}-->
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 TOSCA includes a number of functions that return Boolean values. These
 functions are used in validation expressions and in condition clauses in
@@ -10688,10 +10568,9 @@ true if all its arguments evaluate to true. It evaluates to false in all
 other cases.
 
 ##### Grammar 
-
-| \$and: \[ \<boolean_arg1\>, \<boolean_arg2\>, ... \<boolean_argn\>\] |
-|----------------------------------------------------------------------|
-
+```
+$and: [ <boolean_arg1>, <boolean_arg2>, ... <boolean_argn>]
+```
 #####  Note
 
 Note that the evaluation of the arguments in the \$and function may stop
@@ -10705,10 +10584,9 @@ false if all of its arguments evaluate to false. It evaluates to true in
 all other cases.
 
 ##### Grammar 
-
-| \$or: \[ \<boolean_arg1\>, \<boolean_arg2\>, ... \<boolean_argn\>\] |
-|---------------------------------------------------------------------|
-
+```
+$or: [ <boolean_arg1>, <boolean_arg2>, ... <boolean_argn>]
+```
 ##### Note
 
 Note that the evaluation of the arguments in the \$or function may stop
@@ -10722,10 +10600,9 @@ its argument evaluates to false and evaluates to false if its argument
 evaluates to true.
 
 ##### Grammar 
-
-| \$not: \[ \<boolean_arg\> \] |
-|------------------------------|
-
+```
+$not: [ <boolean_arg> ]
+```
 #### xor
 
 The \$xor function takes two Boolean arguments. It evaluates to false if
@@ -10733,10 +10610,9 @@ both arguments either evaluate to true or both arguments evaluate to
 false, and evaluates to true otherwise.
 
 ##### Grammar 
-
-| \$xor: \[ \<boolean_arg1\>, \<boolean_arg2\> \] |
-|-------------------------------------------------|
-
+```
+$xor: [ <boolean_arg1>, <boolean_arg2> ]
+```
 ### Comparison Functions
 
 The following is the list of recognized comparison functions.
@@ -10751,7 +10627,6 @@ The following is the list of recognized comparison functions.
 <!----
 {"id": "1333", "author": "Calin Curescu", "date": "2023-01-04T16:19:00Z", "comment": "TODO explanation on how versions are\n  compared!!!", "target": "TODO explanation on how versions are\n  compared!!\\!"}-->
 
-
 #### equal
 
 The function takes two arguments of any type. It evaluates to true if
@@ -10759,10 +10634,9 @@ the arguments are equal (that is in both type and value) and evaluates
 to false otherwise.
 
 ##### Grammar 
-
-| \$equal: \[ \<any_type_arg1\>, \<any_type_arg2\> \] |
-|-----------------------------------------------------|
-
+```
+$equal: [ <any_type_arg1>, <any_type_arg2> ]
+```
 #### greater_than
 
 The function takes two arguments of integer, float, string, timestamp,
@@ -10771,10 +10645,9 @@ both arguments are of the same type, and if the first argument is
 greater than the second argument and evaluates to false otherwise.
 
 ##### Grammar 
-
-| \$greater_than: \[ \<comparable_type_arg1\>, \<comparable_type_arg2\> \] |
-|--------------------------------------------------------------------------|
-
+```
+$greater_than: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
 #### greater_or_equal
 
 The function takes two arguments of integer, float, string, timestamp,
@@ -10784,10 +10657,9 @@ greater than or equal to the second argument and evaluates to false
 otherwise.
 
 ##### Grammar 
-
-| \$greater_or_equal: \[ \<comparable_type_arg1\>, \<comparable_type_arg2\> \] |
-|------------------------------------------------------------------------------|
-
+```
+$greater_or_equal: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
 #### less_than
 
 The function takes two arguments of integer, float, string, timestamp,
@@ -10796,10 +10668,9 @@ both arguments are of the same type, and if the first argument is less
 than the second argument and evaluates to false otherwise.
 
 ##### Grammar 
-
-| \$less_than: \[ \<comparable_type_arg1\>, \<comparable_type_arg2\> \] |
-|-----------------------------------------------------------------------|
-
+```
+$less_than: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
 #### less_or_equal
 
 The function takes two arguments of integer, float, string, timestamp,
@@ -10808,10 +10679,9 @@ both arguments are of the same type, and if the first argument is less
 than or equal to the second argument and evaluates to false otherwise.
 
 ##### Grammar 
-
-| \$less_or_equal: \[ \<comparable_type_arg1\>, \<comparable_type_arg2\> \] |
-|---------------------------------------------------------------------------|
-
+```
+$less_or_equal: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
 #### valid_values
 
 The function takes two arguments. The first argument is of any type and
@@ -10823,12 +10693,13 @@ second argument list and false otherwise.
 arguments). A good candidate to remove!
 
 #####  Grammar 
-
-| \$valid_values: \[ \<any_type_arg1\>, \<any_type_list_arg2\> \] |
-|-----------------------------------------------------------------|
-
+```
+$valid_values: [ <any_type_arg1>, <any_type_list_arg2> ]
+```
 #### matches
-
+```
+$matches: [ <string_type_arg1>, <regex_pattern_arg2> ]
+```
 The function takes two arguments. The first argument is a general
 string, and the second argument is a string that encodes a regular
 expression pattern. It evaluates to true if the first argument matches
@@ -10836,9 +10707,6 @@ the regular expression pattern represented by the second argument and
 false otherwise.
 
 #####  Grammar 
-
-| \$matches: \[ \<string_type_arg1\>, \<regex_pattern_arg2\> \] |
-|---------------------------------------------------------------|
 
 #####  Note
 
@@ -10861,10 +10729,9 @@ of the first argument. For lists this means that the values of the
 second list are the last values of the first list in the same order.
 
 #####  Grammar 
-
-| \$has_suffix: \[ \<string_or_list_type_arg1\>, \<string_or_list_type_arg2\> \] |
-|--------------------------------------------------------------------------------|
-
+```
+$has_suffix: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
+```
 #### has_prefix
 
 The function takes two arguments. Both arguments are either of type
@@ -10873,10 +10740,9 @@ of the first argument. For lists this means that the values of the
 second list are the first values of the first list in the same order.
 
 #####  Grammar 
-
-| \$has_prefix: \[ \<string_or_list_type_arg1\>, \<string_or_list_type_arg2\> \] |
-|--------------------------------------------------------------------------------|
-
+```
+$has_prefix: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
+```
 #### contains
 
 The function takes two arguments. Both arguments are either of type
@@ -10887,10 +10753,9 @@ values of the second list are contained in the first list in an
 uninterrupted sequence and in the same order.
 
 #####  Grammar 
-
-| \$contains: \[ \<string_or_list_type_arg1\>, \<string_or_list_type_arg2\> \] |
-|------------------------------------------------------------------------------|
-
+```
+$contains: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
+```
 #### has_entry
 
 The function takes two arguments. The first argument is a list or a map.
@@ -10902,10 +10767,9 @@ argument is a value in any of the key-value pairs in the first argument
 map.
 
 #####  Grammar 
-
-| \$has_entry: \[ \<list_or_map_type_arg1\>, \<any_type_arg2\> \] |
-|-----------------------------------------------------------------|
-
+```
+$has_entry: [ <list_or_map_type_arg1>, <any_type_arg2> ]
+```
 #### has_key
 
 The function takes two arguments. The first argument is a map. The
@@ -10914,10 +10778,9 @@ argument. It evaluates to true if the second argument is a key in any of
 the key-value pairs in the first argument map.
 
 #####  Grammar 
-
-| \$has_key: \[ \<map_type_arg1\>, \<any_type_arg2\> \] |
-|-------------------------------------------------------|
-
+```
+$has_key: [ <map_type_arg1>, <any_type_arg2> ]
+```
 #### has_all_entries
 
 The function takes two arguments. The first argument is a list or a map.
@@ -10927,10 +10790,9 @@ entries in the second argument there is an equal value entry in the
 first argument.
 
 #####  Grammar 
-
-| \$has_all_entries: \[ \<list_or_map_type_arg1\>, \<list_type_arg2\> \] |
-|------------------------------------------------------------------------|
-
+```
+$has_all_entries: [ <list_or_map_type_arg1>, <list_type_arg2> ]
+```
 #### has_all_keys
 
 The function takes two arguments. The first argument is a map. The
@@ -10939,10 +10801,9 @@ of the first argument. It evaluates to true if for all entries in the
 second argument there is an equal value key in the first argument.
 
 #####  Grammar 
-
-| \$has_all_keys: \[ \<map_type_arg1\>, \<list_type_arg2\> \] |
-|-------------------------------------------------------------|
-
+```
+$has_all_keys: [ <map_type_arg1>, <list_type_arg2> ]
+```
 #### has_any_entry
 
 The function takes two arguments. The first argument is a list or a map.
@@ -10952,10 +10813,9 @@ entry in the second argument that is equal to an entry in the first
 argument.
 
 #####  Grammar 
-
-| \$has_any_entry: \[ \<list_or_map_type_arg1\>, \<list_type_arg2\> \] |
-|----------------------------------------------------------------------|
-
+```
+$has_any_entry: [ <list_or_map_type_arg1>, <list_type_arg2> ]
+```
 #### has_any_key
 
 The function takes two arguments. The first argument is a map. The
@@ -10964,11 +10824,10 @@ of the first argument. It evaluates to true if there is an entry in the
 second argument which is equal to a key in the first argument.
 
 #####  Grammar 
-
-| \$has_any_key: \[ \<map_type_arg1\>, \<list_type_arg2\> \] |
-|------------------------------------------------------------|
-
-String, list, and map functions
+```
+$has_any_key: [ <map_type_arg1>, <list_type_arg2> ]
+```
+## String, list, and map functions
 <!----
 {"id": "1334", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-212](commentsIds.xml) \u2013 Concat intrinsic function", "target": ""}-->
 <span class="comment-start" id="1335" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1335"></span>
@@ -10981,10 +10840,9 @@ the number of nicode characters in the string, or the numbers of values
 in the list, or the number of key-values pairs in the map.
 
 ####  Grammar 
-
-| \$length: \[ \<string_list_or_map_type_arg\> \] |
-|-------------------------------------------------|
-
+```
+$length: [ <string_list_or_map_type_arg> ]
+```
 ### concat
 
 The concat function takes one or more arguments of either the type
@@ -10996,32 +10854,19 @@ strings and lists. This function does not recurse into the entries of
 the lists.
 
 #### Grammar 
-
-| \$concat: \[\<string_or_list_type_arg1\>, … \] |
-|------------------------------------------------|
-
+```
+$concat: [<string_or_list_type_arg1>, … ]
+```
 #### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>description: Concatenate the URL for a server from other template
-values</p>
-<p>server_url:</p>
-<p>value: { $concat: [ 'http://',</p>
-<p>$get_attribute: [ server, public_address ],</p>
-<p>':',</p>
-<p>$get_attribute: [ server, port ] ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+  description: Concatenate the URL for a server from other template values
+  server_url:
+  value: { $concat: [ 'http://', 
+                     $get_attribute: [ server, public_address ],
+                     ':', 
+                     $get_attribute: [ server, port ] ] }
+```
 ### join
 
 The join function takes either one or two arguments where the first one
@@ -11035,23 +10880,11 @@ clear!!\!
 <!----
 {"id": "1336", "author": "Calin Curescu", "date": "2023-01-17T17:54:00Z", "comment": "Make a better example.", "target": "!!! Make an\nexample for concat and join where the differences are\nclear!!\\!"}-->
 
-
 #### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>$join: [&lt;list_of_strings&gt; ]</p>
-<p>$join: [&lt;list of strings&gt;, &lt;delimiter&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+$join: [<list_of_strings> ]
+$join: [<list of strings>, <delimiter> ]
+```
 #### Arguments
 
 <table>
@@ -11091,26 +10924,15 @@ list.</td>
 </table>
 
 #### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>example1:</p>
-<p># Result: prefix_1111_suffix</p>
-<p>value: { $join: [ ["prefix", 1111, "suffix" ], "_" ] }</p>
-<p>example2:</p>
-<p># Result: 9.12.1.10,9.12.1.20</p>
-<p>value: { $join: [ { $get_input: my_IPs }, “,” ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+   example1:
+       # Result: prefix_1111_suffix
+       value: { $join: [ ["prefix", 1111, "suffix" ], "_" ] }
+   example2:
+       # Result: 9.12.1.10,9.12.1.20
+       value: { $join: [ { $get_input: my_IPs }, “,” ] } 
+```
 ### token
 
 The token function is used within a TOSCA service template on a string
@@ -11118,10 +10940,9 @@ to parse out (tokenize) substrings separated by one or more token
 characters within a larger string.
 
 #### Grammar 
-
-| \$token: \[ \<string_with_tokens\>, \<string_of_token_chars\>, \<substring_index\> \] |
-|---------------------------------------------------------------------------------------|
-
+```
+$token: [ <string_with_tokens>, <string_of_token_chars>, <substring_index> ]
+```
 #### Arguments
 
 | Argument              | Mandatory | Type                          | Description                                                                                                                                                           |
@@ -11131,27 +10952,14 @@ characters within a larger string.
 | substring_index       | yes       | [integer](#TYPE_YAML_INTEGER) | The integer indicates the index of the substring to return from the composite string. Note that the first substring is denoted by using the ‘0’ (zero) integer value. |
 
 #### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>webserver_port:</p>
-<p>description: the port provided at the end of my server’s endpoint’s
-IP address</p>
-<p>value: { token: [ $get_attribute: [ my_server, data_endpoint,
-ip_address ],</p>
-<p>‘:’,</p>
-<p>1 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+   webserver_port:
+     description: the port provided at the end of my server’s endpoint’s IP address
+     value: { token: [ $get_attribute: [ my_server, data_endpoint, ip_address ], 
+                       ‘:’,
+                       1 ] }
+```
 Set functions
 -------------
 
@@ -11165,14 +10973,11 @@ non-duplicate entries from all the argument lists. By non-duplicate is
 meant that no two entries in the result list are equal.
 
 #### Grammar 
-
-| \$union: \[ \<list_arg1\>, … \] |
-|---------------------------------|
-
-
+```
+$union: [ <list_arg1>, … ]
+```
 <!----
 {"id": "1342", "author": "Chris Lauwers", "date": "2022-10-10T20:39:00Z", "comment": "We should rename this section to String\nManipulation Functions", "target": ""}-->
-
 
 #### Note 
 
@@ -11187,21 +10992,19 @@ schema of the same type. The result is a list that contains all entries
 that can be found in each of the argument lists.
 
 #### Grammar 
-
-| \$intersection: \[ \<list_arg1\>, … \] |
-|----------------------------------------|
-
+```
+$intersection: [ <list_arg1>, … ]
+```
 #### Note 
 
 The intersection applied to only one list will return a result where all
 the duplicate entries of the argument list are eliminated. Note also
 that the order of the elements in the result list is not specified.
 
-Arithmetic functions
+## Arithmetic functions
+------------------------
 <!----
 {"id": "1343", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-212](https://www.oasis-open.org/committees/tosca/) \u2013 Concat intrinsic function", "target": ""}-->
-
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### sum
 
@@ -11210,10 +11013,9 @@ scalar type. The result is of the same type as the arguments and its
 value is the arithmetic sum of the arguments’ values.
 
 #### Grammar 
-
-| \$sum: \[ \<int_float_or_scalar_type_arg1\>, \< int_float_or_scalar_type_arg2\>, … \] |
-|---------------------------------------------------------------------------------------|
-
+```
+$sum: [ <int_float_or_scalar_type_arg1>, < int_float_or_scalar_type_arg2>, … ]
+```
 ### difference
 
 The function takes two arguments of either integer, float, or scalar
@@ -11222,10 +11024,9 @@ the arithmetic subtraction of the second argument value from the first
 argument value.
 
 #### Grammar 
-
-| \$difference: \[ \<int_float_scalar_type_arg1\>, \< int_float_scalar_type_arg2\> \] |
-|-------------------------------------------------------------------------------------|
-
+```
+$difference: [ <int_float_scalar_type_arg1>, < int_float_scalar_type_arg2> ]
+```
 ### product
 
 The function takes either:
@@ -11241,23 +11042,10 @@ The function takes either:
   arguments values.
 
 #### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>$product: [ &lt;scalar_type_arg1&gt;, &lt;
-int_or_float_type_arg2&gt; ]</p>
-<p>$product: [ &lt;int_or_float_type_arg1&gt;, &lt;
-int_or_float_type_arg2&gt;, … ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+$product: [ <scalar_type_arg1>, < int_or_float_type_arg2> ]
+$product: [ <int_or_float_type_arg1>, < int_or_float_type_arg2>, … ]
+```
 ### quotient
 
 The function takes two arguments where the first argument is of an
@@ -11274,10 +11062,9 @@ or float type. The result is of
   must be used.
 
 #### Grammar 
-
-| \$quotient: \[ \<int_float_or_scalar_type_arg1\>, \< int_or_float_type_arg2\> \] |
-|----------------------------------------------------------------------------------|
-
+```
+$quotient: [ <int_float_or_scalar_type_arg1>, < int_or_float_type_arg2> ]
+```
 ### remainder
 
 The function takes two arguments where the first argument is of an
@@ -11286,10 +11073,9 @@ result is of the same type as the first argument and its value is the
 remainder of the division to the second argument.
 
 #### Grammar 
-
-| \$remainder: \[ \<int_or_scalar_type_arg1\>, \< int_type_arg2\> \] |
-|--------------------------------------------------------------------|
-
+```
+$remainder: [ <int_or_scalar_type_arg1>, < int_type_arg2> ]
+```
 ### round
 
 The function takes a float argument. The result is an integer with the
@@ -11297,20 +11083,18 @@ closest value to the float argument. Equal value distance is rounded
 down (e.g. 3.5 is rounded down to 3, while 3.53 is rounded up to 4).
 
 #### Grammar 
-
-| \$round: \[ \<float_type_arg\> \] |
-|-----------------------------------|
-
+```
+$round: [ <float_type_arg> ]
+```
 ### floor
 
 The function takes a float argument. The result is an integer with the
 closest value that is less or equal to the value of the float argument.
 
 #### Grammar 
-
-| \$floor: \[ \<float_type_arg\> \] |
-|-----------------------------------|
-
+```
+$floor: [ <float_type_arg> ]
+```
 ### ceil
 
 The function takes a float argument. The result is an integer with the
@@ -11318,10 +11102,9 @@ closest value that is greater or equal to the value of the float
 argument.
 
 #### Grammar 
-
-| \$ceil: \[ \<float_type_arg\> \] |
-|----------------------------------|
-
+```
+$ceil: [ <float_type_arg> ]
+```
 TOSCA Cloud Service Archive (CSAR) format
 =========================================
 
@@ -11370,10 +11153,9 @@ colon. Values that represent binary data MUST be base64 encoded. Values
 that extend beyond one line can be spread over multiple lines if each
 subsequent line starts with at least one space. Such spaces are then
 collapsed when the value string is read.
-
-| \<name\>: \<value\> |
-|---------------------|
-
+```
+<name>: <value>
+```
 Each name/value pair is in a separate line. A list of related name/value
 pairs, i.e. a list of consecutive name/value pairs is called a block.
 Blocks are separated by an empty line. The first block, called block_0,
@@ -11382,24 +11164,13 @@ Other blocks may be used to represent custom generic metadata or
 metadata pertaining to files in the CSAR. A **TOSCA.meta** file is only
 required to include block_0. The structure of block_0 in the TOSCA meta
 file is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>CSAR-Version: digit.digit</p>
-<p>Created-By: string</p>
-<p>Entry-Definitions: string</p>
-<p>Other-Definitions: string</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-he name/value pairs are as follows:
+```
+CSAR-Version: digit.digit
+Created-By: string
+Entry-Definitions: string
+Other-Definitions: string
+```
+The name/value pairs are as follows:
 
 - **CSAR-Version**: This is the version number of the CSAR
   specification. It defines the structure of the CSAR and the format of
@@ -11436,7 +11207,6 @@ contained in the CSAR.
 <!----
 {"id": "1382", "author": "Calin Curescu", "date": "2019-01-30T16:36:00Z", "comment": "MustFix.  \nIn version 1.0 (pre YAML) the subsequent blocks that contained\ndefinitions were used to provide definitions for types imported in the\nservice template, that is these files were parsed instead of taking the\ndefinitions from external repositoris.  \nSince 1.0 yaml, the files are specified explicitly in the imports\nstatements.  \nNevertheless, by allowing the other definition blocks (as per this\nparagraph formulation) we allow also the old style of imports by the\ndefinitions in the other blocks.  \nI think this puts a burden on the implementation of orchestrators and\nquite confusing. So we should deprecate the usage of definitions in the\nother blocks.  \nMoreover, the other blocks can contain other file type decriptions (for\nartifacts) in the other blocks. E.g:  \nName: Plans/AddUser.bpmn  \nContent-Type: application/vnd.oasis.bpmn  \nThese also seem obsolete and useless.  \nI think we should deprecate the other blocks in the TOSCA.meta\nfile", "target": "Note that any further TOSCA definitions files required by the\ndefinitions specified by **Entry-Definitions** or **Other-Definitions**\ncan be found by a TOSCA orchestrator by processing respective\n**imports** statements. Note also that artifact files (e.g. scripts,\nbinaries, configuration files) used by the TOSCA definitions and\nincluded in the CSAR are fully described and referred via relative path\nnames in artifact definitions in the respective TOSCA definitions files\ncontained in the CSAR."}-->
 
-
 ### Custom keynames in the TOSCA.meta file
 
 Users can populate other blocks than block_0 in the TOSCA.meta file with
@@ -11458,24 +11228,12 @@ scope, etc.) when using custom keynames.
 
 The following listing represents a valid **TOSCA.meta** file according
 to this TOSCA specification.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>CSAR-Version: 2.0</p>
-<p>Created-By: OASIS TOSCA TC</p>
-<p>Entry-Definitions: tosca_elk.yaml</p>
-<p>Other-Definitions: definitions/tosca_moose.yaml
-definitions/tosca_deer.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+CSAR-Version: 2.0
+Created-By: OASIS TOSCA TC
+Entry-Definitions: tosca_elk.yaml 
+Other-Definitions: definitions/tosca_moose.yaml definitions/tosca_deer.yaml
+```
 This **TOSCA.meta** file indicates its structure (as well as the overall
 CSAR structure) by means of the **CSAR-Version** keyname with value
 **2.0**. The **Entry-Definitions** keyname points to a TOSCA definitions
@@ -11506,54 +11264,16 @@ have only one service template defined in a yaml file.
 
 The following represents a valid TOSCA template file acting as the CSAR
 Entry-Definitions file in an archive without TOSCA-Metadata directory.
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>metadata:</p>
-<p>template_name: my_template</p>
-<p>template_author: OASIS TOSCA TC</p>
-<p>template_version: 1.0</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-Security Considerations
-=======================
-
-<span class="mark">(**Note:** OASIS strongly recommends that Technical
-Committees consider issues that could affect security when implementing
-their specification and document them for implementers and adopters. For
-some purposes, you may find it required, e.g. if you apply for IANA
-registration.</span>
-
-<span class="mark">While it may not be immediately obvious how your
-specification might make systems vulnerable to attack, most
-specifications, because they involve communications between systems,
-message formats, or system settings, open potential channels for
-exploit. For example, IETF \[[RFC3552](#RFC3552)\] lists “eavesdropping,
-replay, message insertion, deletion, modification, and
-man-in-the-middle” as well as potential denial of service attacks as
-threats that must be considered and, if appropriate, addressed in IETF
-RFCs.</span>
-
-<span class="mark">In addition to considering and describing foreseeable
-risks, this section should include guidance on how implementers and
-adopters can protect against these risks.</span>
-
-<span class="mark">We encourage editors and TC members concerned with
-this subject to read *Guidelines for Writing RFC Text on Security
-Considerations,* IETF \[[RFC3552](#RFC3552)\], for more
-information.)</span>
+metadata:
+  template_name: my_template
+  template_author: OASIS TOSCA TC
+  template_version: 1.0
+```
 
 -------
-
 # Conformance
 <!-- Required section -->
 
@@ -11599,12 +11319,10 @@ if it satisfies all the statements below:
 1.  It is valid according to the grammar, rules and requirements defined
     in section 3 “TOSCA definitions in YAML”.
 
-<!-- -->
-
-20. When using functions defined in section 4 “TOSCA functions”, it is
+2.  When using functions defined in section 4 “TOSCA functions”, it is
     valid according to the grammar specified for these functions.
 
-21. When using or referring to data types, artifact types, capability
+3.  When using or referring to data types, artifact types, capability
     types, interface types, node types, relationship types, group types,
     policy types defined in section 5 “TOSCA normative type
     definitions”, it is valid according to the definitions given in
@@ -11621,20 +11339,18 @@ if it satisfies all the statements below:
     to conform as TOSCA YAML service template while clearly intending
     to.
 
-<!-- -->
-
-22. It implements the requirements and semantics associated with the
+2.  It implements the requirements and semantics associated with the
     definitions and grammar in section 3 “TOSCA definitions in YAML”,
     including those listed in the “additional requirements” subsections.
 
-23. It resolves the imports, either explicit or implicit, as described
+3.  It resolves the imports, either explicit or implicit, as described
     in section 3 “TOSCA definitions in YAML”.
 
-24. It generates errors as required in error cases described in sections
+4.  It generates errors as required in error cases described in sections
     3.1 (TOSCA Namespace URI and alias), 3.2 (Parameter and property
     type) and 3.6 (Type-specific definitions).
 
-25. It normalizes string values as described in section 5.4.9.3
+5.  It normalizes string values as described in section 5.4.9.3
     (Additional Requirements)
 
 Conformance Clause 3: TOSCA orchestrator
@@ -11646,26 +11362,24 @@ orchestrator if it satisfies all the statements below:
 1.  It is conforming as a TOSCA Processor as defined in conformance
     clause 2: TOSCA Processor.
 
-<!-- -->
-
-26. It can process all types of artifact described in section 5.3
+2.  It can process all types of artifact described in section 5.3
     “Artifact types” according to the rules and grammars in this
     section.
 
-27. It can process TOSCA archives as intended in section 6 “TOSCA Cloud
+3.  It can process TOSCA archives as intended in section 6 “TOSCA Cloud
     Service Archive (CSAR) format” and other related normative sections.
 
-28. It can understand and process the functions defined in section 4
+4. It can understand and process the functions defined in section 4
     “TOSCA functions” according to their rules and semantics.
 
-29. It can understand and process the normative type definitions
+5. It can understand and process the normative type definitions
     according to their semantics and requirements as described in
     section 5 “TOSCA normative type definitions”.
 
-30. It can understand and process the networking types and semantics
+6.  It can understand and process the networking types and semantics
     defined in section 7 “TOSCA Networking”.
 
-31. It generates errors as required in error cases described in sections
+7.  It generates errors as required in error cases described in sections
     2.10 (Using node template substitution for chaining subsystems), 5.4
     (Capabilities Types) and 5.7 (Interface Types).).
 
@@ -11679,9 +11393,7 @@ if it satisfies at least one of the statements below:
     produces a conforming TOSCA service template, as defined in Clause
     1: TOSCA YAML service template,
 
-<!-- -->
-
-32. When requested to generate a TOSCA archive, it always produces a
+2.  When requested to generate a TOSCA archive, it always produces a
     conforming TOSCA archive, as defined in Clause 5: TOSCA archive.
 
 Conformance Clause 5: TOSCA archive
@@ -11692,8 +11404,6 @@ satisfies all the statements below:
 
 1.  It is valid according to the structure and rules defined in section
     6 “TOSCA Cloud Service Archive (CSAR) format”.
-
--------
 
 # Appendix A. References
 
