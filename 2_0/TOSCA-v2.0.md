@@ -5646,22 +5646,22 @@ Collection Types: (section 4.4.3)
 
 - map
 
-Notes that were originally in the metadata section:
+> Notes that were originally in the metadata section:
 
-Important notes:
+> Important notes:
 
-YAML map keys can be any value, not just strings. TOSCA metadata grammar
-allows that full YAML expressiveness and does not add additional
-restrictions beyond requiring correct YAM syntax.
+> YAML map keys can be any value, not just strings. TOSCA metadata grammar
+> allows that full YAML expressiveness and does not add additional
+> restrictions beyond requiring correct YAM syntax.
 
-YAML does not specify the bit width of integers and floats but suggests
-that 32 bits should be acceptable.
+> YAML does not specify the bit width of integers and floats but suggests
+> that 32 bits should be acceptable.
+> 
+> Users should be careful about the difference between parsing floats and
+> integers. If they explicitly want a float, they should add ".0".
 
-Users should be careful about the difference between parsing floats and
-integers. If they explicitly want a float, they should add ".0".
-
-Users should be careful with version strings being parsed as floats.
-E.g., "3.2" is a float but "3.2.1" is a string,
+> Users should be careful with version strings being parsed as floats.
+> E.g., "3.2" is a float but "3.2.1" is a string,
 
 ### Primitive Types
 
@@ -5676,11 +5676,9 @@ Guiding principles:
     template inputs and outputs, property and attribute values stored in
     a database, etc.
 
-<!-- -->
+2.  Adherence to 64-bit precision to ensure portability of numeric data.
 
-8.  Adherence to 64-bit precision to ensure portability of numeric data.
-
-9.  TOSCA parsers *shall not* automatically convert between primitive
+3.  TOSCA parsers *shall not* automatically convert between primitive
     types. Thus, care should be taken to use the correct YAML notation
     for that type. Details will be provided below.
 
@@ -5713,34 +5711,23 @@ otherwise interpret as other types.
 
 This following example would be invalid if there were no quotation marks
 around “0.1”:
+```
+node_types:
+  Node:
+  properties:
+    name:
+    type: string
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>name:</p>
-<p>type: string</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p>
-<p>properties:</p>
-<p>name: "0.1"</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  node_templates:
+    node:
+      type: Node
+      properties:
+        name: "0.1"
+```
 ##### Notes
 <!----
 {"id": "807", "author": "Chris Lauwers", "date": "2020-08-18T23:01:00Z", "comment": "(From Tal): Do we want the comparison constraints to work for strings? E.g. should \"greater_than\" do a sorting-based comparison? I'll just point that it is non-trivial to sort Unicode strings. The most common way is to use the Unicode Collation Algorithm, which involves a database of information. There is a reference implementation in [ICU](webSettings.xml). Good and proper Unicode libraries will support it (e.g. [here is Go's](footnotes.xml)), but I do imagine it may be a burden for some implementations. I suggest we discuss this in the ad hoc and consider the pros and cons.", "target": "Notes"}-->
-:
 
 1.  There are various ways to specify literal !!string data in YAML for
     handling indentation, newlines, as well as convenient support for
@@ -5749,15 +5736,13 @@ around “0.1”:
     trimming of whitespace or newlines. [\[YAML 1.2 chapter
     6\]](https://yaml.org/spec/1.2/spec.html#Basic)
 
-<!-- -->
-
-10. The TOSCA functions “concat”, “join”, “token”, “length”,
+2.  The TOSCA functions “concat”, “join”, “token”, “length”,
     “min_length”, “max_length”, and “pattern” are all Unicode-aware.
     Specifically, the length of a string is a count of its runes, not
     the length of the byte array, which may differ according to the
     encoding. \[See XXX\]
 
-11. The TOSCA functions that check for equality, “equal” and
+3.  The TOSCA functions that check for equality, “equal” and
     “valid_values”, should work regardless of the Unicode encoding. For
     example, comparing two strings that are “!”, one of which is in
     UTF-8 and is encoded as “0x21”, the other which is in UTF-16 and is
@@ -5765,7 +5750,7 @@ around “0.1”:
     implementations may standardize on a single encoding, e.g., UTF-8,
     and convert all other encodings to it. \[See XXX\]
 
-12. Relatedly, although in YAML 1.2 a !!string is already defined as a
+4.  Relatedly, although in YAML 1.2 a !!string is already defined as a
     Unicode sequence [\[YAML 1.2 section
     10.1.1.3\]](https://yaml.org/spec/1.2/spec.html#id2802842), this
     sequence can be variously encoded according to the character set and
@@ -5775,16 +5760,16 @@ around “0.1”:
     inherit the encoding of the YAML document. Again, implementations
     may prefer to convert all strings to a single encoding.
 
-13. TOSCA strings *cannot* be the null value but *can* be empty strings
+5.  TOSCA strings *cannot* be the null value but *can* be empty strings
     (a string with length zero). \[See “nil”, below\]
 
-14. YAML is a streaming format, but TOSCA strings are explicitly *not*
+6.  YAML is a streaming format, but TOSCA strings are explicitly *not*
     streams and thus do have a size limit. Thus, TOSCA implementations
     should check against the size limit.
 
-\[Tal’s comment: for functions we should specify their exact behavior
-for various primitive types. Some won’t work on all types, e.g. “length”
-should not work on integers.\]
+> Tal’s comment: for functions we should specify their exact behavior
+> for various primitive types. Some won’t work on all types, e.g. “length”
+> should not work on integers.
 
 #### integer
 
@@ -5797,23 +5782,12 @@ enforce most of these variations using data type validation clauses
 
 For example, this would be a custom data type for unsigned 16-bit
 integers:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p>UInt16:</p>
-<p>derived_from: integer</p>
-<p>validation: { $in_range: [ $value, [ 0, 0xFFFF ] ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+data_types:
+  UInt16:
+    derived_from: integer
+    validation: { $in_range: [ $value, [ 0, 0xFFFF ] ] }
+```
 ##### Notes
 
 YAML allows for the standard decimal notation as well as hexadecimal and
@@ -5828,9 +5802,7 @@ example we indeed used the hexadecimal notation.
     integers and floats, and thus many JSON implementations use floats
     instead of integers.
 
-<!-- -->
-
-15. TOSCA does not specify the endianness of integers and indeed makes
+2.  TOSCA does not specify the endianness of integers and indeed makes
     no requirements for data representation.
 
 #### float
@@ -5851,30 +5823,20 @@ specify “0” for a zero integer and “0.0” for a zero float.
 
 This following example would be invalid if there were no “.0” suffix
 added to “10”:
+```
+node_types:
+  Node:
+    properties:
+      velocity:
+        type: float
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>velocity:</p>
-<p>type: float</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p>
-<p>properties:</p>
-<p>velocity: 10.0</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  node_templates:
+    node:
+      type: Node
+      properties:
+        velocity: 10.0
+```
 ##### Notes
 
 1.  In addition to decimal, YAML also allows for specifying floats using
@@ -5882,12 +5844,10 @@ added to “10”:
     infinity, positive infinity, and not-a-number [\[YAML 1.2 example
     2.20\]](https://yaml.org/spec/1.2/spec.html#id2761530).
 
-<!-- -->
-
-16. TOSCA does not specify how to convert to other precisions nor to
+2.  TOSCA does not specify how to convert to other precisions nor to
     other formats, e.g. Bfloat16 and TensorFloat-32.
 
-17. TOSCA does not specify the endianness of floats and indeed makes no
+3.  TOSCA does not specify the endianness of floats and indeed makes no
     requirements for data representation.
 
 #### boolean
@@ -5914,34 +5874,24 @@ To specify literal bytes in YAML you *must* use a Base64-encoded
 you convert arbitrary data to Base64.
 
 Example:
+```
+ode_types:
+  Node:
+    properties:
+      preamble:
+        type: bytes
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>preamble:</p>
-<p>type: bytes</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p>
-<p>properties:</p>
-<p>preamble: "\</p>
-<p>R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\</p>
-<p>OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\</p>
-<p>+f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC\</p>
-<p>AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  node_templates:
+    node:
+      type: Node
+        properties:
+          preamble: "\
+R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\
+OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\
++f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC\
+AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
+```
 ##### Notes
 
 1.  There is no standard way to represent literal bytes in YAML 1.2.
@@ -5949,13 +5899,11 @@ Example:
     working draft](https://yaml.org/type/binary.html), to ensure
     portability TOSCA implementations *shall not* accept this YAML type.
 
-<!-- -->
-
-18. The TOSCA functions “length”, “min_length”, and “max_length” work
+2.  The TOSCA functions “length”, “min_length”, and “max_length” work
     differently for the bytes type vs. the string type. For the latter
     the length is the count of Unicode runes, not the count of bytes.
 
-19. TOSCA bytes values *cannot* be the null value but *can* be empty
+3.  TOSCA bytes values *cannot* be the null value but *can* be empty
     arrays (a bytes value with length zero). \[See “nil”, below\]
 
 #### nil
@@ -5967,70 +5915,47 @@ This value is provided literally in YAML via the unquoted all-lowercase
 word “null”.
 
 Example:
+```
+node_types:
+  Node:
+    properties:
+      nothing:
+        type: nil
+        required: true
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>nothing:</p>
-<p>type: nil</p>
-<p>required: true</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p>
-<p>properties:</p>
-<p>nothing: null</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  node_templates:
+    node:
+      type: Node
+      properties:
+        nothing: null
+```
 Note that a nil-typed value is *distinct* from an unassigned value. For
 consistency TOSCA *requires* you to assign nil values even though their
 value is obvious. Thus, the above example would be invalid if we did not
 specify the null value for the property at the node template.
 
 Following is a valid example of *not* assigning a value:
+```
+node_types:
+  Node:
+    properties:
+      nothing:
+        type: nil
+        required: false
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>nothing:</p>
-<p>type: nil</p>
-<p>required: false</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-### Special
+service_template:
+  node_templates:
+    node:
+      type: Node
+```
+### Special Types
 <!----
 {"id": "817", "author": "Chris Lauwers", "date": "2020-08-04T16:22:00Z", "comment": "Need to add timestamp type", "target": "Special"}-->
- Types
 
 #### TOSCA version
 <!----
 {"id": "821", "author": "Chris Lauwers", "date": "2020-08-18T23:03:00Z", "comment": "Tal suggests removing this.", "target": "version"}-->
-
-
 A TOSCA version string.
 
 TOSCA supports the concept of “reuse” of type definitions, as well as
@@ -6042,10 +5967,9 @@ templates over time.
 ##### Grammar
 
 TOSCA version strings have the following grammar:
-
-| \<major_version\>.\<minor_version\>\[.\<fix_version\>\[.\<qualifier\>\[-\<build_version\] \] \] |
-|-------------------------------------------------------------------------------------------------|
-
+```
+<major_version>.<minor_version>[.<fix_version>[.<qualifier>[-<build_version>] ] ] 
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6093,26 +6017,17 @@ have the following meaning:
 ##### Examples
 
 Examples of valid TOSCA version strings:
+```
+# basic version strings
+‘6.1’
+2.0.1
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># basic version strings</p>
-<p>‘6.1’</p>
-<p>2.0.1</p>
-<p># version string with optional qualifier</p>
-<p>3.1.0.beta</p>
-<p># version string with optional qualifier and build version</p>
-<p>1.0.0.alpha-10</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+# version string with optional qualifier
+3.1.0.beta
 
+# version string with optional qualifier and build version
+1.0.0.alpha-10
+```
 ##### Notes
 
 - \[[Maven-Version](#CIT_MAVEN_VERSION)\] The TOSCA version type is
@@ -6183,10 +6098,9 @@ unit from the list of recognized units provided below.
 ##### Grammar
 
 TOSCA scalar-unit typed values have the following grammar:
-
-| \<scalar\> \<unit\> |
-|---------------------|
-
+```
+<scalar> <unit> 
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6197,7 +6111,7 @@ have the following meaning:
 
 ##### Additional requirements
 
-- **<u>Whitespace</u>**: any number of spaces (including zero or none)
+- **Whitespace**: any number of spaces (including zero or none)
   SHALL be allowed between the scalar value and the unit value.
 
 - It SHALL be considered an error if either the scalar or unit portion
@@ -6210,8 +6124,6 @@ have the following meaning:
   value). For example, if we have a property called storage_size (which
   is of type scalar-unit) a valid range constraint would appear as
   follows:
-
-<!-- -->
 
 - storage_size: in_range \[ 4 GB, 20 GB \]
 
@@ -6257,22 +6169,11 @@ These types and their allowed unit values are defined below.
 | TiB  | size  | tebibyte (1099511627776 bytes) |
 
 ###### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Storage size in Gigabytes</p>
-<p>properties:</p>
-<p>storage_size: 10 GB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Storage size in Gigabytes
+properties:
+  storage_size: 10 GB
+```
 ###### Notes
 
 - The unit values recognized by TOSCA for size-type units are based upon
@@ -6283,10 +6184,9 @@ These types and their allowed unit values are defined below.
 - TOSCA treats these unit values as case-insensitive (e.g., a value of
   ‘kB’, ‘KB’ or ‘kb’ is equivalent), but it is considered best practice
   to use the case of these units as prescribed by
-  GNU
+  GNU.
 <!----
 {"id": "843", "author": "Chris Lauwers", "date": "2020-07-20T18:40:00Z", "comment": "Bitrate units are case sensitive. We\n  should make this consistent.", "target": "GNU"}-->
-.
 
 - Some cloud providers may not support byte-level granularity for
   storage size allocations. In those cases, these values could be
@@ -6308,35 +6208,22 @@ These types and their allowed unit values are defined below.
 | ns   | time  | nanoseconds  |
 
 ###### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Response time in milliseconds</p>
-<p>properties:</p>
-<p>respone_time: 10 ms</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Response time in milliseconds
+properties:
+  respone_time: 10 ms
+```
 ###### Notes
 
 - The unit values recognized by TOSCA for time-type units are based upon
   a subset of those defined by International System of Units whose
   recognized abbreviations are defined within the following reference:
 
-<!-- -->
+  - <http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>
 
-- <http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>
-
-- This document is a non-normative reference to this specification and
-  intended for publications or grammars enabled for Latin characters
-  which are not accessible in typical programming languages
+  - This document is a non-normative reference to this specification and
+    intended for publications or grammars enabled for Latin characters
+    which are not accessible in typical programming languages
 
 ##### scalar-unit.frequency
 
@@ -6350,21 +6237,11 @@ These types and their allowed unit values are defined below.
 | GHz  | frequency | Gigahertz, or GHz, equals to 1,000,000,000 Hertz, or 1,000,000 kHz, or 1,000 MHz. |
 
 ###### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Processor raw clock rate</p>
-<p>properties:</p>
-<p>clock_rate: 2.4 GHz</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+# Processor raw clock rate
+properties:
+  clock_rate: 2.4 GHz
+```
 
 ###### Notes
 
@@ -6391,29 +6268,17 @@ These types and their allowed unit values are defined below.
 | Tibps | bitrate | tebibits (1099511627776 bits) per second |
 
 ###### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Somewhere in a node template definition</p>
-<p>requirements:</p>
-<p>- link:</p>
-<p>node_filter:</p>
-<p>capabilities:</p>
-<p>- myLinkable</p>
-<p>properties:</p>
-<p>bitrate:</p>
-<p>- greater_or_equal: 10 Kbps # 10 * 1000 bits per second at
-least</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Somewhere in a node template definition
+requirements:
+  - link:
+      node_filter:
+        capabilities: 
+          - myLinkable
+              properties:
+                bitrate:
+                 - greater_or_equal: 10 Kbps # 10 * 1000 bits per second at least
+```
 ### Collection Types
 
 #### TOSCA list type
@@ -6442,27 +6307,15 @@ TOSCA lists are essentially normal YAML lists with the following
 grammars:
 
 ######  Square bracket notation
-
-| \[ \<list_entry_1\>, \<list_entry_2\>, ... \] |
-|-----------------------------------------------|
-
+```
+[ <list_entry_1>, <list_entry_2>, ... ] 
+```
 ###### Bulleted list notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- &lt;list_entry_1&gt;</p>
-<p>- ...</p>
-<p>- &lt;list_entry_n&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+- <list_entry_1>
+- ...
+- <list_entry_n>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6475,53 +6328,32 @@ have the following meaning:
 The following example shows a list declaration with an entry schema
 based upon a simple integer type (which has an additional validation
 clause):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;some_entity&gt;:</p>
-<p>...</p>
-<p>properties:</p>
-<p>listen_ports:</p>
-<p>type: <a href="#tosca-list-type">list</a></p>
-<p>entry_schema:</p>
-<p>description: listen port entry (simple integer type)</p>
-<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
-<p>validation: { $max_length: [ $value, 128 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+<some_entity>:
+  ...
+  properties:  
+    listen_ports:
+      type: list
+      entry_schema:
+        description: listen port entry (simple integer type)
+        type: integer
+        validation: { $max_length: [ $value, 128 ] }
+```
 
 ###### List declaration using a complex type
 
 The following example shows a list declaration with an entry schema
 based upon a complex type:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;some_entity&gt;:</p>
-<p>...</p>
-<p>properties:</p>
-<p>products:</p>
-<p>type: <a href="#tosca-list-type">list</a></p>
-<p>entry_schema:</p>
-<p>description: Product information entry (complex type) defined
-elsewhere</p>
-<p>type: ProductInfo</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+<some_entity>:
+  ...
+  properties:  
+    products:
+      type: list
+      entry_schema:
+        description: Product information entry (complex type) defined elsewhere
+        type: ProductInfo
+```
 
 ##### Definition Examples
 
@@ -6535,27 +6367,15 @@ These examples show two notation options for defining lists:
   of entries, or if the entries are complex.
 
 ###### Square bracket notation
-
-| listen_ports: \[ 80, 8080 \] |
-|------------------------------|
-
+```
+  listen_ports: [ 80, 8080 ]
+```
 ###### Bulleted list notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>listen_ports:</p>
-<p>- 80</p>
-<p>- 8080</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+listen_ports:
+  - 80
+  - 8080
+```
 #### TOSCA map type
 
 The map type allows for specifying multiple values for a parameter of
@@ -6580,27 +6400,15 @@ specified, keys are assumed to be of type string.
 TOSCA maps are normal YAML dictionaries with following grammar:
 
 ###### Single-line grammar
-
-| { \<entry_key_1\>: \<entry_value_1\>, ..., \<entry_key_n\>: \<entry_value_n\> } |
-|---------------------------------------------------------------------------------|
-
+```
+{ <entry_key_1>: <entry_value_1>, ..., <entry_key_n>: <entry_value_n> }
+```
 ###### Multi-line grammar
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;entry_key_1&gt;: &lt;entry_value_1&gt;</p>
-<p>...</p>
-<p>&lt;entry_key_n&gt;: &lt;entry_value_n&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<entry_key_1>: <entry_value_1>
+...
+<entry_key_n>: <entry_value_n>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6615,53 +6423,31 @@ have the following meaning:
 The following example shows a map with an entry schema definition based
 upon an existing string type (which has an additional validation
 clause):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;some_entity&gt;:</p>
-<p>...</p>
-<p>properties:</p>
-<p>emails:</p>
-<p>type: <a href="#tosca-map-type">map</a></p>
-<p>entry_schema:</p>
-<p>description: basic email address</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>validation: { $max_length: [ $value, 128 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<some_entity>:
+  ...
+  properties:  
+    emails:
+      type: map
+      entry_schema:
+        description: basic email address
+        type: string
+        validation: { $max_length: [ $value, 128 ] }
+```
 ###### Map declaration using a complex type
 
 The following example shows a map with an entry schema definition for
 contact information:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;some_entity&gt;:</p>
-<p>...</p>
-<p>properties:</p>
-<p>contacts:</p>
-<p>type: <a href="#tosca-map-type">map</a></p>
-<p>entry_schema:</p>
-<p>description: simple contact information</p>
-<p>type: ContactInfo</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<some_entity>:
+  ...
+  properties:  
+    contacts:
+      type: map
+      entry_schema:
+        description: simple contact information
+        type: ContactInfo
+```
 ##### Definition Examples
 
 These examples show two notation options for defining maps:
@@ -6674,39 +6460,17 @@ These examples show two notation options for defining maps:
   of entries, or if the entries are complex.
 
 ###### Single-line notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># notation option for shorter maps</p>
-<p>user_name_to_id_map: { user1: 1001, user2: 1002 }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# notation option for shorter maps
+user_name_to_id_map: { user1: 1001, user2: 1002 }
+```
 ###### Multi-line notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># notation for longer maps</p>
-<p>user_name_to_id_map:</p>
-<p>user1: 1001</p>
-<p>user2: 1002</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# notation for longer maps
+user_name_to_id_map:
+  user1: 1001
+  user2: 1002
+```
 ### Data Type
 
 A Data Type definition defines the schema for new datatypes in TOSCA.
@@ -6733,35 +6497,19 @@ Data Type has the following recognized keynames:
 #### Grammar
 
 Data Types have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">data_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">existing_type_name</a>&gt;</p>
-<p>version: &lt;<a
-href="#tosca-tal-suggests-removing-this.version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">datatype_description</a>&gt;</p>
-<p>validation: &lt;<a
-href="#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition">validation_clause</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>key_schema: &lt;key_schema_definition&gt;</p>
-<p>entry_schema: &lt;entry_schema_definition&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<data_type_name>: 
+  derived_from: <existing_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <datatype_description>
+  validation: <validation_clause>
+  properties:
+    <property_definitions>
+  key_schema: <key_schema_definition>
+  entry_schema: <entry_schema_definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6783,12 +6531,8 @@ have the following meaning:
 - property_definitions: represents the optional map of one or more
   property definitions that provide the schema for the data type
 
-<!-- -->
-
-- property_definitions may not be added to data types derived_from TOSCA
-  primitive types.
-
-<!-- -->
+  - property_definitions may not be added to data types derived_from TOSCA
+    primitive types.
 
 - key_schema_definition: if the data type derives from the TOSCA map
   type (i.e existing_type_name is a map or derives from a map), it
@@ -6825,7 +6569,6 @@ During Data Type derivation the keyname definitions follow these rules:
 <!----
 {"id": "910", "author": "Mike Rehder", "date": "2020-12-14T15:10:00Z", "comment": "This implies that type is optional.\n  However it is listed as required \u2013 which is it?", "target": "A valid datatype\n  definition **MUST** have either a valid derived_from declaration or at\n  least one valid property definition."}-->
 
-
 - Any validation clauses **SHALL** be type-compatible with the type
   declared by the derived_from keyname.
 
@@ -6841,53 +6584,29 @@ The following example represents a Data Type definition based upon an
 existing string type:
 
 ##### Defining a complex datatype
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># define a new complex datatype</p>
-<p>mytypes.phonenumber:</p>
-<p>description: my phone number datatype</p>
-<p>properties:</p>
-<p>countrycode:</p>
-<p>type: integer</p>
-<p>areacode:</p>
-<p>type: integer</p>
-<p>number:</p>
-<p>type: integer</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# define a new complex datatype
+mytypes.phonenumber:
+  description: my phone number datatype
+  properties:
+    countrycode:
+      type: integer
+    areacode:
+      type: integer
+    number:
+      type: integer
+```
 ##### Defining a datatype derived from an existing datatype
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># define a new datatype that derives from existing type and
-extends it</p>
-<p>mytypes.phonenumber.extended:</p>
-<p>derived_from: mytypes.phonenumber</p>
-<p>description: custom phone number type that extends the basic
-phonenumber type</p>
-<p>properties:</p>
-<p>phone_description:</p>
-<p>type: string</p>
-<p>validation: { $max_length: [ $value, 128 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# define a new datatype that derives from existing type and extends it
+mytypes.phonenumber.extended:
+  derived_from: mytypes.phonenumber
+  description: custom phone number type that extends the basic phonenumber type
+  properties:
+    phone_description:
+      type: string
+      validation: { $max_length: [ $value, 128 ] }
+```
 ### Schema definition
 
 All entries in a map or list for one property or
@@ -6981,49 +6700,29 @@ defined.</td>
 
 The following single-line grammar may be used when only the schema type
 needs to be declared:
-
-| \<schema_definition\>: \<schema_type\> |
-|----------------------------------------|
-
+```
+<schema_definition>: <schema_type>
+```
 ##### Extended Notation
 
 The following multi-line grammar may be used when additional information
 on the schema definition is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">schema_definition</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">schema_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">schema_description</a>&gt;</p>
-<p>validation: &lt;<a
-href="#validation-clause-definition">schema_validation_clause</a>&gt;</p>
-<p>key_schema: &lt;<a
-href="#schema-definition">key_schema_definition</a>&gt;</p>
-<p>entry_schema: &lt;<a
-href="#schema-definition">entry_schema_definition</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<schema_definition>:
+  type: <schema_type> 
+  description: <schema_description>
+  validation: <schema_validation_clause>
+  key_schema: <key_schema_definition>
+  entry_schema: <entry_schema_definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - schema_type: represents the mandatory type name for entries of the
   specified schema
 
-<!-- -->
-
-- if this schema definition is for a map key, then the schema_type must
-  be derived originally from string.
-
-<!-- -->
+  - if this schema definition is for a map key, then the schema_type must
+    be derived originally from string.
 
 - schema_description: represents the optional description of the schema
   definition
@@ -7068,17 +6767,15 @@ the containing entity type is derived:
 <!----
 {"id": "939", "author": "Mike Rehder", "date": "2020-12-14T14:40:00Z", "comment": "This should have its own refinement rule section to explain how conflicts are resolved, if at all. For example, if there is \u201crange 0..10\u201d and \u201cgreated_than 15\u201d what happens?", "target": "Validation clause definition"}-->
 
-
 A validation clause that must evaluate to True if the value for the
 entity it references is considered valid.
 
 #### Grammar
 
 Validation clauses have the following grammar:
-
-| validation: \< validation_clause\> |
-|------------------------------------|
-
+```
+validation: < validation_clause>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -7098,77 +6795,57 @@ the parameter definition that contains the validation clause.
 
 The following shows an example of validation clauses used in data type
 definitions:
+```
+data_types:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p># Full function syntax for the $value function</p>
-<p>Count1:</p>
-<p>derived_from: integer</p>
-<p>validation: { $greater_or_equal: [ { $value: [] }, 0 ] }</p>
-<p># Simple function syntax for the $value function</p>
-<p>Count2:</p>
-<p>derived_from: integer</p>
-<p>validation: { $greater_or_equal: [ $value, 0 ] }</p>
-<p># Full function syntax with arguments</p>
-<p>FrequencyRange:</p>
-<p>properties:</p>
-<p>low:</p>
-<p>type: scalar-unit.frequency</p>
-<p>high:</p>
-<p>type: scalar-unit.frequency</p>
-<p>validation:</p>
-<p>$greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] }
-]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  # Full function syntax for the $value function
+  Count1:
+    derived_from: integer
+    validation: { $greater_or_equal: [ { $value: [] }, 0 ] }
 
+  # Simple function syntax for the $value function
+  Count2:
+    derived_from: integer
+    validation: { $greater_or_equal: [ $value, 0 ] }
+
+  # Full function syntax with arguments
+  FrequencyRange:
+    properties:
+      low:
+        type: scalar-unit.frequency
+      high:
+        type: scalar-unit.frequency
+    validation:
+      $greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] } ]
+```
 <span id="_Schema_Definition" class="anchor"></span>The following shows
 an example of validation clauses used in property definitions:
+```
+node_types:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Scalable:</p>
-<p>properties:</p>
-<p>minimum_instances:</p>
-<p>type: integer</p>
-<p>validation: { $greater_or_equal: [ $value, 0 ] } # positive
-integer</p>
-<p>maximum_instances:</p>
-<p>type: integer</p>
-<p>validation:</p>
-<p>$greater_or_equal:</p>
-<p>- $value</p>
-<p>- $get_property: [ SELF, minimum_instances ]</p>
-<p>default_instances:</p>
-<p>type: integer</p>
-<p>validation:</p>
-<p>$and:</p>
-<p>- $greater_or_equal:</p>
-<p>- $value</p>
-<p>- $get_property: [ SELF, minimum_instances ]</p>
-<p>- $less_or_equal:</p>
-<p>- $value</p>
-<p>- $get_property: [ SELF, maximum_instances ]</p>
-<p>required: false</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  Scalable:
+    properties:
+      minimum_instances:
+        type: integer
+        validation: { $greater_or_equal: [ $value,  0 ] }  # positive integer
+      maximum_instances:
+        type: integer
+        validation: 
+          $greater_or_equal:
+            - $value
+            - $get_property: [ SELF, minimum_instances ]
+      default_instances:
+        type: integer
+        validation:
+          $and:
+            - $greater_or_equal: 
+              - $value
+              - $get_property: [ SELF, minimum_instances ]
+            - $less_or_equal: 
+              - $value
+              - $get_property: [ SELF, maximum_instances ]
+        required: false
+```
 ### Property definition
 
 A property definition defines a named, typed value and related data that
@@ -7314,62 +6991,30 @@ The following property status values are supported:
 #### Grammar
 
 Property definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">property_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">property_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">property_description</a>&gt;</p>
-<p>required: &lt;<a
-href="#TYPE_YAML_BOOLEAN">property_required</a>&gt;</p>
-<p>default: &lt;default_value&gt;</p>
-<p>value: &lt;property_value&gt; | { &lt;property_value_expression&gt;
-}</p>
-<p>status: &lt;<a
-href="#move-this-in-the-metadata-in-a-recommended-metadata-section-for-profile-writing.status-values">status_value</a>&gt;</p>
-<p>validation: &lt;<a
-href="#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition">validation_clause</a>&gt;</p>
-<p>key_schema: &lt;<a
-href="#schema-definition">key_schema_definition</a>&gt;</p>
-<p>entry_schema: &lt;<a
-href="#schema-definition">entry_schema_definition</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a
-href="#also-covered-by-4.2.1.3.2metadata">metadata_map</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<property_name>:
+  type: <property_type> 
+  description: <property_description>
+  required: <property_required>
+  default: <default_value>
+  value: <property_value> | { <property_value_expression> }
+  status: <status_value>
+  validation: <validation_clause>
+  key_schema: <key_schema_definition>
+  entry_schema: <entry_schema_definition>
+  metadata:
+    <metadata_map>
+```
 The following single-line grammar is supported when only a fixed value
 or fixed value expression needs to be provided to a property:
-
-| \<[property_name](#TYPE_YAML_STRING)\>: \<property_value\> \| { \<property_value_expression\> } |
-|-------------------------------------------------------------------------------------------------|
-
+```
+<property_name>: <property_value> | { <property_value_expression> }
+```
 This single-line grammar is equivalent to the following:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">property_name</a>&gt;:</p>
-<p>value: &lt;property_value&gt; | { &lt;property_value_expression&gt;
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<property_name>:
+    value: <property_value> | { <property_value_expression> }
+```
 Note that the short form can be used only during a refinement (i.e. the
 property has been previously defined).
 
@@ -7393,26 +7038,18 @@ have the following meaning:
   default value if a value is not provided by another means (via the
   fixed_value definition or via property assignment);
 
-<!-- -->
-
-- the default_value shall not be defined for properties that are not
-  required (i.e. property_required is “false”) as they will stay
-  undefined.
-
-<!-- -->
+  - the default_value shall not be defined for properties that are not
+    required (i.e. property_required is “false”) as they will stay
+    undefined.
 
 - \<property_value\> \| { \<property_value_expression\> }: contains a
   type-compatible value or value expression that may be defined during
   property definition or refinement to set and fix the value definition
   of the property
 
-<!-- -->
-
-- note that a value definition cannot be changed; once defined, the
-  property cannot be further refined or assigned. Thus, value
-  definitions should be avoided in data_type definitions.
-
-<!-- -->
+  - note that a value definition cannot be changed; once defined, the
+    property cannot be further refined or assigned. Thus, value
+    definitions should be avoided in data_type definitions.
 
 - status_value: a string that contains a keyword that indicates the
   status of the property relative to the specification or
@@ -7448,7 +7085,6 @@ definitions together:
 <!----
 {"id": "966", "author": "Mike Rehder", "date": "2020-12-14T14:49:00Z", "comment": "Section 4.2.5.2.3 says that description\n  isn\u2019t inherited", "target": "description: a new definition is unrestricted\n  and will overwrite the one inherited from the property definition in\n  the parent entity type definition."}-->
 
-
 - required: if defined to “false” in the property definition parent
   entity type it may be redefined to “true”; note that if undefined it
   is automatically considered as being defined to “true”.
@@ -7467,7 +7103,6 @@ definitions together:
   type definition.
 <!----
 {"id": "967", "author": "Mike Rehder", "date": "2020-12-14T14:50:00Z", "comment": "I don\u2019t see how this is feasible. If\n  deprecated in the parent, how can a child make it active?  \n  I don\u2019t think this should be allowed to be refined at\n  all.", "target": "status: a new definition is unrestricted and will overwrite\n  the one inherited from the property definition in the parent entity\n  type definition."}-->
-
 
 - validation: a new definition is unrestricted; this validation clause
   does not replace the validation clause defined in the property
@@ -7512,78 +7147,44 @@ definitions together:
 
 The following represents an example of a property definition with a
 validation clause:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>num_cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs requested for a software node
-instance.</p>
-<p>default: 1</p>
-<p>required: true</p>
-<p>validation; { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  num_cpus:
+    type: integer
+    description: Number of CPUs requested for a software node instance.
+    default: 1
+    required: true
+    validation; { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
+```
 The following shows an example of a property refinement. Consider the
 definition of an Endpoint capability type:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.capabilities.Endpoint:</p>
-<p>derived_from: tosca.capabilities.Root</p>
-<p>properties:</p>
-<p>protocol:</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>default: tcp</p>
-<p>port:</p>
-<p>type: PortDef</p>
-<p>required: false</p>
-<p>secure:</p>
-<p>type: boolean</p>
-<p>required: false</p>
-<p>default: false</p>
-<p># Other property definitions omitted for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca.capabilities.Endpoint:
+  derived_from: tosca.capabilities.Root
+  properties:
+    protocol:
+      type: string
+      required: true
+      default: tcp
+    port:
+      type: PortDef
+      required: false
+    secure:
+      type: boolean
+      required: false
+      default: false
+    # Other property definitions omitted for brevity
+```
 The Endpoint.Admin capability type refines the secure property of the
 Endpoint capability type from which it derives by forcing its value to
 always be true:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.capabilities.Endpoint.Admin:</p>
-<p>derived_from: tosca.capabilities.Endpoint</p>
-<p># Change Endpoint secure indicator to true from its default of
-false</p>
-<p>properties:</p>
-<p>secure: true</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+tosca.capabilities.Endpoint.Admin:
+  derived_from: tosca.capabilities.Endpoint
+  # Change Endpoint secure indicator to true from its default of false
+  properties:
+    secure: true
+```
 
 ### Property assignment
 
@@ -7602,10 +7203,9 @@ Property assignments have the following grammar:
 
 The following single-line grammar may be used when a simple value
 assignment is needed:
-
-| \<property_name\>: \<property_value\> \| { \<property_value_expression\> } |
-|----------------------------------------------------------------------------|
-
+```
+<property_name>: <property_value> | { <property_value_expression> }
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -7619,10 +7219,9 @@ have the following meaning:
   type-compatible value to assign to the property. Property values may
   be provided as the result of the evaluation of
   an expression or a
-  function
+  function.
 <!----
 {"id": "983", "author": "Chris Lauwers", "date": "2022-11-21T11:36:00Z", "comment": "What is the difference between an\n  expression and a function", "target": "an expression or a\n  function"}-->
-.
 
 #### Additional Requirements
 
@@ -7648,10 +7247,9 @@ Relationship or Capability Type). Specifically, it is used to expose the
 deployed and instantiated (as set by the TOSCA orchestrator). Attribute
 values can be retrieved via the get_attribute function from the instance
 model and used as values to other entities within TOSCA Service
-Templates
+Templates.
 <!----
 {"id": "991", "author": "Chris Lauwers", "date": "2022-11-21T11:36:00Z", "comment": "Can also be set using operation\noutputs", "target": "Templates"}-->
-.
 
 #### Attribute and Property reflection 
 
@@ -7751,34 +7349,19 @@ information.</td>
 #### Grammar
 
 Attribute definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>attributes:</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">attribute_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">attribute_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">attribute_description</a>&gt;</p>
-<p>default: &lt;default_value&gt;</p>
-<p>status: &lt;<a href="#status-values">status_value</a>&gt;</p>
-<p>validation: &lt;<a
-href="#validation-clause-definition">attribute_validation_clause</a>&gt;</p>
-<p>key_schema: &lt;<a
-href="#schema-definition">key_schema_definition</a>&gt;</p>
-<p>entry_schema: &lt;<a
-href="#schema-definition">entry_schema_definition</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#metadata-1">metadata_map</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+attributes:
+  <attribute_name>:
+    type: <attribute_type>
+    description: <attribute_description>
+    default: <default_value> 
+    status: <status_value>
+    validation: <attribute_validation_clause>
+    key_schema: <key_schema_definition>
+    entry_schema: <entry_schema_definition>
+    metadata:
+      <metadata_map>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -7872,33 +7455,19 @@ following refinement rules when the containing entity type is derived:
   actual value (i.e., actual state) that provides the actual
   instantiated value.
 
-<!-- -->
-
-- For example, a property can be used to request the IP address of a
-  node using a property (setting); however, the actual IP address after
-  the node is instantiated may by different and made available by an
-  attribute.
+  - For example, a property can be used to request the IP address of a
+    node using a property (setting); however, the actual IP address after
+    the node is instantiated may by different and made available by an
+    attribute.
 
 #### Example
 
 The following represents a mandatory attribute definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>actual_cpus:</p>
-<p>type: integer</p>
-<p>description: Actual number of CPUs allocated to the node
-instance.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+actual_cpus:
+  type: integer
+  description: Actual number of CPUs allocated to the node instance.
+```
 ### Attribute assignment
 
 This section defines the grammar for assigning values to attributes
@@ -7916,10 +7485,9 @@ Attribute assignments have the following grammar:
 
 The following single-line grammar may be used when a simple value
 assignment is needed:
-
-| \<attribute_name\>: \<attribute_value\> \| { \<attribute_value_expression\> } |
-|-------------------------------------------------------------------------------|
-
+```
+<attribute_name>: <attribute_value> | { <attribute_value_expression> }
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -7958,31 +7526,25 @@ orchestrator to the external world). Thus:
 
 - outgoing parameters are:
 
-<!-- -->
+  - template outputs
 
-- template outputs
+  - internal workflow outputs
 
-- internal workflow outputs
+  - external workflow inputs
 
-- external workflow inputs
-
-- operation inputs
-
-<!-- -->
+  - operation inputs
 
 - incoming parameters are:
 
-<!-- -->
+  - template inputs
 
-- template inputs
+  - internal workflow inputs
 
-- internal workflow inputs
+  - external workflow outputs
 
-- external workflow outputs
+  - operation outputs
 
-- operation outputs
-
-- notification outputs
+  - notification outputs
 
 An “outgoing” parameter definition is essentially the same as a TOSCA
 property definition, however it may optionally inherit the data type of
@@ -8047,81 +7609,40 @@ incoming parameters. Mutually exclusive with the “value” keyname.</td>
 #### Grammar
 
 Parameter definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">parameter_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">parameter_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">parameter_description</a>&gt;</p>
-<p>value: &lt;parameter_value&gt; | { &lt;parameter_value_expression&gt;
-}</p>
-<p>required: &lt;<a
-href="#TYPE_YAML_BOOLEAN">parameter_required</a>&gt;</p>
-<p>default: &lt;parameter_default_value&gt;</p>
-<p>status: &lt;<a href="#status-values">status_value</a>&gt;</p>
-<p>validation: &lt;<a
-href="#validation-clause-definition">parameter_validation_clause</a>&gt;</p>
-<p>key_schema: &lt;key_schema_definition&gt;</p>
-<p>entry_schema: &lt;entry_schema_definition&gt;</p>
-<p>mapping: &lt;<a
-href="#attribute-selection-format">attribute_selection_form</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+<parameter_name>:
+  type: <parameter_type> 
+  description: <parameter_description>
+  value: <parameter_value> | { <parameter_value_expression> }
+  required: <parameter_required>
+  default: <parameter_default_value>
+  status: <status_value>
+  validation: <parameter_validation_clause>
+  key_schema: <key_schema_definition>
+  entry_schema: <entry_schema_definition>
+  mapping: <attribute_selection_form>
+```
 
 The following single-line grammar is supported when only a fixed value
 needs to be provided provided to an outgoing parameter:
-
-| \<[parameter_name](#TYPE_YAML_STRING)\>: \<parameter_value\> \| { \<parameter_value_expression\> } |
-|----------------------------------------------------------------------------------------------------|
-
+```
+<parameter_name>: <parameter_value> | { <parameter_value_expression> }
+```
 This single-line grammar is equivalent to the following:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">parameter_name</a>&gt;:</p>
-<p>value: &lt;parameter_value&gt; | { &lt;parameter_value_expression&gt;
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<parameter_name>:
+    value: <parameter_value> | { <parameter_value_expression> }
+```
 The following single-line grammar is supported when only a parameter to
 attribute mapping needs to be provided to an incoming parameter:
-
-| \<[parameter_name](#TYPE_YAML_STRING)\>: \<[attribute_selection_form](#attribute-selection-format)\> |
-|------------------------------------------------------------------------------------------------------|
-
+```
+<parameter_name>: <attribute_selection_form>
+```
 This single-line grammar is equivalent to the following:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">parameter_name</a>&gt;:</p>
-<p>mapping: &lt;<a
-href="#attribute-selection-format">attribute_selection_form</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<parameter_name>:
+    mapping: <attribute_selection_form>
+```
 Note that the context of the parameter definition unambiguously
 determines if the parameter is an incoming or an outgoing parameter.
 
@@ -8143,16 +7664,12 @@ have the following meaning:
   be provided as the result from the evaluation of an expression or a
   function.
 
-<!-- -->
+  - once the value keyname is defined, the parameter cannot be further
+    refined or assigned.
 
-- once the value keyname is defined, the parameter cannot be further
-  refined or assigned.
-
-- the value keyname is relevant only for “outgoing” parameter
-  definitions and SHOULD NOT be defined in “incoming” parameter
-  definitions.
-
-<!-- -->
+  - the value keyname is relevant only for “outgoing” parameter
+    definitions and SHOULD NOT be defined in “incoming” parameter
+    definitions.
 
 - parameter_required: represents an optional
   [boolean](#TYPE_YAML_BOOLEAN) value (true or false) indicating whether
@@ -8163,13 +7680,9 @@ have the following meaning:
 - default_value: contains a type-compatible value that may be used as a
   default if not provided by other means.
 
-<!-- -->
-
-- the default keyname SHALL NOT be defined for parameters that are not
-  required (i.e. parameter_required is “false”) as they will stay
-  undefined.
-
-<!-- -->
+  - the default keyname SHALL NOT be defined for parameters that are not
+    required (i.e. parameter_required is “false”) as they will stay
+    undefined.
 
 - status_value: a [string](#TYPE_YAML_STRING) that contains a keyword
   that indicates the status of the parameter relative to the
@@ -8191,11 +7704,9 @@ have the following meaning:
   attribute_selection_format; the parameter is mapped onto an attribute
   of the containing entity
 
-<!-- -->
-
-- the mapping keyname is relevant only for “incoming” parameter
-  definitions and SHOULD NOT be defined in “outgoing” parameter
-  definitions.
+  - the mapping keyname is relevant only for “incoming” parameter
+    definitions and SHOULD NOT be defined in “outgoing” parameter
+    definitions.
 
 #### Refinement rules
 
@@ -8223,25 +7734,17 @@ the containing entity type is derived:
   type, it may be defined to any type-compatible value; once defined,
   the parameter cannot be further refined or assigned
 
-<!-- -->
-
-- the value keyname should be defined only for “outgoing” parameters.
-
-<!-- -->
+  - the value keyname should be defined only for “outgoing” parameters.
 
 - mapping: if undefined in the parameter definition in the parent entity
   type, it may be defined to any type-compatible attribute mapping; once
   defined, the parameter cannot be further refined or mapped
 
-<!-- -->
+  - the mapping keyname should be defined only for “incoming” parameters.
 
-- the mapping keyname should be defined only for “incoming” parameters.
-
-<!-- -->
-
-- status: a new definition is unrestricted and will overwrite the one
-  inherited from the parameter definition in the parent entity type
-  definition.
+  - status: a new definition is unrestricted and will overwrite the one
+    inherited from the parameter definition in the parent entity type
+    definition.
 
 - validation: a new definition is unrestricted; this validation clause
   does not replace the validation clause defined in the parameter
@@ -8272,42 +7775,21 @@ the containing entity type is derived:
 
 The following represents an example of an input parameter definition
 with a validation clause:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>validation: { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+inputs:
+  cpus:
+    type: integer
+    description: Number of CPUs for the server.
+    validation: { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
+```
 The following represents an example of an (untyped) output parameter
 definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>server_ip:</p>
-<p>description: The private IP address of the provisioned server.</p>
-<p>value: { $get_attribute: [ my_server, private_address ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+outputs:
+  server_ip:
+    description: The private IP address of the provisioned server.
+    value: { $get_attribute: [ my_server, private_address ] }
+```
 
 ### Parameter value assignment
 
@@ -8321,10 +7803,9 @@ The TOSCA parameter value assignment has no keynames.
 #### Grammar
 
 Parameter value assignments have the following grammar:
-
-| \<parameter_name\>: \<parameter_value\> \| { \<parameter_value_expression\> } |
-|-------------------------------------------------------------------------------|
-
+```
+<parameter_name>: <parameter_value> | { <parameter_value_expression> }
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -8366,10 +7847,9 @@ The TOSCA parameter mapping assignment has no keynames.
 #### Grammar
 
 Parameter mapping assignments have the following grammar:
-
-| \<parameter_name\>: \<attribute_selection_format\> |
-|----------------------------------------------------|
-
+```
+<parameter_name>: <attribute_selection_format>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -8385,10 +7865,9 @@ have the following meaning:
 #### Attribute selection format
 
 The attribute_selection_format is a list of the following format:
-
-| \[\<tosca_traversal_path\>, \<attribute_name\>, \<nested_attribute_name_or_index_1\>, ..., \<nested_attribute_name_or_index_n\> \] |
-|------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+[<tosca_traversal_path>, <attribute_name>, <nested_attribute_name_or_index_1>, ..., <nested_attribute_name_or_index_n> ]
+```
 The various entities in this grammar are defined as follows:
 
 <table>
@@ -8496,23 +7975,12 @@ achieved by adding suffixes after the function name starting with a
 second \$ character. For example, the following is a valid map where the
 function “keygen” is called three times and the returned values are used
 as keys in the hint map:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>hint:</p>
-<p>{ $keygen: [ UUID ] }: 34</p>
-<p>{ $keygen$1: [ UUID ] }: 56</p>
-<p>{ $keygen$2: [ UUID ] }: 78</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+hint:
+  { $keygen: [ UUID ] }: 34
+  { $keygen$1: [ UUID ] }: 56
+  { $keygen$2: [ UUID ] }: 78
+```
 TOSCA functions may be used wherever a value is expected, such as:
 
 - a value for a TOSCA keyname
@@ -8529,63 +7997,28 @@ on the provided function arguments.
 
 The following snippet shows an example of a node template that uses a
 function to retrieve a security context at runtime:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>context: { $get_security_context: { env: staging, role: admin }
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  context: { $get_security_context: { env: staging, role: admin } }
+```
 Nested functions are supported, that is, functions can be used in the
 arguments of another function. The result of the internal function will
 be passed as an argument to the outer function:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>nested: {$outer_func: [{$inner_func: [iarg1, iarg2]},
-oarg2]}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  nested: {$outer_func: [{$inner_func: [iarg1, iarg2]}, oarg2]}
+```
 To allow for strings that are not function names to start with \$, the
 dollar sign can be escaped by using \$\$ (two consecutive dollar
 characters). The following snippet shows escaped strings in a map that
 do not represent function calls:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>prop1:</p>
-<p>$$myid1: myval1</p>
-<p>myid2: $$myval2</p>
-<p>$$myid3: $$myval3</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  prop1:
+   $$myid1: myval1
+   myid2: $$myval2
+   $$myid3: $$myval3
+```
 The arguments to the functions can be arbitrary TOSCA data, although
 TOSCA defines a number of built-in functions that define
 function-specific syntax for providing arguments. In addition, service
@@ -8656,48 +8089,26 @@ templates using a YAML map under the functions keyname as follows. Note
 that this grammar allows the definition of functions that have arguments
 expressed within a YAML seq, however intrinsic functions may accept
 other argument definition syntaxes.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>&lt;function_def&gt;</p>
-<p>&lt;function_def&gt;</p>
-<p>...</p>
-<p>&lt;function_def&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  <function_def>
+  <function_def>
+  ...
+  <function_def>
+```
 Each \<function_def\> defines the name of a function with an associated
 list of signature definitions as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;function_name&gt;:</p>
-<p>signatures:</p>
-<p>- &lt;signature_def&gt;</p>
-<p>- &lt;signature_def&gt;</p>
-<p>- &lt;signature_def&gt;</p>
-<p>...</p>
-<p>- &lt;signature_def&gt;</p>
-<p>description: &lt;string&gt;</p>
-<p>metadata: &lt;map_of_metadata&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  <function_name>:
+    signatures:
+      - <signature_def>
+      - <signature_def>
+      - <signature_def>
+      ...
+      - <signature_def>
+    description: <string>
+    metadata: <map_of_metadata>
+```
 Only the signatures keyname is mandatory and must provide at least one
 signature
 definition
@@ -8708,32 +8119,21 @@ signatures are tested in the order of their definition. The first
 matching implementation is used.
 
 Each \<signature_def\> is a map of following keywords definitions:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>arguments:</p>
-<p>- &lt;schema_def&gt;</p>
-<p>- &lt;schema_def&gt;</p>
-<p>...</p>
-<p>- &lt;schema_def&gt;</p>
-<p>optional_arguments:</p>
-<p>- &lt;schema_def&gt;</p>
-<p>- &lt;schema_def&gt;</p>
-<p>...</p>
-<p>- &lt;schema_def&gt;</p>
-<p>variadic: &lt;boolean&gt;</p>
-<p>result: &lt;schema_def&gt;</p>
-<p>implementation: &lt;implementation_def&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+arguments:
+  - <schema_def>
+  - <schema_def>
+  ...
+  - <schema_def>
+optional_arguments:
+  - <schema_def>
+  - <schema_def>
+  ...
+  - <schema_def>
+variadic: <boolean>
+result: <schema_def>
+implementation: <implementation_def>
+```
 None of the keynames in the signature definition are mandatory.
 
 The keynames have the following meaning:
@@ -8810,21 +8210,10 @@ service_template section:
 
   - Note that in that case the \$ (dollar sign) character will be put in
     front of the namespace name. For example:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>rnd_nr: { $namespace1:random_generator: [ seed ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  rnd_nr: { $namespace1:random_generator: [ seed ] }
+```
 - Function definitions inside a service_template that are having the
   same \<function_name\> are considered a refinement of the homonymous
   definition outside the service_template, see refinement rules below.
@@ -8872,206 +8261,127 @@ definition outside the service_template.
 ##### Square root function with several signatures
 
 The following example shows the definition of a square root function:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  sqrt:</p>
-<p>signatures:</p>
-<p>    - arguments:</p>
-<p>       - type: integer</p>
-<p>validation: { $greater_or_equal: [ $value, 0 ] }</p>
-<p>       result:</p>
-<p>         type: float</p>
-<p>      implementation: scripts/sqrt.py</p>
-<p>    - arguments:</p>
-<p>      - type: float</p>
-<p>validation: { $greater_or_equal: [ $value, 0.0 ] }</p>
-<p>      result:</p>
-<p>        type: float</p>
-<p>      implementation: scripts/sqrt.py</p>
-<p>description: &gt;</p>
-<p>This is a square root function that defines two signatures:</p>
-<p>the argument is either integer or float and the function</p>
-<p>returns the suare root as a float.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  sqrt:
+    signatures:
+      - arguments:
+        - type: integer
+          validation: { $greater_or_equal: [ $value, 0 ] }
+        result:
+          type: float
+        implementation: scripts/sqrt.py
+      - arguments:
+        - type: float
+          validation: { $greater_or_equal: [ $value, 0.0 ] }
+        result:
+          type: float
+        implementation: scripts/sqrt.py
+    description: >
+      This is a square root function that defines two signatures:
+      the argument is either integer or float and the function
+      returns the suare root as a float.
+```
 The next sqrt is similar to above, but uses a simplified type notation
 (in this short form no validation clause can be expressed):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  sqrt:</p>
-<p>signatures:</p>
-<p>      - arguments: [ integer ]</p>
-<p>        result: float</p>
-<p>        implementation: scripts/sqrt.py</p>
-<p>      - arguments: [ float ]</p>
-<p>        result: float</p>
-<p>        implementation: scripts/sqrt.py</p>
-<p>description: &gt;</p>
-<p>This is a square root function that defines two signatures:</p>
-<p>the argument is either integer or float and the function</p>
-<p>returns the suare root as a float.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  sqrt:
+    signatures:
+      - arguments: [ integer ]
+        result: float
+        implementation: scripts/sqrt.py
+      - arguments: [ float ]
+        result: float
+        implementation: scripts/sqrt.py
+    description: >
+      This is a square root function that defines two signatures:
+      the argument is either integer or float and the function
+      returns the suare root as a float.
+```
 ##### Function with list of arguments
 
 The following example shows a function that takes a list of arguments
 with different types:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  my_func_with_different_argument_types:</p>
-<p>signatures:</p>
-<p>    - arguments:</p>
-<p>- type: MyType1</p>
-<p>description: "this is the first argument ..."</p>
-<p>- type: string</p>
-<p>description: "this is the second argument ..."</p>
-<p>- type: string</p>
-<p>description: "this is the third argument ..."</p>
-<p>- type: MyType2</p>
-<p>description: "this is the argument that can be repeated ..."</p>
-<p>      variadic: true</p>
-<p>      result:</p>
-<p>type: MyTypeRez</p>
-<p>      implementation: scripts/my.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  my_func_with_different_argument_types:
+    signatures:
+      - arguments:
+        - type: MyType1
+          description: "this is the first argument ..."
+        - type: string
+          description: "this is the second argument ..."
+        - type: string
+          description: "this is the third argument ..."
+        - type: MyType2
+          description: "this is the argument that can be repeated ..."
+        variadic: true
+        result: 
+          type: MyTypeRez
+        implementation: scripts/my.py
+```
 Same as the above, but in compact notation:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  my_func_with_different_argument_types:</p>
-<p>signatures:</p>
-<p>    - arguments: [MyType1, string, string, MyType2]</p>
-<p>      variadic: true</p>
-<p>      result: MyTypeRez</p>
-<p>      implementation: scripts/my.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  my_func_with_different_argument_types:
+    signatures:
+      - arguments: [MyType1, string, string, MyType2]
+        variadic: true
+        result: MyTypeRez
+      implementation: scripts/my.py
+```
 ##### Function with no arguments
 
 The arguments list can be empty or completely missing. In such a case,
 when using the function the arguments will be an empty list:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  get_random_nr:</p>
-<p>signatures:</p>
-<p>      - result: float</p>
-<p>        implementation: scripts/myrnd.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  get_random_nr:
+    signatures:
+      - result: float
+        implementation: scripts/myrnd.py
+```
 ##### Function with polymorphic arguments/result inside of lists
 
 Function signatures with different types within the arguments and result
 lists:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  union:</p>
-<p>signatures:</p>
-<p>     - arguments:</p>
-<p>        - type: list</p>
-<p>          entry_schema: integer</p>
-<p>   variadic: true</p>
-<p>        result:</p>
-<p>          type: list</p>
-<p>          entry_schema: integer</p>
-<p>        implementation: scripts/libpi.py</p>
-<p>      - arguments:</p>
-<p>        - type: list</p>
-<p>          entry_schema: float</p>
-<p>   variadic: true</p>
-<p>        result:</p>
-<p>          type: list</p>
-<p>          entry_schema: float</p>
-<p>        implementation: scripts/libpi.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  union:
+    signatures:
+      - arguments:
+        - type: list
+          entry_schema: integer
+        variadic: true
+        result:
+          type: list
+          entry_schema: integer
+        implementation: scripts/libpi.py
+      - arguments:
+        - type: list
+          entry_schema: float
+        variadic: true
+        result:
+          type: list
+          entry_schema: float
+        implementation: scripts/libpi.py
+```
 ##### Defining a list in a map argument
 
 The following shows the use of a argument that is a map of lists of
 MyType:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>complex_arg_function:</p>
-<p>signatures:</p>
-<p>- arguments:</p>
-<p>- type: map</p>
-<p>key_schema: string</p>
-<p>entry_schema:</p>
-<p>type: list</p>
-<p>entry_schema: MyType</p>
-<p>      result: string</p>
-<p>      implementation: scripts/complex.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  complex_arg_function:
+    signatures:
+      - arguments: 
+        - type: map
+          key_schema: string
+          entry_schema:
+            type: list
+            entry_schema: MyType
+        result: string
+        implementation: scripts/complex.py
+```
 ##### User-defined function usage
 
 The following shows more examples of function usage. Note that in the
@@ -9079,23 +8389,12 @@ usage of the polymorphic union function, the TOSCA parser knows to
 identify the right signature via the types of the function arguments.
 Also note the usage of a user-defined function with no parameters; an
 empty list is used for the arguments.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>integer_union: {$union: [[1, 7], [3, 4, 9], [15, 16]]}</p>
-<p>float_union: {$union: [[3.5, 8.8], [1.3]]}</p>
-<p>rnd: {$get_random_nr: []}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  integer_union: {$union: [[1, 7], [3, 4, 9], [15, 16]]}
+  float_union: {$union: [[3.5, 8.8], [1.3]]}
+  rnd: {$get_random_nr: []}
+```
 Substitution
 ------------
 
@@ -9120,32 +8419,20 @@ allows the consumption of complex systems using a simplified vision.
 #### Grammar
 
 The grammar of the substitution_mapping section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_type: &lt;<a
-href="#TYPE_YAML_STRING">node_type_name</a>&gt;</p>
-<p>substitution_filter : &lt;node_filter&gt;</p>
-<p>properties:</p>
-<p>&lt;property_mappings&gt;</p>
-<p>capabilities:</p>
-<p>&lt;capability_mappings&gt;</p>
-<p>requirements:</p>
-<p>&lt;requirement_mappings&gt;</p>
-<p>attributes:</p>
-<p>&lt;attribute_mappings&gt;</p>
-<p>interfaces:</p>
-<p>&lt;interface_mappings&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_type: <node_type_name>
+substitution_filter : <node_filter>
+properties:
+  <property_mappings>
+capabilities:
+  <capability_mappings>
+requirements:
+  <requirement_mappings>
+attributes:
+  <attribute_mappings>
+interfaces:
+  <interface_mappings>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9175,6 +8462,8 @@ have the following meaning:
 
 #### Examples
 
+TBD
+
 #### Additional requirements
 
 - The substitution mapping MUST provide mapping for every property,
@@ -9203,40 +8492,17 @@ mapping:
 #### Grammar
 
 The single-line grammar of a property_mapping is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;property_name&gt;: &lt;property_value&gt; # This use is
-deprecated</p>
-<p>&lt;property_name&gt;: [ &lt;input_name&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<property_name>: <property_value> # This use is deprecated
+<property_name>: [ <input_name> ]
+```
 The multi-line grammar is as follows :
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;property_name&gt;:</p>
-<p>mapping: [ &lt; input_name &gt; ]</p>
-<p>&lt;property_name&gt;:</p>
-<p>value: &lt;property_value&gt; # This use is deprecated</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<property_name>: 
+  mapping: [ < input_name > ]
+<property_name>: 
+  value: <property_value> # This use is deprecated
+```
 #### Notes
 
 - Single line grammar for a property value assignment is not allowed for
@@ -9294,10 +8560,9 @@ mapping:
 #### Grammar
 
 The single-line grammar of an attribute_mapping is as follows:
-
-| \<attribute_name\>: \[ \<output_name\> \] |
-|-------------------------------------------|
-
+```
+<attribute_name>: [ <output_name> ]
+```
 ### Capability mapping
 
 A capability mapping allows to map the capability of one of the nodes of
@@ -9318,31 +8583,18 @@ mapping:
 #### Grammar
 
 The single-line grammar of a capability_mapping is as follows:
-
-| \<capability_name\>: \[ \<node_template_name\>, \<node_template_capability_name\> \] |
-|--------------------------------------------------------------------------------------|
-
+```
+<capability_name>: [ <node_template_name>, <node_template_capability_name> ]
+```
 The multi-line grammar is as follows :
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;capability_name&gt;:</p>
-<p>mapping: [ &lt;node_template_name&gt;,
-&lt;node_template_capability_name&gt; ]</p>
-<p>properties:</p>
-<p>&lt;property_name&gt;: &lt;property_value&gt;</p>
-<p>attributes:</p>
-<p>&lt;attribute_name&gt;: &lt;attribute_value&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<capability_name>: 
+  mapping: [ <node_template_name>, <node_template_capability_name> ]
+  properties:
+    <property_name>: <property_value>
+  attributes:
+    <attribute_name>: <attribute_value>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9391,31 +8643,18 @@ mapping:
 #### Grammar
 
 The single-line grammar of a requirement_mapping is as follows:
-
-| \<requirement_name\>: \[ \<node_template_name\>, \<node_template_requirement_name\> \] |
-|----------------------------------------------------------------------------------------|
-
+```
+<requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
+```
 The multi-line grammar is as follows :
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;requirement_name&gt;:</p>
-<p>mapping: [ &lt;node_template_name&gt;,
-&lt;node_template_requirement_name&gt; ]</p>
-<p>properties:</p>
-<p>&lt;property_name&gt;: &lt;property_value&gt;</p>
-<p>attributes:</p>
-<p>&lt;attribute_name&gt;: &lt;attribute_value&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>: 
+  mapping: [ <node_template_name>, <node_template_requirement_name> ]
+  properties:
+    <property_name>: <property_value>
+  attributes:
+    <attribute_name>: <attribute_value>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9452,25 +8691,13 @@ implementation for.
 <!----
 {"id": "1110", "author": "Calin Curescu [2]", "date": "2018-08-23T08:33:00Z", "comment": "This could change if we introduce the operations keyname in the interface definitions", "target": "Grammar"}-->
 
-
 The grammar of an interface_mapping is as follows:
 <!----
 {"id": "1111", "author": "Chris Lauwers", "date": "2020-08-03T18:40:00Z", "comment": "What about\nnotification mappings?", "target": "follows"}-->
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;interface_name&gt;:</p>
-<p>&lt;operation_name&gt;: &lt;workflow_name&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<interface_name>:
+  <operation_name>: <workflow_name>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9574,33 +8801,19 @@ Group Type has the following recognized keynames:
 #### Grammar
 
 Group Types have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">group_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_group_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">group_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-definition">attribute_definitions</a>&gt;</p>
-<p>members: [ &lt;list_of_valid_member_types&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<group_type_name>:
+  derived_from: <parent_group_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <group_description>
+  properties:
+    <property_definitions>
+  attributes:
+    <attribute_definitions>
+  members: [ <list_of_valid_member_types> ]
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9627,14 +8840,12 @@ have the following meaning:
   the Group Type; if the members keyname is not defined then there are
   no restrictions to the member types;
 
-<!-- -->
+  - note that the members of a group ultimately resolve to nodes, the
+    types here just restrict which nodes can be defined as members in a
+    group definition.
 
-- note that the members of a group ultimately resolve to nodes, the
-  types here just restrict which nodes can be defined as members in a
-  group definition.
-
-- A node type is matched if it is the specified type or is derived from
-  the node type
+  - A node type is matched if it is the specified type or is derived from
+    the node type
 
 #### Derivation rules
 
@@ -9655,24 +8866,12 @@ During Group Type derivation the keyname definitions follow these rules:
 #### Example
 
 The following represents a Group Type definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>group_types:</p>
-<p>mycompany.mytypes.groups.placement:</p>
-<p>description: My company’s group type for placing nodes of type
-Compute</p>
-<p>members: [ tosca.nodes.Compute ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+group_types:
+  mycompany.mytypes.groups.placement:
+    description: My company’s group type for placing nodes of type Compute
+    members: [ tosca.nodes.Compute ]
+```
 ### Group definition
 
 Collections of Nodes may be defined using a Group. A group definition
@@ -9750,31 +8949,18 @@ members of this group definition.</td>
 #### Grammar
 
 Group definitions have one the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">group_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">group_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">group_description</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-assignment">attribute_assignments</a>&gt;</p>
-<p>members: [ &lt;list_of_node_templates&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<group_name>:
+  type: <group_type_name>
+  description: <group_description>
+  metadata: 
+    <map of string>
+  properties:
+    <property_assignments>
+  attributes:
+    <attribute_assignments>
+  members: [ <list_of_node_templates> ]
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9798,36 +8984,22 @@ have the following meaning:
   node template names or group symbolic names (within the same service
   template) that are members of this logical group
 
-<!-- -->
-
-- if the members keyname was defined (by specifying a
-  list_of_valid_member_types) in the group type of this group then the
-  nodes listed here must be compatible (i.e. be of that type or of type
-  that is derived from) with the node types in the
-  list_of_valid_member_types
+  - if the members keyname was defined (by specifying a
+    list_of_valid_member_types) in the group type of this group then the
+    nodes listed here must be compatible (i.e. be of that type or of type
+    that is derived from) with the node types in the
+    list_of_valid_member_types
 
 #### Example
 
 The following represents a group definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>groups:</p>
-<p>my_app_placement_group:</p>
-<p>type: tosca.groups.Root</p>
-<p>description: My application’s logical component grouping for
-placement</p>
-<p>members: [ my_web_server, my_sql_database ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+groups:
+  my_app_placement_group:
+    type: tosca.groups.Root
+    description: My application’s logical component grouping for placement
+    members: [ my_web_server, my_sql_database ]
+```
 ### Policy Type
 
 A Policy Type defines a type of a policy that affects or governs an
@@ -9884,34 +9056,19 @@ can be applied to.</td>
 #### Grammar
 
 Policy Types have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">policy_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_policy_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">policy_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>targets: [ &lt;list_of_valid_target_types&gt; ]</p>
-<p>triggers:</p>
-<p>&lt;<a
-href="#trigger-definition">trigger_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<policy_type_name>:
+  derived_from: <parent_policy_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <policy_description>
+  properties:
+    <property_definitions> 
+  targets: [ <list_of_valid_target_types> ]
+  triggers:
+    <trigger_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9959,23 +9116,12 @@ rules:
 #### Example
 
 The following represents a Policy Type definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policy_types:</p>
-<p>mycompany.mytypes.policies.placement.Container.Linux:</p>
-<p>description: My company’s placement policy for linux</p>
-<p>derived_from: tosca.policies.Root</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policy_types:
+  mycompany.mytypes.policies.placement.Container.Linux:
+    description: My company’s placement policy for linux 
+    derived_from: tosca.policies.Root
+```
 ### Policy definition
 
 A policy definition defines a policy that can be associated with a TOSCA
@@ -10056,31 +9202,18 @@ type.</td>
 #### Grammar
 
 Policy definitions have one the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">policy_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">policy_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">policy_description</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>targets: [&lt;list_of_policy_targets&gt;]</p>
-<p>triggers:</p>
-<p>&lt;trigger_definitions&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<policy_name>:
+  type: <policy_type_name>
+  description: <policy_description>
+  metadata: 
+    <map of string>
+  properties:
+    <property_assignments>
+  targets: [<list_of_policy_targets>]
+  triggers:
+    <trigger_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10099,11 +9232,11 @@ have the following meaning:
 - list_of_policy_targets: represents the optional list of names of node
   templates or groups that the policy is to applied to.
 
-- if the targets keyname was defined (by specifying a
-  list_of_valid_target_types) in the policy type of this policy then the
-  targets listed here must be compatible (i.e. be of that type or of
-  type that is derived from) with the types (of nodes or groups) in the
-  list_of_valid_target_types.
+  - if the targets keyname was defined (by specifying a
+    list_of_valid_target_types) in the policy type of this policy then the
+    targets listed here must be compatible (i.e. be of that type or of
+    type that is derived from) with the types (of nodes or groups) in the
+    list_of_valid_target_types.
 
 - trigger_definitions: represents the optional map
   of [trigger definitions](#trigger-definition) for the policy; these
@@ -10116,26 +9249,13 @@ have the following meaning:
 #### Example
 
 The following represents a policy definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policies:</p>
-<p>- my_compute_placement_policy:</p>
-<p>type: tosca.policies.placement</p>
-<p>description: Apply my placement policy to my application’s
-servers</p>
-<p>targets: [ my_server_1, my_server_2 ]</p>
-<p># remainder of policy definition left off for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  - my_compute_placement_policy:
+      type: tosca.policies.placement
+      description: Apply my placement policy to my application’s servers
+      targets: [ my_server_1, my_server_2 ]
+      # remainder of policy definition left off for brevity
+```
 ### Trigger definition
 
 A trigger definition defines the event, condition and action that is
@@ -10144,7 +9264,6 @@ used to “trigger” a policy with which it is associated.
 #### Keynames
 <!----
 {"id": "1181", "author": "Matt Rutkowski", "date": "2017-09-26T11:38:00Z", "comment": "RECALL; Policy type defn were to be consumed by a \u201cPolicy Engine\u201d that would create events on a known event monitoring service. We need to create diagram and explain the event-condition-action flow of policy (defn.)", "target": "Keynames"}-->
-
 
 The following is the list of recognized keynames for a TOSCA trigger
 definition:
@@ -10164,28 +9283,14 @@ definition:
 {"id": "1185", "author": "Calin Curescu", "date": "2020-05-06T11:29:00Z", "comment": "This does not make any sense. Needs to be deleted.", "target": ""}-->
 
 Trigger definitions have the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">trigger_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">trigger_description</a>&gt;</p>
-<p>event: &lt;event_name&gt;</p>
-<p>condition: &lt;<a
-href="#BKM_Condition_Clause_Def">condition_clause</a>&gt;</p>
-<p>action:</p>
-<p>- &lt;<a
-href="#activity-definitions">list_of_activity_definition</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<trigger_name>:
+  description: <trigger_description>
+  event: <event_name>
+  condition: <condition_clause>
+  action: 
+    - <list_of_activity_definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10219,42 +9324,28 @@ be of the following types:
 
 - Delegate workflow activity definition:
 
-<!-- -->
-
-- Defines the name of the delegate workflow and optional input
-  assignments. This activity requires the target to be provided by the
-  orchestrator (no-op node or relationship).
-
-<!-- -->
+  - Defines the name of the delegate workflow and optional input
+    assignments. This activity requires the target to be provided by the
+    orchestrator (no-op node or relationship).
 
 - Set state activity definition:
 
-<!-- -->
-
-- Sets the state of a node.
-
-<!-- -->
+  - Sets the state of a node.
 
 - Call operation activity definition:
 
-<!-- -->
-
-- Calls an operation defined on a TOSCA interface of a node,
-  relationship or group. The operation name uses the
-  \<interface_name\>.\<operation_name\> notation. Optionally,
-  assignments for the operation inputs can also be provided. If
-  provided, they will override for this operation call the operation
-  inputs assignment in the node template.
-
-<!-- -->
+  - Calls an operation defined on a TOSCA interface of a node,
+    relationship or group. The operation name uses the
+    \<interface_name\>.\<operation_name\> notation. Optionally,
+    assignments for the operation inputs can also be provided. If
+    provided, they will override for this operation call the operation
+    inputs assignment in the node template.
 
 - Inline workflow activity definition:
 
-<!-- -->
-
-- Inlines another workflow defined in the service (allowing
-  reusability). The definition includes the name of a workflow to be
-  inlined and optional workflow input assignments.
+  - Inlines another workflow defined in the service (allowing
+    reusability). The definition includes the name of a workflow to be
+    inlined and optional workflow input assignments.
 
 #### Delegate workflow activity definition
 
@@ -10313,29 +9404,16 @@ A delegate activity definition has the following grammar. The short
 notation can be used if no input assignments are provided.
 
 #####  Short notation
-
-| \- delegate: \<[delegate_workflow_name](#TYPE_YAML_STRING)\> |
-|--------------------------------------------------------------|
-
+```
+- delegate: <delegate_workflow_name>
+```
 #####  Extended notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- delegate:</p>
-<p>workflow: &lt;<a
-href="#TYPE_YAML_STRING"><u>delegate_workflow_name</u></a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment"><u>parameter_assignments</u></a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+- delegate: 
+   workflow: <delegate_workflow_name>
+   inputs:
+     <parameter_assignments>
+```
 
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -10363,10 +9441,9 @@ definition.
 ##### Grammar
 
 A set state activity definition has the following grammar.
-
-| \- set_state: \<new_node_state\> |
-|----------------------------------|
-
+```
+- set_state: <new_node_state>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10437,30 +9514,16 @@ A call operation activity definition has the following grammar. The
 short notation can be used if no input assignments are provided.
 
 #####  Short notation
-
-| \- call_operation: \<operation_name\> |
-|---------------------------------------|
-
+```
+- call_operation: <operation_name>
+```
 #####  Extended notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- call_operation:</p>
-<p>operation: &lt;<a
-href="#TYPE_YAML_STRING"><u>operation_name</u></a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment"><u>parameter_assignments</u></a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+- call_operation: 
+   operation: <operation_name>
+   inputs:
+     <parameter_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10533,30 +9596,16 @@ An inline workflow activity definition has the following grammar. The
 short notation can be used if no input assignments are provided.
 
 #####  Short notation
-
-| \- inline: \<inlined_workflow_name\> |
-|--------------------------------------|
-
+```
+- inline: <inlined_workflow_name>
+```
 #####  Extended notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- inline:</p>
-<p>workflow: &lt;<a
-href="#TYPE_YAML_STRING"><u>inlined_workflow_name</u></a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment"><u>parameter_assignments</u></a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+- inline: 
+   workflow: <inlined_workflow_name>
+   inputs:
+     <parameter_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10570,23 +9619,12 @@ have the following meaning:
 
 The following represents a list of activity definitions (using the short
 notation):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- delegate: deploy</p>
-<p>- set_state: started</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
-<p>- inline: my_workflow</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+ - delegate: deploy
+ - set_state: started
+ - call_operation: tosca.interfaces.node.lifecycle.Standard.start
+ - inline: my_workflow
+```
 Workflows
 ---------
 
@@ -10677,35 +9715,22 @@ defined in the service.</td>
 #### Grammar
 
 Imperative workflow definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;workflow_name&gt;:</p>
-<p>description: &lt;workflow_description&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a href="#parameter-definition">parameter_definitions</a>&gt;</p>
-<p>precondition:</p>
-<p>&lt;condition_clause&gt;</p>
-<p>steps:</p>
-<p>&lt;<a href="#workflow-step-definition">workflow_steps</a>&gt;</p>
-<p>implementation:</p>
-<p>&lt;<a
-href="#artifact-definition">operation_implementation_definitions</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;attribute_mappings&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<workflow_name>:
+  description: <workflow_description>
+  metadata: 
+    <map of string>
+  inputs:
+    <parameter_definitions>
+  precondition:
+    <condition_clause>
+  steps:
+    <workflow_steps>
+  implementation:
+    <operation_implementation_definitions>
+  outputs:
+    <attribute_mappings>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10722,10 +9747,10 @@ have the following meaning:
 - operation_implementation_definition: represents a full inline
   definition of an implementation artifact
 
-attribute_mappings: represents the optional map of attribute_mappings
-that consists of named output values returned by operation
-implementations (i.e. artifacts) and associated mappings that specify
-the attribute into which this output value must be stored.
+- attribute_mappings: represents the optional map of attribute_mappings
+  that consists of named output values returned by operation
+  implementations (i.e. artifacts) and associated mappings that specify
+  the attribute into which this output value must be stored.
 
 ### Workflow precondition definition
 
@@ -10832,34 +9857,21 @@ one of the step activity failed.</td>
 #### Grammar
 
 Workflow step definitions have the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>steps:</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">step_name</a>&gt;</p>
-<p>target: &lt;<a href="#TYPE_YAML_STRING">target_name</a>&gt;</p>
-<p>target_relationship: &lt;target_requirement_name&gt;</p>
-<p>operation_host: &lt;operation_host_name&gt;</p>
-<p>filter:</p>
-<p>- &lt;<a
-href="#BKM_Condition_Clause_Def">list_of_condition_clause_definition</a>&gt;</p>
-<p>activities:</p>
-<p>- &lt;<a
-href="#activity-definitions">list_of_activity_definition</a>&gt;</p>
-<p>on_success:</p>
-<p>- &lt;target_step_name&gt;</p>
-<p>on_failure:</p>
-<p>- &lt;target_step_name&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+steps:
+  <step_name>
+    target: <target_name>
+    target_relationship: <target_requirement_name>
+    operation_host: <operation_host_name>
+    filter:
+      - <list_of_condition_clause_definition>
+    activities:
+      - <list_of_activity_definition>
+    on_success:
+      - <target_step_name>
+    on_failure:
+      - <target_step_name>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
