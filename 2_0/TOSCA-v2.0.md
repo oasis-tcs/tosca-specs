@@ -6281,64 +6281,13 @@ a map or list type.
 The following is the list of recognized keynames for a TOSCA schema
 definition:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 13%" />
-<col style="width: 12%" />
-<col style="width: 58%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The mandatory data type for the key or entry.</p>
-<p>If this schema definition is for a map key, then the referred type
-must be derived originally from string.</p></td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the schema.</td>
-</tr>
-<tr class="odd">
-<td>validation</td>
-<td>no</td>
-<td><a href="#validation-clause-definition">validation clauses</a>\</td>
-<td>The optional validation clause that must evaluate to True for the
-property.</td>
-</tr>
-<tr class="even">
-<td>key_schema</td>
-<td>no (default: string)</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>When the schema itself is of type map, the optional schema
-definition that is used to specify the type of the keys of that map’s
-entries (if key_schema is not defined it is assumed to be “string” by
-default). For other schema types, the key_schema must not be
-defined.</td>
-</tr>
-<tr class="odd">
-<td>entry_schema</td>
-<td>conditional</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>When the schema itself is of type map or list, the schema definition
-is mandatory and is used to specify the type of the entries in that map
-or list. For other schema types, the entry_schema must not be
-defined.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory data type for the key or entry. If this schema definition is for a map key, then the referred type must be derived originally from string.|
+|description|no|string|The optional description for the schema.|
+|validation|no|validation clauses|The optional validation clause that must evaluate to True for the property.|
+|key_schema|no (default: string)|schema definition|When the schema itself is of type map, the optional schema definition that is used to specify the type of the keys of that map’s entries (if key_schema is not defined it is assumed to be “string” by default). For other schema types, the key_schema must not be defined.|
+|entry_schema|conditional|schema definition|When the schema itself is of type map or list, the schema definition is mandatory and is used to specify the type of the entries in that map or list. For other schema types, the entry_schema must not be defined.|
 
 #### Grammar
 
@@ -6517,111 +6466,19 @@ property.
 The following is the list of recognized keynames for a TOSCA property
 definition:
 
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 13%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory data type for the property.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the property.</td>
-</tr>
-<tr class="odd">
-<td>required</td>
-<td>No (default: true)</td>
-<td><a href="#TYPE_YAML_BOOLEAN">boolean</a></td>
-<td>An optional key that declares a property as required (true) or not
-(false). Defaults to true.</td>
-</tr>
-<tr class="even">
-<td>default</td>
-<td>no</td>
-<td>&lt;must match property type&gt;</td>
-<td><p>An optional key that may provide a value to be used as a default
-if not provided by another means.</p>
-<p>The default keyname SHALL NOT be defined when property is not
-required (i.e. the value of the required keyname is false).</p></td>
-</tr>
-<tr class="odd">
-<td>value</td>
-<td>no</td>
-<td>&lt;see below&gt;</td>
-<td>An optional key that may provide a fixed value to be used. A
-property that has a fixed value provided (as part of a definition or
-refinement) cannot be subject to a further refinement or assignment.
-That is, a fixed value cannot be changed.</td>
-</tr>
-<tr class="even">
-<td>status</td>
-<td>No (default: supported)</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional status of the property relative to the specification or
-implementation. See table below for valid values. Defaults to
-supported.</td>
-</tr>
-<tr class="odd">
-<td>validation</td>
-<td>no</td>
-<td><a href="#validation-clause-definition">validation clause</a></td>
-<td>The optional validation clause for the property.</td>
-</tr>
-<tr class="even">
-<td>key_schema</td>
-<td>conditional (default: string)</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>The schema definition for the keys used to identify entries in
-properties of type TOSCA map (or types that derive from map). If not
-specified, the key_schema defaults to string. For properties of type
-other than map, the key_schema is not allowed.</td>
-</tr>
-<tr class="odd">
-<td>entry_schema</td>
-<td>conditional</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>The schema definition for the entries in properties of TOSCA
-collection types such as list, map, or types that derive from list or
-map) If the property type is a collection type, the entry schema is
-mandatory. For other types, the entry_schema is not allowed.</td>
-</tr>
-<tr class="even">
-<td>external-schema</td>
-<td>no</td>
-<td>string</td>
-<td><p>The optional key that contains a schema definition that TOSCA
-Orchestrators MAY use for validation when the “type” key’s value
-indicates an External schema (e.g., “json”).</p>
-<p>See section “External schema” below for further explanation and
-usage.</p></td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory data type for the property.|
+|description|no|string|The optional description for the property.|
+|required|No (default: true)|boolean|An optional key that declares a property as required (true) or not (false). Defaults to true.|
+|default|no|\<must match property type\>|An optional key that may provide a value to be used as a default if not provided by another means.  The default keyname SHALL NOT be defined when property is not required (i.e. the value of the required keyname is false).|
+|value|no|\<see below\>|An optional key that may provide a fixed value to be used. A property that has a fixed value provided (as part of a definition or refinement) cannot be subject to a further refinement or assignment. That is, a fixed value cannot be changed.|
+|status|No (default: supported)|string|The optional status of the property relative to the specification or implementation. See table below for valid values. Defaults to supported.|
+|validation|no|validation clause|The optional validation clause for the property.|
+|key_schema|conditional (default: string)|schema definition|The schema definition for the keys used to identify entries in properties of type TOSCA map (or types that derive from map). If not specified, the key_schema defaults to string. For properties of type other than map, the key_schema is not allowed. |
+|entry_schema|conditional|schema definition|The schema definition for the entries in properties of TOSCA collection types such as list, map, or types that derive from list or map) If the property type is a collection type, the entry schema is mandatory. For other types, the entry_schema is not allowed.|
+|external-schema|no|string|The optional key that contains a schema definition that TOSCA Orchestrators MAY use for validation when the “type” key’s value indicates an External schema (e.g., “json”). See section “External schema” below for further explanation and usage.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
 
 #### Status values
 
@@ -6912,85 +6769,16 @@ property.
 The following is the list of recognized keynames for a TOSCA attribute
 definition:
 
-<table>
-<colgroup>
-<col style="width: 26%" />
-<col style="width: 14%" />
-<col style="width: 11%" />
-<col style="width: 46%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory data type for the attribute.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the attribute.</td>
-</tr>
-<tr class="odd">
-<td>default</td>
-<td>no</td>
-<td>&lt;any&gt;</td>
-<td><p>An optional key that may provide a value to be used as a default
-if not provided by another means.</p>
-<p>This value SHALL be type compatible with the type declared by the
-attribute definition’s type keyname.</p></td>
-</tr>
-<tr class="even">
-<td>status</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional status of the attribute relative to the specification
-or implementation. See supported <a href="#status-values">status
-values</a> . Defaults to supported.</td>
-</tr>
-<tr class="odd">
-<td>validation</td>
-<td>no</td>
-<td><a href="#validation-clause-definition">validation clause</a></td>
-<td>The optional validation clause for the attribute.</td>
-</tr>
-<tr class="even">
-<td>key_schema</td>
-<td>conditional (default: string)</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>The schema definition for the keys used to identify entries in
-attributes of type TOSCA map (or types that derive from map). If not
-specified, the key_schema defaults to string. For attributes of type
-other than map, the key_schema is not allowed.</td>
-</tr>
-<tr class="odd">
-<td>entry_schema</td>
-<td>conditional</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>The schema definition for the entries in attributes of TOSCA
-collection types such as list, map, or types that derive from list or
-map) If the attribute type is a collection type, the entry schema is
-mandatory. For other types, the entry_schema is not allowed.</td>
-</tr>
-<tr class="even">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory data type for the attribute.|
+|description|no|string|The optional description for the attribute.|
+|default|no|\<any\>|An optional key that may provide a value to be used as a default if not provided by another means.  This value SHALL be type compatible with the type declared by the attribute definition’s type keyname.|
+|status|no|string|The optional status of the attribute relative to the specification or implementation.  See supported status values . Defaults to supported.|
+|validation|no|validation clause|The optional validation clause for the attribute.|
+|key_schema|conditional (default: string)|schema definition|The schema definition for the keys used to identify entries in attributes of type TOSCA map (or types that derive from map). If not specified, the key_schema defaults to string. For attributes of type other than map, the key_schema is not allowed. |
+|entry_schema|conditional|schema definition|The schema definition for the entries in attributes of TOSCA collection types such as list, map, or types that derive from list or map) If the attribute type is a collection type, the entry schema is mandatory. For other types, the entry_schema is not allowed.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
 
 #### Grammar
 
@@ -7206,51 +6994,11 @@ an explicit data type defined for it.
 The TOSCA parameter definition has all the keynames of a TOSCA property
 definition with the following additional or changed keynames:
 
-<table>
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 12%" />
-<col style="width: 10%" />
-<col style="width: 61%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The data type of the parameter.</p>
-<p><strong>Note</strong>: This keyname is mandatory for a TOSCA Property
-definition but is not mandatory for a TOSCA Parameter
-definition.</p></td>
-</tr>
-<tr class="even">
-<td>value</td>
-<td>no</td>
-<td>&lt;any&gt;</td>
-<td>The type-compatible value to assign to the parameter. Parameter
-values may be provided as the result from the evaluation of an
-expression or a function. May only be defined for outgoing parameters.
-Mutually exclusive with the “mapping” keyname.</td>
-</tr>
-<tr class="odd">
-<td>mapping</td>
-<td>no</td>
-<td><a href="#attribute-selection-format">attribute selection
-format</a></td>
-<td>A mapping that specifies the node or relationship attribute into
-which the returned output value must be stored. May only be defined for
-incoming parameters. Mutually exclusive with the “value” keyname.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|no|string|The data type of the parameter. Note: This keyname is mandatory for a TOSCA Property definition but is not mandatory for a TOSCA Parameter definition.|
+|value|no|\<any\>|The type-compatible value to assign to the parameter.  Parameter values may be provided as the result from the evaluation of an expression or a function. May only be defined for outgoing parameters. Mutually exclusive with the “mapping” keyname.|
+|mapping|no|attribute selection format|A mapping that specifies the node or relationship attribute into which the returned output value must be stored. May only be defined for incoming parameters. Mutually exclusive with the “value” keyname.|
 
 #### Grammar
 
@@ -7516,50 +7264,11 @@ The attribute_selection_format is a list of the following format:
 ```
 The various entities in this grammar are defined as follows:
 
-<table>
-<colgroup>
-<col style="width: 30%" />
-<col style="width: 12%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Parameter</th>
-<th>Mandatory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;tosca_traversal_path&gt;</td>
-<td>yes</td>
-<td><p>Using the &lt;tosca_traversal_path&gt; we can traverse the
-representation graph to reach the attribute we need to store the output
-value into. The specification of the &lt;tosca_traversal_path&gt; is
-explicated in section 6.1.2 get_property.</p>
-<p>Note that while the &lt;tosca_traversal_path&gt; is very powerful,
-its usage should normally be restricted to reach attributes in the local
-node ore relationship (i.e. SELF) or in a local capability
-definition.</p></td>
-</tr>
-<tr class="even">
-<td>&lt;attribute_name&gt;</td>
-<td>yes</td>
-<td>The name of the attribute into which the output value must be
-stored.</td>
-</tr>
-<tr class="odd">
-<td>&lt;nested_attribute_name_or_index_or_key_*&gt;</td>
-<td>no</td>
-<td><p>Some TOSCA attributes are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some attributes represent list or map types. In these cases, an index
-or key may be provided to reference a specific entry in the list or map
-(identified by the previous parameter).</p></td>
-</tr>
-</tbody>
-</table>
+|Parameter|Mandatory|Description|
+| ----- | ------- | ----- | 
+|\<tosca_traversal_path\>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to reach the attribute we need to store the output value into. The specification of the \<tosca_traversal_path\> is explicated in section 6.1.2 get_property. Note that while the \<tosca_traversal_path\> is very powerful, its usage should normally be restricted to reach attributes in the local node ore relationship (i.e. SELF) or in a local capability definition.|
+|\<attribute_name\> |yes|The name of the attribute into which the output value must be stored.|
+|\<nested_attribute_name_or_index_or_key_*\> |no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.   Some attributes represent list or map types. In these cases, an index or key may be provided to reference a specific entry in the list or map (identified by the previous parameter). |
 
 Note that it is possible for multiple operations to define outputs that
 map onto the same attribute value. For example, a *create* operation
@@ -8404,45 +8113,11 @@ The Group Type is a TOSCA type entity and has the common keynames listed
 in Section 4.2.5.2 Common keynames in type definitions. In addition, the
 Group Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 13%" />
-<col style="width: 20%" />
-<col style="width: 48%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Group Type.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-definition">attribute definitions</a></p></td>
-<td>An optional map of attribute definitions for the Group Type.</td>
-</tr>
-<tr class="odd">
-<td>members</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more names of Node Types that are valid
-(allowed) as members of the Group Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|properties|no|map of property definitions|An optional map of property definitions for the Group Type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Group Type.|
+|members |no|list of string|An optional list of one or more names of Node Types that are valid (allowed) as members of the Group Type.|
 
 #### Grammar
 
@@ -8529,68 +8204,14 @@ purposes, but is separate from the application’s service template.
 The following is the list of recognized keynames for a TOSCA group
 definition:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 14%" />
-<col style="width: 20%" />
-<col style="width: 49%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the group type the group definition is based
-upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the group definition.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="even">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional map of property value assignments for the group
-definition.</td>
-</tr>
-<tr class="odd">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">attribute assignments</a></p></td>
-<td>An optional map of attribute value assignments for the group
-definition.</td>
-</tr>
-<tr class="even">
-<td>members</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional list of one or more node template names that are
-members of this group definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory name of the group type the group definition is based upon.|
+|description|no|string|The optional description for the group definition.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|properties|no|map of property assignments|An optional map of property value assignments for the group definition.|
+|attributes|no|map of attribute assignments|An optional map of attribute value assignments for the group definition.|
+|members|no|list of string|The optional list of one or more node template names that are members of this group definition.|
 
 #### Grammar
 
@@ -8660,44 +8281,12 @@ The Policy Type is a TOSCA type entity and has the common keynames
 listed in Section 4.2.5.2 Common keynames in type definitions. In
 addition, the Policy Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 16%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Policy Type.</td>
-</tr>
-<tr class="even">
-<td>targets</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of valid Node Types or Group Types the Policy Type
-can be applied to.</td>
-</tr>
-<tr class="odd">
-<td>triggers</td>
-<td>no</td>
-<td>map of <a href="#trigger-definition">trigger definitions</a></td>
-<td>An optional map of policy triggers for the Policy Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|properties|no|map of property definitions|An optional map of property definitions for the Policy Type.|
+|targets|no|list of string|An optional list of valid Node Types or Group Types the Policy Type can be applied to.|
+|triggers|no|map of trigger definitions |An optional map of policy triggers for the Policy Type.|
+
 
 #### Grammar
 
@@ -8781,69 +8370,14 @@ definition:
 <!----
 {"id": "1167", "author": "Chris Lauwers", "date": "2022-10-03T19:59:00Z", "comment": "Policies apply to entire service templates,\nnot to individual node templates. What was the intended use of targets\nin policy definitions?", "target": "definition"}-->
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 14%" />
-<col style="width: 20%" />
-<col style="width: 49%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the policy type the policy definition is based
-upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the policy definition.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="even">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional map of property value assignments for the policy
-definition.</td>
-</tr>
-<tr class="odd">
-<td>targets</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of valid Node Templates or Groups the Policy can be
-applied to.</td>
-</tr>
-<tr class="even">
-<td>triggers</td>
-<td>no</td>
-<td>map of <a href="#trigger-definition">trigger definitions</a></td>
-<td>An optional map of trigger definitions to invoke when the policy is
-applied by an orchestrator against the associated TOSCA entity. These
-triggers apply in addition to the triggers defined in the policy
-type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory name of the policy type the policy definition is based upon.|
+|description|no|string|The optional description for the policy definition.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|properties|no|map of property assignments|An optional map of property value assignments for the policy definition.|
+|targets|no|list of string|An optional list of valid Node Templates or Groups the Policy can be applied to.|
+|triggers|no|map of trigger definitions|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
 
 #### Grammar
 
@@ -9000,49 +8534,11 @@ be of the following types:
 The following is a list of recognized keynames for a delegate activity
 definition.
 
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 12%" />
-<col style="width: 19%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Keyname</strong></th>
-<th><strong>Mandatory</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>delegate</td>
-<td>yes</td>
-<td><p>string or empty</p>
-<p>(see grammar below)</p></td>
-<td><p>Defines the name of the delegate workflow and optional input
-assignments.</p>
-<p>This activity requires the target to be provided by the orchestrator
-(no-op node or relationship).</p></td>
-</tr>
-<tr class="even">
-<td>workflow</td>
-<td>no</td>
-<td>string</td>
-<td>The name of the delegate workflow. Mandatory in the extended
-notation.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td>map of <a href="#parameter-definition">parameter
-assignments</a></td>
-<td>The optional map of input parameter assignments for the delegate
-workflow.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|delegate|yes|string or empty  (see grammar below)|Defines the name of the delegate workflow and optional input assignments. This activity requires the target to be provided by the orchestrator (no-op node or relationship).|
+|workflow|no|string|The name of the delegate workflow. Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the delegate workflow.|
 
 ##### Grammar
 
@@ -9106,53 +8602,11 @@ input assignments can be optionally provided.
 The following is a list of recognized keynames for a call operation
 activity definition.
 
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 12%" />
-<col style="width: 19%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Keyname</strong></th>
-<th><strong>Mandatory</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>call_operation</td>
-<td>yes</td>
-<td><p>string or empty</p>
-<p>(see grammar below)</p></td>
-<td><p>Defines the opration call. The operation name uses the
-&lt;interface_name&gt;.&lt;operation_name&gt; notation.</p>
-<p>Optionally, assignments for the operation inputs can also be
-provided. If provided, they will override for this operation call the
-operation inputs assignment in the node template.</p></td>
-</tr>
-<tr class="even">
-<td>operation</td>
-<td>no</td>
-<td>string</td>
-<td><p>The name of the operation to call, using the
-&lt;interface_name&gt;.&lt;operation_name&gt; notation.</p>
-<p>Mandatory in the extended notation.</p></td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td>map of <a href="#parameter-definition">parameter
-assignments</a></td>
-<td>The optional map of input parameter assignments for the called
-operation. Any provided input assignments will override the operation
-input assignment in the target node template for this operation
-call.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|call_operation|yes|string or empty (see grammar below)|Defines the opration call. The operation name uses the \<interface_name\>.\<operation_name\> notation. Optionally, assignments for the operation inputs can also be provided. If provided, they will override for this operation call the operation inputs assignment in the node template.|
+|operation|no|string|The name of the operation to call, using the \<interface_name\>.\<operation_name\> notation.  Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the called operation. Any provided input assignments will override the operation input assignment in the target node template for this operation call.|
 
 ##### Grammar
 
@@ -9194,47 +8648,11 @@ input assignments.
 The following is a list of recognized keynames for an inline workflow
 activity definition.
 
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 12%" />
-<col style="width: 19%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Keyname</strong></th>
-<th><strong>Mandatory</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>inline</td>
-<td>yes</td>
-<td><p>string or empty</p>
-<p>(see grammar below)</p></td>
-<td>The definition includes the name of a workflow to be inlined and
-optional workflow input assignments.</td>
-</tr>
-<tr class="even">
-<td>workflow</td>
-<td>no</td>
-<td><u>string</u></td>
-<td>The name of the inlined workflow. Mandatory in the extended
-notation.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter assignments</a></p></td>
-<td>The optional map of input parameter assignments for the inlined
-workflow.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|inline|yes|string or empty (see grammar below)|The definition includes the name of a workflow to be inlined and optional workflow input assignments.|
+|workflow|no|string|The name of the inlined workflow. Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the inlined workflow.|
 
 ##### Grammar
 
@@ -9286,77 +8704,15 @@ the workflow using an external workflow language.
 The following is the list of recognized keynames for a TOSCA workflow
 definition:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 12%" />
-<col style="width: 16%" />
-<col style="width: 55%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the workflow definition.</td>
-</tr>
-<tr class="even">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td>The optional map of input parameter definitions.</td>
-</tr>
-<tr class="even">
-<td>precondition</td>
-<td>no</td>
-<td>condition clause</td>
-<td>Condition clause that must evaluate to true before the workflow can
-be processed.</td>
-</tr>
-<tr class="odd">
-<td>steps</td>
-<td>no</td>
-<td>map of <a href="#workflow-step-definition">step definitions</a></td>
-<td>An optional map of valid imperative workflow step definitions.</td>
-</tr>
-<tr class="even">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">operation
-implementation definition</a></td>
-<td>The optional definition of an external workflow definition. This
-keyname is mutually exclusive with the <strong>steps</strong> keyname
-above.</td>
-</tr>
-<tr class="odd">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p>attribute mappings</p></td>
-<td>The optional map of attribute mappings that specify workflow output
-values and their mappings onto attributes of a node or relationship
-defined in the service.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|description|no|string|The optional description for the workflow definition.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|inputs|no|map of parameter definitions|The optional map of input parameter definitions.|
+|precondition|no|condition clause|Condition clause that must evaluate to true before the workflow can be processed.|
+|steps|no|map of step definitions|An optional map of valid imperative workflow step definitions.|
+|implementation|no|operation implementation definition|The optional definition of an external workflow definition. This keyname is mutually exclusive with the steps keyname above.|
+|outputs|no|map of attribute mappings|The optional map of attribute mappings that specify workflow  output values and their mappings onto attributes of a node or relationship defined in the service.|
 
 #### Grammar
 
@@ -9420,85 +8776,15 @@ They are the building blocks of a declarative workflow.
 The following is the list of recognized keynames for a TOSCA workflow
 step definition:
 
-<table>
-<colgroup>
-<col style="width: 17%" />
-<col style="width: 12%" />
-<col style="width: 15%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>target</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The target of the step (this can be a node template name, a group
-name)</td>
-</tr>
-<tr class="even">
-<td>target_relationship</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional name of a requirement of the target in case the step
-refers to a relationship rather than a node or group. Note that this is
-applicable only if the target is a node.</td>
-</tr>
-<tr class="odd">
-<td>operation_host</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The node on which operations should be executed (for TOSCA
-call_operation activities).</p>
-<p>This element is mandatory only for relationships and groups
-target.</p>
-<p>If target is a relationship then operation_host is mandatory and
-valid_values are SOURCE or TARGET – referring to the relationship source
-or target node.</p>
-<p>If target is a group then operation_host is optional.</p>
-<p>If not specified the operation will be triggered on every node of the
-group.</p>
-<p>If specified the valid_value is a node_type or the name of a node
-template.</p></td>
-</tr>
-<tr class="even">
-<td>filter</td>
-<td>no</td>
-<td>list of <a href="#validation-clause-definition">validation
-clauses</a></td>
-<td>Filter is a list of validation clauses that allows to provide a
-filtering logic.</td>
-</tr>
-<tr class="odd">
-<td>activities</td>
-<td>yes</td>
-<td>list of <a href="#activity-definitions">activity definition</a></td>
-<td>The list of sequential activities to be performed in this step.</td>
-</tr>
-<tr class="even">
-<td>on_success</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional list of step names to be performed after this one has
-been completed with success (all activities has been correctly
-processed).</td>
-</tr>
-<tr class="odd">
-<td>on_failure</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional list of step names to be called after this one in case
-one of the step activity failed.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|target|yes|string|The target of the step (this can be a node template name, a group name)|
+|target_relationship|no|string|The optional name of a requirement of the target in case the step refers to a relationship rather than a node or group. Note that this is applicable only if the target is a node.|
+|operation_host|no|string|The node on which operations should be executed (for TOSCA call_operation activities). This element is mandatory only for relationships and groups target. If target is a relationship then operation_host is mandatory and valid_values are SOURCE or TARGET – referring to the relationship source or target node. If target is a group then operation_host is optional. If not specified the operation will be triggered on every node of the group. If specified the valid_value is a node_type or the name of a node template.|
+|filter|no|list of validation clauses|Filter is a list of validation clauses that allows to provide a filtering logic.|
+|activities|yes|list of activity definition|The list of sequential activities to be performed in this step.|
+|on_success|no|list of string|The optional list of step names to be performed after this one has been completed with success (all activities has been correctly processed).|
+|on_failure|no|list of string|The optional list of step names to be called after this one in case one of the step activity failed.|
 
 #### Grammar
 
@@ -9564,43 +8850,10 @@ definition, but it does not have to as it is a TOSCA built-in function.
 
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;input_parameter_name&gt;</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The name of the parameter as defined in the inputs section of the
-service template.</td>
-</tr>
-<tr class="even">
-<td>&lt;nested_input_parameter_name_or_index_*&gt;</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a>| <a
-href="#TYPE_YAML_INTEGER">integer</a></td>
-<td><p>Some TOSCA input parameters are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some parameters represent list types. In these cases, an index may be
-provided to reference a specific entry in the list (as identified by the
-previous parameter) to return.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|\<input_parameter_name\>|yes|string|The name of the parameter as defined in the inputs section of the service template.|
+|\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 #### Examples
 
@@ -9681,51 +8934,11 @@ $get_property: [ <tosca_traversal_path>, <property_name>, <nested_property_name_
 ```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 12%" />
-<col style="width: 64%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt; tosca_traversal_path &gt;</td>
-<td>yes</td>
-<td>Using the &lt;tosca_traversal_path&gt; we can traverse the
-representation graph to extract information from a certain node or
-relationship. We start from a specific node or relationship identified
-by its symbolic name (or by the SELF keyword representing the node or
-relationship containing the definition) and then we may further traverse
-the relationships and nodes of the representation graph (using a
-variable number of steps) until reaching the desired node or
-relationship. In the following subsection the specification of the
-&lt;tosca_traversal_path&gt; is explicated.</td>
-</tr>
-<tr class="even">
-<td>&lt;property_name&gt;</td>
-<td>yes</td>
-<td>The name of the property definition the function will return the
-value from.</td>
-</tr>
-<tr class="odd">
-<td>&lt;nested_property_name_or_index_*&gt;</td>
-<td>no</td>
-<td><p>Some TOSCA properties are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some properties represent list types. In these cases, an index may be
-provided to reference a specific entry in the list (as identified by the
-previous parameter) to return.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|\< tosca_traversal_path \>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. In the following subsection the specification of the \<tosca_traversal_path\> is explicated.|
+|\<property_name\>|yes|The name of the property definition the function will return the value from.|
+|\<nested_property_name_or_index_*\> |no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 ##### The simplified TOSCA_PATH definition in BNF format
 ```
@@ -9942,51 +9155,11 @@ $get_attribute: [<tosca_traversal_path>, <attribute_name>, <nested_attribute_nam
 ```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 12%" />
-<col style="width: 64%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;tosca_traversal_path&gt;</td>
-<td>yes</td>
-<td>Using the &lt;tosca_traversal_path&gt; we can traverse the
-representation graph to extract information from a certain node or
-relationship. We start from a specific node or relationship identified
-by its symbolic name (or by the SELF keyword representing the node or
-relationship containing the definition) and then we may further traverse
-the relationships and nodes of the representation graph (using a
-variable number of steps) until reaching the desired node or
-relationship. The specification of the &lt;tosca_traversal_path&gt; is
-explicated in the get_property section.</td>
-</tr>
-<tr class="even">
-<td>&lt;attribute_name&gt;</td>
-<td>yes</td>
-<td>The name of the attribute definition the function will return the
-value from.</td>
-</tr>
-<tr class="odd">
-<td>&lt;nested_attribute_name_or_index_*&gt;</td>
-<td>no</td>
-<td><p>Some TOSCA attributes are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some attributes represent list types. In these cases, an index may be
-provided to reference a specific entry in the list (as identified by the
-previous parameter) to return.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|\<tosca_traversal_path\>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The specification of the \<tosca_traversal_path\> is explicated in the get_property section.|
+|\<attribute_name\> |yes|The name of the attribute definition the function will return the value from.|
+|\<nested_attribute_name_or_index_*\> |no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 #### Examples:
 
@@ -10008,68 +9181,12 @@ $get_artifact: [ <modelable_entity_name>, <artifact_name>, <location>, <remove> 
 ```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 12%" />
-<col style="width: 9%" />
-<col style="width: 55%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;modelable entity name&gt; | SELF | SOURCE | TARGET | HOST</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of a modelable entity (e.g., Node Template or
-Relationship Template name) as declared in the service template that
-contains the property definition the function will return the value
-from. See section B.1 for valid keywords.</td>
-</tr>
-<tr class="even">
-<td>&lt;artifact_name&gt;</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The name of the artifact definition the function will return the
-value from.</td>
-</tr>
-<tr class="odd">
-<td>&lt;location&gt; | LOCAL_FILE</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>Location value must be either a valid path e.g.
-‘/etc/var/my_file’ or ‘LOCAL_FILE’.</p>
-<p>If the value is LOCAL_FILE the orchestrator is responsible for
-providing a path as the result of the get_artifact call where the
-artifact file can be accessed. The orchestrator will also remove the
-artifact from this location at the end of the operation.</p>
-<p>If the location is a path specified by the user the orchestrator is
-responsible to copy the artifact to the specified location. The
-orchestrator will return the path as the value of the get_artifact
-function and leave the file here after the execution of the
-operation.</p></td>
-</tr>
-<tr class="even">
-<td>remove</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_BOOLEAN">boolean</a></td>
-<td><p>Boolean flag to override the orchestrator default behavior so it
-will remove or not the artifact at the end of the operation
-execution.</p>
-<p>If not specified the removal will depends of the location e.g.
-removes it in case of ‘LOCAL_FILE’ and keeps it in case of a path.</p>
-<p>If true the artifact will be removed by the orchestrator at the end
-of the operation execution, if false it will not be removed.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Type|Description|
+| ----- | ------- | ----- | ----- |
+|\<modelable entity name\> \| SELF \| SOURCE \| TARGET \| HOST|yes|string|The mandatory name of a modelable entity (e.g., Node Template or Relationship Template name) as declared in the service template that contains the property definition the function will return the value from. See section B.1 for valid keywords.|
+|<artifact_name\>|yes|string|The name of the artifact definition the function will return the value from.|
+|\<location\> \| LOCAL_FILE|no|string|Location value must be either a valid path e.g. ‘/etc/var/my_file’ or ‘LOCAL_FILE’. If the value is LOCAL_FILE the orchestrator is responsible for providing a path as the result of the get_artifact call where the artifact file can be accessed. The orchestrator will also remove the artifact from this location at the end of the operation. If the location is a path specified by the user the orchestrator is responsible to copy the artifact to the specified location. The orchestrator will return the path as the value of the get_artifact function and leave the file here after the execution of the operation.|
+|remove|no|boolean|Boolean flag to override the orchestrator default behavior so it will remove or not the artifact at the end of the operation execution. If not specified the removal will depends of the location e.g. removes it in case of ‘LOCAL_FILE’ and keeps it in case of a path. If true the artifact will be removed by the orchestrator at the end of the operation execution, if false it will not be removed.|
 
 #### Examples
 
@@ -10167,32 +9284,9 @@ $value: [<nested_value_name_or_index>, ... ]
 ```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 12%" />
-<col style="width: 64%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;nested_value_name_or_index&gt;</td>
-<td>no</td>
-<td><p>Some TOSCA data are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some data represent lists. In these cases, an index may be provided
-to reference a specific entry in the list (as identified by the previous
-parameter) to return.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|<nested_value_name_or_index\> |no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 Boolean Functions
 -----------------
@@ -10533,41 +9627,10 @@ $join: [<list of strings>, <delimiter> ]
 ```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 12%" />
-<col style="width: 11%" />
-<col style="width: 61%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;list of strings&gt;</td>
-<td>yes</td>
-<td><p>list of</p>
-<p><a href="#TYPE_YAML_STRING">string</a> or</p>
-<p><a href="#TYPE_YAML_STRING">string</a> value expressions</p></td>
-<td>A list of one or more strings (or expressions that result in a list
-of string values) which can be joined together into a single
-string.</td>
-</tr>
-<tr class="even">
-<td>&lt;delimiter&gt;</td>
-<td>no</td>
-<td>string</td>
-<td>An optional delimiter used to join the string in the provided
-list.</td>
-</tr>
-</tbody>
-</table>
+Argument|Mandatory|Type|Description
+| ----- | ------- | ----- | ----- |
+|\<list of strings\>|yes|list of string or string value expressions|A list of one or more strings (or expressions that result in a list of string values) which can be joined together into a single string.|
+|\<delimiter\>|no|string|An optional delimiter used to join the string in the provided list.|
 
 #### Examples
 ```
