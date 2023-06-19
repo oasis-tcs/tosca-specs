@@ -20,19 +20,77 @@
 
 # Interface Definition
 
+Keyname|Mandatory|Type|Description
+type|yes|string|The mandatory name of the Interface Type this interface definition is based upon.
+description|no|string|The optional description for this interface definition.
+inputs|no|map of parameter definitions and refinements|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the Interface Type definition).
+|||
+operations|no|map of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the Interface Type definition.
+notifications|no|map of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the Interface Type definition.
+
 # Operation Definition
+
+Keyname|Mandatory|Type|Description
+description|no|string|The optional description string for the associated operation.
+implementation|no|operation implementation definition|The optional definition of the operation implementation. May not be used in an interface type definition (i.e. where an operation is initially defined), but only during refinements. 
+inputs|no|map of parameter definitions|The optional map of parameter definitions for operation input values.
+|||
+outputs|no|map of parameter definitions|The optional map of parameter definitions for operation output values.
+|||Only as part of node and relationship type definitions, the output definitions may include mappings onto attributes of the node or relationship type that contains the definition.
 
 # Operation Assignment
 
+Keyname|Mandatory|Type|Description
+implementation|no|operation implementation definition|The optional definition of the operation implementation. Overrides implementation provided at operation definition.
+inputs|no|map of parameter value assignments|The optional map of parameter value assignments for assigning values to operation inputs. 
+outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how operation outputs are mapped onto attributes of the node or relationship that contains the operation definition. 
+|||
+
 # Notification Definition
+
+Keyname|Mandatory|Type|Description
+description|no|string|The optional description string for the associated notification.
+implementation|no|notification implementation definition|The optional definition of the notification implementation.
+outputs|no|map of parameter definitions|The optional map of parameter definitions that specify notification output values.  Only as part of node and relationship type definitions, the output definitions may include their mappings onto attributes of the node type or relationship type that contains the definition. 
+|||
 
 # Notification Assignment
 
+Keyname|Mandatory|Type|Description
+implementation|no|notification implementation definition|The optional definition of the notification implementation. Overrides implementation provided at notification definition.
+outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how notification outputs values are mapped onto attributes of the node or relationship type that contains the notification definition.
+|||
+
 # Operation Implementation
+
+Keyname|Mandatory|Type|Description
+primary|no|artifact definition|The optional implementation artifact (i.e., the primary script file within a TOSCA CSAR file).  
+dependencies|no|list of  artifact definition|The optional list of one or more dependent or secondary implementation artifacts which are referenced by the primary implementation artifact (e.g., a library the script installs or a secondary script).  
+|||
+timeout|no|integer|Timeout value in seconds. Has no meaning and should not be used within a notification implementation definition.
 
 # Artifact Type
 
+Keyname|Mandatory|Type|Description
+mime_type|no|string|The optional mime type property for the Artifact Type.
+file_ext|no|list of string|The optional file extension property for the Artifact Type.
+properties|no|map of property definitions|An optional map of property definitions for the Artifact Type.
+|||
+
 # Artifact Definition
 
+Keyname|Mandatory|Type|Description
+type|yes|string|The mandatory artifact type for the artifact definition.
+file|yes|string|The mandatory URI string (relative or absolute) which can be used to locate the artifact’s file.
+repository|no|string|The optional name of the repository definition which contains the location of the external repository that contains the artifact.  The artifact is expected to be referenceable by its file URI within the repository.
+description|no|string|The optional description for the artifact definition.
+deploy_path|no|string|The file path the associated file will be deployed on within the target node’s container. 
+artifact_version|no|string|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.
+checksum|no|string|The checksum used to validate the integrity of the artifact.
+checksum_algorithm|no|string|Algorithm used to calculate the artifact checksum (e.g. MD5, SHA [Ref]). Shall be specified if checksum is specified for an artifact.
+|||
+properties|no|map of property assignments|The optional map of property assignments associated with the artifact.
+|||
+|||
 
 
