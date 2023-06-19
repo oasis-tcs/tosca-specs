@@ -655,7 +655,7 @@ An orchestrator performs the following actions:
 
 -------
 
-TOSCA definitions
+TOSCA Definitions
 =================
 
 Except for the examples, this section is **normative** and describes the
@@ -670,23 +670,23 @@ TOSCA Metamodel
 This section defines the models and the modeling goals that comprise the
 TOSCA Version 2.0 specification.
 
-### Modeling concepts and goals
+### Modeling Concepts and Goals
 
-TBD. Here we should have selected core concepts of TOSCA 1.0 from
-section “[3   Core Concepts and Usage
-Pattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)”
-and this section should be a more in-depth section than section 2.1 in
-this document.
+> TBD. Here we should have selected core concepts of TOSCA 1.0 from
+> section “[3   Core Concepts and Usage
+> Pattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)”
+> and this section should be a more in-depth section than section 2.1
+> in this document.
+
 <!----
 {"id": "161", "author": "Calin Curescu", "date": "2020-04-16T12:53:00Z", "comment": "This section needs completion before submitting the TOSCA 2.0.", "target": "Modeling concepts and goals\n\nTBD. Here we should have selected core concepts of TOSCA 1.0 from\nsection \u201c[3\u00a0\u00a0\u00a0Core Concepts and Usage\nPattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)\u201d\nand this section should be a more in-depth section than section 2.1 in\nthis document."}-->
 
+> Add a metamodel picture
 
-Add a metamodel picture
+> Explain separation of concerns and different roles. Refer to email
+> from Peter.
 
-Explain separation of concerns and different roles. Refer to email from
-Peter.
-
-### Modeling definitions and reuse
+### Modeling Definitions and Reuse
 
 The TOSCA metamodel includes complex definitions used in types and
 templates. Reuse concepts simplify the design of TOSCA templates by
@@ -696,90 +696,64 @@ are clarified next:
 
 - **Definition**:
 
-<!-- -->
+  - The TOSCA specification is based on defining modeling entities.
+  - Entity definitions are based on different sets of keynames (with
+    specific syntax and semantics) that are associated with values (of a
+    specific format).
 
-- The TOSCA specification is based on defining modeling entities.
-
-- Entity definitions are based on different sets of keynames (with
-  specific syntax and semantics) that are associated with values (of a
-  specific format
 <!----
 {"id": "163", "author": "Chris Lauwers", "date": "2021-01-17T00:51:00Z", "comment": "Alternative language proposed by PJ:\n  Entity definitions comprise pairs of keynames and values. Each entity\n  has it own syntax, semantics and set of\n  keynames.", "target": "format"}-->
-).
-
-<!-- -->
 
 - **Derivation**:
 
-<!-- -->
-
-- Specific TOSCA entities support a type definition.
-
-- When defining a type, it can be derived from a parent type and inherit
-  all the definitions of the parent type.
-
-- The derivation rules describe what (keyname) definitions are inherited
-  from the parent type and further if and how they can be expanded or
+  - Specific TOSCA entities support a type definition.
+  - When defining a type, it can be derived from a parent type and inherit
+    all the definitions of the parent type.
+  - The derivation rules describe what (keyname) definitions are inherited
+    from the parent type and further if and how they can be expanded or modified. Note
+    that some definitions (for example, “version”) and intrinsic to the
+    type declaration and so are not inherited.
+  - A parent type can in turn be derived from a parent type. There is no
+    limit to the depth of a chain of derivations.
   
 <!----
 {"id": "164", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:42:00Z", "comment": "Expansion and modification is part of\n  Refinement not Derivation. This bullet point should be\n  removed", "target": ""}-->
-modified. Note
-  that some definitions (for example, “version”) and intrinsic to the
-  type declaration and so are not inherited.
-
-- A parent type can in turn be derived from a parent type. There is no
-  limit to the depth of a chain of derivations.
-
-<!-- -->
 
 - **Refinement**:
 
-<!-- -->
+  - Definitions within a type definition consist of the definition of
+    keynames and other TOSCA entities (e.g. properties, requirements,
+    capabilities, etc.). 
+    Definitions within a parent type can be refined (adjusted) to better
+    suit the needs of the referencing type.
+  - The refinement rules pertaining to an entity describe how such entity
+    definitions that are inherited from the parent type during a type
+    derivation can be expanded or modified.
 
-- Definitions within a type definition consist of the definition of
-  keynames and other TOSCA entities (e.g. properties, requirements,
-  capabilities, etc.). 
 <!----
 {"id": "165", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:43:00Z", "comment": "Type\n  definition is part of Definition not\n  Refinement", "target": ""}-->
 
-  Definitions within a parent type can be refined (adjusted) to better
-  suit the needs of the referencing type.
+- **Augmentation**:
 
-- The refinement rules pertaining to an entity describe how such entity
-  definitions that are inherited from the parent type during a type
-  derivation can be expanded or modified.
+  - Definitions within a parent type can be expanded, which is the
+    addition of properties, to better suit the requirements of the
+    referencing type.
+  - The augmentation rules pertaining to an entity describe how the
+    inherited parent type during a type derivation can be added to.
 
-<!-- -->
-
-- **Augmentation**
 <!----
 {"id": "166", "author": "Mike Rehder", "date": "2020-04-30T11:10:00Z", "comment": "I think separating augmentation is helpful\n  (as YANG has done). I think it makes it easier to understand the rules\n  that apply for the refining or augmenting\n  scenario", "target": "**Augmentation**"}-->
-:
-
-<!-- -->
-
-- Definitions within a parent type can be expanded, which is the
-  addition of properties, to better suit the requirements of the
-  referencing type.
-
-- The augmentation rules pertaining to an entity describe how the
-  inherited parent type during a type derivation can be added to.
-
-<!-- -->
 
 - **Assignment**:
 
-<!-- -->
+  - When creating a service template, we specify several entities that are
+    part of the template (e.g., nodes, relationships, groups, etc.).
+  - When adding such an entity in the service template, for some
+    definitions that appear in the corresponding entity type (e.g.,
+    properties, operations, requirements, etc.) we may (or must) assign a
+    certain specification (or value).
 
-- When creating a service template, we specify several entities that are
-  part of the template (e.g., nodes, relationships, groups, etc.).
-
-- When adding such an entity in the service template, for some
-  definitions that appear in the corresponding entity type (e.g.,
-  properties, operations, requirements, etc.) we may (or must) assign a
-  certain specification (or value).
-
-### Goal of the derivation and refinement rules
+### Goal of the Derivation and Refinement Rules
 
 The main reason for derivation and refinement rules is to create a
 framework useful for a consistent TOSCA type profile creation. The
@@ -845,222 +819,88 @@ are allowed to appear in a TOSCA file.
 
 The following is the list of recognized keynames for a TOSCA file:
 
-<table>
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 49%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>tosca_definitions_version</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines the version of the TOSCA specification used in the TOSCA
-file</td>
-</tr>
-<tr class="even">
-<td>profile</td>
-<td>no</td>
-<td>string</td>
-<td>The profile name that can be used by other TOSCA files to import the
-type definitions in this document.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of YAML values</td>
-<td>Defines a section used to declare additional metadata information.
-Domain-specific TOSCA profile specifications may define keynames that
-are mandatory for their implementations.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>Declares a description for this TOSCA file and its contents.</td>
-</tr>
-<tr class="odd">
-<td>dsl_definitions</td>
-<td>no</td>
-<td>N/A</td>
-<td>Defines reusable YAML macros (i.e., YAML alias anchors) for use
-throughout the TOSCA file.</td>
-</tr>
-<tr class="even">
-<td>repositories</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#namespaces">Repository definitions</a></p></td>
-<td>Declares the map of external repositories that contain artifacts
-that are referenced in the TOSCA file along with the addresses used to
-connect to them in order to retrieve the artifacts.</td>
-</tr>
-<tr class="odd">
-<td>imports</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a href="#import-definition">Import definitions</a></p></td>
-<td>Declares a list of import statements pointing to external TOSCA
-files or well-known profiles. For example, these may be file locations
-or URIs relative to the TOSCA file within the same TOSCA CSAR file.</td>
-</tr>
-<tr class="even">
-<td>artifact_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#artifact-type">Artifact Types</a></p></td>
-<td>This section contains amap of artifact type definitions for use in
-the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="odd">
-<td>data_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#data-type">Data Types</a></p></td>
-<td>Declares a map of TOSCA Data Type definitions for use in the TOSCA
-file and/or external TOSCA files.</td>
-</tr>
-<tr class="even">
-<td>capability_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#capability-type">Capability Types</a></p></td>
-<td>This section contains amap of capability type definitions for use in
-the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="odd">
-<td>interface_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-type">Interface Types</a></p></td>
-<td>This section contains amap of interface type definitions for use in
-the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="even">
-<td>relationship_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#relationship-type">Relationship Types</a></p></td>
-<td>This section contains a map of relationship type definitions for use
-in the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="odd">
-<td>node_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#node-type">Node Types</a></p></td>
-<td>This section contains a map of node type definitions for use in the
-TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="even">
-<td>group_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#group-type">Group Types</a></p></td>
-<td>This section contains a map of group type definitions for use in the
-TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="odd">
-<td>policy_types</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#policy-type">Policy Types</a></p></td>
-<td>This section contains a map of policy type definitions for use in
-the TOSCA file and/or external TOSCA files.</td>
-</tr>
-<tr class="even">
-<td>service_template</td>
-<td>no</td>
-<td><a href="#service-template-definition">service template
-definition</a></td>
-<td>Defines a template from which to create a mode/representation of an
-application or service. Service templates consist of node templates that
-represent the application’s or service’s components, as well as
-relationship templates representing relations between these
-components.</td>
-</tr>
-<tr class="odd">
-<td>Functions</td>
-<td>no</td>
-<td>map of function definitions</td>
-<td>This section contains a map of function definitions for use in the
-TOSCA file and/or external TOSCA files.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in the TOSCA file |
+|profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information.  Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations. |
+|description|no|string|Declares a description for this TOSCA file and its contents.|
+|dsl_definitions|no |N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout the TOSCA file.|
+|repositories|no|map of Repository definitions|Declares the map of external repositories that contain artifacts that are referenced in the TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
+|imports|no|list of Import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
+|artifact_types|no|map of Artifact Types|This section contains amap of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
+|data_types|no|map of Data Types|Declares a map of TOSCA Data Type definitions for use in the TOSCA file and/or external TOSCA files.|
+|capability_types|no|map of Capability Types|This section contains amap of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
+|interface_types|no|map of Interface Types|This section contains amap of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
+|relationship_types|no|map of Relationship Types|This section contains a map of relationship type definitions for use in the TOSCA file and/or external TOSCA files.|
+|node_types|no|map of Node Types|This section contains a map of node type definitions for use in the TOSCA file and/or external TOSCA files.|
+|group_types|no|map of Group Types|This section contains a map of group type definitions for use in the TOSCA file and/or external TOSCA files.|
+|policy_types|no|map of Policy Types|This section contains a map of policy type definitions for use in the TOSCA file and/or external TOSCA files.|
+|service_template|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application's or service's components, as well as relationship templates representing relations between these components.|
+|functions|no|map of function definitions|This section contains a map of function definitions for use in the TOSCA file and/or external TOSCA files.|
 
 #### Grammar
 
 The overall structure of a TOSCA file and its top-level keynames is
 shown below:
+```
+# Mandatory TOSCA version string
+tosca_definitions_version: <value>  # Mandatory, see section 3.1 for usage
+profile: <string>                   # Optional, see section 3.2 for usage
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Mandatory TOSCA version string</p>
-<p>tosca_definitions_version: &lt;value&gt; # Mandatory, see section 3.1
-for usage</p>
-<p>profile: &lt;string&gt; # Optional, see section 3.2 for usage</p>
-<p># Optional metadata keyname: value pairs</p>
-<p>metadata:</p>
-<p># map of YAML values</p>
-<p># Optional description of the definitions inside the file.</p>
-<p>description: &lt;<a href="#TYPE_YAML_STRING">template_
-description</a>&gt;</p>
-<p>dsl_definitions:</p>
-<p># map of YAML alias anchors (or macros)</p>
-<p>repositories:</p>
-<p># map of external repository definitions which host TOSCA
-artifacts</p>
-<p>imports:</p>
-<p># ordered list of <a href="#import-definition">import
-definitions</a></p>
-<p>artifact_types:</p>
-<p># map of <a href="#artifact-type">artifact type</a> definitions</p>
-<p>data_types:</p>
-<p># map of <a href="#data-type">datatype</a> definitions</p>
-<p>capability_types:</p>
-<p># map of <a href="#capability-type">capability type</a>
-definitions</p>
-<p>interface_types</p>
-<p># map of <a href="#interface-type">interface type</a> definitions</p>
-<p>relationship_types:</p>
-<p># map of <a href="#relationship-type">relationship type</a>
-definitions</p>
-<p>node_types:</p>
-<p># map of <a href="#node-type">node type</a> definitions</p>
-<p>group_types:</p>
-<p># map of <a href="#group-type">group type</a> definitions</p>
-<p>policy_types:</p>
-<p># map of <a href="#policy-type">policy type</a> definitions</p>
-<p>functions:</p>
-<p># map of function definitions`</p>
-<p>service_template:</p>
-<p># service template definition of the cloud application or
-service</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+# Optional metadata keyname: value pairs
+metadata:
+  
+  # map of YAML values
+
+# Optional description of the definitions inside the file.
+description: <template_ description>
+
+dsl_definitions:
+  # map of YAML alias anchors (or macros)
+
+repositories:
+  # map of external repository definitions which host TOSCA artifacts
+
+imports:
+  # ordered list of import definitions 
+
+artifact_types:
+  # map of artifact type definitions
+
+data_types:
+  # map of datatype definitions
+
+capability_types:
+  # map of capability type definitions
+
+interface_types
+  # map of interface type definitions
+
+relationship_types:
+  # map of relationship type definitions
+
+node_types:
+  # map of node type definitions
+
+group_types:
+  # map of group type definitions
+
+policy_types:
+  # map of policy type definitions
+
+functions:
+  # map of function definitions`
+
+service_template:
+  # service template definition of the cloud application or service
+
+```
 
 ##### Requirements
 
-- The key “tosca_definitions_version” MUSTbe the first line of each
-  TOSCA file..
+- The key `tosca_definitions_version` MUST be the first line of each
+  TOSCA file.
 
 ##### Notes
 <!----
@@ -1082,14 +922,14 @@ TOSCA grammar that should be used to parse the remainder of the TOSCA
 file.
 
 ###### Keyname
-
-| tosca_definitions_version |
-|---------------------------|
-
+```
+tosca_definitions_version 
+```
 ###### Grammar
 
-| tosca_definitions_version: \<tosca\_ version\> |
-|------------------------------------------------|
+```
+tosca_definitions_version: <tosca_version> 
+```
 
 TOSCA uses the following version strings for the various revisions of
 the TOSCA specification:
@@ -1110,9 +950,9 @@ support older versions of the TOSCA specifications.
 ###### Examples:
 
 A TOSCA file designed using the TOSCA Version 2.0 specification:
-
-| tosca_definitions_version: tosca_2_0 |
-|--------------------------------------|
+```
+tosca_definitions_version: tosca_2_0
+```
 
 ##### profile
 <!----
@@ -1125,14 +965,14 @@ profiles can then be imported by other TOSCA files using the profile
 keyword in their import statement.
 
 ###### Keyname
-
-| profile |
-|---------|
+```
+profile
+```
 
 ###### Grammar
-
-| profile: \<string_value\> |
-|---------------------------|
+```
+profile: <string_value\> 
+```
 
 TOSCA does not place any restrictions on the value of the profile name
 string. However, we encourage a Java-style reverse-domain notation with
@@ -1142,14 +982,14 @@ version as a best-practice convention.
 
 The following is an example of a TOSCA file that defines TOSCA Simple
 Profile Version 2.0 types:
-
-| profile: org.oasis-open.tosca.simple:2.0 |
-|------------------------------------------|
+```
+profile: org.oasis-open.tosca.simple:2.0 
+```
 
 The following defines a domain-specific profile for Kubernetes:
-
-| profile: io.kubernetes:1.18 |
-|-----------------------------|
+```
+profile: io.kubernetes:1.18 
+```
 
 ##### metadata
 
@@ -1159,51 +999,28 @@ keynames with values that can use all types supported by the [YAML 1.2.2
 recommended
 schemas](https://yaml.org/spec/1.2.2/#chapter-10-recommended-schemas)
 \[Yaml-1.2\]. Specifically, the following types can be used for metadata
-values: map, seq, str, null, bool, int, float
+values: map, seq, str, null, bool, int, float.
 <!----
 {"id": "213", "author": "Chris Lauwers", "date": "2022-12-06T14:44:00Z", "comment": "Did we\ndecide to allow recursive metadata (i.e. maps of\nmaps?)", "target": "float"}-->
-.
-
-- 
 
 ###### Keyname
-
-| metadata |
-|----------|
+```
+metadata 
+```
 
 ###### Grammar
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>metadata:</p>
-<p>&lt;map_of_yaml_values&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+metadata: 
+  <map_of_yaml_values>
+```
 
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>metadata:</p>
-<p>creation_date: 2015-04-14</p>
-<p>date_updated: 2015-05-01</p>
-<p>status: developmental</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+metadata: 
+  creation_date: 2015-04-14
+  date_updated: 2015-05-01
+  status: developmental  
+```
 
 ##### description
 
@@ -1211,37 +1028,27 @@ This optional keyname provides a means to include single or multiline
 descriptions within a TOSCA template as a scalar string value.
 
 ###### Keyname
-
-| description |
-|-------------|
+```
+description 
+```
 
 ###### Grammar
-
-| description: \<description\> |
-|------------------------------|
+```
+description: <description>
+```
 
 ###### Example
 
 Single line example
-
-| description: A simple example service template |
-|------------------------------------------------|
+```
+description: A simple example service template 
+```
 
 Multi-line example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>description: "A multiline description</p>
-<p>using a quoted string”</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+description: "A multiline description 
+using a quoted string”
+```
 
 ##### dsl_definitions
 
@@ -1249,54 +1056,35 @@ This optional keyname provides a section to define macros YAML-style
 macros for use in the TOSCA file.
 
 ###### Keyname
-
-| dsl_definitions |
-|-----------------|
+```
+dsl_definitions 
+```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>dsl_definitions:</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">dsl_definition_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">dsl_definition_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+dsl_definitions:
+   <dsl_definition_1>
+   ...
+   <dsl_definition_n>
+```
 
 ###### Example
 <!----
 {"id": "236", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:18:00Z", "comment": "There should also be an example of how to use the macro once defined.", "target": "Example"}-->
+```
+dsl_definitions:
+    ubuntu_image_props: &ubuntu_image_props
+      architecture: x86_64
+      type: linux
+      distribution: ubuntu
+      os_version: 14.04
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>dsl_definitions:</p>
-<p>ubuntu_image_props: &amp;ubuntu_image_props</p>
-<p>architecture: x86_64</p>
-<p>type: linux</p>
-<p>distribution: ubuntu</p>
-<p>os_version: 14.04</p>
-<p>redhat_image_props: &amp;redhat_image_props</p>
-<p>architecture: x86_64</p>
-<p>type: linux</p>
-<p>distribution: rhel</p>
-<p>os_version: 6.6</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+    redhat_image_props: &redhat_image_props
+      architecture: x86_64
+      type: linux
+      distribution: rhel
+      os_version: 6.6
+```
 
 ##### repositories
 
@@ -1305,49 +1093,26 @@ that may contain artifacts or other TOSCA files that might be referenced
 or imported by this TOSCA file.
 
 ###### Keyname
-
-| repositories |
-|--------------|
+```
+repositories 
+```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>repositories:</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">repository_definition_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a
-href="#TYPE_YAML_STRING">repository_definition_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+repositories:
+   <repository_definition_1>
+   ...
+   <repository_definition_n>
+```
 
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>repositories:</p>
-<p>my_project_artifact_repo:</p>
-<p>description: development repository for TAR archives and Bash
-scripts</p>
-<p>url: <a
-href="http://mycompany.com/repository/myproject/">http://mycompany.com/repository/myproject/</a></p>
-<p>external_repo: https://foo.bar</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+repositories:
+  my_project_artifact_repo:
+    description: development repository for TAR archives and Bash scripts
+    url: http://mycompany.com/repository/myproject/
+  external_repo: https://foo.bar
+```
 
 ##### imports
 
@@ -1360,51 +1125,28 @@ companies and organizations to define domain-specific types and/or
 describe their software applications for reuse in other TOSCA files.
 
 ###### Keyname
-
-| imports |
-|---------|
+```
+imports 
+```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>imports:</p>
-<p>- &lt;<a
-href="#it-would-be-good-to-allow-also-the-import-of-specific-types-via-their-fully-qualified-names-and-also-entire-namespaces-i.e.-types-from-entire-namespaces-from-athe-catalogue.-that-is-in-addition-to-importing-from-a-file-globally-well-known-local-catalog-fileimport-definition">import_definition_1</a>&gt;</p>
-<p>- ...</p>
-<p>- &lt;<a
-href="#it-would-be-good-to-allow-also-the-import-of-specific-types-via-their-fully-qualified-names-and-also-entire-namespaces-i.e.-types-from-entire-namespaces-from-athe-catalogue.-that-is-in-addition-to-importing-from-a-file-globally-well-known-local-catalog-fileimport-definition">import_definition_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+imports:
+   - <import_definition_1>
+   - ...
+   - <import_definition_n>
+```
 
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># An example import of TOSCA files from a location relative to
-the</p>
-<p># file location of the TOSCA file declaring the import.</p>
-<p>imports:</p>
-<p>- relative_path/my_defns/my_typesdefs_1.yaml</p>
-<p>- url: my_defns/my_typesdefs_n.yaml</p>
-<p>repository: my_company_repo</p>
-<p>namespace: mycompany</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+# An example import of TOSCA files from a location relative to the 
+# file location of the TOSCA file declaring the import.
+imports:
+  - relative_path/my_defns/my_typesdefs_1.yaml
+  - url: my_defns/my_typesdefs_n.yaml    
+    repository: my_company_repo
+    namespace: mycompany
+```
 
 ##### artifact_types
 
@@ -1412,109 +1154,67 @@ This optional keyname lists the Artifact Types that are defined by this
 TOSCA file..
 
 ###### Keyname
+```
+artifact_types 
+```
 
-| artifact_types |
-|----------------|
-
-###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>artifact_types:</p>
-<p>&lt;<a href="#artifact-type">artifact_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#artifact-type">artifact type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+###### Grammar
+```
+artifact_types:
+  <artifact_type_defn_1>
+  ...
+  <artifact type_defn_n>
+```
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>artifact_types:</p>
-<p>mycompany.artifacttypes.myFileType:</p>
-<p>derived_from: tosca.artifacts.File</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+artifact_types:
+  mycompany.artifacttypes.myFileType:
+    derived_from: tosca.artifacts.File
+```
 ##### data_types
 
 This optional keyname provides a section to define new data types in
 TOSCA.
 
 ###### Keyname
-
-| data_types |
-|------------|
+```
+data_types 
+```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p>&lt;<a href="#data-type">tosca_datatype_def_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#data-type">tosca_datatype_def_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+data_types:
+   <tosca_datatype_def_1>
+   ...
+   <tosca_datatype_def_n>
+```
 
 ###### Example
+```
+data_types:
+  # A complex datatype definition
+  simple_contactinfo_type:
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      phone:
+        type: string
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p># A complex datatype definition</p>
-<p>simple_contactinfo_type:</p>
-<p>properties:</p>
-<p>name:</p>
-<p>type: string</p>
-<p>email:</p>
-<p>type: string</p>
-<p>phone:</p>
-<p>type: string</p>
-<p># datatype definition derived from an existing type</p>
-<p>full_contact_info:</p>
-<p>derived_from: simple_contact_info</p>
-<p>properties:</p>
-<p>street_address:</p>
-<p>type: string</p>
-<p>city:</p>
-<p>type: string</p>
-<p>state:</p>
-<p>type: string</p>
-<p>postalcode:</p>
-<p>type: string</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  # datatype definition derived from an existing type
+  full_contact_info:
+    derived_from: simple_contact_info
+    properties:
+      street_address:
+        type: string
+      city: 
+        type: string
+      state:
+        type: string
+      postalcode:
+        type: string
+```
 ##### capability_types
 
 This optional keyname lists the Capability Types that provide the
@@ -1522,52 +1222,30 @@ reusable type definitions that can be used to describe features of nodes
 that can be used to fulfill requirements of other nodes.
 
 ###### Keyname
-
-| capability_types |
-|------------------|
+```
+capability_types 
+```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>capability_types:</p>
-<p>&lt;<a href="#capability-type">capability_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#capability-type">capability
-type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+capability_types:
+  <capability_type_defn_1>
+  ...
+  <capability type_defn_n>
+```
 ###### Example
+```
+capability_types:
+  mycompany.mytypes.myCustomEndpoint:
+    derived_from: tosca.capabilities.Endpoint
+    properties:
+      # more details ...
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>capability_types:</p>
-<p>mycompany.mytypes.myCustomEndpoint:</p>
-<p>derived_from: tosca.capabilities.Endpoint</p>
-<p>properties:</p>
-<p># more details ...</p>
-<p>mycompany.mytypes.myCustomFeature:</p>
-<p>derived_from: tosca.capabilities.Feature</p>
-<p>properties:</p>
-<p># more details ...</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  mycompany.mytypes.myCustomFeature:
+    derived_from: tosca.capabilities.Feature
+    properties:
+      # more details ...
+```
 ##### interface_types
 
 This optional keyname lists the Interface Types that provide the
@@ -1575,51 +1253,27 @@ reusable type definitions that can be used to describe operations
 exposed by TOSCA relationships and nodes.
 
 ###### Keyname
-
-| interface_types |
-|-----------------|
+```
+interface_types 
+```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interface_types:</p>
-<p>&lt;<a href="#interface-type">interface_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#interface-type">interface type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interface_types:
+  <interface_type_defn_1>
+  ...
+  <interface type_defn_n>
+```
 ###### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interface_types:</p>
-<p>mycompany.interfaces.service.Signal:</p>
-<p>operations:</p>
-<p>signal_begin_receive:</p>
-<p>description: Operation to signal start of some message
-processing.</p>
-<p>signal_end_receive:</p>
-<p>description: Operation to signal end of some message
-processed.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interface_types:
+  mycompany.interfaces.service.Signal:
+    operations:
+      signal_begin_receive:
+        description: Operation to signal start of some message processing.
+      signal_end_receive:
+        description: Operation to signal end of some message processed.
+```
 ##### relationship_types
 
 This optional keyname lists the Relationship Types that provide the
@@ -1627,151 +1281,85 @@ reusable type definitions that can be used to describe dependent
 relationships between nodes.
 
 ###### Keyname
-
-| relationship_types |
-|--------------------|
+```
+relationship_types 
+```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_types:</p>
-<p>&lt;<a
-href="#i-still-think-this-is-simply-a-requirement-type-i-cant-see-why-it-isnt-and-what-advantage-there-is-in-calling-it-something-else.relationship-type">relationship_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a
-href="#i-still-think-this-is-simply-a-requirement-type-i-cant-see-why-it-isnt-and-what-advantage-there-is-in-calling-it-something-else.relationship-type">relationship
-type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_types:
+  <relationship_type_defn_1>
+  ...
+  <relationship type_defn_n>
+```
 ###### Example
+```
+relationship_types:
+  mycompany.mytypes.myCustomClientServerType:
+    derived_from: tosca.relationships.HostedOn
+    properties:
+      # more details ...
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_types:</p>
-<p>mycompany.mytypes.myCustomClientServerType:</p>
-<p>derived_from: tosca.relationships.HostedOn</p>
-<p>properties:</p>
-<p># more details ...</p>
-<p>mycompany.mytypes.myCustomConnectionType:</p>
-<p>derived_from: tosca.relationships.ConnectsTo</p>
-<p>properties:</p>
-<p># more details ...</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  mycompany.mytypes.myCustomConnectionType:
+    derived_from: tosca.relationships.ConnectsTo
+    properties:
+      # more details ...
+```
 ##### node_types
 
 This optional keyname lists the Node Types that provide the reusable
 type definitions for nodes in a service.
 
 ###### Keyname
-
-| node_types |
-|------------|
+```
+node_types
+```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>&lt;<a href="#node-type">node_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#node-type">node_type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_types:
+  <node_type_defn_1>
+  ...
+  <node_type_defn_n>
+```
 ###### Example
+```
+node_types:
+  my_webapp_node_type:
+    derived_from: WebApplication
+    properties:
+      my_port:
+        type: integer
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>my_webapp_node_type:</p>
-<p>derived_from: WebApplication</p>
-<p>properties:</p>
-<p>my_port:</p>
-<p>type: integer</p>
-<p>my_database_node_type:</p>
-<p>derived_from: Database</p>
-<p>capabilities:</p>
-<p>mytypes.myfeatures.transactSQL</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  my_database_node_type:
+    derived_from: Database
+    capabilities:
+      mytypes.myfeatures.transactSQL
+```
 ##### group_types
 
 This optional keyname lists the Group Types that are defined by this
 TOSCA file.
 
 ###### Keyname
-
-| group_types |
-|-------------|
+```
+group_types 
+```
 
 ###### Grammar 
+```
+group_types:
+  <group_type_defn_1>
+  ...
+  <group type_defn_n>
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>group_types:</p>
-<p>&lt;<a href="#group-type">group_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#group-type">group type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
 ###### Example
-
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>group_types:</p>
-<p>mycompany.mytypes.myScalingGroup:</p>
-<p>derived_from: tosca.groups.Root</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+group_types:
+  mycompany.mytypes.myScalingGroup:
+    derived_from: tosca.groups.Root
+```
 
 ##### policy_types
 
@@ -1779,48 +1367,25 @@ This optional keyname lists the Policy Types that are defined by this
 TOSCA file.
 
 ###### Keyname
-
-| policy_types |
-|--------------|
+```
+policy_types 
+```
 
 ###### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policy_types:</p>
-<p>&lt;<a href="#group-type">policy_type_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#group-type">policy type_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policy_types:
+  <policy_type_defn_1>
+  ...
+  <policy type_defn_n>
+```
 ###### Example
 <!----
 {"id": "327", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:48:00Z", "comment": "There should be a second policy definition in the example or it is just a repeat of the policy type definition example", "target": "Example"}-->
-
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policy_types:</p>
-<p>mycompany.mytypes.myScalingPolicy:</p>
-<p>derived_from: tosca.policies.Scaling</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policy_types:
+  mycompany.mytypes.myScalingPolicy:
+    derived_from: tosca.policies.Scaling
+```
 ### Profiles
 
 A profile is a named collection of TOSCA type definitions, artifacts,
@@ -1836,7 +1401,6 @@ defined in TOSCA profiles are used as follows:
 
 - Types defined in a TOSCA profile provide reusable building blocks from
   which services can be composed.
-
 - Artifacts and service templates defined in a TOSCA profile provide
   implementations for the TOSCA types defined in the profile. Whereas
   artifacts provide interface operation implementations for concrete
@@ -1877,7 +1441,7 @@ defines Virtualized Network Function Descriptors (VNFDs), Network
 Service Descriptors (NSDs) and a Physical Network Function Descriptors
 (PNFDs).
 
-We should give a couple of additional examples.
+> We should give a couple of additional examples.
 
 #### Defining Profiles
 
@@ -1890,25 +1454,21 @@ TOSCA does not impose naming conventions for profile names, but as a
 best practice we recommend a domain-name-like structure as used for Java
 package naming. For example, the following profile statement is used to
 define TOSCA Simple Profile Version 2.0 types:
-
-| profile: org.oasis-open.tosca.simple:2.0 |
-|------------------------------------------|
-
+```
+profile: org.oasis-open.tosca.simple:2.0 
+```
 TOSCA parsers MUST process profile definitions according to the
 following rules:
 
 - TOSCA files that define a profile (i.e., that contain a profile
   keyname) MUST NOT also define a service template.
-
 - If the parser encounters the profile keyname in a TOSCA file, then the
   corresponding profile name will be applied to all types defined in
   that file as well as to types defined in any imported TOSCA files.
-
 - If one of those imported files also defines the profile keyname—and
   that profile name is different from the name of the importing
   profile—then that profile name overrides the profile name value from
   that point in the import tree onward, recursively.
-
 - TOSCA service templates defined in profiles MUST advertise
   substitution mapping to allow them to be used as implementations for
   abstract nodes defined using profile types.
@@ -1923,10 +1483,10 @@ a version qualifier to distinguish between different versions of their
 profiles, and service template designers must use the proper string name
 to make sure they import the desired versions of these profiles.
 
-Do we impose a structure on profile names that distinguishes the version
-qualifier from the base profile name? If so, is there a specific
-separator character or string (in which case the use of the separator
-must be escaped somehow (or disallowed) in profile names.
+> Do we impose a structure on profile names that distinguishes the version
+> qualifier from the base profile name? If so, is there a specific
+> separator character or string (in which case the use of the separator
+> must be escaped somehow (or disallowed) in profile names.
 
 When multiple versions of the same profile exist, it is possibly that
 service templates could mix and match different versions of a profile in
@@ -1936,132 +1496,88 @@ scenario:
 Assume a profile designer creates version 1 of a base profile that
 defines (among other things) a **Host** capability type and a
 corresponding **HostedOn** relationship type as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>profile: org.base.v1</p>
-<p>capability_types:</p>
-<p>Host:</p>
-<p>description: Hosting capability</p>
-<p>relationship_types:</p>
-<p>HostedOn:</p>
-<p>valid_capability_types: [ Host ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+profile: org.base.v1
+capability_types:
+  Host:
+    description: Hosting capability
+relationship_types:
+  HostedOn:
+    valid_capability_types: [ Host ]
+```
 Now let’s assume a different profile designer creates a
 platform-specific profile that defines (among other things) a
 **Platform** node type. The Platform node type defines a capability of
 type **Host**. Since the **Host** capability is defined in the
 **org.base.v1** profile, that profile must be imported as shown in the
 snippet below:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>profile: org.platform</p>
-<p>imports:</p>
-<p>- profile: org.base.v1</p>
-<p>namespace: p1</p>
-<p>node_types:</p>
-<p>Platform:</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>type: p1:Host</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+profile: org.platform
+imports:
+  - profile: org.base.v1
+    namespace: p1
+node_types:
+  Platform:
+    capabilities:
+      host:
+        type: p1:Host
+```
 At some later point of time, the original profile designer updates the
 **org.base** profile to Version 2. The updated version of this profile
 just adds a **Credential** data type (in addition to defining the
 **Host** capability type and the **HostedOn** relationship type), as
 follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>profile: org.base.v2</p>
-<p>capability_types:</p>
-<p>Host:</p>
-<p>description: Hosting capability</p>
-<p>relationship_types:</p>
-<p>HostedOn:</p>
-<p>valid_capability_types: [ Host ]</p>
-<p>data_types:</p>
-<p>Credential:</p>
-<p>properties:</p>
-<p>key:</p>
-<p>type: string</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+profile: org.base.v2
+capability_types:
+  Host:
+    description: Hosting capability
+relationship_types:
+  HostedOn:
+    valid_capability_types: [ Host ]
+data_types:
+  Credential:
+    properties:
+      key:
+        type: string
+```
 Finally, let’s assume a service designer creates a template for a
 service that is to be hosted on the platform defined in the
 **org.platform** profile. The template introduces a **Service** node
 type that has a requirement for the platform’s **Host** capability. It
 also has a credential property of type **Credential** as defined in
 **org.base.v2**:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>imports:</p>
-<p>- profile: org.base.v2</p>
-<p>namespace: p2</p>
-<p>- profile: org.platform</p>
-<p>namespace: pl</p>
-<p>node_types:</p>
-<p>Service:</p>
-<p>properties:</p>
-<p>credential:</p>
-<p>type: p2:Credential</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>capability: p2:Host</p>
-<p>relationship: p2:HostedOn</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>service:</p>
-<p>type: Service</p>
-<p>properties:</p>
-<p>credential:</p>
-<p>key: password</p>
-<p>requirements:</p>
-<p>- host: platform</p>
-<p>platform:</p>
-<p>type: pl:Platform</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+imports:
+  - profile: org.base.v2
+    namespace: p2
+  - profile: org.platform
+    namespace: pl
+node_types:
+  Service:
+    properties:
+      credential:
+        type: p2:Credential
+    requirements:
+      - host:
+          capability: p2:Host
+          relationship: p2:HostedOn
+service_template:
+  node_templates:
+    service:
+      type: Service
+      properties:
+        credential:
+          key: password
+      requirements:
+        - host: platform
+    platform:
+      type: pl:Platform
+```
 This service template is invalid, since the **platform** node template
 does not define a capability of a type that is compatible with the
 **valid_capability_types** specified by the **host** requirement in the
@@ -2073,9 +1589,9 @@ The example in this section illustrates a general version compatibility
 issue that exists when different versions of the same profile are used
 in a TOSCA service.
 
-A number of suggestions for these extensions are currently being
-discussed. Grammar extensions will be included in this document one they
-are agreed upon.
+> A number of suggestions for these extensions are currently being
+> discussed. Grammar extensions will be included in this document one they
+> are agreed upon.
 
 ### Imports
 <!----
@@ -2086,7 +1602,6 @@ are agreed upon.
 <!----
 {"id": "350", "author": "Calin Curescu", "date": "2019-01-30T15:54:00Z", "comment": "It would be good to allow also the import of specific types (via their fully qualified names) and also entire namespaces (i.e. types from entire namespaces) from a/the catalogue. That is, in addition to importing from a file: Globally well-known Local catalog File", "target": "Import definition"}-->
 
-
 An import definition is used within a TOSCA file to locate and uniquely
 name another TOSCA file or TOSCA profile that has type, repository, and
 function 
@@ -2096,7 +1611,6 @@ definitions to
 be imported
 <!----
 {"id": "352", "author": "Matt Rutkowski", "date": "2016-09-06T09:49:00Z", "comment": "Nodejs has NPM that uses the following to\nimport new package modules:  \nA package is:  \na) a folder containing a program described by a\n[package.json](numbering.xml) file  \nb) a gzipped tarball containing (a)  \nc) a url that resolves to (b)  \nd) a \\<name\\>@\\<version\\> that is published on the registry (see\n[npm-registry](styles.xml)) with (c)  \ne) a \\<name\\>@\\<tag\\> (see [npm-dist-tag](settings.xml)) that points to\n(d)  \nf) a \\<name\\> that has a \"latest\" tag satisfying (e)  \ng) a \\<git remote url\\> that resolves to (a)  \nwe may want to adopt something similar if TOSCA references service\ntemplate (packages) from a\ncatalog)", "target": "imported"}-->
-
 (included) into another TOSCA file.
 
 ##### Keynames
@@ -2116,62 +1630,28 @@ definition:
 Import definitions have one the following grammars:
 
 ###### Single-line grammar:
-
 When using the single-line grammar, the url keyword is assumed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>imports:</p>
-<p>- &lt;URI_1&gt;</p>
-<p>- &lt;URI_2&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+imports:
+  - <URI_1>
+  - <URI_2>
+```
 ###### Multi-line grammar
 
 The following multi-line grammar can be used for importing TOSCA files:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>imports:</p>
-<p>- url: &lt;file_URI&gt;</p>
-<p>repository: &lt;repository_name&gt;</p>
-<p>namespace: &lt;namespace_name&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+imports:  
+  - url: <file_URI>   
+    repository: <repository_name>
+    namespace: <namespace_name>
+```
 The following multi-line grammar can be used for importing TOSCA
 profiles:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>imports:</p>
-<p>- profile: &lt;profile_name&gt;</p>
-<p>namespace: &lt;namespace_name&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+imports:  
+  - profile: <profile_name>   
+    namespace: <namespace_name>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -2217,42 +1697,32 @@ attempt to import the file referenced by \<file_URI\> as follows:
   the resource identified by \<file_URL\> represents a valid TOSCA file,
   then it SHOULD cause the remote Service Template to be imported.
 
-<!-- -->
-
-- Note that if in addition to a URL with a URL scheme, the import
-  definition also specifies a \<repository_name\> (using the repository
-  key), then that import definition SHOULD be considered invalid.
-
-<!-- -->
+  - Note that if in addition to a URL with a URL scheme, the import
+    definition also specifies a \<repository_name\> (using the repository
+    key), then that import definition SHOULD be considered invalid.
 
 - If the \<file_URI\> does not include a URL scheme, it is a considered
   a relative path URL. The TOSCA orchestrator or processor SHOULD handle
   such a \<file_URI\> as follows:
 
-<!-- -->
+  - If the import definition also specifies a \<repository_name\> (using
+    the repository keyname), then \<file_URI\> refers to the path name of
+    a file relative to the root of the named repository
 
-- If the import definition also specifies a \<repository_name\> (using
-  the repository keyname), then \<file_URI\> refers to the path name of
-  a file relative to the root of the named repository
+  - If the import definition does not specify a \<profile_name\> then
+    \<file_URI\> refers to a TOSCA file located in the repository that
+    contains the Service Template file that includes the import
+    definition. If the importing service template is located in a CSAR
+    file, then that CSAR file should be treated as the repository in which
+    to locate the service template file that must be imported.
 
-- If the import definition does not specify a \<profile_name\> then
-  \<file_URI\> refers to a TOSCA file located in the repository that
-  contains the Service Template file that includes the import
-  definition. If the importing service template is located in a CSAR
-  file, then that CSAR file should be treated as the repository in which
-  to locate the service template file that must be imported.
+    - If \<file_URI\> starts with a leading slash (‘/’) then \<file_URI\>
+     specifies a path name starting at the root of the repository.
 
-<!-- -->
-
-- If \<file_URI\> starts with a leading slash (‘/’) then \<file_URI\>
-  specifies a path name starting at the root of the repository.
-
-- If \<file_URI\> does not start with a leading slash, then \<file_URI\>
-  specifies a path that is relative to the importing document’s location
-  within the repository. Double dot notation (‘../’) can be used to
-  refer to parent directories in a file path name.
-
-<!-- -->
+    - If \<file_URI\> does not start with a leading slash, then \<file_URI\>
+     specifies a path that is relative to the importing document’s location
+     within the repository. Double dot notation (‘../’) can be used to
+     refer to parent directories in a file path name.
 
 - If \<file_URI\> does not reference a valid TOSCA file file, then the
   import SHOULD be considered a failure.
@@ -2261,121 +1731,54 @@ attempt to import the file referenced by \<file_URI\> as follows:
 
 The first example shows how to use an import definition import a
 well-known profile by name:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Importing a profile</p>
-<p>imports:</p>
-<p>- profile: org.oasis-open.tosca.simple:2.0</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Importing a profile
+imports:
+- profile: org.oasis-open.tosca.simple:2.0
+```
 The next example shows an import definition used to import a
 network-accessible resource using the https protocol:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Absolute URL with scheme</p>
-<p>imports:</p>
-<p>- url: https://myorg.org/tosca/types/mytypes.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-The following represents shows an import definition used to import a
+```
+# Absolute URL with scheme
+imports:
+- url: https://myorg.org/tosca/types/mytypes.yaml
+```
+The following shows an import definition used to import a
 service template in the same repository as the importing template. The
 template to be imported is referenced using a path name that is relative
 to the location of the importing template. This example shows the short
 notation:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Short notation supported</p>
-<p>imports:</p>
-<p>- ../types/mytypes.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Short notation supported
+imports:
+- ../types/mytypes.yaml 
+```
 The following shows the same example but using the long notation:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Long notation</p>
-<p>imports:</p>
-<p>- url: ../types/mytypes.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Long notation
+imports:
+- url: ../types/mytypes.yaml
+```
 The following example shows how to import service templates using
 absolute path names (i.e. path names that start at the root of the
 repository):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Root file</p>
-<p>imports:</p>
-<p>- url: /base.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Root file
+imports:
+- url: /base.yaml
+```
 And finally, the following shows how to import templates from a
 repository that is different than the repository that contains the
 importing template:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># External repository</p>
-<p>imports:</p>
-<p>- url: types/mytypes.yaml</p>
-<p>repository: my_repository</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-#### Namespace
+```
+# External repository
+imports:
+- url: types/mytypes.yaml
+  repository: my_repository
+```
+#### Namespaces
 <!----
 {"id": "373", "author": "Chris Lauwers", "date": "2020-09-01T00:19:00Z", "comment": "I recommend removing this entire section and rewriting any parts that are still relevant inside the \u201cimports\u201d section.", "target": "Namespace"}-->
-s
 
 When importing TOSCA files or TOSCA profiles, there exists a possibility
 for name collision. For example, an imported file may define a node type
@@ -2385,57 +1788,39 @@ For example, let say we have two TOSCA files, A and B, both of which
 contain a Node Type definition for “MyNode”:
 
 **TOSCA File B**
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: TOSCA File B</p>
-<p>node_types:</p>
-<p>MyNode:</p>
-<p>derived_from: SoftwareComponent</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>capabilities:</p>
-<p># omitted here for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca_definitions_version: tosca_2_0
+description: TOSCA File B
+  
+node_types:
+  MyNode:
+    derived_from: SoftwareComponent
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+```
 **TOSCA File A**
+```
+tosca_definitions_version: tosca_2_0
+description: TOSCA File A
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: TOSCA File A</p>
-<p>imports:</p>
-<p>- url: /templates/ServiceTemplateB.yaml</p>
-<p>node_types:</p>
-<p>MyNode:</p>
-<p>derived_from: Root</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>capabilities:</p>
-<p># omitted here for brevity</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>my_node:</p>
-<p>type: MyNode</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+imports:
+  - url: /templates/ServiceTemplateB.yaml
 
+node_types:
+  MyNode:
+    derived_from: Root
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+
+service_template:
+  node_templates:
+    my_node:
+      type: MyNode
+```
 As you can see, TOSCA file A imports TOSCA file B which results in
 duplicate definitions of the MyNode node type. In this example, it is
 not clear which type is intended to be used for the my_node node
@@ -2448,89 +1833,63 @@ To address this issue, TOSCA uses the concept of namespaces:
 
 - When a TOSCA file imports other templates, it has two options:
 
-<!-- -->
+  - It can import any type definitions from the imported templates into
+    its root namespace
 
-- It can import any type definitions from the imported templates into
-  its root namespace
-
-- Or it can import type definitions from the imported templates into a
-  separate named namespace. This is done using the namespace keyname in
-  the associated import statement. When using types imported into a
-  named namespace, those type names must be qualified using the
-  namespace name.
+  - Or it can import type definitions from the imported templates into a
+    separate named namespace. This is done using the namespace keyname in
+    the associated import statement. When using types imported into a
+    named namespace, those type names must be qualified using the
+    namespace name.
 
 The following snippets update the previous example using namespaces to
 disambiguate between the two MyNode type definitions. This first snippet
 shows the scenario where the MyNode definition from TOSCA file B is
 intended to be used:
-
+```
 tosca_definitions_version: tosca_2_0
-
 description: TOSCA file A
 
 imports:
-
-\- url: /templates/ServiceTemplateB.yaml
-
-namespace: templateB
+  - url: /templates/ServiceTemplateB.yaml
+    namespace: templateB
 
 node_types:
-
-MyNode:
-
-derived_from: Root
-
-properties:
-
-\# omitted here for brevity
-
-capabilities:
-
-\# omitted here for brevity
+  MyNode:
+    derived_from: Root
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
 
 service_template:
-
-node_templates:
-
-my_node:
-
-type: templateB:MyNode
-
+  node_templates:
+    my_node:
+      type: templateB:MyNode
+```
 The second snippet shows the scenario where the MyNode definition from
 TOSCA file A is intended to be used:
-
+```
 tosca_definitions_version: tosca_2_0
-
 description: TOSCA file A
 
 imports:
-
-\- url: /templates/ServiceTemplateB.yaml
-
-namespace: templateB
+  - url: /templates/ServiceTemplateB.yaml
+    namespace: templateB
 
 node_types:
-
-MyNode:
-
-derived_from: Root
-
-properties:
-
-\# omitted here for brevity
-
-capabilities:
-
-\# omitted here for brevity
+  MyNode:
+    derived_from: Root
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
 
 service_template:
-
-node_templates:
-
-my_node:
-
-type: MyNode
-
+  node_templates:
+    my_node:
+      type: MyNode
+```
 In many scenarios, imported TOSCA files may in turn import their own
 TOSCA files, and introduce their own namespaces to avoid name
 collisions. In those scenarios, nested namespace names are used to
@@ -2540,52 +1899,38 @@ The following example shows a mytypes.yaml TOSCA file that imports a
 Kubernetes profile into the k8s namespace. It defines a SuperPod node
 type that derives from the Pod node type defined in that Kubernetes
 profile:
-
+```
 tosca_definitions_version: tosca_2_0
-
 description: mytypes.yaml
 
 imports:
-
-\- profile: io.kubernetes:1.18
-
-namespace: k8s
+- profile: io.kubernetes:1.18
+  namespace: k8s
 
 node_types:
-
-MyNode: {}
-
-SuperPod:
-
-derived_from: k8s:Pod
-
+  MyNode: {}
+  SuperPod:
+    derived_from: k8s:Pod
+```
 The mytypes.yaml template is then imported into the main.yaml TOSCA
 file, which defines both a node template of type SuperPod as well as a
 node template of type Pod. Nested namespace names are used to identify
 the Pod node type from the Kubernetes profile:
-
+```
 tosca_definitions_version: tosca_2_0
-
 description: main.yaml
 
 imports:
-
-\- url: mytypes.yaml
-
-namespace: my
+- url: mytypes.yaml
+  namespace: my
 
 service_template:
-
-node_templates:
-
-mynode:
-
-type: my:MyType
-
-pod:
-
-type: my:k8s:Pod
-
+  node_templates:
+    mynode:
+      type: my:MyType
+    pod:
+      type: my:k8s:Pod
+```
 ##### Additional Requirements
 
 Within each namespace, names must be unique. This means the following:
@@ -2594,67 +1939,56 @@ Within each namespace, names must be unique. This means the following:
   considered an error. These include, but are not limited to duplicate
   names found for the following definitions:
 
-<!-- -->
+  - Repositories (repositories)
 
-- Repositories (repositories)
+  - Data Types (data_types)
 
-- Data Types (data_types)
+  - Node Types (node_types)
 
-- Node Types (node_types)
+  - Relationship Types (relationship_types)
 
-- Relationship Types (relationship_types)
+  - Capability Types (capability_types)
 
-- Capability Types (capability_types)
+  - Artifact Types (artifact_types)
 
-- Artifact Types (artifact_types)
-
-- Interface Types (interface_types)
-
-<!-- -->
+  - Interface Types (interface_types)
 
 - Duplicate Template names within a Service Template SHALL be considered
   an error. These include, but are not limited to duplicate names found
   for the following template types:
 
-<!-- -->
+  - Node Templates (node_templates)
 
-- Node Templates (node_templates)
+  - Relationship Templates (relationship_templates)
 
-- Relationship Templates (relationship_templates)
+  - Inputs (inputs)
 
-- Inputs (inputs)
-
-- Outputs (outputs)
-
-<!-- -->
+  - Outputs (outputs)
 
 - Duplicate names for the following keynames within Types or Templates
   SHALL be considered an error. These include, but are not limited to
   duplicate names found for the following keynames:
 
-<!-- -->
+  - Properties (properties)
 
-- Properties (properties)
+  - Attributes (attributes)
 
-- Attributes (attributes)
+  - Artifacts (artifacts)
 
-- Artifacts (artifacts)
-
-- R<span class="comment-start" id="376"
-  author="Matt Rutkowski" date="2015-08-25T21:52:00Z">MUSTFIX: Verify
-  duplicates are NOT allowed!!</span>equirements
-  (requirements)
+  - R<span class="comment-start" id="376"
+    author="Matt Rutkowski" date="2015-08-25T21:52:00Z">MUSTFIX: Verify
+    duplicates are NOT allowed!!</span>equirements
+    (requirements)
 <!----
 {"id": "375", "author": "Calin Curescu", "date": "2020-06-08T18:24:00Z", "comment": "But requirements assignments support\n  duplicates!", "target": "R<span class=\"comment-start\" id=\"376\"\n  author=\"Matt Rutkowski\" date=\"2015-08-25T21:52:00Z\">MUSTFIX: Verify\n  duplicates are NOT allowed!!</span>equirements\n  (requirements)"}-->
 
+  - Capabilities (capabilities)<span class="comment-end" id="376"></span>
 
-- Capabilities (capabilities)<span class="comment-end" id="376"></span>
+  - Interfaces (interfaces)
 
-- Interfaces (interfaces)
+  - Policies (policies)
 
-- Policies (policies)
-
-- Groups (groups)
+  - Groups (groups)
 
 #### Repository definition
 
@@ -2677,29 +2011,15 @@ definition:
 Repository definitions have one the following grammars:
 
 ###### Single-line grammar:
-
-| \<[repository_name](#TYPE_YAML_STRING)\>: \<repository_address\> |
-|------------------------------------------------------------------|
-
+```
+<repository_name>: <repository_address>
+```
 ###### Multi-line grammar
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">repository_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">repository_description</a>&gt;</p>
-<p>url: &lt;<a
-href="#TYPE_YAML_STRING">repository_address</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<repository_name>:
+  description: <repository_description>
+  url: <repository_address>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -2715,29 +2035,17 @@ have the following meaning:
 ##### Example
 
 The following represents a repository definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>repositories:</p>
-<p>my_code_repo:</p>
-<p>description: My project’s code repository in GitHub</p>
-<p>url: https://github.com/my-project/</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+repositories:
+  my_code_repo:
+    description: My project’s code repository in GitHub
+    url: https://github.com/my-project/
+```
 ### Additional information definitions
 
 #### Description definition
 <!----
 {"id": "394", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:16:00Z", "comment": "Description is already described in 4.2.1.3.6", "target": "Description definition"}-->
-
 
 This optional element provides a means include single or multiline
 descriptions within a TOSCA template as a scalar string value.
@@ -2746,61 +2054,45 @@ descriptions within a TOSCA template as a scalar string value.
 
 The following keyname is used to provide a description within the TOSCA
 specification:
-
-| description |
-|-------------|
-
+```
+description 
+```
 ##### Grammar
 
 Description definitions have the following grammar:
-
-| description: \<[description_string](#TYPE_YAML_STRING)\> |
-|----------------------------------------------------------|
+```
+description: <[description_string](#TYPE_YAML_STRING)> 
+```
 
 ##### Examples
 
 Simple descriptions are treated as a single literal that includes the
 entire contents of the line that immediately follows the description
 key:
-
-| description: This is an example of a single line description (no folding). |
-|----------------------------------------------------------------------------|
-
+```
+description: This is an example of a single line description (no folding). 
+```
 The YAML “folded” style may also be used for multi-line descriptions
 which “folds” line breaks as space characters.
+```
+description: >
+  This is an example of a multi-line description using YAML. It permits for line        
+  breaks for easier readability...
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>description: &gt;</p>
-<p>This is an example of a multi-line description using YAML. It permits
-for line</p>
-<p>breaks for easier readability...</p>
-<p>if needed. However, (multiple) line breaks are folded into a single
-space</p>
-<p>character when processed into a single string value.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  if needed.  However, (multiple) line breaks are folded into a single space   
+  character when processed into a single string value.
+```
 ##### Notes
 
 - Use of “folded” style is discouraged for the YAML string type apart
   from when used with the description keyname.
-  .
+
 <!----
 {"id": "403", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:13:00Z", "comment": "Can\u2019t I just use a double quoted string\n  for multi-line ?", "target": ""}-->
-
 
 #### Metadata
 <!----
 {"id": "409", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:17:00Z", "comment": "Also covered by 4.2.1.3.2", "target": "Metadata"}-->
-
 
 This optional element provides a means to include optional metadata as a
 map of strings.
@@ -2809,46 +2101,23 @@ map of strings.
 
 The following keyname is used to provide metadata within the TOSCA
 specification:
-
-| metadata |
-|----------|
-
+```
+metadata 
+```
 ##### Grammar
 
 Metadata definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>metadata:</p>
-<p>map of &lt;<a href="#TYPE_YAML_STRING">string</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+metadata: 
+  map of <string>
+```
 ##### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>metadata:</p>
-<p>foo1: bar1</p>
-<p>foo2: bar2</p>
-<p>...</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+metadata:
+  foo1: bar1
+  foo2: bar2
+  ...
+```
 ##### Notes
 
 - Data provided within metadata, wherever it appears, MAY be ignored by
@@ -2969,28 +2238,14 @@ definitions:
 ##### Grammar
 
 The common keynames in type definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;type_name&gt;:</p>
-<p>derived_from: &lt;parent_type_name&gt;</p>
-<p>version: &lt;<a
-href="#tosca-tal-suggests-removing-this.version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a
-href="#also-covered-by-4.2.1.3.2metadata">metadata_map</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">type_description</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<type_name>:
+  derived_from: <parent_type_name>
+  version: <version_number>
+  metadata: 
+    <metadata_map>
+  description: <type_description>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -3039,132 +2294,47 @@ parameters, output parameters as well as grouping of node templates.
 The following is the list of recognized keynames for a TOSCA service
 template:
 
-<table>
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 14%" />
-<col style="width: 23%" />
-<col style="width: 37%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description for the service template.</td>
-</tr>
-<tr class="even">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td>An optional map of input parameters (i.e., as parameter definitions)
-for the service template.</td>
-</tr>
-<tr class="odd">
-<td>node_templates</td>
-<td>yes</td>
-<td><p>map of</p>
-<p><a href="#node-template">node templates</a></p></td>
-<td>A mandatory map of node template definitions for the service
-template.</td>
-</tr>
-<tr class="even">
-<td>relationship_templates</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#relationship-template">relationship templates</a></p></td>
-<td>An optional map of relationship templates for the service
-template.</td>
-</tr>
-<tr class="odd">
-<td>groups</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#group-definition">group definitions</a></p></td>
-<td>An optional map of Group definitions whose members are node
-templates defined within this same service template.</td>
-</tr>
-<tr class="even">
-<td>policies</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a
-href="#i-know-that-tmf-have-a-branch-of-their-information-model-to-describe-policy-but-that-it-is-not-used-much-and-that-mef-have-recently-been-more-active-in-specializing-policy-for-access-control-and-for-ip-forwarding-rules.-it-is-possible-that-tosca-could-draw-on-this-work-to-make-tosca-policy-framework-more-useful.policy-definition">policy
-definitions</a></p></td>
-<td>An optional list of Policy definitions for the service
-template.</td>
-</tr>
-<tr class="odd">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td>An optional map of output parameters (i.e., as parameter
-definitions) for the service template.</td>
-</tr>
-<tr class="even">
-<td>substitution_mappings</td>
-<td>no</td>
-<td>substitution_mapping</td>
-<td><p>An optional declaration that exports the service template as an
-implementation of a Node type.</p>
-<p>This also includes the mappings between the external Node Types
-capabilities and requirements to existing implementations of those
-capabilities and requirements on Node templates declared within the
-service template.</p></td>
-</tr>
-<tr class="odd">
-<td>workflows</td>
-<td>no</td>
-<td>map of imperative workflow definitions</td>
-<td>An optional map of imperative workflow definition for the service
-template.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in the TOSCA file |
+|profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information.  Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations. |
+|description|no|string|Declares a description for this TOSCA file and its contents.|
+|dsl_definitions|no |N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout the TOSCA file.|
+|repositories|no|map of Repository definitions|Declares the map of external repositories that contain artifacts that are referenced in the TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
+|imports|no|list of Import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
+|artifact_types|no|map of Artifact Types|This section contains amap of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
+|data_types|no|map of Data Types|Declares a map of TOSCA Data Type definitions for use in the TOSCA file and/or external TOSCA files.|
+|capability_types|no|map of Capability Types|This section contains amap of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
+|interface_types|no|map of Interface Types|This section contains amap of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
+|relationship_types|no|map of Relationship Types|This section contains a map of relationship type definitions for use in the TOSCA file and/or external TOSCA files.|
+|node_types|no|map of Node Types|This section contains a map of node type definitions for use in the TOSCA file and/or external TOSCA files.|
+|group_types|no|map of Group Types|This section contains a map of group type definitions for use in the TOSCA file and/or external TOSCA files.|
+|policy_types|no|map of Policy Types|This section contains a map of policy type definitions for use in the TOSCA file and/or external TOSCA files.|
+|service_template|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application’s or service’s components, as well as relationship templates representing relations between these components.|
+|Functions|no|map of function definitions|This section contains a map of function definitions for use in the TOSCA file and/or external TOSCA files.|
 
 #### Grammar
 
 The overall grammar of the service_template section is shown
-below.Detailed grammar definitions are provided in subsequent
+below. Detailed grammar definitions are provided in subsequent
 subsections.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>service_template:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">template_description</a>&gt;</p>
-<p>inputs: &lt;input_parameters&gt;</p>
-<p>outputs: &lt;output_parameters&gt;</p>
-<p>node_templates: &lt;node_templates&gt;</p>
-<p>relationship_templates: &lt;relationship_templates&gt;</p>
-<p>groups: &lt;group_definitions&gt;</p>
-<p>policies:</p>
-<p>- &lt;policy_definition_list&gt;</p>
-<p>workflows: &lt;workflows&gt;</p>
-<p># Optional declaration that exports the service template</p>
-<p># as an implementation of a Node Type.</p>
-<p>substitution_mappings:</p>
-<p>&lt;substitution_mappings&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+service_template:
+  description: <template_description>
+  inputs: <input_parameters>
+  outputs: <output_parameters>
+  node_templates: <node_templates>
+  relationship_templates: <relationship_templates>
+  groups: <group_definitions>
+  policies: 
+    - <policy_definition_list>
+  workflows: <workflows>
+  # Optional declaration that exports the service template 
+  # as an implementation of a Node Type.
+  substitution_mappings:
+    <substitution_mappings>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -3227,66 +2397,32 @@ defined. If no input is provided, then the default value is used.
 ###### Grammar
 
 The grammar of the inputs section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+inputs:
+  <parameter_definitions>
+```
 ###### Examples
 
 This section provides a set of examples for the single elements of a
 service template.
 
 Simple inputs example without any validation clauses:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>fooName:</p>
-<p>type: string</p>
-<p>description: Simple string parameter without a validation clause.</p>
-<p>default: bar</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+inputs:
+  fooName:
+    type: string
+    description: Simple string parameter without a validation clause.
+    default: bar
+```
 Example of inputs with a validation clause:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>SiteName:</p>
-<p>type: string</p>
-<p>description: String parameter with validation clause.</p>
-<p>default: My Site</p>
-<p>validation: { $min_length: [ $value, 9 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+inputs:
+  SiteName:
+    type: string
+    description: String parameter with validation clause.
+    default: My Site
+    validation: { $min_length: [ $value, 9 ] }
+```
 ##### node_templates
 
 The node_templates section lists the Node Templates that describe the
@@ -3295,44 +2431,23 @@ The node_templates section lists the Node Templates that describe the
 ###### grammar
 
 The grammar of the node_templates section is a follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>&lt;<a href="#node-template">node_template_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#node-template">node_template_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_templates:
+  <node_template_defn_1>
+  ...
+  <node_template_defn_n>
+```
 ###### Example
 
 Example of node_templates section:
+```
+node_templates:
+  my_webapp_node_template:
+    type: WebApplication
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>my_webapp_node_template:</p>
-<p>type: WebApplication</p>
-<p>my_database_node_template:</p>
-<p>type: Database</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  my_database_node_template:
+    type: Database
+```
 ##### relationship_templates
 
 The relationship_templates section lists the Relationship Templates that
@@ -3347,48 +2462,24 @@ requirements sections of node templates.
 ###### Grammar
 
 The grammar of the relationship_templates section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_templates:</p>
-<p>&lt;<a
-href="#relationship-template">relationship_template_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a
-href="#relationship-template">relationship_template_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_templates:
+  <relationship_template_defn_1>
+  ...
+  <relationship_template_defn_n>
+```
 ###### Example
 
 Example of relationship_templates section:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_templates:</p>
-<p>my_connectsto_relationship:</p>
-<p>type: tosca.relationships.ConnectsTo</p>
-<p>interfaces:</p>
-<p>Configure:</p>
-<p>inputs:</p>
-<p>speed: { $$get_attribute: [ SELF, SOURCE, connect_speed ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_templates:
+  my_connectsto_relationship:
+    type: tosca.relationships.ConnectsTo
+    interfaces:
+      Configure:
+        inputs:
+          speed: { $$get_attribute: [ SELF, SOURCE, connect_speed ] }      
+```
 ##### outputs
 
 The outputs section provides a means to define the output parameters
@@ -3399,44 +2490,19 @@ containing service_template to users of a service.
 ###### Grammar
 
 The grammar of the outputs section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+  <parameter_definitions>
+```
 ###### Example
 
 Example of the outputs section:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>server_address:</p>
-<p>description: The first private IP address for the provisioned
-server.</p>
-<p>value: { $get_attribute: [ node5, networks, private, addresses, 0 ]
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+  server_address:
+    description: The first private IP address for the provisioned server.
+    value: { $get_attribute: [ node5, networks, private, addresses, 0 ] }
+```
 ##### groups
 
 The groups section allows for grouping one or more node templates within
@@ -3446,56 +2512,37 @@ policies to the group.
 ###### Grammar
 
 The grammar of the groups section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>groups:</p>
-<p>&lt;<a href="#group-definition">group_defn_1</a>&gt;</p>
-<p>...</p>
-<p>&lt;<a href="#group-definition">group_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+groups:
+  <group_defn_1>
+  ...
+  <group_defn_n>
+```
 ###### Example
 
 The following example shows the definition of three Compute nodes in the
 node_templates section of a service_template as well as the grouping of
 two of the Compute nodes in a group server_group_1.
+```
+node_templates:
+  server1:
+    type: tosca.nodes.Compute
+    # more details ...
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>server1:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># more details ...</p>
-<p>server2:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># more details ...</p>
-<p>server3:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># more details ...</p>
-<p>groups:</p>
-<p># server2 and server3 are part of the same group</p>
-<p>server_group_1:</p>
-<p>type: tosca.groups.Root</p>
-<p>members: [ server2, server3 ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  server2:
+    type: tosca.nodes.Compute
+    # more details ...
 
+  server3:
+    type: tosca.nodes.Compute
+    # more details ...
+
+groups:
+  # server2 and server3 are part of the same group
+  server_group_1:
+    type: tosca.groups.Root
+    members: [ server2, server3 ]
+```
 ##### policies
 
 The policies section allows for declaring policies that can be applied
@@ -3504,72 +2551,35 @@ to entities in the service template.
 ###### Grammar
 
 The grammar of the policies section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policies:</p>
-<p>- &lt;<a
-href="#i-know-that-tmf-have-a-branch-of-their-information-model-to-describe-policy-but-that-it-is-not-used-much-and-that-mef-have-recently-been-more-active-in-specializing-policy-for-access-control-and-for-ip-forwarding-rules.-it-is-possible-that-tosca-could-draw-on-this-work-to-make-tosca-policy-framework-more-useful.policy-definition">policy_defn_1</a>&gt;</p>
-<p>- ...</p>
-<p>- &lt;<a
-href="#i-know-that-tmf-have-a-branch-of-their-information-model-to-describe-policy-but-that-it-is-not-used-much-and-that-mef-have-recently-been-more-active-in-specializing-policy-for-access-control-and-for-ip-forwarding-rules.-it-is-possible-that-tosca-could-draw-on-this-work-to-make-tosca-policy-framework-more-useful.policy-definition">policy_defn_n</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policies:
+  - <policy_defn_1>
+  - ...
+  - <policy_defn_n>
+```
 ###### Example
 
 The following example shows the definition of a placement policy.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policies:</p>
-<p>- my_placement_policy:</p>
-<p>type: mycompany.mytypes.policy.placement</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policies:
+  - my_placement_policy:
+      type: mycompany.mytypes.policy.placement
+```
 ##### substitution_mapping
 
 ###### requirement_mapping
 
 The grammar of a requirement_mapping is as follows:
-
-| \<requirement_name\>: \[ \<node_template_name\>, \<node_template_requirement_name\> \] |
-|----------------------------------------------------------------------------------------|
-
+```
+<requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
+```
 The multi-line grammar is as follows :
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;requirement_name&gt;:</p>
-<p>mapping: [ &lt;node_template_name&gt;,
-&lt;node_template_capability_name&gt; ]</p>
-<p>properties:</p>
-<p>&lt;property_name&gt;: &lt;property_value&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>: 
+  mapping: [ <node_template_name>, <node_template_capability_name> ]
+  properties:
+    <property_name>: <property_value>
+```
 - requirement_name: represents the name of the requirement as it appears
   in the Node Type definition for the Node Type (name) that is declared
   as the value for on the substitution_mappings’ “node_type” key.
@@ -3586,62 +2596,51 @@ The multi-line grammar is as follows :
 <!----
 {"id": "489", "author": "Calin Curescu", "date": "2020-06-17T18:23:00Z", "comment": "\\### need to revisit this. Example is wrong !!!", "target": "Example"}-->
 
+The following example shows a substitution mapping.
+```
+service_template:
+inputs:
+   cpus: 
+     type: integer
+     validation: { $less_than: [ $value, 2 ] } # OR use “defaults” key
 
-The following example shows the definition of a placement policy.
+substitution_mappings:
+    node_type: MyService
+    properties:  # Do not care if running or matching (e.g., Compute node)
+      # get from outside?  Get from contsraint?
+      num_cpus: cpus # Implied “PUSH”
+      # get from some node in the topology…
+      num_cpus: [ <node>, <cap>, <property> ]
+      # 1) Running 
+      architecture: 
+        # a) Explicit
+        value: { $get_property: [some_service, architecture] }
+        # b) implicit
+        value: [ some_service, <req | cap name>, <property name> architecture ] 
+        default: “amd”
+        # c) INPUT mapping?
+        ???
+      # 2) Catalog (Matching)
+      architecture: 
+         contraints: equals: “x86”
+ 
+    capabilities:
+      bar: [ some_service, bar ]
+    requirements:
+      foo: [ some_service, foo ]
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>service_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>validation: { $less_than: [ $value, 2 ] } # OR use “defaults” key</p>
-<p>substitution_mappings:</p>
-<p>node_type: MyService</p>
-<p>properties: # Do not care if running or matching (e.g., Compute
-node)</p>
-<p># get from outside? Get from contsraint?</p>
-<p>num_cpus: cpus # Implied “PUSH”</p>
-<p># get from some node in the topology…</p>
-<p>num_cpus: [ &lt;node&gt;, &lt;cap&gt;, &lt;property&gt; ]</p>
-<p># 1) Running</p>
-<p>architecture:</p>
-<p># a) Explicit</p>
-<p>value: { $get_property: [some_service, architecture] }</p>
-<p># b) implicit</p>
-<p>value: [ some_service, &lt;req | cap name&gt;, &lt;property name&gt;
-architecture ]</p>
-<p>default: “amd”</p>
-<p># c) INPUT mapping?</p>
-<p>???</p>
-<p># 2) Catalog (Matching)</p>
-<p>architecture:</p>
-<p>contraints: equals: “x86”</p>
-<p>capabilities:</p>
-<p>bar: [ some_service, bar ]</p>
-<p>requirements:</p>
-<p>foo: [ some_service, foo ]</p>
-<p>node_templates:</p>
-<p>some_service:</p>
-<p>type: MyService</p>
-<p>properties:</p>
-<p>rate: 100</p>
-<p>capabilities:</p>
-<p>bar:</p>
-<p>...</p>
-<p>requirements:</p>
-<p>- foo:</p>
-<p>...</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  node_templates:
+    some_service:
+      type: MyService
+      properties: 
+        rate: 100
+      capabilities:
+        bar:
+          ...
+      requirements:
+        - foo: 
+            ...
+```
 Nodes and Relationships
 -----------------------
 
@@ -3658,113 +2657,38 @@ The Node Type is a TOSCA type entity and has the common keynames listed
 in Section 4.2.5.2 Common keynames in type definitions. In addition, the
 Node Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 12%" />
-<col style="width: 14%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Node Type.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a
-href="#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition">attribute
-definitions</a></p></td>
-<td>An optional map of attribute definitions for the Node Type.</td>
-</tr>
-<tr class="odd">
-<td>capabilities</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#capability-definition">capability definitions</a></p></td>
-<td>An optional map of capability definitions for the Node Type.</td>
-</tr>
-<tr class="even">
-<td>requirements</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a href="#requirement-definition">requirement
-definitions</a></p></td>
-<td>An optional list of requirement definitions for the Node Type.</td>
-</tr>
-<tr class="odd">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-definition">interface definitions</a></p></td>
-<td>An optional map of interface definitions supported by the Node
-Type.</td>
-</tr>
-<tr class="even">
-<td>artifacts</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#artifact-definition">artifact definitions</a></p></td>
-<td>An optional map of artifact definitions for the Node Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|properties|no|map of property definitions|An optional map of property definitions for the Node Type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Node Type.|
+|capabilities|no|map of capability definitions|An optional map of capability definitions for the Node Type.|
+|requirements|no|list of requirement definitions|An optional list of requirement definitions for the Node Type.|
+|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Node Type.|
+|artifacts|no|map of artifact definitions|An optional map of artifact definitions for the Node Type.|
 
 #### Grammar 
 
 Node Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">node_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_node_type_name</a>&gt;</p>
-<p>version: &lt;<a
-href="#tosca-tal-suggests-removing-this.version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">node_type_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a
-href="#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition">attribute_definitions</a>&gt;</p>
-<p>capabilities:</p>
-<p>&lt;<a
-href="#capability-definition">capability_definitions</a>&gt;</p>
-<p>requirements:</p>
-<p>- &lt;<a
-href="#requirement-definition">requirement_definitions</a>&gt;</p>
-<p>interfaces:</p>
-<p>&lt;<a href="#interface-definition">interface_definitions</a>&gt;</p>
-<p>artifacts:</p>
-<p>&lt;<a
-href="#artifact-definition">artifact_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<node_type_name>:  
+  derived_from: <parent_node_type_name> 
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <node_type_description>
+  properties:
+    <property_definitions>
+  attributes:
+    <attribute_definitions>
+  capabilities:
+    <capability_definitions>
+  requirements: 
+    - <requirement_definitions>
+  interfaces: 
+    <interface_definitions> 
+  artifacts:
+    <artifact_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -3820,17 +2744,15 @@ During Node Type derivation the keyname definitions follow these rules:
 - artifacts: existing artifact definitions (identified by their symbolic
   name) may be redefined; new artifact definitions may be added.
 
-<!-- -->
+  - note that an artifact is created for a specific purpose and
+    corresponds to a specific file (with e.g. a path name and checksum);
+    if it cannot meet its purpose in a derived type then a new artifact
+    should be defined and used.
 
-- note that an artifact is created for a specific purpose and
-  corresponds to a specific file (with e.g. a path name and checksum);
-  if it cannot meet its purpose in a derived type then a new artifact
-  should be defined and used.
-
-- thus, if an artifact defined in a parent node type does not correspond
-  anymore with the needs in the child node type, its definition may be
-  completely redefined; thus, an existing artifact definition is not
-  refined, but completely overwritten.
+  - thus, if an artifact defined in a parent node type does not correspond
+    anymore with the needs in the child node type, its definition may be
+    completely redefined; thus, an existing artifact definition is not
+    refined, but completely overwritten.
 
 #### Additional Requirements
 
@@ -3839,39 +2761,28 @@ During Node Type derivation the keyname definitions follow these rules:
   resolved (processed) in sequence by TOSCA Orchestrators.
 
 #### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>my_company.my_types.my_app_node_type:</p>
-<p>derived_from: tosca.nodes.SoftwareComponent</p>
-<p>description: My company’s custom applicaton</p>
-<p>properties:</p>
-<p>my_app_password:</p>
-<p>type: string</p>
-<p>description: application password</p>
-<p>validation:</p>
-<p>$and:</p>
-<p>- { $min_length: [ $value, 6 ] }</p>
-<p>- { $max_length: [ $value, 10 ] }</p>
-<p>attributes:</p>
-<p>my_app_port:</p>
-<p>type: integer</p>
-<p>description: application port number</p>
-<p>requirements:</p>
-<p>- some_database:</p>
-<p>capability: EndPoint.Database</p>
-<p>node: Database</p>
-<p>relationship: ConnectsTo</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+my_company.my_types.my_app_node_type:
+  derived_from: tosca.nodes.SoftwareComponent
+  description: My company’s custom applicaton
+  properties:
+    my_app_password:
+      type: string
+      description: application password
+      validation:
+        $and: 
+          - { $min_length: [ $value, 6 ] }
+          - { $max_length: [ $value, 10 ] }
+  attributes:
+    my_app_port:
+      type: integer
+      description: application port number
+  requirements:
+    - some_database:
+        capability: EndPoint.Database
+        node: Database    
+        relationship: ConnectsTo
+```
 ### Node Template
 
 A Node Template specifies the occurrence of a manageable component as
@@ -3885,156 +2796,45 @@ that complement and change the defaults provided by its Node Type.
 The following is the list of recognized keynames for a TOSCA Node
 Template definition:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 12%" />
-<col style="width: 18%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the Node Type the Node Template is based
-upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional description for the Node Template.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="even">
-<td>directives</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of directive values to provide processing
-instructions to orchestrators and tooling.</td>
-</tr>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional map of property value assignments for the Node
-Template.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-assignment">attribute assignments</a></p></td>
-<td>An optional map of attribute value assignments for the Node
-Template.</td>
-</tr>
-<tr class="odd">
-<td>requirements</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a href="#requirement-assignment">requirement
-assignments</a></p></td>
-<td>An optional list of requirement assignments for the Node
-Template.</td>
-</tr>
-<tr class="even">
-<td>capabilities</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#capability-assignment">capability assignments</a></p></td>
-<td>An optional map of capability assignments for the Node
-Template.</td>
-</tr>
-<tr class="odd">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-assignment">interface assignments</a></p></td>
-<td>An optional map of interface assignments for the Node Template.</td>
-</tr>
-<tr class="even">
-<td>artifacts</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#artifact-definition">artifact definitions</a></p></td>
-<td>An optional map of artifact definitions for the Node Template.</td>
-</tr>
-<tr class="odd">
-<td>node_filter</td>
-<td>no</td>
-<td><a href="#node-filter-definition">node filter</a></td>
-<td>The optional filter definition that TOSCA orchestrators will use to
-select the correct target node.</td>
-</tr>
-<tr class="even">
-<td>copy</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional (symbolic) name of another node template to copy into
-(all keynames and values) and use as a basis for this node
-template.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory name of the Node Type the Node Template is based upon.|
+|description|no|string|An optional description for the Node Template.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|directives|no|list of string|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
+|properties|no|map of property assignments|An optional map of property value assignments for the Node Template.|
+|attributes|no|map of attribute assignments|An optional map of attribute value assignments for the Node Template.|
+|requirements|no|list of requirement assignments|An optional list of requirement assignments for the Node Template.|
+|capabilities|no|map of capability assignments|An optional map of capability assignments for the Node Template.|
+|interfaces|no|map of interface assignments|An optional map of interface assignments for the Node Template.|
+|artifacts|no|map of  artifact definitions|An optional map of artifact definitions for the Node Template.|
+|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select the correct target node.  |
+|copy|no|string|The optional (symbolic) name of another node template to copy into (all keynames and values) and use as a basis for this node template.|
 
 #### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">node_template_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">node_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">node_template_description</a>&gt;</p>
-<p>directives: [&lt;<a href="#TYPE_YAML_STRING">directives</a>&gt;]</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-assignment">attribute_assignments</a>&gt;</p>
-<p>requirements:</p>
-<p>- &lt;<a
-href="#requirement-assignment">requirement_assignments</a>&gt;</p>
-<p>capabilities:</p>
-<p>&lt;<a
-href="#capability-assignment">capability_assignments</a>&gt;</p>
-<p>interfaces:</p>
-<p>&lt;<a href="#interface-assignment">interface_assignments</a>&gt;</p>
-<p>artifacts:</p>
-<p>&lt;<a href="#artifact-definition">artifact_definitions</a>&gt;</p>
-<p>node_filter:</p>
-<p>&lt;<a
-href="#node-filter-definition">node_filter_definition</a>&gt;</p>
-<p>copy: &lt;<a
-href="#TYPE_YAML_STRING">source_node_template_name</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<node_template_name>: 
+  type: <node_type_name>
+  description: <node_template_description>
+  directives: [<directives>]
+  metadata: 
+    <map of string>
+  properties:
+    <property_assignments>
+  attributes:
+    <attribute_assignments>
+  requirements: 
+    - <requirement_assignments>
+  capabilities:
+    <capability_assignments>
+  interfaces:
+    <interface_assignments>
+  artifacts:
+    <artifact_definitions>
+  node_filter:
+    <node_filter_definition>
+  copy: <source_node_template_name>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4089,41 +2889,28 @@ have the following meaning:
   template).
 
 #### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>properties:</p>
-<p>root_password: { $get_input: my_mysql_rootpw }</p>
-<p>port: { $get_input: my_mysql_port }</p>
-<p>requirements:</p>
-<p>- host: db_server</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>operations:</p>
-<p>configure: scripts/my_own_configure.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_templates:
+  mysql:
+    type: tosca.nodes.DBMS.MySQL
+    properties:
+      root_password: { $get_input: my_mysql_rootpw }
+      port: { $get_input: my_mysql_port }
+    requirements:
+      - host: db_server
+    interfaces:
+      Standard:
+        operations:
+          configure: scripts/my_own_configure.sh
+```
 ### Relationship Type
 <!----
 {"id": "520", "author": "Michael Rehder", "date": "2020-12-15T13:33:00Z", "comment": "I still think this is simply a Requirement Type \u2013 I can\u2019t see why it isn\u2019t and what advantage there is in calling it something else.", "target": "Relationship Type"}-->
-
 
 A Relationship Type is a reusable entity that defines the type of one or
 more relationships between Node Types or Node Templates
 <!----
 {"id": "521", "author": "Michael Rehder", "date": "2020-12-15T12:12:00Z", "comment": "There is no\nrelationship type in a node template so why is this stated\nhere?", "target": "Node Templates"}-->
-.
 
 #### Keynames
 
@@ -4131,113 +2918,35 @@ The Relationship Type is a TOSCA type entity and has the common keynames
 listed in Section 4.2.5.2 Common keynames in type definitions. In
 addition, the Relationship Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 13%" />
-<col style="width: 16%" />
-<col style="width: 47%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Definition/Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Relationship
-Type.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a
-href="#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition">attribute
-definitions</a></p></td>
-<td>An optional map of attribute definitions for the Relationship
-Type.</td>
-</tr>
-<tr class="odd">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-definition">interface definitions</a></p></td>
-<td>An optional map of interface definitions supported by the
-Relationship Type.</td>
-</tr>
-<tr class="even">
-<td>valid_capability_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more names of Capability Types that are
-valid targets for this relationship. If undefined, all Capability Types
-are valid.</td>
-</tr>
-<tr class="odd">
-<td>valid_target_node_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more names of Node Types that are valid
-targets for this relationship. If undefined, all Node Types are valid
-targets.</td>
-</tr>
-<tr class="even">
-<td>valid_source_node_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more names of Node Types that are valid
-sources for this relationship. If undefined, all Node Types are valid
-sources.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Definition/Type|Description|
+| :---- | :------ | :---- | :------ |
+|properties|no|map of property definitions|An optional map of property definitions for the Relationship Type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Relationship Type.|
+|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Relationship Type.|
+|valid_capability_types|no|list of string|An optional list of one or more names of Capability Types that are valid targets for this relationship. If undefined, all Capability Types are valid.|
+|valid_target_node_types|no|list of string|An optional list of one or more names of Node Types that are valid targets for this relationship. If undefined, all Node Types are valid targets.|
+|valid_source_node_types|no|list of string|An optional list of one or more names of Node Types that are valid sources for this relationship. If undefined, all Node Types are valid sources.|
 
 #### Grammar
 
 Relationship Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_relationship_type_name</a>&gt;</p>
-<p>version: &lt;<a
-href="#tosca-tal-suggests-removing-this.version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">relationship_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a
-href="#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition">attribute_definitions</a>&gt;</p>
-<p>interfaces:</p>
-<p>&lt;<a href="#interface-definition">interface_definitions</a>&gt;</p>
-<p>valid_capability_types: [ &lt;<a
-href="#TYPE_YAML_STRING">capability_type_names</a>&gt; ]</p>
-<p>valid_target_node_types: [ &lt;target_node_type_names&gt; ]</p>
-<p>valid_source_node_types: [ &lt;source_node_type_names&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<relationship_type_name>:
+  derived_from: <parent_relationship_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <relationship_description>
+  properties: 
+    <property_definitions>
+  attributes:
+    <attribute_definitions>
+  interfaces: 
+    <interface_definitions>
+  valid_capability_types: [ <capability_type_names> ]
+  valid_target_node_types: [ <target_node_type_names> ]
+  valid_source_node_types: [ <source_node_type_names> ]
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4303,23 +3012,11 @@ rules:
   valid_capability_types
 
 #### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>mycompanytypes.myrelationships.AppDependency:</p>
-<p>derived_from: tosca.relationships.DependsOn</p>
-<p>valid_capability_types: [
-mycompanytypes.mycapabilities.SomeAppCapability ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+mycompanytypes.myrelationships.AppDependency:
+  derived_from: tosca.relationships.DependsOn
+  valid_capability_types: [ mycompanytypes.mycapabilities.SomeAppCapability ]
+```
 ### Relationship Template
 
 A Relationship Template
@@ -4331,7 +3028,6 @@ operations that complement and change the defaults provided by its
 Relationship Type and its implementations.
 <!----
 {"id": "532", "author": "Michael Rehder", "date": "2020-12-15T13:23:00Z", "comment": "My understanding is that this is an\nalternative to relations defined within node templates.  \nIt\u2019s not clear why this option would be chosen over the node-template\noption.  \nIf both relations in node-templates and Relationship Templates are used,\nhow are they combined together?  \nOr is this not recommended?  \nI can imagine that combination rules would be very difficult to define\nbut if it is possible, it must be defined", "target": "A Relationship Template\nspecifies the occurrence of a manageable relationship between node\ntemplates as part of an application\u2019s topology model that is defined in\na TOSCA Service Template. A Relationship template is an instance of a\nspecified Relationship Type and can provide customized properties, or\noperations that complement and change the defaults provided by its\nRelationship Type and its implementations."}-->
-
 
 Relations between Node Templates can be defined either using
 Relationship Templates or Requirements and Capability definitions within
@@ -4353,109 +3049,32 @@ requirements definition. This topic needs further work.
 The following is the list of recognized keynames for a TOSCA
 Relationship Template definition:
 
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 18%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the Relationship Type the Relationship
-Template is based upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional description for the Relationship Template.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="even">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional map of property assignments for the Relationship
-Template.</td>
-</tr>
-<tr class="odd">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-assignment">attribute assignments</a></p></td>
-<td>An optional map of attribute assignments for the Relationship
-Template.</td>
-</tr>
-<tr class="even">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-assignment">interface assignments</a></p></td>
-<td>An optional map of interface assignments for the relationship
-template.</td>
-</tr>
-<tr class="odd">
-<td>copy</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional (symbolic) name of another relationship template to
-copy into (all keynames and values) and use as a basis for this
-relationship template.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory name of the Relationship Type the Relationship Template is based upon.|
+|description|no|string|An optional description for the Relationship Template.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|properties|no|map of property assignments|An optional map of property assignments for the Relationship Template.|
+|attributes|no|map of attribute assignments|An optional map of attribute assignments for the Relationship Template.|
+|interfaces|no|map of interface assignments|An optional map of interface assignments for the relationship template.|
+|copy|no|string|The optional (symbolic) name of another relationship template to copy into (all keynames and values) and use as a basis for this relationship template.|
 
 #### Grammar
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;relationship_template_name&gt;:</p>
-<p>type: &lt;<a
-href="#relationship-type">relationship_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_description</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-assignment">attribute_assignments</a>&gt;</p>
-<p>interfaces:</p>
-<p>&lt;<a href="#interface-assignment">interface_assignments</a>&gt;</p>
-<p>copy:</p>
-<p>&lt;<a
-href="#TYPE_YAML_STRING">source_relationship_template_name</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<relationship_template_name>: 
+  type: <relationship_type_name>
+  description: <relationship_type_description>
+  metadata: 
+    <map of string>
+  properties:
+    <property_assignments>
+  attributes:
+    <attribute_assignments>
+  interfaces:
+    <interface_assignments>
+  copy:
+    <source_relationship_template_name>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4492,24 +3111,13 @@ have the following meaning:
   another relationship template).
 
 #### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_templates:</p>
-<p>storage_attachment:</p>
-<p>type: AttachesTo</p>
-<p>properties:</p>
-<p>location: /my_mount_point</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_templates:
+  storage_attachment:
+    type: AttachesTo
+    properties:
+      location: /my_mount_point
+```
 ### Capabilities and Requirements
 
 #### Capability Type
@@ -4526,89 +3134,28 @@ The Capability Type is a TOSCA type entity and has the common keynames
 listed in Section 4.2.5.2 Common keynames in type definitions. In
 addition, the Capability Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 52%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td>map of<br />
-<a href="#_Schema_Definition">property definitions</a></td>
-<td>An optional map of property definitions for the Capability
-Type.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-definition">attribute definitions</a></p></td>
-<td>An optional map of attribute definitions for the Capability
-Type.</td>
-</tr>
-<tr class="odd">
-<td>valid_source_node_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more valid names of Node Types that are
-supported as valid sources of any relationship established to the
-declared Capability Type. If undefined, all Node Types are valid
-sources.</td>
-</tr>
-<tr class="even">
-<td>valid_relationship_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more valid names of Relationship Types
-that are supported as valid types of any relationship established to the
-declared Capability Type. If undefined, all Relationship Types are
-valid.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|properties|no|map of property definitions|An optional map of property definitions for the Capability Type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Capability Type.|
+|valid_source_node_types|no|list of string|An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability Type. If undefined, all Node Types are valid sources.|
+|valid_relationship_types|no|list of string|An optional list of one or more valid names of Relationship Types that are supported as valid types of any relationship established to the declared Capability Type. If undefined, all Relationship Types are valid.|
 
 ##### Grammar
 
 Capability Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">capability_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_capability_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">capability_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-definition">attribute_definitions</a>&gt;</p>
-<p>valid_source_node_types: [ &lt;<a
-href="#TYPE_YAML_STRING">node_type_names</a>&gt; ]</p>
-<p>valid_relationship_types: [ &lt;relationship_type_names&gt;
-]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<capability_type_name>:
+  derived_from: <parent_capability_type_name>
+  version: <version_number>
+  description: <capability_description>
+  properties:
+    <property_definitions>
+  attributes:
+    <attribute_definitions>
+  valid_source_node_types: [ <node_type_names> ]
+  valid_relationship_types: [ <relationship_type_names> ]
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4664,27 +3211,16 @@ rules:
   valid_source_node_types.
 
 ##### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>mycompany.mytypes.myapplication.MyFeature:</p>
-<p>derived_from: tosca.capabilities.Root</p>
-<p>description: a custom feature of my company’s application</p>
-<p>properties:</p>
-<p>my_feature_setting:</p>
-<p>type: string</p>
-<p>my_feature_value:</p>
-<p>type: integer</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+mycompany.mytypes.myapplication.MyFeature:
+  derived_from: tosca.capabilities.Root
+  description: a custom feature of my company’s application
+  properties:
+    my_feature_setting:
+      type: string
+    my_feature_value:
+      type: integer
+```
 #### Capability definition
 
 A Capability definition defines a typed set of data that a node can
@@ -4697,81 +3233,14 @@ definition and may be refined during Node Type derivation.
 The following is the list of recognized keynames for a TOSCA capability
 definition:
 
-<table style="width:100%;">
-<colgroup>
-<col style="width: 27%" />
-<col style="width: 15%" />
-<col style="width: 14%" />
-<col style="width: 42%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the Capability Type this capability definition
-is based upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description of the Capability definition.</td>
-</tr>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property refinements</a></p></td>
-<td>An optional map of property refinements for the Capability
-definition. The referred properties must have been defined in the
-Capability Type definition referred by the type keyword. New properties
-may not be added.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-definition">attribute refinements</a></p></td>
-<td>An optional map of attribute refinements for the Capability
-definition. The referred attributes must have been defined in the
-Capability Type definition referred by the type keyword. New attributes
-may not be added.</td>
-</tr>
-<tr class="odd">
-<td>valid_source_node_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>An optional list of one or more valid names of Node Types that
-are supported as valid sources of any relationship established to the
-declared Capability Type. If undefined, all node types are valid
-sources.</p>
-<p>If valid_source_node_types is defined in the Capability Type, each
-element in this list must either be or derived from an element in the
-list defined in the type.</p></td>
-</tr>
-<tr class="even">
-<td>valid_relationship_types</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>An optional list of one or more valid names of Relationship Types
-that are supported as valid types of any relationship established to the
-declared Capability Type. If undefined, all Relationship Types are
-valid.</p>
-<p>If valid_relationship_types is defined in the Capability Type, each
-element in this list must either be or derived from an element in the
-list defined in the type.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory name of the Capability Type this capability definition is based upon.|
+|description|no|string|The optional description of the Capability definition.|
+|properties|no|map of property refinements|An optional map of property refinements for the Capability definition. The referred properties must have been defined in the Capability Type definition referred by the type keyword. New properties may not be added.|
+|attributes|no|map of attribute refinements|An optional map of attribute refinements for the Capability definition. The referred attributes must have been defined in the Capability Type definition referred by the type keyword. New attributes may not be added.|
+|valid_source_node_types|no|list of string|An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability Type. If undefined, all node types are valid sources. If valid_source_node_types is defined in the Capability Type, each element in this list must either be or derived from an element in the list defined in the type.|
+|valid_relationship_types|no|list of string|An optional list of one or more valid names of Relationship Types that are supported as valid types of any relationship established to the declared Capability Type. If undefined, all Relationship Types are valid. If valid_relationship_types is defined in the Capability Type, each element in this list must either be or derived from an element in the list defined in the type.|
 
 ##### Grammar
 
@@ -4782,39 +3251,24 @@ Capability definitions have one of the following grammars:
 The following single-line grammar may be used when only the capability
 type needs to be declared, without further refinement of the definitions
 in the capability type:
-
-| \<[capability_definition_name](#TYPE_YAML_STRING)\>: \<[capability_type](#capability-type)\> |
-|----------------------------------------------------------------------------------------------|
-
+```
+<[capability_definition_name](#TYPE_YAML_STRING)>: <[capability_type](#capability-type)> 
+```
 ###### Extended notation
 
 The following multi-line grammar may be used when additional information
 on the capability definition is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">capability_definition_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">capability_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">capability_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_refinements</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-definition">attribute_refinements</a>&gt;</p>
-<p>valid_source_node_types: [ &lt;node_type_names&gt; ]</p>
-<p>valid_relationship_types: [ &lt;relationship_type_names&gt;
-]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<capability_definition_name>:
+  type: <capability_type>
+  description: <capability_description>
+  properties:
+    <property_refinements>
+  attributes:
+    <attribute_refinements>
+  valid_source_node_types: [ <node_type_names> ]
+  valid_relationship_types: [ <relationship_type_names> ]
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -4839,20 +3293,20 @@ have the following meaning:
   node types that the capability definition supports as valid sources
   for a successful relationship to be established to said capability
 
-- if valid_source_node_types is defined in the capability type, each
-  > element in this list MUST either be in that list or derived from an
-  > element in that list; if valid_source_types is not defined in the
-  > capability type then no restrictions are applied.
+  - if valid_source_node_types is defined in the capability type, each
+    element in this list MUST either be in that list or derived from an
+    element in that list; if valid_source_types is not defined in the
+    capability type then no restrictions are applied.
 
 - relationship_type_names: represents the optional list of one or more
   names of relationship types that the capability definition supports as
   valid type for a successful relationship to be established to said
   capability
 
-- if valid_relationship_types is defined in the capability type, each
-  > element in this list MUST either be in that list or derived from an
-  > element in that list; if valid_source_types is not defined in the
-  > capability type then no restrictions are applied.
+  - if valid_relationship_types is defined in the capability type, each
+    element in this list MUST either be in that list or derived from an
+    element in that list; if valid_source_types is not defined in the
+    capability type then no restrictions are applied.
 
 ##### Refinement rules
 
@@ -4888,41 +3342,19 @@ The following examples show capability definitions in both simple and
 full forms:
 
 ###### Simple notation example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Simple notation, no properties need to be refined</p>
-<p>some_capability: mytypes.mycapabilities.MyCapabilityTypeName</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Simple notation, no properties need to be refined
+some_capability: mytypes.mycapabilities.MyCapabilityTypeName
+```
 ###### Full notation example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Full notation, refining properties</p>
-<p>some_capability:</p>
-<p>type: mytypes.mycapabilities.MyCapabilityTypeName</p>
-<p>properties:</p>
-<p>limit:</p>
-<p>default: 100</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Full notation, refining properties
+some_capability: 
+  type: mytypes.mycapabilities.MyCapabilityTypeName
+  properties:
+    limit: 
+      default: 100
+```
 ##### Additional requirements
 
 - Capability symbolic names SHALL be unique; it is an error if a
@@ -4948,83 +3380,23 @@ capability occurrences.
 The following is the list of recognized keynames for a TOSCA capability
 assignment:
 
-<table>
-<colgroup>
-<col style="width: 31%" />
-<col style="width: 12%" />
-<col style="width: 13%" />
-<col style="width: 42%" />
-<col style="width: 0%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td colspan="2">An optional map of property assignments for the
-Capability definition.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-assignment">attribute assignments</a></p></td>
-<td colspan="2">An optional map of attribute assignments for the
-Capability definition.</td>
-</tr>
-<tr class="odd">
-<td>directives</td>
-<td><p>no</p>
-<p>default: [internal, external]</p></td>
-<td><p>list of string</p>
-<p>valid string values:</p>
-<p>“internal”,</p>
-<p>“external”</p></td>
-<td>Describes if the fulfillment of this capability assignment should
-use relationships with source nodes created within this template
-(“internal”) or should use source nodes created outside this template as
-available to the TOSCA environment ("external”) or if it should use a
-combination of the above. If so, the order of the strings in the list
-defines which scope should be attempted first. If no scope is defined,
-the default value is [internal, external]. If no directives are defined,
-the default value is left to the particular implementation.</td>
-<td></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|properties|no|map of  property assignments|An optional map of property assignments for the Capability definition.|
+|attributes|no|map of attribute assignments|An optional map of attribute assignments for the Capability definition.|
+|directives|no default: [internal, external] |list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this capability assignment should use relationships with source nodes created within this template (“internal”) or should use source nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which scope should be attempted first. If no scope is defined, the default value is [internal, external]. If no directives are defined, the default value is left to the particular implementation."|
 
 ##### Grammar
 
 Capability assignments have one of the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">capability_definition_name</a>&gt;:</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-assignment">attribute_assignments</a>&gt;</p>
-<p>directives: &lt;directives_list&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<capability_definition_name>:
+  properties:
+    <property_assignments>
+  attributes:
+    <attribute_assignments>
+  directives: <directives_list>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5042,45 +3414,34 @@ have the following meaning:
 - directives_list: represents the optional list of strings that defines
   directives for this capability:
 
-- valid values for the strings:
+  - valid values for the strings:
 
-- “internal” – relationships to this capability can be created from
-  > source nodes created within this template.
+    - “internal” – relationships to this capability can be created from
+      source nodes created within this template.
 
-- “external” – relationships to this capability can be created from
-  > source nodes created outside this template as available to the TOSCA
-  > environment.
+    - “external” – relationships to this capability can be created from
+      source nodes created outside this template as available to the TOSCA
+      environment.
 
-- the order of the strings in the list defines which scope should be
-  > attempted first when fulfilling the assignment.
+  - the order of the strings in the list defines which scope should be
+    attempted first when fulfilling the assignment.
 
-- If no directives are defined, the default value is left to the
-  > particular implementation.
+  - If no directives are defined, the default value is left to the
+    particular implementation.
 
 ##### Example
 
 The following example shows a capability assignment:
 
 ###### Notation example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>some_node_template:</p>
-<p>capabilities:</p>
-<p>some_capability:</p>
-<p>properties:</p>
-<p>limit: 100</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_templates:
+  some_node_template:
+    capabilities:
+      some_capability: 
+        properties:
+          limit: 100
+```
 ##### Note
 
 - The occurrences keyname is deprecated in TOSCA 2.0. By default, the
@@ -5114,83 +3475,14 @@ derivation.
 The following is the list of recognized keynames for a TOSCA requirement
 definition:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 18%" />
-<col style="width: 12%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description of the Requirement definition.</td>
-</tr>
-<tr class="even">
-<td>capability</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The mandatory keyname used to provide either the:</p>
-<ul>
-<li><p>symbolic name of a <strong>Capability definition</strong> within
-a <em>target</em> Node Type that can fulfill the requirement.</p></li>
-<li><p>name of a <strong>Capability Type</strong> that the TOSCA
-orchestrator will use to select a type-compatible <em>target</em> node
-to fulfill the requirement at runtime.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>node</td>
-<td>conditional</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The optional keyname used to provide the name of a valid <a
-href="#node-type">Node Type</a> that contains the capability definition
-that can be used to fulfill the requirement.</p>
-<p>If a symbolic name of a <strong>Capability definition</strong> has
-been used for the capability keyname, then the node keyname is
-mandatory.</p></td>
-</tr>
-<tr class="even">
-<td>relationship</td>
-<td>conditional</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The optional keyname used to provide the name of a valid <a
-href="#relationship-type">Relationship Type</a> to construct a
-relationship when fulfilling the requirement.</p>
-<p>The relationship definition is mandatory either in the requirement
-definition of in the requirement assignment.</p></td>
-</tr>
-<tr class="odd">
-<td>node_filter</td>
-<td>no</td>
-<td><a href="#node-filter-definition">node filter</a></td>
-<td>The optional filter definition that TOSCA orchestrators will use to
-select a type-compatible <em>target</em> node that can fulfill the
-associated abstract requirement at runtime.</td>
-</tr>
-<tr class="even">
-<td>count_range</td>
-<td>no</td>
-<td><a href="#TYPE_TOSCA_RANGE">range</a> of <a
-href="#TYPE_YAML_INTEGER">integer</a></td>
-<td><p>The optional minimum required and maximum allowed number of
-relationships created by the requirement. If this key is not specified,
-the implied default of [0, UNBOUNDED] will be used.</p>
-<p>Note: the keyword UNBOUNDED is also supported to represent any
-positive integer.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|description|no|string|The optional description of the Requirement definition.|
+|capability|yes|string|The mandatory keyname used to provide either the: ·         symbolic name of a Capability definition within a target Node Type that can fulfill the requirement. ·         name of a Capability Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
+|node|conditional|string|The optional keyname used to provide the name of a valid Node Type that contains the capability definition that can be used to fulfill the requirement.  If a symbolic name of a Capability definition has been used for the capability keyname, then the node keyname is mandatory.|
+|relationship|conditional|string|The optional keyname used to provide the name of a valid Relationship Type to construct a relationship when fulfilling the requirement.  The relationship definition is mandatory either in the requirement definition of in the requirement assignment.|
+|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill the associated abstract requirement at runtime.|
+|count_range|no|range of integer|The optional minimum required and maximum allowed number of relationships created by the requirement. If this key is not specified, the implied default of [0, UNBOUNDED] will be used. Note: the keyword UNBOUNDED is also supported to represent any positive integer.|
 
 ###### Additional keynames for multi-line relationship grammar
 
@@ -5213,64 +3505,33 @@ additional parameter definitions to be used as inputs/outputs).
 Requirement definitions have one of the following grammars:
 
 ###### Simple grammar (Capability Type only)
-
-| \<[requirement_definition_name](#TYPE_YAML_STRING)\>: \<[capability_type_name](#TYPE_YAML_STRING)\> |
-|-----------------------------------------------------------------------------------------------------|
+```
+<[requirement_definition_name](#TYPE_YAML_STRING)>: <[capability_type_name](#TYPE_YAML_STRING)> 
+```
 
 ###### Extended grammar (with Node and Relationship Types)
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">requirement_definition_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">requirement_description</a>&gt;</p>
-<p>capability: &lt;<a
-href="#TYPE_YAML_STRING">capability_symbolic_name</a>&gt; | &lt;<a
-href="#TYPE_YAML_STRING">capability_type_name</a>&gt;</p>
-<p>node: &lt;<a href="#TYPE_YAML_STRING">node_type_name</a>&gt;</p>
-<p>relationship: &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;</p>
-<p>node_filter: &lt;<a
-href="#node-filter-definition">node_filter_definition</a>&gt;</p>
-<p>count_range: [ &lt;min_count&gt;, &lt;max_count&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_definition_name>: 
+  description: <requirement_description>
+  capability: <capability_symbolic_name> | <capability_type_name>
+  node: <node_type_name>
+  relationship: <relationship_type_name>
+  node_filter: <node_filter_definition>
+  count_range: [ <min_count>, <max_count> ]
+```
 ###### Extended grammar for declaring Parameter Definitions on the relationship’s Interfaces
 
 The following additional multi-line grammar is provided for the
 relationship keyname in order to declare new parameter definitions for
 inputs/outputs of known Interface definitions of the declared
 Relationship Type.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">requirement_definition_name</a>&gt;:</p>
-<p># Other keynames omitted for brevity</p>
-<p>relationship:</p>
-<p>type: &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;</p>
-<p>interfaces: &lt;<a
-href="#interface-definition">interface_refinements</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_definition_name>: 
+  # Other keynames omitted for brevity
+  relationship:
+    type: <relationship_type_name>
+    interfaces: <interface_refinements>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5306,22 +3567,22 @@ have the following meaning:
 - min_count, max_count: represents the optional range between a minimum
   required and maximum allowed count of the requirement
 
-- this range constrains how many relationships from this requirement
-  > towards target capabilities (in target nodes) are created, and that
-  > number MUST be within the range specified here.
+  - this range constrains how many relationships from this requirement
+    towards target capabilities (in target nodes) are created, and that
+    number MUST be within the range specified here.
 
-- by default (i.e. if count_range is undefined here), a requirement
-  > shall form exactly one relationship ( \[1, 1\] i.e. allowed at least
-  > one, and at most one).
+  - by default (i.e. if count_range is undefined here), a requirement
+    shall form exactly one relationship ( \[1, 1\] i.e. allowed at least
+    one, and at most one).
 
 - interface_refinements: represents refinements for one or more already
   declared interface definitions in the Relationship Type (as declared
   on the type keyname)
 
-- allowing for the declaration of new parameter definitions for these
-  > interfaces or for specific operation or notification definitions of
-  > these interfaces or for the change of the description or
-  > implementation definitions.
+  - allowing for the declaration of new parameter definitions for these
+    interfaces or for specific operation or notification definitions of
+    these interfaces or for the change of the description or
+    implementation definitions.
 
 ##### Refinement rules
 
@@ -5336,18 +3597,18 @@ definition refinement rules when the containing node type is derived:
   same as) the capability type in the requirement definition in the
   parent node type definition.
 
-- if the capability was specified using the symbolic name of a
-  > capability definition in the target node type, then the capability
-  > keyname definition MUST remain unchanged in any subsequent
-  > refinements or during assignment.
+  - if the capability was specified using the symbolic name of a
+    capability definition in the target node type, then the capability
+    keyname definition MUST remain unchanged in any subsequent
+    refinements or during assignment.
 
 - node: must be derived from (or the same as) the node type in the
   requirement definition in the parent node type definition; if node is
   not defined in the parent type then no restrictions are applied;
 
-- the node type specified by the node keyname must also contain a
-  > capability definition that fulfills the requirement set via the
-  > capability keyname above.
+  - the node type specified by the node keyname must also contain a
+    capability definition that fulfills the requirement set via the
+    capability keyname above.
 
 - relationship: must be derived from (or the same as) the relationship
   type in the requirement definition in the parent node type definition;
@@ -5384,11 +3645,9 @@ A requirement definition allows type designers to govern which types are
 allowed (valid) for fulfillment using three levels of specificity with
 only the Capability definition or Capability Type being mandatory.
 
-5.  Node Type (mandatory/optional)
-
-6.  Relationship Type (optional)
-
-7.  Capability definition or Capability Type (mandatory)
+1.  Node Type (mandatory/optional)
+2.  Relationship Type (optional)
+3.  Capability definition or Capability Type (mandatory)
 
 The first level allows selection, as shown in both the simple or complex
 grammar, simply providing the node’s type using the node keyname. The
@@ -5435,147 +3694,16 @@ the corresponding Requirement definition.
 The following is the list of recognized keynames for a TOSCA requirement
 assignment:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 12%" />
-<col style="width: 61%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>capability</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The optional keyname used to provide either the:</p>
-<ul>
-<li><p>symbolic name of a <strong>Capability definition</strong> within
-a <em>target</em> node that can fulfill the requirement.</p></li>
-<li><p>name of a <strong>Capability Type</strong> that the TOSCA
-orchestrator will use to select a type-compatible <em>target</em> node
-to fulfill the requirement at runtime.</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>node</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The optional keyname used to identify the target node of a
-relationship; specifically, it is used to provide either the:</p>
-<ul>
-<li><p>name of a <strong>Node Template</strong> that can fulfill the
-<em>target</em> node requirement.</p></li>
-<li><p>name of a <strong>Node Type</strong> that the TOSCA orchestrator
-will use to select a type-compatible <em>target</em> node to fulfill the
-requirement at runtime.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>relationship</td>
-<td>conditional</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The conditional keyname used to provide either the:</p>
-<ul>
-<li><p>name of a <strong>Relationship Template</strong> to use to relate
-<em>this</em> node to the <em>target</em> node when fulfilling the
-requirement.</p></li>
-<li><p>name of a <strong>Relationship Type</strong> that the TOSCA
-orchestrator will use to create a relationship to relate <em>this</em>
-node to the <em>target</em> node when fulfilling the
-requirement.</p></li>
-<li><p>Details of a <strong>Relationship Type</strong> and its property
-and interface assignments that the TOSCA orchestrator will use to create
-a relationship to relate <em>this</em> node to the <em>target</em> node
-when fulfilling the requirement.</p></li>
-</ul>
-<p>The relationship definition is mandatory either in the requirement
-definition of in the requirement assignment.</p></td>
-</tr>
-<tr class="even">
-<td>allocation</td>
-<td>no</td>
-<td>allocation block</td>
-<td><p>The optional keyname that allows the inclusion of an allocation
-block. The allocation block contains a map of property assignments that
-semantically represent “allocations” from the property with the same
-name in the target capability.</p>
-<ul>
-<li><p>The allocation acts as a “capacity filter” for the target
-capability in the target node. When the requirement is resolved, a
-capability in a node is a valid target for the requirement relationship
-if for each property of the target capability, the sum of all existing
-allocations plus the current allocation is less_or_equal to the property
-value.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>node_filter</td>
-<td>no</td>
-<td><a href="#node-filter-definition">node filter</a></td>
-<td>The optional filter definition that TOSCA orchestrators will use to
-select a type-compatible <em>target</em> node that can fulfill the
-requirement at runtime.</td>
-</tr>
-<tr class="even">
-<td>count</td>
-<td>no</td>
-<td>non-negative <a href="#TYPE_YAML_INTEGER">integer</a></td>
-<td><p>An optional keyname that sets the cardinality of the requirement
-assignment, that is how many relationships to be established from this
-requirement assignment specification.</p>
-<p>If not defined, the assumed count for an assignment is 1.</p>
-<p>Note that there can be multiple requirement assignments for a
-requirement with a specific symbolic name.</p>
-<ul>
-<li><p>The sum of all count values of assignments for a requirement with
-a specific symbolic name must be within the count_range defined in the
-requirement definition.</p></li>
-<li><p>Moreover, the sum of all count values of non-optional assignments
-for a requirement with a specific symbolic name must also be within the
-count_range defined in the requirement definition.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>directives</td>
-<td>no</td>
-<td><p>list of string</p>
-<p>valid string values:</p>
-<p>“internal”,</p>
-<p>“external”</p></td>
-<td>Describes if the fulfillment of this requirement assignment should
-use relationships with target nodes created within this template
-(“internal”) or should use target nodes created outside this template as
-available to the TOSCA environment ("external”) or if it should use a
-combination of the above. If so, the order of the strings in the list
-defines which directive should be attempted first. If no directives are
-defined, the default value is left to the particular
-implementation.</td>
-</tr>
-<tr class="even">
-<td>optional</td>
-<td><p>no</p>
-<p>default:</p>
-<p>false</p></td>
-<td>boolean</td>
-<td><p>Describes if the fulfillment of this requirement assignment is
-optional (true) or not (false).</p>
-<p>If not specified, the requirement assignment must be fulfilled, i.e.
-the default value is false.</p>
-<p>Note also, that non-optional requirements have precedence, thus
-during a service deployment, the optional requirements for all nodes
-should be resolved only after the non-optional requirements for all
-nodes have been resolved.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|capability|no|string|The optional keyname used to provide either the: ·         symbolic name of a Capability definition within a target node that can fulfill the requirement. ·         name of a Capability Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
+|node|no|string|The optional keyname used to identify the target node of a relationship; specifically, it is used to provide either the: ·         name of a Node Template that can fulfill the target node requirement. ·         name of a Node Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
+|relationship|conditional|string|The conditional keyname used to provide either the: ·         name of a Relationship Template to use to relate this node to the target node when fulfilling the requirement. ·         name of a Relationship Type that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. ·         Details of a Relationship Type and its property and interface assignments that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. The relationship definition is mandatory either in the requirement definition of in the requirement assignment.|
+|allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent “allocations” from the property with the same name in the target capability.  ·         The allocation acts as a “capacity filter” for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
+|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill the requirement at runtime.|
+|count|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships to be established from this requirement assignment specification. If not defined, the assumed count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name.  ·         The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. ·         Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
+|directives|no|list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this requirement assignment should use relationships with target nodes created within this template (“internal”) or should use target nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which directive should be attempted first. If no directives are defined, the default value is left to the particular implementation."|
+|optional|no. default: FALSE|boolean|Describes if the fulfillment of this requirement assignment is optional (true) or not (false).  If not specified, the requirement assignment must be fulfilled, i.e. the default value is false.  Note also, that non-optional requirements have precedence, thus during a service deployment, the optional requirements for all nodes should be resolved only after the non-optional requirements for all nodes have been resolved.|
 
 The following is the list of recognized keynames for a TOSCA requirement
 assignment’s relationship keyname which is used when property
@@ -5583,47 +3711,11 @@ assignments or interface assignments (for e.g. changing the
 implementation keyname or declare additional parameter definitions to be
 used as inputs/outputs) need to be provided:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 10%" />
-<col style="width: 62%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional keyname used to provide the name of the Relationship
-Type for the Requirement assignment’s relationship.</td>
-</tr>
-<tr class="even">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional keyname providing property assignments for the
-relationship.</td>
-</tr>
-<tr class="odd">
-<td>interfaces</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#interface-assignment">interface assignments</a></p></td>
-<td>The optional keyname providing Interface assignments for the
-corresponding Interface definitions in the Relationship Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|no|string|The optional keyname used to provide the name of the Relationship Type for the Requirement assignment’s relationship.|
+|properties|no|map of property assignments|An optional keyname providing property assignments for the relationship.|
+|interfaces|no|map of interface assignments|The optional keyname providing Interface assignments for the corresponding Interface definitions in the Relationship Type.|
 
 ##### Grammar
 
@@ -5633,70 +3725,37 @@ Requirement assignments have one of the following grammars:
 
 The following single-line grammar may be used if only a concrete Node
 Template for the target node needs to be declared in the requirement:
-
-| \<[requirement_name](#TYPE_YAML_STRING)\>: \<[node_template_name](#TYPE_YAML_STRING)\> |
-|----------------------------------------------------------------------------------------|
-
+```
+<[requirement_name](#TYPE_YAML_STRING)>: <[node_template_name](#TYPE_YAML_STRING)> 
+```
 ###### Extended notation:
 
 The following grammar should be used if the requirement assignment needs
 to provide more information than just the Node Template name:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">requirement_name</a>&gt;:</p>
-<p>capability: &lt;<a
-href="#TYPE_YAML_STRING">capability_symbolic_name</a>&gt; | &lt;<a
-href="#TYPE_YAML_STRING">capability_type_name</a>&gt;</p>
-<p>node: &lt;<a href="#TYPE_YAML_STRING">node_template_name</a>&gt; |
-&lt;<a href="#TYPE_YAML_STRING">node_type_name</a>&gt;</p>
-<p>relationship: &lt;<a
-href="#TYPE_YAML_STRING">relationship_template_name</a>&gt; | &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;</p>
-<p>node_filter: &lt;<a
-href="#node-filter-definition">node_filter_definition</a>&gt;</p>
-<p>count: &lt;<a href="#TYPE_YAML_INTEGER">count</a>_value&gt;</p>
-<p>directives: &lt;directives_list&gt;</p>
-<p>optional: &lt;is_optional&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>:
+  capability: <capability_symbolic_name> | <capability_type_name>
+  node: <node_template_name> | <node_type_name>
+  relationship: <relationship_template_name> | <relationship_type_name>
+  node_filter: <node_filter_definition>
+  count: <count_value>
+  directives: <directives_list>
+  optional: <is_optional>
+```
 ###### Extended grammar with Property Assignments and Interface Assignments for the relationship
 
 The following additional multi-line grammar is provided for the
 relationship keyname in order to provide new Property assignments and
 Interface assignments for the created relationship of the declared
 Relationship.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">requirement_name</a>&gt;:</p>
-<p># Other keynames omitted for brevity</p>
-<p>relationship:</p>
-<p>type: &lt;<a
-href="#TYPE_YAML_STRING">relationship_template_name</a>&gt; | &lt;<a
-href="#TYPE_YAML_STRING">relationship_type_name</a>&gt;</p>
-<p>properties: &lt;<a
-href="#property-assignment">property_assignments</a>&gt;</p>
-<p>interfaces: &lt;<a
-href="#interface-assignment">interface_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>:
+  # Other keynames omitted for brevity
+  relationship: 
+    type: <relationship_template_name> | <relationship_type_name>
+    properties: <property_assignments>
+    interfaces: <interface_assignments>
+```
 ###### Extended grammar with capacity allocation 
 
 The following additional multi-line grammar is provided for capacity
@@ -5719,24 +3778,12 @@ same name in the target capability.
 
 - Of course, allocations can be defined only for integer, float, or
   scalar property types.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;requirement_name&gt;:</p>
-<p># Other keynames omitted for brevity</p>
-<p>allocation:</p>
-<p>properties: &lt;<a
-href="#property-assignment">allocation_property_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>:
+  # Other keynames omitted for brevity
+  allocation: 
+    properties: <allocation_property_assignments>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -5746,57 +3793,57 @@ have the following meaning:
 - capability_symbolic_name: represents the optional name of the
   Capability definition within the target Node Type or Node Template;
 
-- if the capability in the Requirement definition was specified using
-  > the symbolic name of a capability definition in a target node type,
-  > then the capability keyname definition
+  - if the capability in the Requirement definition was specified using
+    the symbolic name of a capability definition in a target node type,
+    then the capability keyname definition
 
-- MUST remain unchanged in any subsequent refinements or during
-  > assignment.
+  - MUST remain unchanged in any subsequent refinements or during
+    assignment.
 
-- if the capability in the Requirement definition was specified using
-  > the name of a Capability Type, then the Capability definition
-  > referred here by the capability_symbolic_name must be of a type that
-  > is the same as or derived from the said Capability Type in the
-  > Requirement definition.
+  - if the capability in the Requirement definition was specified using
+    the name of a Capability Type, then the Capability definition
+    referred here by the capability_symbolic_name must be of a type that
+    is the same as or derived from the said Capability Type in the
+    Requirement definition.
 
 - capability_type_name: represents the optional name of a Capability
   Type definition within the target Node Type or Node Template this
   requirement needs to form a relationship with;
 
-- may not be used if the capability in the Requirement definition was
-  > specified using the symbolic name of a capability definition in a
-  > target node type.
+  - may not be used if the capability in the Requirement definition was
+    specified using the symbolic name of a capability definition in a
+    target node type.
 
-- otherwise the capability_type_name must be of a type that is the same
-  > as or derived from the type defined by the capability keyname in the
-  > Requirement definition.
+  - otherwise the capability_type_name must be of a type that is the same
+    as or derived from the type defined by the capability keyname in the
+    Requirement definition.
 
 - node_template_name: represents the optional name of a Node Template
   that contains the capability this requirement will be fulfilled by;
 
-- in addition, the Node Type of the Node Template must be of a type that
-  > is the same as or derived from the type defined by the node keyname
-  > (if the node keyname is defined) in the Requirement definition,
+  - in addition, the Node Type of the Node Template must be of a type that
+    is the same as or derived from the type defined by the node keyname
+    (if the node keyname is defined) in the Requirement definition,
 
-- in addition, the Node Template must fulfill the node filter
-  > requirements of the node_filter (if a node_filter is defined) in the
-  > Requirement definition.
+  - in addition, the Node Template must fulfill the node filter
+    requirements of the node_filter (if a node_filter is defined) in the
+    Requirement definition.
 
 - node_type_name: represents the optional name of a Node Type that
   contains the capability this Requirement will be fulfilled by;
 
-- in addition, the node_type_name must be of a type that is the same as
-  > or derived from the type defined by the node keyname (if the node
-  > keyname is defined) in the Requirement definition.
+  - in addition, the node_type_name must be of a type that is the same as
+    or derived from the type defined by the node keyname (if the node
+    keyname is defined) in the Requirement definition.
 
 - relationship_template_name: represents the optional name of a
   Relationship Template to be used when relating the Requirement to the
   Capability in the target node.
 
-- in addition, the Relationship Type of the Relationship Template must
-  > be of a type that is the same as or derived from the type defined by
-  > the relationship keyname (if the relationship keyname is defined) in
-  > the Requirement definition.
+  - in addition, the Relationship Type of the Relationship Template must
+    be of a type that is the same as or derived from the type defined by
+    the relationship keyname (if the relationship keyname is defined) in
+    the Requirement definition.
 
 - relationship_type_name: represents the optional name of a Relationship
   Type that is compatible with the Capability Type in the target node;
@@ -5804,10 +3851,10 @@ have the following meaning:
   Type when relating the Requirement to the Capability in the target
   node.
 
-- in addition, the relationship_type_name must be of a type that is the
-  > same as or derived from the type defined by the relationship keyname
-  > (if the relationship keyname is defined) in the Requirement
-  > definition.
+  - in addition, the relationship_type_name must be of a type that is the
+    same as or derived from the type defined by the relationship keyname
+    (if the relationship keyname is defined) in the Requirement
+    definition.
 
 - property_assignments: within the relationship declaration, it
   represents the optional map of property assignments for the declared
@@ -5824,23 +3871,23 @@ have the following meaning:
   target capability. Syntactically their form is the same as for a
   normal property assignments.
 
-- The allocation acts as a “capacity filter” for the target capability
-  > in the target node. When the requirement is resolved, a capability
-  > in a node is a valid target for the requirement relationship if for
-  > each property of the target capability, the sum of all existing
-  > allocations plus the current allocation is less_or_equal to the
-  > property value.
+  - The allocation acts as a “capacity filter” for the target capability
+    in the target node. When the requirement is resolved, a capability
+    in a node is a valid target for the requirement relationship if for
+    each property of the target capability, the sum of all existing
+    allocations plus the current allocation is less_or_equal to the
+    property value.
 
-- Intuitively, the sum of “allocations” from all the incoming
-  > relationships for a certain capability property cannot exceed the
-  > value of the property.
+    - Intuitively, the sum of “allocations” from all the incoming
+      relationships for a certain capability property cannot exceed the
+      value of the property.
 
-- If the “allocation” refers (via its name) to a property that does not
-  > exist in a capability, then that capability cannot be a valid
-  > target.
+    - If the “allocation” refers (via its name) to a property that does not
+      exist in a capability, then that capability cannot be a valid
+      target.
 
-- Of course, allocations can be defined only for integer, float, or
-  > scalar property types.
+    - Of course, allocations can be defined only for integer, float, or
+      scalar property types.
 
 - node_filter_definition: represents the optional node filter TOSCA
   orchestrators will use to fulfill the requirement for selecting a
@@ -5848,54 +3895,54 @@ have the following meaning:
   assignment, the TOSCA orchestrator verifies that the specified node
   template fulfills the node filter.
 
-- this node_filter does not replace the node_filter definition in the
-  > Requirement definition, it is applied in addition to that.
+  - this node_filter does not replace the node_filter definition in the
+    Requirement definition, it is applied in addition to that.
 
 - count_value: represents the optional cardinality of this requirement
   assignment, that is how many relationships are to be established from
   this requirement assignment specification.
 
-- If count is not defined, the assumed count_value for an assignment is
-  > 1.
+  - If count is not defined, the assumed count_value for an assignment is
+    1.
 
-- Note that there can be multiple requirement assignments for a
-  > requirement with a specific symbolic name.
+  - Note that there can be multiple requirement assignments for a
+    requirement with a specific symbolic name.
 
-- The sum of all count values of assignments for a requirement with a
-  > specific symbolic name must be within the count_range defined in the
-  > requirement definition.
+  - The sum of all count values of assignments for a requirement with a
+    specific symbolic name must be within the count_range defined in the
+    requirement definition.
 
-- Moreover, the sum of all count values of non-optional assignments for
-  > a requirement with a specific symbolic name must also be within the
-  > count_range defined in the requirement definition.
+  - Moreover, the sum of all count values of non-optional assignments for
+    a requirement with a specific symbolic name must also be within the
+    count_range defined in the requirement definition.
 
 - directives: represents the optional list of strings that defines
   directives for this requirement assignment:
 
-- valid values for the strings:
+  - valid values for the strings:
 
-- “internal” – relationship created by this requirement assignment use
-  > target nodes created within this template.
+    - “internal” – relationship created by this requirement assignment use
+       target nodes created within this template.
 
-- “external” – relationship created by this requirement assignment use
-  > target nodes created outside this template as available to the TOSCA
-  > environment.
+    - “external” – relationship created by this requirement assignment use
+       target nodes created outside this template as available to the TOSCA
+       environment.
 
-- the order of the strings in the list defines which directive should be
-  > attempted first when fulfilling the assignment.
+  - the order of the strings in the list defines which directive should be
+    attempted first when fulfilling the assignment.
 
-- If no directives are defined, the default value is left to the
-  > particular implementation.
+  - If no directives are defined, the default value is left to the
+    particular implementation.
 
 - is_optional: represents the optional boolean value specifying if this
   requirement assignment is optional or not.
 
-- If is_optional is false, the assignment MUST be fulfilled.
+  - If is_optional is false, the assignment MUST be fulfilled.
 
-- If is_optional is true, the assignment SHOULD be fulfilled, but if not
-  > possible the service deployment is still considered valid.
+  - If is_optional is true, the assignment SHOULD be fulfilled, but if not
+    possible the service deployment is still considered valid.
 
-- The default value for is_optional is false.
+  - The default value for is_optional is false.
 
 ##### Notes
 
@@ -5905,17 +3952,17 @@ have the following meaning:
   in the requirement definition in the corresponding node type is
   assumed.
 
-- Additionally, the count_value is assumed to be equal to the min_count
-  > value of the requirement definition in the corresponding node type.
+  - Additionally, the count_value is assumed to be equal to the min_count
+    value of the requirement definition in the corresponding node type.
 
 - For all explicit requirement assignments with the same symbolic name:
 
-- the sum of the count_value must be within the count_range specified in
-  > the corresponding requirement definition.
+  - the sum of the count_value must be within the count_range specified in
+    the corresponding requirement definition.
 
-- the sum of the count_value for all non-optional requirements
-  > assignments must be within the count_range specified in the
-  > corresponding requirement definition.
+  - the sum of the count_value for all non-optional requirements
+    assignments must be within the count_range specified in the
+    corresponding requirement definition.
 
 - Non-optional requirements have precedence, thus during a service
   deployment, the optional requirements for all nodes should be resolved
@@ -5947,28 +3994,16 @@ include:
 A web application node template named ‘my_application_node_template’ of
 type WebApplication declares a requirement named ‘host’ that needs to be
 fulfilled by any node that derives from the node type WebServer.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Example of a requirement fulfilled by a specific web server
-node template</p>
-<p>node_templates:</p>
-<p>my_application_node_template:</p>
-<p>type: tosca.nodes.WebApplication</p>
-<p>...</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node: tosca.nodes.WebServer</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Example of a requirement fulfilled by a specific web server node template
+node_templates:
+  my_application_node_template:
+    type: tosca.nodes.WebApplication
+    ...
+    requirements:
+      - host: 
+          node: tosca.nodes.WebServer
+```
 In this case, the node template’s type is WebApplication which already
 declares the Relationship Type HostedOn to use to relate to the target
 node and the Capability Type of Container to be the specific target of
@@ -5982,71 +4017,47 @@ a database endpoint (Endpoint.Database) Capability Type in a node
 template (my_database). However, the connection requires a custom
 Relationship Type (my.types.CustomDbConnection’) declared on the keyname
 ‘relationship’.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Example of a (database) requirement that is fulfilled by a node
-template named</p>
-<p># “my_database”, but also requires a custom database connection
-relationship</p>
-<p>my_application_node_template:</p>
-<p>requirements:</p>
-<p>- database:</p>
-<p>node: my_database</p>
-<p>capability: Endpoint.Database</p>
-<p>relationship: my.types.CustomDbConnection</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Example of a (database) requirement that is fulfilled by a node template named 
+# “my_database”, but also requires a custom database connection relationship
+my_application_node_template:
+  requirements:
+    - database: 
+        node: my_database
+        capability: Endpoint.Database
+        relationship: my.types.CustomDbConnection
+```
 ###### Example 3 - Requirement for a Compute node with additional selection criteria (filter) 
 
 This example shows how to extend an abstract ‘host’ requirement for a
 Compute node with a filter definition that further constrains TOSCA
 orchestrators to include additional properties and capabilities on the
 target node when fulfilling the requirement.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node: tosca.nodes.Compute</p>
-<p>node_filter:</p>
-<p>capabilities:</p>
-<p>- host:</p>
-<p>properties:</p>
-<p>- num_cpus: { in_range: [ 1, 4 ] }</p>
-<p>- mem_size: { greater_or_equal: 512 MB }</p>
-<p>- os:</p>
-<p>properties:</p>
-<p>- architecture: { equal: x86_64 }</p>
-<p>- type: { equal: linux }</p>
-<p>- distribution: { equal: ubuntu }</p>
-<p>- mytypes.capabilities.compute.encryption:</p>
-<p>properties:</p>
-<p>- algorithm: { equal: aes }</p>
-<p>- keylength: { valid_values: [ 128, 256 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_templates:
+  mysql:
+   type: tosca.nodes.DBMS.MySQL
+    properties:
+      # omitted here for brevity
+    requirements:
+      - host:
+          node: tosca.nodes.Compute
+          node_filter:
+            capabilities:
+              - host:
+                  properties:
+                    - num_cpus: { in_range: [ 1, 4 ] }
+                    - mem_size: { greater_or_equal: 512 MB }
+              - os:
+                  properties:
+                    - architecture: { equal: x86_64 }
+                    - type: { equal: linux }
+                    - distribution: { equal: ubuntu }
+              - mytypes.capabilities.compute.encryption:
+                  properties:
+                    - algorithm: { equal: aes }
+                    - keylength: { valid_values: [ 128, 256 ] }
+```
 ###### Example 4 - Requirement assignment for definition with count_range: \[2,2\]
 
 This example shows how the assignments can look if the Requirement
@@ -6058,26 +4069,14 @@ keyname for each assignment is not declared (i.e. the default value of 1
 is used) and that the sum of the count values of both assignments is 2
 which is in the range of \[2,2\] as specified in the Requirement
 definition.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Example of a (redundant_database) requirement that is fulfilled
-by</p>
-<p># two node templates named “database1” and “database1</p>
-<p>my_critical_application_node_template:</p>
-<p>requirements:</p>
-<p>- redundant_database: database1</p>
-<p>- redundant_database: database2</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Example of a (redundant_database) requirement that is fulfilled by 
+# two node templates named “database1” and “database1
+my_critical_application_node_template:
+  requirements:
+    - redundant_database: database1
+    - redundant_database: database2
+```
 ###### Example 5 - Requirement assignment for definition with capacity allocation
 
 This example shows how the assignment can look if the requirement is
@@ -6099,40 +4098,27 @@ Another node with num_cpu with value 2 could not be a valid target since
 1 (existing) + 2 (current) = 3, and that is larger than the property
 value which is 2. Of course, similar calculations must be done for the
 mem_size allocation.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Example of a (redundant_database) requirement that is fulfilled
-by</p>
-<p># two node templates named “database1” and “database1</p>
-<p>my_critical_application_node_template:</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node: tosca.nodes.Compute</p>
-<p>allocation:</p>
-<p>properties:</p>
-<p>num_cpu: 2</p>
-<p>mem_size: 128 MB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Example of a (redundant_database) requirement that is fulfilled by 
+# two node templates named “database1” and “database1
+my_critical_application_node_template:
+  requirements:
+    - host:
+        node: tosca.nodes.Compute
+        allocation:
+          properties:
+            num_cpu: 2
+            mem_size: 128 MB
+```
 #### Node Filter definition
 
 ##### Grammar
 
 Node filters are defines using condition clauses as shown in the
 following grammar:
-
-| node_filter: \<condition_clause\> |
-|-----------------------------------|
-
+```
+node_filter: <condition_clause> 
+```
 In the above grammar, the condition_clause represents a Boolean
 expression that will be used to select (filter) TOSCA nodes that are
 valid candidates for fulfilling the requirement that defines the node
@@ -6158,31 +4144,20 @@ node based upon the values of its defined capabilities. Specifically,
 this filter will select Compute nodes that support a specific range of
 CPUs (i.e., num_cpus value between 1 and 4) and memory size (i.e.,
 mem_size of 2 or greater) from its declared “host” capability.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>my_node_template:</p>
-<p># other details omitted for brevity</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node_filter:</p>
-<p>$and:</p>
-<p>- $in_range:</p>
-<p>- $get_property: [ SELF, CAPABILITY, num_cpus ]</p>
-<p>- [ 1, 4 ]</p>
-<p>- $greater_or_equal:</p>
-<p>- $get_property: [ SELF, CAPABILITY, mem_size ]</p>
-<p>- 512 MB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+my_node_template:
+  # other details omitted for brevity
+  requirements:
+    - host:
+        node_filter:
+          $and:
+            - $in_range:
+              - $get_property: [ SELF, CAPABILITY, num_cpus ]
+              - [ 1, 4 ]
+            - $greater_or_equal:
+              - $get_property: [ SELF, CAPABILITY, mem_size ]
+              - 512 MB 
+```
 ### Interfaces
 
 #### Interface Type
@@ -6206,35 +4181,20 @@ addition, the Interface Type has the following recognized keynames:
 ##### Grammar
 
 Interface Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">interface_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_interface_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">interface_description</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a href="#parameter-definition">parameter_definitions</a>&gt;</p>
-<p>operations:</p>
-<p>&lt;<a href="#operation-definition">operation_definitions</a>&gt;</p>
-<p>notifications:</p>
-<p>&lt;<a href="#notification-definition">Notification
-definition</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<interface_type_name>:
+  derived_from: <parent_interface_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <interface_description>
+  inputs: 
+    <parameter_definitions>
+  operations:
+    <operation_definitions>
+  notifications:
+    <Notification definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6279,30 +4239,19 @@ rules:
 
 The following example shows a custom interface used to define multiple
 configure operations.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>mycompany.mytypes.myinterfaces.MyConfigure:</p>
-<p>derived_from: tosca.interfaces.relationship.Root</p>
-<p>description: My custom configure Interface Type</p>
-<p>inputs:</p>
-<p>mode:</p>
-<p>type: string</p>
-<p>operations:</p>
-<p>pre_configure_service:</p>
-<p>description: pre-configure operation for my service</p>
-<p>post_configure_service:</p>
-<p>description: post-configure operation for my service</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+mycompany.mytypes.myinterfaces.MyConfigure:
+  derived_from: tosca.interfaces.relationship.Root
+  description: My custom configure Interface Type
+  inputs:
+    mode:
+      type: string
+  operations:
+    pre_configure_service:
+      description: pre-configure operation for my service
+    post_configure_service:
+      description: post-configure operation for my service
+```
 ##### Additional Requirements
 
 - Interface Types **MUST NOT** include any implementations for defined
@@ -6322,97 +4271,29 @@ refined in subsequent Node or Relationship Type derivations.
 The following is the list of recognized keynames for a TOSCA interface
 definition:
 
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 15%" />
-<col style="width: 59%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td>string</td>
-<td>The mandatory name of the Interface Type this interface definition
-is based upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description for this interface definition.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions and
-refinements</a></p></td>
-<td>The optional map of input parameter refinements and new input
-parameter definitions available to all operations defined for this
-interface (the input parameters to be refined have been defined in the
-Interface Type definition).</td>
-</tr>
-<tr class="even">
-<td>operations</td>
-<td>no</td>
-<td>map of <a href="#operation-definition">operation
-refinements</a></td>
-<td>The optional map of operations refinements for this interface. The
-referred operations must have been defined in the Interface Type
-definition.</td>
-</tr>
-<tr class="odd">
-<td>notifications</td>
-<td>no</td>
-<td>map of <a href="#notification-definition">notification</a>
-refinements</td>
-<td>The optional map of notifications refinements for this interface.
-The referred operations must have been defined in the Interface Type
-definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory name of the Interface Type this interface definition is based upon.|
+|description|no|string|The optional description for this interface definition.|
+|inputs|no|map of parameter definitions and refinements|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the Interface Type definition).|
+|operations|no|map of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
+|notifications|no|map of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
 
 ##### Grammar
 
 Interface definitions in Node or Relationship Type definitions have the
 following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">interface_definition_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">interface_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">interface_description</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions_and_refinements</a>&gt;</p>
-<p>operations:</p>
-<p>&lt;<a href="#operation-definition">operation_refinements</a>&gt;</p>
-<p>notifications:</p>
-<p>&lt;<a href="#notification-definition">notification
-definition</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<interface_definition_name>:
+  type: <interface_type_name>
+  description: <interface_description>
+  inputs: 
+    <parameter_definitions_and_refinements>
+  operations:
+    <operation_refinements>
+  notifications:
+    <notification definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6431,13 +4312,13 @@ have the following meaning:
   their values will be accessible to the implementation artifacts (e.g.,
   scripts) associated to each operation during their execution
 
-- the map represents a mix of parameter refinements (for parameters
-  > already defined in the Interface Type) and new parameter
-  > definitions.
+  - the map represents a mix of parameter refinements (for parameters
+    already defined in the Interface Type) and new parameter
+    definitions.
 
-- with the new parameter definitions, we can flexibly add new parameters
-  > when changing the implementation of operations and notifications
-  > during refinements or assignments.
+  - with the new parameter definitions, we can flexibly add new parameters
+    when changing the implementation of operations and notifications
+    during refinements or assignments.
 
 - operation_refinements: represents the optional map of operation
   definition refinements for this interface; the referred operations
@@ -6483,7 +4364,7 @@ of a Requirement assignment in a Node Template).
 ##### Keynames
 
 The following is the list of recognized keynames for a TOSCA interface
-definition:
+assignment:
 
 | Keyname       | Mandatory | Type                                                              | Description                                                                                                                                                                          |
 |---------------|-----------|-------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -6494,29 +4375,15 @@ definition:
 ##### Grammar
 
 Interface assignments have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a
-href="#TYPE_YAML_STRING">interface_definition_name</a>&gt;:</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment">parameter_value_assignments</a>&gt;</p>
-<p>operations:</p>
-<p>&lt;<a href="#operation-definition">operation_assignments</a>&gt;</p>
-<p>notifications:</p>
-<p>&lt;<a
-href="#notification-definition">notification_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<interface_definition_name>:
+  inputs: 
+    <parameter_value_assignments>
+  operations:
+    <operation_assignments>
+  notifications:
+    <notification_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6527,8 +4394,8 @@ have the following meaning:
   value assignments for passing input parameter values to all interface
   operations
 
-- template authors MAY provide new parameter assignments for interface
-  > inputs that are not defined in the Interface definition.
+  - template authors MAY provide new parameter assignments for interface
+    inputs that are not defined in the Interface definition.
 
 - operation_assignments: represents the optional map of operation
   assignments for operations defined in the Interface definition.
@@ -6557,59 +4424,12 @@ may not contain an attribute mapping as part of its output definition
 The following is the list of recognized keynames for a TOSCA operation
 definition (including definition refinement)
 
-<table>
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 12%" />
-<col style="width: 15%" />
-<col style="width: 48%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description string for the associated operation.</td>
-</tr>
-<tr class="even">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">operation
-implementation definition</a></td>
-<td>The optional definition of the operation implementation. May not be
-used in an interface type definition (i.e. where an operation is
-initially defined), but only during refinements.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td>The optional map of parameter definitions for operation input
-values.</td>
-</tr>
-<tr class="even">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td><p>The optional map of parameter definitions for operation output
-values.</p>
-<p>Only as part of node and relationship type definitions, the output
-definitions may include mappings onto attributes of the node or
-relationship type that contains the definition.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|description|no|string|The optional description string for the associated operation.|
+|implementation|no|operation implementation definition|The optional definition of the operation implementation. May not be used in an interface type definition (i.e. where an operation is initially defined), but only during refinements. |
+|inputs|no|map of parameter definitions|The optional map of parameter definitions for operation input values.|
+|outputs|no|map of parameter definitions|The optional map of parameter definitions for operation output values. Only as part of node and relationship type definitions, the output definitions may include mappings onto attributes of the node or relationship type that contains the definition.|
 
 ##### Grammar
 
@@ -6621,37 +4441,22 @@ The following single-line grammar may be used when the operation’s
 implementation definition is the only keyname that is needed, and when
 the operation implementation definition itself can be specified using a
 single line grammar:
-
-| \<[operation_name](#TYPE_YAML_STRING)\>: \<[operation_implementation_definition](# BKM_Implementation_Oper_Notif_Def)\> |
-|-------------------------------------------------------------------------------------------------------------------------|
-
+```
+<[operation_name](#TYPE_YAML_STRING)>: <[operation_implementation_definition](# BKM_Implementation_Oper_Notif_Def)>
+```
 ###### Extended notation 
 
 The following multi-line grammar may be used when additional information
 about the operation is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">operation_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">operation_description</a>&gt;</p>
-<p>implementation: &lt;<a
-href="#operation-and-notification-implementation-definition">operation_implementation_definition</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a href="#parameter-definition">parameter_definitions</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<operation_name>:
+   description: <operation_description>
+   implementation: <operation_implementation_definition>
+   inputs: 
+     <parameter_definitions>
+   outputs:
+     <parameter_definitions>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6723,71 +4528,38 @@ following refinement rules when the containing entity type is derived:
 ##### Examples
 
 ###### Single-line example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interfaces:</p>
-<p>Standard:</p>
-<p>start: scripts/start_server.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interfaces:
+  Standard:
+    start: scripts/start_server.sh
+```
 ###### Multi-line example with shorthand implementation definitions
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interfaces:</p>
-<p>Configure:</p>
-<p>pre_configure_source:</p>
-<p>implementation:</p>
-<p>primary: scripts/pre_configure_source.sh</p>
-<p>dependencies:</p>
-<p>- scripts/setup.sh</p>
-<p>- binaries/library.rpm</p>
-<p>- scripts/register.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interfaces:
+  Configure:
+    pre_configure_source:
+      implementation: 
+        primary: scripts/pre_configure_source.sh
+        dependencies: 
+          - scripts/setup.sh
+          - binaries/library.rpm
+          - scripts/register.py
+```
 ###### Multi-line example with extended implementation definitions
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>interfaces:</p>
-<p>Configure:</p>
-<p>pre_configure_source:</p>
-<p>implementation:</p>
-<p>primary:</p>
-<p>file: scripts/pre_configure_source.sh</p>
-<p>type: tosca.artifacts.Implementation.Bash</p>
-<p>repository: my_service_catalog</p>
-<p>dependencies:</p>
-<p>- file : scripts/setup.sh</p>
-<p>type : tosca.artifacts.Implementation.Bash</p>
-<p>repository : my_service_catalog</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+interfaces:
+  Configure:
+    pre_configure_source:
+      implementation: 
+        primary: 
+          file: scripts/pre_configure_source.sh
+          type: tosca.artifacts.Implementation.Bash
+          repository: my_service_catalog
+        dependencies:
+           - file : scripts/setup.sh
+             type : tosca.artifacts.Implementation.Bash
+             repository : my_service_catalog
+```
 #### Operation assignment
 
 An operation assignment may be used to assign values for input
@@ -6816,50 +4588,11 @@ attribute to map to (for output parameters).
 The following is the list of recognized keynames for an operation
 assignment:
 
-<table>
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 12%" />
-<col style="width: 19%" />
-<col style="width: 46%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">operation
-implementation definition</a></td>
-<td>The optional definition of the operation implementation. Overrides
-implementation provided at operation definition.</td>
-</tr>
-<tr class="even">
-<td>inputs</td>
-<td>no</td>
-<td>map of <a href="#parameter-value-assignment">parameter value
-assignments</a></td>
-<td>The optional map of parameter value assignments for assigning values
-to operation inputs.</td>
-</tr>
-<tr class="odd">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of <a href="\l">parameter</a></p>
-<p><a href="\l">mapping assignments</a></p></td>
-<td>The optional map of parameter mapping assignments that specify how
-operation outputs are mapped onto attributes of the node or relationship
-that contains the operation definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|implementation|no|operation implementation definition|The optional definition of the operation implementation. Overrides implementation provided at operation definition.|
+|inputs|no|map of parameter value assignments|The optional map of parameter value assignments for assigning values to operation inputs. |
+|outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how operation outputs are mapped onto attributes of the node or relationship that contains the operation definition. |
 
 ##### Grammar
 
@@ -6871,37 +4604,22 @@ The following single-line grammar may be used when the operation’s
 implementation definition is the only keyname that is needed, and when
 the operation implementation definition itself can be specified using a
 single line grammar:
-
-| \<[operation_name](#TYPE_YAML_STRING)\>: \<[operation_implementation_definition](#operation-and-notification-implementation-definition)\> |
-|-------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+<[operation_name](#TYPE_YAML_STRING)>: <[operation_implementation_definition](#operation-and-notification-implementation-definition)> 
+```
 ###### Extended notation
 
 The following multi-line grammar may be used in Node or Relationship
 Template definitions when additional information about the operation is
 needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">operation_name</a>&gt;:</p>
-<p>implementation: &lt;<a
-href="#operation-and-notification-implementation-definition">operation_implementation_definition</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment">parameter_value_assignments</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;<a
-href="#parameter-mapping-assignment">parameter_mapping_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<operation_name>:
+   implementation: <operation_implementation_definition>
+   inputs: 
+     <parameter_value_assignments>
+   outputs:
+     <parameter_mapping_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -6911,22 +4629,22 @@ have the following meaning:
 - operation_implementation_definition: represents the optional
   specification of the operation’s implementation
 
-- the implementation declared here overrides the implementation provided
-  > at operation definition.
+  - the implementation declared here overrides the implementation provided
+    at operation definition.
 
 - parameter_value_assignments: represents the optional map of parameter
   value assignments for passing input parameter values to operations.
 
-- assignments for operation inputs that are not defined in the operation
-  > definition may be provided
+  - assignments for operation inputs that are not defined in the operation
+    definition may be provided
 
 - parameter_mapping_assignments: represents the optional map of
   parameter mapping assignments that consists of named output values
   returned by operation implementations (i.e. artifacts) and associated
   attributes into which this output value must be stored
 
-- assignments for operation outputs that are not defined in the
-  > operation definition may be provided.
+  - assignments for operation outputs that are not defined in the
+    operation definition may be provided.
 
 ##### Additional requirements
 
@@ -6987,49 +4705,11 @@ it may not contain an attribute mapping as part of its output definition
 The following is the list of recognized keynames for a TOSCA
 notification definition:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 12%" />
-<col style="width: 18%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description string for the associated
-notification.</td>
-</tr>
-<tr class="even">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">notification
-implementation definition</a></td>
-<td>The optional definition of the notification implementation.</td>
-</tr>
-<tr class="odd">
-<td>outputs</td>
-<td>no</td>
-<td>map of parameter definitions</td>
-<td><p>The optional map of parameter definitions that specify
-notification output values.</p>
-<p>Only as part of node and relationship type definitions, the output
-definitions may include their mappings onto attributes of the node type
-or relationship type that contains the definition.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|description|no|string|The optional description string for the associated notification.|
+|implementation|no|notification implementation definition|The optional definition of the notification implementation.|
+|outputs|no|map of parameter definitions|The optional map of parameter definitions that specify notification output values.  Only as part of node and relationship type definitions, the output definitions may include their mappings onto attributes of the node type or relationship type that contains the definition. |
 
 ##### Grammar
 
@@ -7041,35 +4721,20 @@ The following single-line grammar may be used when the notification’s
 implementation definition is the only keyname that is needed and when
 the notification implementation definition itself can be specified using
 a single line grammar:
-
-| \<[notification_name](#TYPE_YAML_STRING)\>: \<[notification_implementation_definition](#operation-and-notification-implementation-definition)\> |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+<[notification_name](#TYPE_YAML_STRING)>: <[notification_implementation_definition](#operation-and-notification-implementation-definition)> 
+```
 ###### Extended notation 
 
 The following multi-line grammar may be used when additional information
 about the notification is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;notification_name&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">notification_description</a>&gt;</p>
-<p>implementation: &lt;<a
-href="#operation-and-notification-implementation-definition">notification_implementation_definition</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;<a
-href="#parameter-definition">parameter_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<notification_name>:
+  description: <notification_description>
+  implementation: <notification_implementation_definition>
+  outputs: 
+    <parameter_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -7160,42 +4825,10 @@ attribute to map to.
 The following is the list of recognized keynames for a TOSCA
 notification assignment:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 12%" />
-<col style="width: 17%" />
-<col style="width: 55%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">notification
-implementation definition</a></td>
-<td>The optional definition of the notification implementation.
-Overrides implementation provided at notification definition.</td>
-</tr>
-<tr class="even">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of <a href="\l">parameter</a></p>
-<p><a href="\l">mapping assignments</a></p></td>
-<td>The optional map of parameter mapping assignments that specify how
-notification outputs values are mapped onto attributes of the node or
-relationship type that contains the notification definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|implementation|no|notification implementation definition|The optional definition of the notification implementation. Overrides implementation provided at notification definition.|
+|outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how notification outputs values are mapped onto attributes of the node or relationship type that contains the notification definition.|
 
 ##### Grammar
 
@@ -7207,34 +4840,20 @@ The following single-line grammar may be used when the notification’s
 implementation definition is the only keyname that is needed, and when
 the notification implementation definition itself can be specified using
 a single line grammar:
-
-| \<[notification_name](#TYPE_YAML_STRING)\>: \<[notification_implementation_definition](#operation-and-notification-implementation-definition)\> |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+<[notification_name](#TYPE_YAML_STRING)>: <[notification_implementation_definition](#operation-and-notification-implementation-definition)> 
+```
 ###### Extended notation
 
 The following multi-line grammar may be used in Node or Relationship
 Template definitions when additional information about the notification
 is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">notification_name</a>&gt;:</p>
-<p>implementation: &lt;<a
-href="#operation-and-notification-implementation-definition">notification_implementation_definition</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;<a
-href="#parameter-mapping-assignment">parameter_mapping_assignments</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<notification_name>:
+  implementation: <notification_implementation_definition>
+  outputs: 
+    <parameter_mapping_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -7245,16 +4864,16 @@ have the following meaning:
   specification of the notification implementation (i.e. the external
   artifact that is may send notifications)
 
-- the implementation declared here overrides the implementation provided
-  > at notification definition.
+  - the implementation declared here overrides the implementation provided
+    at notification definition.
 
 - parameter_mapping_assignments: represents the optional map of
   parameter_mapping_assignments that consists of named output values
   returned by operation implementations (i.e. artifacts) and associated
   attributes into which this output value must be stored
 
-- assignments for notification outputs that are not defined in the
-  > operation definition may be provided.
+  - assignments for notification outputs that are not defined in the
+    operation definition may be provided.
 
 ##### Additional requirements
 
@@ -7295,48 +4914,11 @@ notification implementation definition and should not be used in such.
 The following is the list of recognized keynames for an operation
 implementation definition or a notification implementation definition:
 
-<table>
-<colgroup>
-<col style="width: 17%" />
-<col style="width: 11%" />
-<col style="width: 13%" />
-<col style="width: 57%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>primary</td>
-<td>no</td>
-<td><a href="#artifact-definition">artifact definition</a></td>
-<td>The optional implementation artifact (i.e., the primary script file
-within a TOSCA CSAR file).</td>
-</tr>
-<tr class="even">
-<td>dependencies</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a href="#artifact-definition">artifact definition</a></p></td>
-<td><p>The optional list of one or more dependent or secondary
-implementation artifacts which are referenced by the primary
-implementation artifact (e.g., a library the script installs or a</p>
-<p>secondary script).</p></td>
-</tr>
-<tr class="odd">
-<td>timeout</td>
-<td>no</td>
-<td>integer</td>
-<td>Timeout value in seconds. Has no meaning and should not be used
-within a notification implementation definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|primary|no|artifact definition|The optional implementation artifact (i.e., the primary script file within a TOSCA CSAR file).  |
+|dependencies|no|list of  artifact definition|The optional list of one or more dependent or secondary implementation artifacts which are referenced by the primary implementation artifact (e.g., a library the script installs or a secondary script).  |
+|timeout|no|integer|Timeout value in seconds. Has no meaning and should not be used within a notification implementation definition.|
 
 ##### Grammar
 
@@ -7347,10 +4929,9 @@ definitions have the following grammar:
 
 The following single-line grammar may be used when only a primary
 implementation artifact name is needed:
-
-| [implementation](#TYPE_YAML_STRING): \<[primary_artifact_name](#TYPE_YAML_STRING)\> |
-|-------------------------------------------------------------------------------------|
-
+```
+[implementation](#TYPE_YAML_STRING): <[primary_artifact_name](#TYPE_YAML_STRING)> 
+```
 This notation can be used when the primary artifact name uniquely
 identifies the artifact, either because it refers to an artifact
 specified in the artifacts section of a type or template, or because it
@@ -7362,26 +4943,12 @@ definition.
 The following multi-line short-hand grammar may be used when multiple
 artifacts are needed, but each of the artifacts can be uniquely
 identified by name as before:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>implementation:</p>
-<p>primary: &lt;<a
-href="#TYPE_YAML_STRING">primary_artifact_name</a>&gt;</p>
-<p>dependencies:</p>
-<p>- &lt;<a
-href="#TYPE_YAML_STRING">list_of_dependent_artifact_names</a>&gt;</p>
-<p>timeout: 60</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  primary: <primary_artifact_name>
+  dependencies:
+    - <list_of_dependent_artifact_names>
+  timeout: 60
+```
 ###### Extended notation for use with single artifact
 
 The following multi-line grammar may be used in Node or Relationship
@@ -7390,51 +4957,26 @@ additional information about the primary artifact is needed (e.g. to
 specify the repository from which to obtain the artifact, or to specify
 the artifact type when it cannot be derived from the artifact file
 extension):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>implementation:</p>
-<p>primary:</p>
-<p>&lt;<a
-href="#artifact-definition">primary_artifact_definition</a>&gt;</p>
-<p>timeout: 100</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+implementation: 
+  primary:
+    <primary_artifact_definition>
+  timeout: 100
+```
 ###### Extended notation for use with multiple artifacts
 
 The following multi-line grammar may be used in Node or Relationship
 Type or Template definitions when there are multiple artifacts that may
 be needed for the operation to be implemented and additional information
 about each of the artifacts is required:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>implementation:</p>
-<p>primary:</p>
-<p>&lt;<a
-href="#artifact-definition">primary_artifact_definition</a>&gt;</p>
-<p>dependencies:</p>
-<p>- &lt;<a href="#artifact-definition">list_of_dependent_artifact
-definitions</a>&gt;</p>
-<p>timeout: 120</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+implementation: 
+  primary: 
+    <primary_artifact_definition>   
+  dependencies: 
+    - <list_of_dependent_artifact definitions>
+  timeout: 120
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -7475,76 +5017,27 @@ The Artifact Type is a TOSCA type entity and has the common keynames
 listed in Section 4.2.5.2 Common keynames in type definitions. In
 addition, the Artifact Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 19%" />
-<col style="width: 24%" />
-<col style="width: 12%" />
-<col style="width: 43%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>mime_type</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional mime type property for the Artifact Type.</td>
-</tr>
-<tr class="even">
-<td>file_ext</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional file extension property for the Artifact Type.</td>
-</tr>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Artifact Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|mime_type|no|string|The optional mime type property for the Artifact Type.|
+|file_ext|no|list of string|The optional file extension property for the Artifact Type.|
+|properties|no|map of property definitions|An optional map of property definitions for the Artifact Type.|
 
 ##### Grammar
 
 Artifact Types have following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">artifact_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_artifact_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">artifact_description</a>&gt;</p>
-<p>mime_type: &lt;<a
-href="#TYPE_YAML_STRING">mime_type_string</a>&gt;</p>
-<p>file_ext: [ &lt;<a href="#TYPE_YAML_STRING">file_extensions</a>&gt;
-]</p>
-<p>properties:</p>
-<p>&lt;<a
-href="#_Schema_Definition">property_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<artifact_type_name>:
+  derived_from: <parent_artifact_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <artifact_description>
+  mime_type: <mime_type_string>
+  file_ext: [ <file_extensions> ]
+  properties:     
+    <property_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -7585,34 +5078,22 @@ rules:
   definitions may be added.
 
 ##### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>my_artifact_type:</p>
-<p>description: Java Archive artifact type</p>
-<p>derived_from: tosca.artifact.Root</p>
-<p>mime_type: application/java-archive</p>
-<p>file_ext: [ jar ]</p>
-<p>properties:</p>
-<p>id:</p>
-<p>description: Identifier of the jar</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>creator:</p>
-<p>description: Vendor of the java implementation on which the jar is
-based</p>
-<p>type: string</p>
-<p>required: false</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+my_artifact_type:
+  description: Java Archive artifact type
+  derived_from: tosca.artifact.Root
+  mime_type: application/java-archive
+  file_ext: [ jar ]
+  properties:
+    id: 
+      description: Identifier of the jar
+      type: string
+      required: true
+    creator:
+      description: Vendor of the java implementation on which the jar is based
+      type: string
+      required: false
+```
 ##### Additional Requirements
 
 - The ‘mime_type’ keyname is meant to have values that are Apache mime
@@ -7647,93 +5128,17 @@ operations.
 The following is the list of recognized keynames for a TOSCA artifact
 definition when using the extended notation:
 
-<table>
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory artifact type for the artifact definition.</td>
-</tr>
-<tr class="even">
-<td>file</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory URI string (relative or absolute) which can be used to
-locate the artifact’s file.</td>
-</tr>
-<tr class="odd">
-<td>repository</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional name of the repository definition which contains the
-location of the external repository that contains the artifact. The
-artifact is expected to be referenceable by its file URI within the
-repository.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description for the artifact definition.</td>
-</tr>
-<tr class="odd">
-<td>deploy_path</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The file path the associated file will be deployed on within the
-target node’s container.</td>
-</tr>
-<tr class="even">
-<td>artifact_version</td>
-<td>no</td>
-<td>string</td>
-<td>The version of this artifact. One use of this artifact_version is to
-declare the particular version of this artifact type, in addition to its
-mime_type (that is declared in the artifact type definition). Together
-with the mime_type it may be used to select a particular artifact
-processor for this artifact. For example, a python interpreter that can
-interpret python version 2.7.0.</td>
-</tr>
-<tr class="odd">
-<td>checksum</td>
-<td>no</td>
-<td>string</td>
-<td>The checksum used to validate the integrity of the artifact.</td>
-</tr>
-<tr class="even">
-<td>checksum_algorithm</td>
-<td>no</td>
-<td>string</td>
-<td>Algorithm used to calculate the artifact checksum (e.g. MD5, SHA
-<mark>[Ref]).</mark> Shall be specified if checksum is specified for an
-artifact.</td>
-</tr>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property</a></p>
-<p>assignments</p></td>
-<td>The optional map of property assignments associated with the
-artifact.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory artifact type for the artifact definition.|
+|file|yes|string|The mandatory URI string (relative or absolute) which can be used to locate the artifact’s file.|
+|repository|no|string|The optional name of the repository definition which contains the location of the external repository that contains the artifact.  The artifact is expected to be referenceable by its file URI within the repository.|
+|description|no|string|The optional description for the artifact definition.|
+|deploy_path|no|string|The file path the associated file will be deployed on within the target node’s container. |
+|artifact_version|no|string|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
+|checksum|no|string|The checksum used to validate the integrity of the artifact.|
+|checksum_algorithm|no|string|Algorithm used to calculate the artifact checksum (e.g. MD5, SHA [Ref]). Shall be specified if checksum is specified for an artifact.|
+|properties|no|map of property assignments|The optional map of property assignments associated with the artifact.|
 
 ##### Grammar
 
@@ -7743,40 +5148,25 @@ Artifact definitions have one of the following grammars:
 
 The following single-line grammar may be used when the artifact’s type
 and mime type can be inferred from the file URI:
-
-| \<[artifact_name](#TYPE_YAML_STRING)\>: \<[artifact_file_URI](#TYPE_YAML_STRING)\> |
-|------------------------------------------------------------------------------------|
-
+```
+<[artifact_name](#TYPE_YAML_STRING)>: <[artifact_file_URI](#TYPE_YAML_STRING)> 
+```
 ###### Extended notation:
 
 The following multi-line grammar may be used when the artifact’s
 definition’s type and mime type need to be explicitly declared:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">artifact_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">artifact_description</a>&gt;</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">artifact_type_name</a>&gt;</p>
-<p>file: &lt;<a href="#TYPE_YAML_STRING">artifact_file_URI</a>&gt;</p>
-<p>repository: &lt;<a
-href="#TYPE_YAML_STRING">artifact_repository_name</a>&gt;</p>
-<p>deploy_path: &lt;<a
-href="#TYPE_YAML_STRING">file_deployment_path</a>&gt;</p>
-<p>version: &lt;artifact _version&gt;</p>
-<p>checksum: &lt;artifact_checksum&gt;</p>
-<p>checksum_algorithm: &lt;artifact_checksum_algorithm&gt;</p>
-<p>properties: &lt;property assignments&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<artifact_name>: 
+  description: <artifact_description>
+  type: <artifact_type_name>
+  file: <artifact_file_URI>
+  repository: <artifact_repository_name>
+  deploy_path: <file_deployment_path>
+  version: <artifact _version>
+  checksum: <artifact_checksum>
+  checksum_algorithm: <artifact_checksum_algorithm>
+  properties: <property assignments>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -7827,40 +5217,27 @@ redefined.
 ##### Examples
 
 The following represents an artifact definition:
-
-| my_file_artifact: ../my_apps_files/operation_artifact.txt |
-|-----------------------------------------------------------|
-
+```
+my_file_artifact: ../my_apps_files/operation_artifact.txt 
+```
 The following example represents an artifact definition with property
 assignments:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>artifacts:</p>
-<p>sw_image:</p>
-<p>description: Image for virtual machine</p>
-<p>type: tosca.artifacts.Deployment.Image.VM</p>
-<p>file: <a
-href="http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2">http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2</a></p>
-<p>checksum: ba411cafee2f0f702572369da0b765e2</p>
-<p>version: 3.2</p>
-<p>checksum_algorithm: MD5</p>
-<p>properties:</p>
-<p>name: vSRX</p>
-<p>container_format: BARE</p>
-<p>disk_format: QCOW2</p>
-<p>min_disk: 1 GB</p>
-<p>size: 649 MB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+artifacts:
+  sw_image:
+    description: Image for virtual machine
+    type: tosca.artifacts.Deployment.Image.VM
+    file: http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2
+    checksum: ba411cafee2f0f702572369da0b765e2
+    version: 3.2
+    checksum_algorithm: MD5
+    properties:
+      name: vSRX
+      container_format: BARE
+      disk_format: QCOW2
+      min_disk: 1 GB
+      size: 649 MB
+```
 Properties, Attributes, and Parameters
 --------------------------------------
 
@@ -7915,22 +5292,22 @@ Collection Types: (section 4.4.3)
 
 - map
 
-Notes that were originally in the metadata section:
+> Notes that were originally in the metadata section:
 
-Important notes:
+> Important notes:
 
-YAML map keys can be any value, not just strings. TOSCA metadata grammar
-allows that full YAML expressiveness and does not add additional
-restrictions beyond requiring correct YAM syntax.
+> YAML map keys can be any value, not just strings. TOSCA metadata grammar
+> allows that full YAML expressiveness and does not add additional
+> restrictions beyond requiring correct YAM syntax.
 
-YAML does not specify the bit width of integers and floats but suggests
-that 32 bits should be acceptable.
+> YAML does not specify the bit width of integers and floats but suggests
+> that 32 bits should be acceptable.
+> 
+> Users should be careful about the difference between parsing floats and
+> integers. If they explicitly want a float, they should add ".0".
 
-Users should be careful about the difference between parsing floats and
-integers. If they explicitly want a float, they should add ".0".
-
-Users should be careful with version strings being parsed as floats.
-E.g., "3.2" is a float but "3.2.1" is a string,
+> Users should be careful with version strings being parsed as floats.
+> E.g., "3.2" is a float but "3.2.1" is a string,
 
 ### Primitive Types
 
@@ -7945,11 +5322,9 @@ Guiding principles:
     template inputs and outputs, property and attribute values stored in
     a database, etc.
 
-<!-- -->
+2.  Adherence to 64-bit precision to ensure portability of numeric data.
 
-8.  Adherence to 64-bit precision to ensure portability of numeric data.
-
-9.  TOSCA parsers *shall not* automatically convert between primitive
+3.  TOSCA parsers *shall not* automatically convert between primitive
     types. Thus, care should be taken to use the correct YAML notation
     for that type. Details will be provided below.
 
@@ -7982,34 +5357,23 @@ otherwise interpret as other types.
 
 This following example would be invalid if there were no quotation marks
 around “0.1”:
+```
+node_types:
+  Node:
+  properties:
+    name:
+    type: string
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>name:</p>
-<p>type: string</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p>
-<p>properties:</p>
-<p>name: "0.1"</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  node_templates:
+    node:
+      type: Node
+      properties:
+        name: "0.1"
+```
 ##### Notes
 <!----
 {"id": "807", "author": "Chris Lauwers", "date": "2020-08-18T23:01:00Z", "comment": "(From Tal): Do we want the comparison constraints to work for strings? E.g. should \"greater_than\" do a sorting-based comparison? I'll just point that it is non-trivial to sort Unicode strings. The most common way is to use the Unicode Collation Algorithm, which involves a database of information. There is a reference implementation in [ICU](webSettings.xml). Good and proper Unicode libraries will support it (e.g. [here is Go's](footnotes.xml)), but I do imagine it may be a burden for some implementations. I suggest we discuss this in the ad hoc and consider the pros and cons.", "target": "Notes"}-->
-:
 
 1.  There are various ways to specify literal !!string data in YAML for
     handling indentation, newlines, as well as convenient support for
@@ -8018,15 +5382,13 @@ around “0.1”:
     trimming of whitespace or newlines. [\[YAML 1.2 chapter
     6\]](https://yaml.org/spec/1.2/spec.html#Basic)
 
-<!-- -->
-
-10. The TOSCA functions “concat”, “join”, “token”, “length”,
+2.  The TOSCA functions “concat”, “join”, “token”, “length”,
     “min_length”, “max_length”, and “pattern” are all Unicode-aware.
     Specifically, the length of a string is a count of its runes, not
     the length of the byte array, which may differ according to the
     encoding. \[See XXX\]
 
-11. The TOSCA functions that check for equality, “equal” and
+3.  The TOSCA functions that check for equality, “equal” and
     “valid_values”, should work regardless of the Unicode encoding. For
     example, comparing two strings that are “!”, one of which is in
     UTF-8 and is encoded as “0x21”, the other which is in UTF-16 and is
@@ -8034,7 +5396,7 @@ around “0.1”:
     implementations may standardize on a single encoding, e.g., UTF-8,
     and convert all other encodings to it. \[See XXX\]
 
-12. Relatedly, although in YAML 1.2 a !!string is already defined as a
+4.  Relatedly, although in YAML 1.2 a !!string is already defined as a
     Unicode sequence [\[YAML 1.2 section
     10.1.1.3\]](https://yaml.org/spec/1.2/spec.html#id2802842), this
     sequence can be variously encoded according to the character set and
@@ -8044,16 +5406,16 @@ around “0.1”:
     inherit the encoding of the YAML document. Again, implementations
     may prefer to convert all strings to a single encoding.
 
-13. TOSCA strings *cannot* be the null value but *can* be empty strings
+5.  TOSCA strings *cannot* be the null value but *can* be empty strings
     (a string with length zero). \[See “nil”, below\]
 
-14. YAML is a streaming format, but TOSCA strings are explicitly *not*
+6.  YAML is a streaming format, but TOSCA strings are explicitly *not*
     streams and thus do have a size limit. Thus, TOSCA implementations
     should check against the size limit.
 
-\[Tal’s comment: for functions we should specify their exact behavior
-for various primitive types. Some won’t work on all types, e.g. “length”
-should not work on integers.\]
+> Tal’s comment: for functions we should specify their exact behavior
+> for various primitive types. Some won’t work on all types, e.g. “length”
+> should not work on integers.
 
 #### integer
 
@@ -8066,23 +5428,12 @@ enforce most of these variations using data type validation clauses
 
 For example, this would be a custom data type for unsigned 16-bit
 integers:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p>UInt16:</p>
-<p>derived_from: integer</p>
-<p>validation: { $in_range: [ $value, [ 0, 0xFFFF ] ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+data_types:
+  UInt16:
+    derived_from: integer
+    validation: { $in_range: [ $value, [ 0, 0xFFFF ] ] }
+```
 ##### Notes
 
 YAML allows for the standard decimal notation as well as hexadecimal and
@@ -8097,9 +5448,7 @@ example we indeed used the hexadecimal notation.
     integers and floats, and thus many JSON implementations use floats
     instead of integers.
 
-<!-- -->
-
-15. TOSCA does not specify the endianness of integers and indeed makes
+2.  TOSCA does not specify the endianness of integers and indeed makes
     no requirements for data representation.
 
 #### float
@@ -8120,30 +5469,20 @@ specify “0” for a zero integer and “0.0” for a zero float.
 
 This following example would be invalid if there were no “.0” suffix
 added to “10”:
+```
+node_types:
+  Node:
+    properties:
+      velocity:
+        type: float
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>velocity:</p>
-<p>type: float</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p>
-<p>properties:</p>
-<p>velocity: 10.0</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  node_templates:
+    node:
+      type: Node
+      properties:
+        velocity: 10.0
+```
 ##### Notes
 
 1.  In addition to decimal, YAML also allows for specifying floats using
@@ -8151,12 +5490,10 @@ added to “10”:
     infinity, positive infinity, and not-a-number [\[YAML 1.2 example
     2.20\]](https://yaml.org/spec/1.2/spec.html#id2761530).
 
-<!-- -->
-
-16. TOSCA does not specify how to convert to other precisions nor to
+2.  TOSCA does not specify how to convert to other precisions nor to
     other formats, e.g. Bfloat16 and TensorFloat-32.
 
-17. TOSCA does not specify the endianness of floats and indeed makes no
+3.  TOSCA does not specify the endianness of floats and indeed makes no
     requirements for data representation.
 
 #### boolean
@@ -8183,34 +5520,24 @@ To specify literal bytes in YAML you *must* use a Base64-encoded
 you convert arbitrary data to Base64.
 
 Example:
+```
+ode_types:
+  Node:
+    properties:
+      preamble:
+        type: bytes
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>preamble:</p>
-<p>type: bytes</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p>
-<p>properties:</p>
-<p>preamble: "\</p>
-<p>R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\</p>
-<p>OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\</p>
-<p>+f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC\</p>
-<p>AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  node_templates:
+    node:
+      type: Node
+        properties:
+          preamble: "\
+R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\
+OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\
++f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC\
+AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
+```
 ##### Notes
 
 1.  There is no standard way to represent literal bytes in YAML 1.2.
@@ -8218,13 +5545,11 @@ Example:
     working draft](https://yaml.org/type/binary.html), to ensure
     portability TOSCA implementations *shall not* accept this YAML type.
 
-<!-- -->
-
-18. The TOSCA functions “length”, “min_length”, and “max_length” work
+2.  The TOSCA functions “length”, “min_length”, and “max_length” work
     differently for the bytes type vs. the string type. For the latter
     the length is the count of Unicode runes, not the count of bytes.
 
-19. TOSCA bytes values *cannot* be the null value but *can* be empty
+3.  TOSCA bytes values *cannot* be the null value but *can* be empty
     arrays (a bytes value with length zero). \[See “nil”, below\]
 
 #### nil
@@ -8236,70 +5561,47 @@ This value is provided literally in YAML via the unquoted all-lowercase
 word “null”.
 
 Example:
+```
+node_types:
+  Node:
+    properties:
+      nothing:
+        type: nil
+        required: true
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>nothing:</p>
-<p>type: nil</p>
-<p>required: true</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p>
-<p>properties:</p>
-<p>nothing: null</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  node_templates:
+    node:
+      type: Node
+      properties:
+        nothing: null
+```
 Note that a nil-typed value is *distinct* from an unassigned value. For
 consistency TOSCA *requires* you to assign nil values even though their
 value is obvious. Thus, the above example would be invalid if we did not
 specify the null value for the property at the node template.
 
 Following is a valid example of *not* assigning a value:
+```
+node_types:
+  Node:
+    properties:
+      nothing:
+        type: nil
+        required: false
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Node:</p>
-<p>properties:</p>
-<p>nothing:</p>
-<p>type: nil</p>
-<p>required: false</p>
-<p>service_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: Node</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-### Special
+service_template:
+  node_templates:
+    node:
+      type: Node
+```
+### Special Types
 <!----
 {"id": "817", "author": "Chris Lauwers", "date": "2020-08-04T16:22:00Z", "comment": "Need to add timestamp type", "target": "Special"}-->
- Types
 
 #### TOSCA version
 <!----
 {"id": "821", "author": "Chris Lauwers", "date": "2020-08-18T23:03:00Z", "comment": "Tal suggests removing this.", "target": "version"}-->
-
-
 A TOSCA version string.
 
 TOSCA supports the concept of “reuse” of type definitions, as well as
@@ -8311,10 +5613,9 @@ templates over time.
 ##### Grammar
 
 TOSCA version strings have the following grammar:
-
-| \<major_version\>.\<minor_version\>\[.\<fix_version\>\[.\<qualifier\>\[-\<build_version\] \] \] |
-|-------------------------------------------------------------------------------------------------|
-
+```
+<major_version>.<minor_version>[.<fix_version>[.<qualifier>[-<build_version>] ] ] 
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -8362,26 +5663,17 @@ have the following meaning:
 ##### Examples
 
 Examples of valid TOSCA version strings:
+```
+# basic version strings
+‘6.1’
+2.0.1
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># basic version strings</p>
-<p>‘6.1’</p>
-<p>2.0.1</p>
-<p># version string with optional qualifier</p>
-<p>3.1.0.beta</p>
-<p># version string with optional qualifier and build version</p>
-<p>1.0.0.alpha-10</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+# version string with optional qualifier
+3.1.0.beta
 
+# version string with optional qualifier and build version
+1.0.0.alpha-10
+```
 ##### Notes
 
 - \[[Maven-Version](#CIT_MAVEN_VERSION)\] The TOSCA version type is
@@ -8452,10 +5744,9 @@ unit from the list of recognized units provided below.
 ##### Grammar
 
 TOSCA scalar-unit typed values have the following grammar:
-
-| \<scalar\> \<unit\> |
-|---------------------|
-
+```
+<scalar> <unit> 
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -8466,7 +5757,7 @@ have the following meaning:
 
 ##### Additional requirements
 
-- **<u>Whitespace</u>**: any number of spaces (including zero or none)
+- **Whitespace**: any number of spaces (including zero or none)
   SHALL be allowed between the scalar value and the unit value.
 
 - It SHALL be considered an error if either the scalar or unit portion
@@ -8479,8 +5770,6 @@ have the following meaning:
   value). For example, if we have a property called storage_size (which
   is of type scalar-unit) a valid range constraint would appear as
   follows:
-
-<!-- -->
 
 - storage_size: in_range \[ 4 GB, 20 GB \]
 
@@ -8526,22 +5815,11 @@ These types and their allowed unit values are defined below.
 | TiB  | size  | tebibyte (1099511627776 bytes) |
 
 ###### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Storage size in Gigabytes</p>
-<p>properties:</p>
-<p>storage_size: 10 GB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Storage size in Gigabytes
+properties:
+  storage_size: 10 GB
+```
 ###### Notes
 
 - The unit values recognized by TOSCA for size-type units are based upon
@@ -8552,10 +5830,9 @@ These types and their allowed unit values are defined below.
 - TOSCA treats these unit values as case-insensitive (e.g., a value of
   ‘kB’, ‘KB’ or ‘kb’ is equivalent), but it is considered best practice
   to use the case of these units as prescribed by
-  GNU
+  GNU.
 <!----
 {"id": "843", "author": "Chris Lauwers", "date": "2020-07-20T18:40:00Z", "comment": "Bitrate units are case sensitive. We\n  should make this consistent.", "target": "GNU"}-->
-.
 
 - Some cloud providers may not support byte-level granularity for
   storage size allocations. In those cases, these values could be
@@ -8577,35 +5854,22 @@ These types and their allowed unit values are defined below.
 | ns   | time  | nanoseconds  |
 
 ###### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Response time in milliseconds</p>
-<p>properties:</p>
-<p>respone_time: 10 ms</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Response time in milliseconds
+properties:
+  respone_time: 10 ms
+```
 ###### Notes
 
 - The unit values recognized by TOSCA for time-type units are based upon
   a subset of those defined by International System of Units whose
   recognized abbreviations are defined within the following reference:
 
-<!-- -->
+  - <http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>
 
-- <http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>
-
-- This document is a non-normative reference to this specification and
-  intended for publications or grammars enabled for Latin characters
-  which are not accessible in typical programming languages
+  - This document is a non-normative reference to this specification and
+    intended for publications or grammars enabled for Latin characters
+    which are not accessible in typical programming languages
 
 ##### scalar-unit.frequency
 
@@ -8619,21 +5883,11 @@ These types and their allowed unit values are defined below.
 | GHz  | frequency | Gigahertz, or GHz, equals to 1,000,000,000 Hertz, or 1,000,000 kHz, or 1,000 MHz. |
 
 ###### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Processor raw clock rate</p>
-<p>properties:</p>
-<p>clock_rate: 2.4 GHz</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+# Processor raw clock rate
+properties:
+  clock_rate: 2.4 GHz
+```
 
 ###### Notes
 
@@ -8660,29 +5914,17 @@ These types and their allowed unit values are defined below.
 | Tibps | bitrate | tebibits (1099511627776 bits) per second |
 
 ###### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Somewhere in a node template definition</p>
-<p>requirements:</p>
-<p>- link:</p>
-<p>node_filter:</p>
-<p>capabilities:</p>
-<p>- myLinkable</p>
-<p>properties:</p>
-<p>bitrate:</p>
-<p>- greater_or_equal: 10 Kbps # 10 * 1000 bits per second at
-least</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Somewhere in a node template definition
+requirements:
+  - link:
+      node_filter:
+        capabilities: 
+          - myLinkable
+              properties:
+                bitrate:
+                 - greater_or_equal: 10 Kbps # 10 * 1000 bits per second at least
+```
 ### Collection Types
 
 #### TOSCA list type
@@ -8711,27 +5953,15 @@ TOSCA lists are essentially normal YAML lists with the following
 grammars:
 
 ######  Square bracket notation
-
-| \[ \<list_entry_1\>, \<list_entry_2\>, ... \] |
-|-----------------------------------------------|
-
+```
+[ <list_entry_1>, <list_entry_2>, ... ] 
+```
 ###### Bulleted list notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- &lt;list_entry_1&gt;</p>
-<p>- ...</p>
-<p>- &lt;list_entry_n&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+- <list_entry_1>
+- ...
+- <list_entry_n>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -8744,53 +5974,32 @@ have the following meaning:
 The following example shows a list declaration with an entry schema
 based upon a simple integer type (which has an additional validation
 clause):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;some_entity&gt;:</p>
-<p>...</p>
-<p>properties:</p>
-<p>listen_ports:</p>
-<p>type: <a href="#tosca-list-type">list</a></p>
-<p>entry_schema:</p>
-<p>description: listen port entry (simple integer type)</p>
-<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
-<p>validation: { $max_length: [ $value, 128 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+<some_entity>:
+  ...
+  properties:  
+    listen_ports:
+      type: list
+      entry_schema:
+        description: listen port entry (simple integer type)
+        type: integer
+        validation: { $max_length: [ $value, 128 ] }
+```
 
 ###### List declaration using a complex type
 
 The following example shows a list declaration with an entry schema
 based upon a complex type:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;some_entity&gt;:</p>
-<p>...</p>
-<p>properties:</p>
-<p>products:</p>
-<p>type: <a href="#tosca-list-type">list</a></p>
-<p>entry_schema:</p>
-<p>description: Product information entry (complex type) defined
-elsewhere</p>
-<p>type: ProductInfo</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+<some_entity>:
+  ...
+  properties:  
+    products:
+      type: list
+      entry_schema:
+        description: Product information entry (complex type) defined elsewhere
+        type: ProductInfo
+```
 
 ##### Definition Examples
 
@@ -8804,27 +6013,15 @@ These examples show two notation options for defining lists:
   of entries, or if the entries are complex.
 
 ###### Square bracket notation
-
-| listen_ports: \[ 80, 8080 \] |
-|------------------------------|
-
+```
+  listen_ports: [ 80, 8080 ]
+```
 ###### Bulleted list notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>listen_ports:</p>
-<p>- 80</p>
-<p>- 8080</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+listen_ports:
+  - 80
+  - 8080
+```
 #### TOSCA map type
 
 The map type allows for specifying multiple values for a parameter of
@@ -8849,27 +6046,15 @@ specified, keys are assumed to be of type string.
 TOSCA maps are normal YAML dictionaries with following grammar:
 
 ###### Single-line grammar
-
-| { \<entry_key_1\>: \<entry_value_1\>, ..., \<entry_key_n\>: \<entry_value_n\> } |
-|---------------------------------------------------------------------------------|
-
+```
+{ <entry_key_1>: <entry_value_1>, ..., <entry_key_n>: <entry_value_n> }
+```
 ###### Multi-line grammar
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;entry_key_1&gt;: &lt;entry_value_1&gt;</p>
-<p>...</p>
-<p>&lt;entry_key_n&gt;: &lt;entry_value_n&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<entry_key_1>: <entry_value_1>
+...
+<entry_key_n>: <entry_value_n>
+```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -8884,53 +6069,31 @@ have the following meaning:
 The following example shows a map with an entry schema definition based
 upon an existing string type (which has an additional validation
 clause):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;some_entity&gt;:</p>
-<p>...</p>
-<p>properties:</p>
-<p>emails:</p>
-<p>type: <a href="#tosca-map-type">map</a></p>
-<p>entry_schema:</p>
-<p>description: basic email address</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>validation: { $max_length: [ $value, 128 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<some_entity>:
+  ...
+  properties:  
+    emails:
+      type: map
+      entry_schema:
+        description: basic email address
+        type: string
+        validation: { $max_length: [ $value, 128 ] }
+```
 ###### Map declaration using a complex type
 
 The following example shows a map with an entry schema definition for
 contact information:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;some_entity&gt;:</p>
-<p>...</p>
-<p>properties:</p>
-<p>contacts:</p>
-<p>type: <a href="#tosca-map-type">map</a></p>
-<p>entry_schema:</p>
-<p>description: simple contact information</p>
-<p>type: ContactInfo</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<some_entity>:
+  ...
+  properties:  
+    contacts:
+      type: map
+      entry_schema:
+        description: simple contact information
+        type: ContactInfo
+```
 ##### Definition Examples
 
 These examples show two notation options for defining maps:
@@ -8943,39 +6106,17 @@ These examples show two notation options for defining maps:
   of entries, or if the entries are complex.
 
 ###### Single-line notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># notation option for shorter maps</p>
-<p>user_name_to_id_map: { user1: 1001, user2: 1002 }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# notation option for shorter maps
+user_name_to_id_map: { user1: 1001, user2: 1002 }
+```
 ###### Multi-line notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># notation for longer maps</p>
-<p>user_name_to_id_map:</p>
-<p>user1: 1001</p>
-<p>user2: 1002</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# notation for longer maps
+user_name_to_id_map:
+  user1: 1001
+  user2: 1002
+```
 ### Data Type
 
 A Data Type definition defines the schema for new datatypes in TOSCA.
@@ -8986,51 +6127,34 @@ The Data Type is a TOSCA type entity and has the common keynames listed
 in Section 4.2.5.2 Common keynames in type definitions. In addition, the
 Data Type has the following recognized keynames:
 
-| Keyname      | Mandatory                     | Type                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                                                                    |
-|--------------|-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| validation   | no                            | [validation clause](#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition) | The optional validation clause that must evaluate to True for values of this Data Type
 <!----
 {"id": "904", "author": "Chris Lauwers", "date": "2021-01-26T03:12:00Z", "comment": "Edit suggested by Mike Rehder: Not valid for a type derived from a complex type (parent has property definitions) or a type with property, key_schema or entry_schema definitions.", "target": "Type"}-->
- to be valid. |
-| properties   | no                            | map of [property definitions](#_Schema_Definition)                                                                                                                                                                       | The optional map property definitions that comprise the schema for a complex Data Type in TOSCA
 <!----
 {"id": "905", "author": "Chris Lauwers", "date": "2021-01-26T03:13:00Z", "comment": "Edit suggested by Mike Rehder: Not valid for a type derived from a simple type (parent has no property definitions) or a type with constraint definitions.", "target": "TOSCA"}-->
-.                            |
+
+| Keyname      | Mandatory                     | Type                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|--------------|-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| validation   | no                            | [validation clause](#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition) | The optional validation clause that must evaluate to True for values of this Data Type to be valid. |
+| properties   | no                            | map of [property definitions](#_Schema_Definition)                                                                                                                                                                       | The optional map property definitions that comprise the schema for a complex Data Type in TOSCA.                            |
 | key_schema   | conditional (default: string) | [schema definition](#schema-definition)                                                                                                                                                                                  | For data types that derive from the TOSCA map data type, the optional schema definition for the keys used to identify entries in properties of this data type. If not specified, the key_schema defaults to string. For data types that do not derive from the TOSCA map data type, the key_schema is not allowed.                                                                                                             |
 | entry_schema | conditional                   | [schema definition](#schema-definition)                                                                                                                                                                                  | For data types that derive from the TOSCA map or list data types, the mandatory schema definition for the entries in properties of this data type. For data types that do not derive from the TOSCA list or map data type, the entry_schema is not allowed.                                                                                                                                                                    |
 
 #### Grammar
 
 Data Types have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">data_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">existing_type_name</a>&gt;</p>
-<p>version: &lt;<a
-href="#tosca-tal-suggests-removing-this.version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">datatype_description</a>&gt;</p>
-<p>validation: &lt;<a
-href="#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition">validation_clause</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>key_schema: &lt;key_schema_definition&gt;</p>
-<p>entry_schema: &lt;entry_schema_definition&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<data_type_name>: 
+  derived_from: <existing_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <datatype_description>
+  validation: <validation_clause>
+  properties:
+    <property_definitions>
+  key_schema: <key_schema_definition>
+  entry_schema: <entry_schema_definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9052,12 +6176,8 @@ have the following meaning:
 - property_definitions: represents the optional map of one or more
   property definitions that provide the schema for the data type
 
-<!-- -->
-
-- property_definitions may not be added to data types derived_from TOSCA
-  primitive types.
-
-<!-- -->
+  - property_definitions may not be added to data types derived_from TOSCA
+    primitive types.
 
 - key_schema_definition: if the data type derives from the TOSCA map
   type (i.e existing_type_name is a map or derives from a map), it
@@ -9094,7 +6214,6 @@ During Data Type derivation the keyname definitions follow these rules:
 <!----
 {"id": "910", "author": "Mike Rehder", "date": "2020-12-14T15:10:00Z", "comment": "This implies that type is optional.\n  However it is listed as required \u2013 which is it?", "target": "A valid datatype\n  definition **MUST** have either a valid derived_from declaration or at\n  least one valid property definition."}-->
 
-
 - Any validation clauses **SHALL** be type-compatible with the type
   declared by the derived_from keyname.
 
@@ -9110,53 +6229,29 @@ The following example represents a Data Type definition based upon an
 existing string type:
 
 ##### Defining a complex datatype
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># define a new complex datatype</p>
-<p>mytypes.phonenumber:</p>
-<p>description: my phone number datatype</p>
-<p>properties:</p>
-<p>countrycode:</p>
-<p>type: integer</p>
-<p>areacode:</p>
-<p>type: integer</p>
-<p>number:</p>
-<p>type: integer</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# define a new complex datatype
+mytypes.phonenumber:
+  description: my phone number datatype
+  properties:
+    countrycode:
+      type: integer
+    areacode:
+      type: integer
+    number:
+      type: integer
+```
 ##### Defining a datatype derived from an existing datatype
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># define a new datatype that derives from existing type and
-extends it</p>
-<p>mytypes.phonenumber.extended:</p>
-<p>derived_from: mytypes.phonenumber</p>
-<p>description: custom phone number type that extends the basic
-phonenumber type</p>
-<p>properties:</p>
-<p>phone_description:</p>
-<p>type: string</p>
-<p>validation: { $max_length: [ $value, 128 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# define a new datatype that derives from existing type and extends it
+mytypes.phonenumber.extended:
+  derived_from: mytypes.phonenumber
+  description: custom phone number type that extends the basic phonenumber type
+  properties:
+    phone_description:
+      type: string
+      validation: { $max_length: [ $value, 128 ] }
+```
 ### Schema definition
 
 All entries in a map or list for one property or
@@ -9185,64 +6280,13 @@ a map or list type.
 The following is the list of recognized keynames for a TOSCA schema
 definition:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 13%" />
-<col style="width: 12%" />
-<col style="width: 58%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The mandatory data type for the key or entry.</p>
-<p>If this schema definition is for a map key, then the referred type
-must be derived originally from string.</p></td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the schema.</td>
-</tr>
-<tr class="odd">
-<td>validation</td>
-<td>no</td>
-<td><a href="#validation-clause-definition">validation clauses</a>\</td>
-<td>The optional validation clause that must evaluate to True for the
-property.</td>
-</tr>
-<tr class="even">
-<td>key_schema</td>
-<td>no (default: string)</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>When the schema itself is of type map, the optional schema
-definition that is used to specify the type of the keys of that map’s
-entries (if key_schema is not defined it is assumed to be “string” by
-default). For other schema types, the key_schema must not be
-defined.</td>
-</tr>
-<tr class="odd">
-<td>entry_schema</td>
-<td>conditional</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>When the schema itself is of type map or list, the schema definition
-is mandatory and is used to specify the type of the entries in that map
-or list. For other schema types, the entry_schema must not be
-defined.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory data type for the key or entry. If this schema definition is for a map key, then the referred type must be derived originally from string.|
+|description|no|string|The optional description for the schema.|
+|validation|no|validation clauses|The optional validation clause that must evaluate to True for the property.|
+|key_schema|no (default: string)|schema definition|When the schema itself is of type map, the optional schema definition that is used to specify the type of the keys of that map’s entries (if key_schema is not defined it is assumed to be “string” by default). For other schema types, the key_schema must not be defined.|
+|entry_schema|conditional|schema definition|When the schema itself is of type map or list, the schema definition is mandatory and is used to specify the type of the entries in that map or list. For other schema types, the entry_schema must not be defined.|
 
 #### Grammar
 
@@ -9250,49 +6294,29 @@ defined.</td>
 
 The following single-line grammar may be used when only the schema type
 needs to be declared:
-
-| \<schema_definition\>: \<schema_type\> |
-|----------------------------------------|
-
+```
+<schema_definition>: <schema_type>
+```
 ##### Extended Notation
 
 The following multi-line grammar may be used when additional information
 on the schema definition is needed:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">schema_definition</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">schema_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">schema_description</a>&gt;</p>
-<p>validation: &lt;<a
-href="#validation-clause-definition">schema_validation_clause</a>&gt;</p>
-<p>key_schema: &lt;<a
-href="#schema-definition">key_schema_definition</a>&gt;</p>
-<p>entry_schema: &lt;<a
-href="#schema-definition">entry_schema_definition</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<schema_definition>:
+  type: <schema_type> 
+  description: <schema_description>
+  validation: <schema_validation_clause>
+  key_schema: <key_schema_definition>
+  entry_schema: <entry_schema_definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - schema_type: represents the mandatory type name for entries of the
   specified schema
 
-<!-- -->
-
-- if this schema definition is for a map key, then the schema_type must
-  be derived originally from string.
-
-<!-- -->
+  - if this schema definition is for a map key, then the schema_type must
+    be derived originally from string.
 
 - schema_description: represents the optional description of the schema
   definition
@@ -9337,17 +6361,15 @@ the containing entity type is derived:
 <!----
 {"id": "939", "author": "Mike Rehder", "date": "2020-12-14T14:40:00Z", "comment": "This should have its own refinement rule section to explain how conflicts are resolved, if at all. For example, if there is \u201crange 0..10\u201d and \u201cgreated_than 15\u201d what happens?", "target": "Validation clause definition"}-->
 
-
 A validation clause that must evaluate to True if the value for the
 entity it references is considered valid.
 
 #### Grammar
 
 Validation clauses have the following grammar:
-
-| validation: \< validation_clause\> |
-|------------------------------------|
-
+```
+validation: < validation_clause>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9367,77 +6389,57 @@ the parameter definition that contains the validation clause.
 
 The following shows an example of validation clauses used in data type
 definitions:
+```
+data_types:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p># Full function syntax for the $value function</p>
-<p>Count1:</p>
-<p>derived_from: integer</p>
-<p>validation: { $greater_or_equal: [ { $value: [] }, 0 ] }</p>
-<p># Simple function syntax for the $value function</p>
-<p>Count2:</p>
-<p>derived_from: integer</p>
-<p>validation: { $greater_or_equal: [ $value, 0 ] }</p>
-<p># Full function syntax with arguments</p>
-<p>FrequencyRange:</p>
-<p>properties:</p>
-<p>low:</p>
-<p>type: scalar-unit.frequency</p>
-<p>high:</p>
-<p>type: scalar-unit.frequency</p>
-<p>validation:</p>
-<p>$greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] }
-]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  # Full function syntax for the $value function
+  Count1:
+    derived_from: integer
+    validation: { $greater_or_equal: [ { $value: [] }, 0 ] }
 
+  # Simple function syntax for the $value function
+  Count2:
+    derived_from: integer
+    validation: { $greater_or_equal: [ $value, 0 ] }
+
+  # Full function syntax with arguments
+  FrequencyRange:
+    properties:
+      low:
+        type: scalar-unit.frequency
+      high:
+        type: scalar-unit.frequency
+    validation:
+      $greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] } ]
+```
 <span id="_Schema_Definition" class="anchor"></span>The following shows
 an example of validation clauses used in property definitions:
+```
+node_types:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>Scalable:</p>
-<p>properties:</p>
-<p>minimum_instances:</p>
-<p>type: integer</p>
-<p>validation: { $greater_or_equal: [ $value, 0 ] } # positive
-integer</p>
-<p>maximum_instances:</p>
-<p>type: integer</p>
-<p>validation:</p>
-<p>$greater_or_equal:</p>
-<p>- $value</p>
-<p>- $get_property: [ SELF, minimum_instances ]</p>
-<p>default_instances:</p>
-<p>type: integer</p>
-<p>validation:</p>
-<p>$and:</p>
-<p>- $greater_or_equal:</p>
-<p>- $value</p>
-<p>- $get_property: [ SELF, minimum_instances ]</p>
-<p>- $less_or_equal:</p>
-<p>- $value</p>
-<p>- $get_property: [ SELF, maximum_instances ]</p>
-<p>required: false</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  Scalable:
+    properties:
+      minimum_instances:
+        type: integer
+        validation: { $greater_or_equal: [ $value,  0 ] }  # positive integer
+      maximum_instances:
+        type: integer
+        validation: 
+          $greater_or_equal:
+            - $value
+            - $get_property: [ SELF, minimum_instances ]
+      default_instances:
+        type: integer
+        validation:
+          $and:
+            - $greater_or_equal: 
+              - $value
+              - $get_property: [ SELF, minimum_instances ]
+            - $less_or_equal: 
+              - $value
+              - $get_property: [ SELF, maximum_instances ]
+        required: false
+```
 ### Property definition
 
 A property definition defines a named, typed value and related data that
@@ -9463,111 +6465,19 @@ property.
 The following is the list of recognized keynames for a TOSCA property
 definition:
 
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 13%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory data type for the property.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the property.</td>
-</tr>
-<tr class="odd">
-<td>required</td>
-<td>No (default: true)</td>
-<td><a href="#TYPE_YAML_BOOLEAN">boolean</a></td>
-<td>An optional key that declares a property as required (true) or not
-(false). Defaults to true.</td>
-</tr>
-<tr class="even">
-<td>default</td>
-<td>no</td>
-<td>&lt;must match property type&gt;</td>
-<td><p>An optional key that may provide a value to be used as a default
-if not provided by another means.</p>
-<p>The default keyname SHALL NOT be defined when property is not
-required (i.e. the value of the required keyname is false).</p></td>
-</tr>
-<tr class="odd">
-<td>value</td>
-<td>no</td>
-<td>&lt;see below&gt;</td>
-<td>An optional key that may provide a fixed value to be used. A
-property that has a fixed value provided (as part of a definition or
-refinement) cannot be subject to a further refinement or assignment.
-That is, a fixed value cannot be changed.</td>
-</tr>
-<tr class="even">
-<td>status</td>
-<td>No (default: supported)</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional status of the property relative to the specification or
-implementation. See table below for valid values. Defaults to
-supported.</td>
-</tr>
-<tr class="odd">
-<td>validation</td>
-<td>no</td>
-<td><a href="#validation-clause-definition">validation clause</a></td>
-<td>The optional validation clause for the property.</td>
-</tr>
-<tr class="even">
-<td>key_schema</td>
-<td>conditional (default: string)</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>The schema definition for the keys used to identify entries in
-properties of type TOSCA map (or types that derive from map). If not
-specified, the key_schema defaults to string. For properties of type
-other than map, the key_schema is not allowed.</td>
-</tr>
-<tr class="odd">
-<td>entry_schema</td>
-<td>conditional</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>The schema definition for the entries in properties of TOSCA
-collection types such as list, map, or types that derive from list or
-map) If the property type is a collection type, the entry schema is
-mandatory. For other types, the entry_schema is not allowed.</td>
-</tr>
-<tr class="even">
-<td>external-schema</td>
-<td>no</td>
-<td>string</td>
-<td><p>The optional key that contains a schema definition that TOSCA
-Orchestrators MAY use for validation when the “type” key’s value
-indicates an External schema (e.g., “json”).</p>
-<p>See section “External schema” below for further explanation and
-usage.</p></td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory data type for the property.|
+|description|no|string|The optional description for the property.|
+|required|No (default: true)|boolean|An optional key that declares a property as required (true) or not (false). Defaults to true.|
+|default|no|\<must match property type\>|An optional key that may provide a value to be used as a default if not provided by another means.  The default keyname SHALL NOT be defined when property is not required (i.e. the value of the required keyname is false).|
+|value|no|\<see below\>|An optional key that may provide a fixed value to be used. A property that has a fixed value provided (as part of a definition or refinement) cannot be subject to a further refinement or assignment. That is, a fixed value cannot be changed.|
+|status|No (default: supported)|string|The optional status of the property relative to the specification or implementation. See table below for valid values. Defaults to supported.|
+|validation|no|validation clause|The optional validation clause for the property.|
+|key_schema|conditional (default: string)|schema definition|The schema definition for the keys used to identify entries in properties of type TOSCA map (or types that derive from map). If not specified, the key_schema defaults to string. For properties of type other than map, the key_schema is not allowed. |
+|entry_schema|conditional|schema definition|The schema definition for the entries in properties of TOSCA collection types such as list, map, or types that derive from list or map) If the property type is a collection type, the entry schema is mandatory. For other types, the entry_schema is not allowed.|
+|external-schema|no|string|The optional key that contains a schema definition that TOSCA Orchestrators MAY use for validation when the “type” key’s value indicates an External schema (e.g., “json”). See section “External schema” below for further explanation and usage.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
 
 #### Status values
 
@@ -9583,62 +6493,30 @@ The following property status values are supported:
 #### Grammar
 
 Property definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">property_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">property_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">property_description</a>&gt;</p>
-<p>required: &lt;<a
-href="#TYPE_YAML_BOOLEAN">property_required</a>&gt;</p>
-<p>default: &lt;default_value&gt;</p>
-<p>value: &lt;property_value&gt; | { &lt;property_value_expression&gt;
-}</p>
-<p>status: &lt;<a
-href="#move-this-in-the-metadata-in-a-recommended-metadata-section-for-profile-writing.status-values">status_value</a>&gt;</p>
-<p>validation: &lt;<a
-href="#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition">validation_clause</a>&gt;</p>
-<p>key_schema: &lt;<a
-href="#schema-definition">key_schema_definition</a>&gt;</p>
-<p>entry_schema: &lt;<a
-href="#schema-definition">entry_schema_definition</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a
-href="#also-covered-by-4.2.1.3.2metadata">metadata_map</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<property_name>:
+  type: <property_type> 
+  description: <property_description>
+  required: <property_required>
+  default: <default_value>
+  value: <property_value> | { <property_value_expression> }
+  status: <status_value>
+  validation: <validation_clause>
+  key_schema: <key_schema_definition>
+  entry_schema: <entry_schema_definition>
+  metadata:
+    <metadata_map>
+```
 The following single-line grammar is supported when only a fixed value
 or fixed value expression needs to be provided to a property:
-
-| \<[property_name](#TYPE_YAML_STRING)\>: \<property_value\> \| { \<property_value_expression\> } |
-|-------------------------------------------------------------------------------------------------|
-
+```
+<property_name>: <property_value> | { <property_value_expression> }
+```
 This single-line grammar is equivalent to the following:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">property_name</a>&gt;:</p>
-<p>value: &lt;property_value&gt; | { &lt;property_value_expression&gt;
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<property_name>:
+    value: <property_value> | { <property_value_expression> }
+```
 Note that the short form can be used only during a refinement (i.e. the
 property has been previously defined).
 
@@ -9662,26 +6540,18 @@ have the following meaning:
   default value if a value is not provided by another means (via the
   fixed_value definition or via property assignment);
 
-<!-- -->
-
-- the default_value shall not be defined for properties that are not
-  required (i.e. property_required is “false”) as they will stay
-  undefined.
-
-<!-- -->
+  - the default_value shall not be defined for properties that are not
+    required (i.e. property_required is “false”) as they will stay
+    undefined.
 
 - \<property_value\> \| { \<property_value_expression\> }: contains a
   type-compatible value or value expression that may be defined during
   property definition or refinement to set and fix the value definition
   of the property
 
-<!-- -->
-
-- note that a value definition cannot be changed; once defined, the
-  property cannot be further refined or assigned. Thus, value
-  definitions should be avoided in data_type definitions.
-
-<!-- -->
+  - note that a value definition cannot be changed; once defined, the
+    property cannot be further refined or assigned. Thus, value
+    definitions should be avoided in data_type definitions.
 
 - status_value: a string that contains a keyword that indicates the
   status of the property relative to the specification or
@@ -9717,7 +6587,6 @@ definitions together:
 <!----
 {"id": "966", "author": "Mike Rehder", "date": "2020-12-14T14:49:00Z", "comment": "Section 4.2.5.2.3 says that description\n  isn\u2019t inherited", "target": "description: a new definition is unrestricted\n  and will overwrite the one inherited from the property definition in\n  the parent entity type definition."}-->
 
-
 - required: if defined to “false” in the property definition parent
   entity type it may be redefined to “true”; note that if undefined it
   is automatically considered as being defined to “true”.
@@ -9736,7 +6605,6 @@ definitions together:
   type definition.
 <!----
 {"id": "967", "author": "Mike Rehder", "date": "2020-12-14T14:50:00Z", "comment": "I don\u2019t see how this is feasible. If\n  deprecated in the parent, how can a child make it active?  \n  I don\u2019t think this should be allowed to be refined at\n  all.", "target": "status: a new definition is unrestricted and will overwrite\n  the one inherited from the property definition in the parent entity\n  type definition."}-->
-
 
 - validation: a new definition is unrestricted; this validation clause
   does not replace the validation clause defined in the property
@@ -9781,78 +6649,44 @@ definitions together:
 
 The following represents an example of a property definition with a
 validation clause:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>num_cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs requested for a software node
-instance.</p>
-<p>default: 1</p>
-<p>required: true</p>
-<p>validation; { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  num_cpus:
+    type: integer
+    description: Number of CPUs requested for a software node instance.
+    default: 1
+    required: true
+    validation; { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
+```
 The following shows an example of a property refinement. Consider the
 definition of an Endpoint capability type:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.capabilities.Endpoint:</p>
-<p>derived_from: tosca.capabilities.Root</p>
-<p>properties:</p>
-<p>protocol:</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>default: tcp</p>
-<p>port:</p>
-<p>type: PortDef</p>
-<p>required: false</p>
-<p>secure:</p>
-<p>type: boolean</p>
-<p>required: false</p>
-<p>default: false</p>
-<p># Other property definitions omitted for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca.capabilities.Endpoint:
+  derived_from: tosca.capabilities.Root
+  properties:
+    protocol:
+      type: string
+      required: true
+      default: tcp
+    port:
+      type: PortDef
+      required: false
+    secure:
+      type: boolean
+      required: false
+      default: false
+    # Other property definitions omitted for brevity
+```
 The Endpoint.Admin capability type refines the secure property of the
 Endpoint capability type from which it derives by forcing its value to
 always be true:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.capabilities.Endpoint.Admin:</p>
-<p>derived_from: tosca.capabilities.Endpoint</p>
-<p># Change Endpoint secure indicator to true from its default of
-false</p>
-<p>properties:</p>
-<p>secure: true</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+tosca.capabilities.Endpoint.Admin:
+  derived_from: tosca.capabilities.Endpoint
+  # Change Endpoint secure indicator to true from its default of false
+  properties:
+    secure: true
+```
 
 ### Property assignment
 
@@ -9871,10 +6705,9 @@ Property assignments have the following grammar:
 
 The following single-line grammar may be used when a simple value
 assignment is needed:
-
-| \<property_name\>: \<property_value\> \| { \<property_value_expression\> } |
-|----------------------------------------------------------------------------|
-
+```
+<property_name>: <property_value> | { <property_value_expression> }
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9888,10 +6721,9 @@ have the following meaning:
   type-compatible value to assign to the property. Property values may
   be provided as the result of the evaluation of
   an expression or a
-  function
+  function.
 <!----
 {"id": "983", "author": "Chris Lauwers", "date": "2022-11-21T11:36:00Z", "comment": "What is the difference between an\n  expression and a function", "target": "an expression or a\n  function"}-->
-.
 
 #### Additional Requirements
 
@@ -9917,10 +6749,9 @@ Relationship or Capability Type). Specifically, it is used to expose the
 deployed and instantiated (as set by the TOSCA orchestrator). Attribute
 values can be retrieved via the get_attribute function from the instance
 model and used as values to other entities within TOSCA Service
-Templates
+Templates.
 <!----
 {"id": "991", "author": "Chris Lauwers", "date": "2022-11-21T11:36:00Z", "comment": "Can also be set using operation\noutputs", "target": "Templates"}-->
-.
 
 #### Attribute and Property reflection 
 
@@ -9937,117 +6768,33 @@ property.
 The following is the list of recognized keynames for a TOSCA attribute
 definition:
 
-<table>
-<colgroup>
-<col style="width: 26%" />
-<col style="width: 14%" />
-<col style="width: 11%" />
-<col style="width: 46%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory data type for the attribute.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the attribute.</td>
-</tr>
-<tr class="odd">
-<td>default</td>
-<td>no</td>
-<td>&lt;any&gt;</td>
-<td><p>An optional key that may provide a value to be used as a default
-if not provided by another means.</p>
-<p>This value SHALL be type compatible with the type declared by the
-attribute definition’s type keyname.</p></td>
-</tr>
-<tr class="even">
-<td>status</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional status of the attribute relative to the specification
-or implementation. See supported <a href="#status-values">status
-values</a> . Defaults to supported.</td>
-</tr>
-<tr class="odd">
-<td>validation</td>
-<td>no</td>
-<td><a href="#validation-clause-definition">validation clause</a></td>
-<td>The optional validation clause for the attribute.</td>
-</tr>
-<tr class="even">
-<td>key_schema</td>
-<td>conditional (default: string)</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>The schema definition for the keys used to identify entries in
-attributes of type TOSCA map (or types that derive from map). If not
-specified, the key_schema defaults to string. For attributes of type
-other than map, the key_schema is not allowed.</td>
-</tr>
-<tr class="odd">
-<td>entry_schema</td>
-<td>conditional</td>
-<td><a href="#schema-definition">schema definition</a></td>
-<td>The schema definition for the entries in attributes of TOSCA
-collection types such as list, map, or types that derive from list or
-map) If the attribute type is a collection type, the entry schema is
-mandatory. For other types, the entry_schema is not allowed.</td>
-</tr>
-<tr class="even">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory data type for the attribute.|
+|description|no|string|The optional description for the attribute.|
+|default|no|\<any\>|An optional key that may provide a value to be used as a default if not provided by another means.  This value SHALL be type compatible with the type declared by the attribute definition’s type keyname.|
+|status|no|string|The optional status of the attribute relative to the specification or implementation.  See supported status values . Defaults to supported.|
+|validation|no|validation clause|The optional validation clause for the attribute.|
+|key_schema|conditional (default: string)|schema definition|The schema definition for the keys used to identify entries in attributes of type TOSCA map (or types that derive from map). If not specified, the key_schema defaults to string. For attributes of type other than map, the key_schema is not allowed. |
+|entry_schema|conditional|schema definition|The schema definition for the entries in attributes of TOSCA collection types such as list, map, or types that derive from list or map) If the attribute type is a collection type, the entry schema is mandatory. For other types, the entry_schema is not allowed.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
 
 #### Grammar
 
 Attribute definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>attributes:</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">attribute_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">attribute_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">attribute_description</a>&gt;</p>
-<p>default: &lt;default_value&gt;</p>
-<p>status: &lt;<a href="#status-values">status_value</a>&gt;</p>
-<p>validation: &lt;<a
-href="#validation-clause-definition">attribute_validation_clause</a>&gt;</p>
-<p>key_schema: &lt;<a
-href="#schema-definition">key_schema_definition</a>&gt;</p>
-<p>entry_schema: &lt;<a
-href="#schema-definition">entry_schema_definition</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#metadata-1">metadata_map</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+attributes:
+  <attribute_name>:
+    type: <attribute_type>
+    description: <attribute_description>
+    default: <default_value> 
+    status: <status_value>
+    validation: <attribute_validation_clause>
+    key_schema: <key_schema_definition>
+    entry_schema: <entry_schema_definition>
+    metadata:
+      <metadata_map>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10141,33 +6888,19 @@ following refinement rules when the containing entity type is derived:
   actual value (i.e., actual state) that provides the actual
   instantiated value.
 
-<!-- -->
-
-- For example, a property can be used to request the IP address of a
-  node using a property (setting); however, the actual IP address after
-  the node is instantiated may by different and made available by an
-  attribute.
+  - For example, a property can be used to request the IP address of a
+    node using a property (setting); however, the actual IP address after
+    the node is instantiated may by different and made available by an
+    attribute.
 
 #### Example
 
 The following represents a mandatory attribute definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>actual_cpus:</p>
-<p>type: integer</p>
-<p>description: Actual number of CPUs allocated to the node
-instance.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+actual_cpus:
+  type: integer
+  description: Actual number of CPUs allocated to the node instance.
+```
 ### Attribute assignment
 
 This section defines the grammar for assigning values to attributes
@@ -10185,10 +6918,9 @@ Attribute assignments have the following grammar:
 
 The following single-line grammar may be used when a simple value
 assignment is needed:
-
-| \<attribute_name\>: \<attribute_value\> \| { \<attribute_value_expression\> } |
-|-------------------------------------------------------------------------------|
-
+```
+<attribute_name>: <attribute_value> | { <attribute_value_expression> }
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10227,31 +6959,25 @@ orchestrator to the external world). Thus:
 
 - outgoing parameters are:
 
-<!-- -->
+  - template outputs
 
-- template outputs
+  - internal workflow outputs
 
-- internal workflow outputs
+  - external workflow inputs
 
-- external workflow inputs
-
-- operation inputs
-
-<!-- -->
+  - operation inputs
 
 - incoming parameters are:
 
-<!-- -->
+  - template inputs
 
-- template inputs
+  - internal workflow inputs
 
-- internal workflow inputs
+  - external workflow outputs
 
-- external workflow outputs
+  - operation outputs
 
-- operation outputs
-
-- notification outputs
+  - notification outputs
 
 An “outgoing” parameter definition is essentially the same as a TOSCA
 property definition, however it may optionally inherit the data type of
@@ -10267,130 +6993,49 @@ an explicit data type defined for it.
 The TOSCA parameter definition has all the keynames of a TOSCA property
 definition with the following additional or changed keynames:
 
-<table>
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 12%" />
-<col style="width: 10%" />
-<col style="width: 61%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The data type of the parameter.</p>
-<p><strong>Note</strong>: This keyname is mandatory for a TOSCA Property
-definition but is not mandatory for a TOSCA Parameter
-definition.</p></td>
-</tr>
-<tr class="even">
-<td>value</td>
-<td>no</td>
-<td>&lt;any&gt;</td>
-<td>The type-compatible value to assign to the parameter. Parameter
-values may be provided as the result from the evaluation of an
-expression or a function. May only be defined for outgoing parameters.
-Mutually exclusive with the “mapping” keyname.</td>
-</tr>
-<tr class="odd">
-<td>mapping</td>
-<td>no</td>
-<td><a href="#attribute-selection-format">attribute selection
-format</a></td>
-<td>A mapping that specifies the node or relationship attribute into
-which the returned output value must be stored. May only be defined for
-incoming parameters. Mutually exclusive with the “value” keyname.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|no|string|The data type of the parameter. Note: This keyname is mandatory for a TOSCA Property definition but is not mandatory for a TOSCA Parameter definition.|
+|value|no|\<any\>|The type-compatible value to assign to the parameter.  Parameter values may be provided as the result from the evaluation of an expression or a function. May only be defined for outgoing parameters. Mutually exclusive with the “mapping” keyname.|
+|mapping|no|attribute selection format|A mapping that specifies the node or relationship attribute into which the returned output value must be stored. May only be defined for incoming parameters. Mutually exclusive with the “value” keyname.|
 
 #### Grammar
 
 Parameter definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">parameter_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">parameter_type</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">parameter_description</a>&gt;</p>
-<p>value: &lt;parameter_value&gt; | { &lt;parameter_value_expression&gt;
-}</p>
-<p>required: &lt;<a
-href="#TYPE_YAML_BOOLEAN">parameter_required</a>&gt;</p>
-<p>default: &lt;parameter_default_value&gt;</p>
-<p>status: &lt;<a href="#status-values">status_value</a>&gt;</p>
-<p>validation: &lt;<a
-href="#validation-clause-definition">parameter_validation_clause</a>&gt;</p>
-<p>key_schema: &lt;key_schema_definition&gt;</p>
-<p>entry_schema: &lt;entry_schema_definition&gt;</p>
-<p>mapping: &lt;<a
-href="#attribute-selection-format">attribute_selection_form</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+<parameter_name>:
+  type: <parameter_type> 
+  description: <parameter_description>
+  value: <parameter_value> | { <parameter_value_expression> }
+  required: <parameter_required>
+  default: <parameter_default_value>
+  status: <status_value>
+  validation: <parameter_validation_clause>
+  key_schema: <key_schema_definition>
+  entry_schema: <entry_schema_definition>
+  mapping: <attribute_selection_form>
+```
 
 The following single-line grammar is supported when only a fixed value
 needs to be provided provided to an outgoing parameter:
-
-| \<[parameter_name](#TYPE_YAML_STRING)\>: \<parameter_value\> \| { \<parameter_value_expression\> } |
-|----------------------------------------------------------------------------------------------------|
-
+```
+<parameter_name>: <parameter_value> | { <parameter_value_expression> }
+```
 This single-line grammar is equivalent to the following:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">parameter_name</a>&gt;:</p>
-<p>value: &lt;parameter_value&gt; | { &lt;parameter_value_expression&gt;
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<parameter_name>:
+    value: <parameter_value> | { <parameter_value_expression> }
+```
 The following single-line grammar is supported when only a parameter to
 attribute mapping needs to be provided to an incoming parameter:
-
-| \<[parameter_name](#TYPE_YAML_STRING)\>: \<[attribute_selection_form](#attribute-selection-format)\> |
-|------------------------------------------------------------------------------------------------------|
-
+```
+<parameter_name>: <attribute_selection_form>
+```
 This single-line grammar is equivalent to the following:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">parameter_name</a>&gt;:</p>
-<p>mapping: &lt;<a
-href="#attribute-selection-format">attribute_selection_form</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<parameter_name>:
+    mapping: <attribute_selection_form>
+```
 Note that the context of the parameter definition unambiguously
 determines if the parameter is an incoming or an outgoing parameter.
 
@@ -10412,16 +7057,12 @@ have the following meaning:
   be provided as the result from the evaluation of an expression or a
   function.
 
-<!-- -->
+  - once the value keyname is defined, the parameter cannot be further
+    refined or assigned.
 
-- once the value keyname is defined, the parameter cannot be further
-  refined or assigned.
-
-- the value keyname is relevant only for “outgoing” parameter
-  definitions and SHOULD NOT be defined in “incoming” parameter
-  definitions.
-
-<!-- -->
+  - the value keyname is relevant only for “outgoing” parameter
+    definitions and SHOULD NOT be defined in “incoming” parameter
+    definitions.
 
 - parameter_required: represents an optional
   [boolean](#TYPE_YAML_BOOLEAN) value (true or false) indicating whether
@@ -10432,13 +7073,9 @@ have the following meaning:
 - default_value: contains a type-compatible value that may be used as a
   default if not provided by other means.
 
-<!-- -->
-
-- the default keyname SHALL NOT be defined for parameters that are not
-  required (i.e. parameter_required is “false”) as they will stay
-  undefined.
-
-<!-- -->
+  - the default keyname SHALL NOT be defined for parameters that are not
+    required (i.e. parameter_required is “false”) as they will stay
+    undefined.
 
 - status_value: a [string](#TYPE_YAML_STRING) that contains a keyword
   that indicates the status of the parameter relative to the
@@ -10460,11 +7097,9 @@ have the following meaning:
   attribute_selection_format; the parameter is mapped onto an attribute
   of the containing entity
 
-<!-- -->
-
-- the mapping keyname is relevant only for “incoming” parameter
-  definitions and SHOULD NOT be defined in “outgoing” parameter
-  definitions.
+  - the mapping keyname is relevant only for “incoming” parameter
+    definitions and SHOULD NOT be defined in “outgoing” parameter
+    definitions.
 
 #### Refinement rules
 
@@ -10492,25 +7127,17 @@ the containing entity type is derived:
   type, it may be defined to any type-compatible value; once defined,
   the parameter cannot be further refined or assigned
 
-<!-- -->
-
-- the value keyname should be defined only for “outgoing” parameters.
-
-<!-- -->
+  - the value keyname should be defined only for “outgoing” parameters.
 
 - mapping: if undefined in the parameter definition in the parent entity
   type, it may be defined to any type-compatible attribute mapping; once
   defined, the parameter cannot be further refined or mapped
 
-<!-- -->
+  - the mapping keyname should be defined only for “incoming” parameters.
 
-- the mapping keyname should be defined only for “incoming” parameters.
-
-<!-- -->
-
-- status: a new definition is unrestricted and will overwrite the one
-  inherited from the parameter definition in the parent entity type
-  definition.
+  - status: a new definition is unrestricted and will overwrite the one
+    inherited from the parameter definition in the parent entity type
+    definition.
 
 - validation: a new definition is unrestricted; this validation clause
   does not replace the validation clause defined in the parameter
@@ -10541,42 +7168,21 @@ the containing entity type is derived:
 
 The following represents an example of an input parameter definition
 with a validation clause:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>validation: { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+inputs:
+  cpus:
+    type: integer
+    description: Number of CPUs for the server.
+    validation: { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
+```
 The following represents an example of an (untyped) output parameter
 definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>server_ip:</p>
-<p>description: The private IP address of the provisioned server.</p>
-<p>value: { $get_attribute: [ my_server, private_address ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+outputs:
+  server_ip:
+    description: The private IP address of the provisioned server.
+    value: { $get_attribute: [ my_server, private_address ] }
+```
 
 ### Parameter value assignment
 
@@ -10590,10 +7196,9 @@ The TOSCA parameter value assignment has no keynames.
 #### Grammar
 
 Parameter value assignments have the following grammar:
-
-| \<parameter_name\>: \<parameter_value\> \| { \<parameter_value_expression\> } |
-|-------------------------------------------------------------------------------|
-
+```
+<parameter_name>: <parameter_value> | { <parameter_value_expression> }
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10635,10 +7240,9 @@ The TOSCA parameter mapping assignment has no keynames.
 #### Grammar
 
 Parameter mapping assignments have the following grammar:
-
-| \<parameter_name\>: \<attribute_selection_format\> |
-|----------------------------------------------------|
-
+```
+<parameter_name>: <attribute_selection_format>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -10654,56 +7258,16 @@ have the following meaning:
 #### Attribute selection format
 
 The attribute_selection_format is a list of the following format:
-
-| \[\<tosca_traversal_path\>, \<attribute_name\>, \<nested_attribute_name_or_index_1\>, ..., \<nested_attribute_name_or_index_n\> \] |
-|------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+[<tosca_traversal_path>, <attribute_name>, <nested_attribute_name_or_index_1>, ..., <nested_attribute_name_or_index_n> ]
+```
 The various entities in this grammar are defined as follows:
 
-<table>
-<colgroup>
-<col style="width: 30%" />
-<col style="width: 12%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Parameter</th>
-<th>Mandatory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;tosca_traversal_path&gt;</td>
-<td>yes</td>
-<td><p>Using the &lt;tosca_traversal_path&gt; we can traverse the
-representation graph to reach the attribute we need to store the output
-value into. The specification of the &lt;tosca_traversal_path&gt; is
-explicated in section 6.1.2 get_property.</p>
-<p>Note that while the &lt;tosca_traversal_path&gt; is very powerful,
-its usage should normally be restricted to reach attributes in the local
-node ore relationship (i.e. SELF) or in a local capability
-definition.</p></td>
-</tr>
-<tr class="even">
-<td>&lt;attribute_name&gt;</td>
-<td>yes</td>
-<td>The name of the attribute into which the output value must be
-stored.</td>
-</tr>
-<tr class="odd">
-<td>&lt;nested_attribute_name_or_index_or_key_*&gt;</td>
-<td>no</td>
-<td><p>Some TOSCA attributes are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some attributes represent list or map types. In these cases, an index
-or key may be provided to reference a specific entry in the list or map
-(identified by the previous parameter).</p></td>
-</tr>
-</tbody>
-</table>
+|Parameter|Mandatory|Description|
+| ----- | ------- | ----- | 
+|\<tosca_traversal_path\>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to reach the attribute we need to store the output value into. The specification of the \<tosca_traversal_path\> is explicated in section 6.1.2 get_property. Note that while the \<tosca_traversal_path\> is very powerful, its usage should normally be restricted to reach attributes in the local node ore relationship (i.e. SELF) or in a local capability definition.|
+|\<attribute_name\> |yes|The name of the attribute into which the output value must be stored.|
+|\<nested_attribute_name_or_index_or_key_*\> |no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.   Some attributes represent list or map types. In these cases, an index or key may be provided to reference a specific entry in the list or map (identified by the previous parameter). |
 
 Note that it is possible for multiple operations to define outputs that
 map onto the same attribute value. For example, a *create* operation
@@ -10765,23 +7329,12 @@ achieved by adding suffixes after the function name starting with a
 second \$ character. For example, the following is a valid map where the
 function “keygen” is called three times and the returned values are used
 as keys in the hint map:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>hint:</p>
-<p>{ $keygen: [ UUID ] }: 34</p>
-<p>{ $keygen$1: [ UUID ] }: 56</p>
-<p>{ $keygen$2: [ UUID ] }: 78</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+hint:
+  { $keygen: [ UUID ] }: 34
+  { $keygen$1: [ UUID ] }: 56
+  { $keygen$2: [ UUID ] }: 78
+```
 TOSCA functions may be used wherever a value is expected, such as:
 
 - a value for a TOSCA keyname
@@ -10798,63 +7351,28 @@ on the provided function arguments.
 
 The following snippet shows an example of a node template that uses a
 function to retrieve a security context at runtime:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>context: { $get_security_context: { env: staging, role: admin }
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  context: { $get_security_context: { env: staging, role: admin } }
+```
 Nested functions are supported, that is, functions can be used in the
 arguments of another function. The result of the internal function will
 be passed as an argument to the outer function:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>nested: {$outer_func: [{$inner_func: [iarg1, iarg2]},
-oarg2]}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  nested: {$outer_func: [{$inner_func: [iarg1, iarg2]}, oarg2]}
+```
 To allow for strings that are not function names to start with \$, the
 dollar sign can be escaped by using \$\$ (two consecutive dollar
 characters). The following snippet shows escaped strings in a map that
 do not represent function calls:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>prop1:</p>
-<p>$$myid1: myval1</p>
-<p>myid2: $$myval2</p>
-<p>$$myid3: $$myval3</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  prop1:
+   $$myid1: myval1
+   myid2: $$myval2
+   $$myid3: $$myval3
+```
 The arguments to the functions can be arbitrary TOSCA data, although
 TOSCA defines a number of built-in functions that define
 function-specific syntax for providing arguments. In addition, service
@@ -10925,48 +7443,26 @@ templates using a YAML map under the functions keyname as follows. Note
 that this grammar allows the definition of functions that have arguments
 expressed within a YAML seq, however intrinsic functions may accept
 other argument definition syntaxes.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>&lt;function_def&gt;</p>
-<p>&lt;function_def&gt;</p>
-<p>...</p>
-<p>&lt;function_def&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  <function_def>
+  <function_def>
+  ...
+  <function_def>
+```
 Each \<function_def\> defines the name of a function with an associated
 list of signature definitions as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;function_name&gt;:</p>
-<p>signatures:</p>
-<p>- &lt;signature_def&gt;</p>
-<p>- &lt;signature_def&gt;</p>
-<p>- &lt;signature_def&gt;</p>
-<p>...</p>
-<p>- &lt;signature_def&gt;</p>
-<p>description: &lt;string&gt;</p>
-<p>metadata: &lt;map_of_metadata&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  <function_name>:
+    signatures:
+      - <signature_def>
+      - <signature_def>
+      - <signature_def>
+      ...
+      - <signature_def>
+    description: <string>
+    metadata: <map_of_metadata>
+```
 Only the signatures keyname is mandatory and must provide at least one
 signature
 definition
@@ -10977,32 +7473,21 @@ signatures are tested in the order of their definition. The first
 matching implementation is used.
 
 Each \<signature_def\> is a map of following keywords definitions:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>arguments:</p>
-<p>- &lt;schema_def&gt;</p>
-<p>- &lt;schema_def&gt;</p>
-<p>...</p>
-<p>- &lt;schema_def&gt;</p>
-<p>optional_arguments:</p>
-<p>- &lt;schema_def&gt;</p>
-<p>- &lt;schema_def&gt;</p>
-<p>...</p>
-<p>- &lt;schema_def&gt;</p>
-<p>variadic: &lt;boolean&gt;</p>
-<p>result: &lt;schema_def&gt;</p>
-<p>implementation: &lt;implementation_def&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+arguments:
+  - <schema_def>
+  - <schema_def>
+  ...
+  - <schema_def>
+optional_arguments:
+  - <schema_def>
+  - <schema_def>
+  ...
+  - <schema_def>
+variadic: <boolean>
+result: <schema_def>
+implementation: <implementation_def>
+```
 None of the keynames in the signature definition are mandatory.
 
 The keynames have the following meaning:
@@ -11079,21 +7564,10 @@ service_template section:
 
   - Note that in that case the \$ (dollar sign) character will be put in
     front of the namespace name. For example:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>rnd_nr: { $namespace1:random_generator: [ seed ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  rnd_nr: { $namespace1:random_generator: [ seed ] }
+```
 - Function definitions inside a service_template that are having the
   same \<function_name\> are considered a refinement of the homonymous
   definition outside the service_template, see refinement rules below.
@@ -11141,206 +7615,127 @@ definition outside the service_template.
 ##### Square root function with several signatures
 
 The following example shows the definition of a square root function:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  sqrt:</p>
-<p>signatures:</p>
-<p>    - arguments:</p>
-<p>       - type: integer</p>
-<p>validation: { $greater_or_equal: [ $value, 0 ] }</p>
-<p>       result:</p>
-<p>         type: float</p>
-<p>      implementation: scripts/sqrt.py</p>
-<p>    - arguments:</p>
-<p>      - type: float</p>
-<p>validation: { $greater_or_equal: [ $value, 0.0 ] }</p>
-<p>      result:</p>
-<p>        type: float</p>
-<p>      implementation: scripts/sqrt.py</p>
-<p>description: &gt;</p>
-<p>This is a square root function that defines two signatures:</p>
-<p>the argument is either integer or float and the function</p>
-<p>returns the suare root as a float.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  sqrt:
+    signatures:
+      - arguments:
+        - type: integer
+          validation: { $greater_or_equal: [ $value, 0 ] }
+        result:
+          type: float
+        implementation: scripts/sqrt.py
+      - arguments:
+        - type: float
+          validation: { $greater_or_equal: [ $value, 0.0 ] }
+        result:
+          type: float
+        implementation: scripts/sqrt.py
+    description: >
+      This is a square root function that defines two signatures:
+      the argument is either integer or float and the function
+      returns the suare root as a float.
+```
 The next sqrt is similar to above, but uses a simplified type notation
 (in this short form no validation clause can be expressed):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  sqrt:</p>
-<p>signatures:</p>
-<p>      - arguments: [ integer ]</p>
-<p>        result: float</p>
-<p>        implementation: scripts/sqrt.py</p>
-<p>      - arguments: [ float ]</p>
-<p>        result: float</p>
-<p>        implementation: scripts/sqrt.py</p>
-<p>description: &gt;</p>
-<p>This is a square root function that defines two signatures:</p>
-<p>the argument is either integer or float and the function</p>
-<p>returns the suare root as a float.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  sqrt:
+    signatures:
+      - arguments: [ integer ]
+        result: float
+        implementation: scripts/sqrt.py
+      - arguments: [ float ]
+        result: float
+        implementation: scripts/sqrt.py
+    description: >
+      This is a square root function that defines two signatures:
+      the argument is either integer or float and the function
+      returns the suare root as a float.
+```
 ##### Function with list of arguments
 
 The following example shows a function that takes a list of arguments
 with different types:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  my_func_with_different_argument_types:</p>
-<p>signatures:</p>
-<p>    - arguments:</p>
-<p>- type: MyType1</p>
-<p>description: "this is the first argument ..."</p>
-<p>- type: string</p>
-<p>description: "this is the second argument ..."</p>
-<p>- type: string</p>
-<p>description: "this is the third argument ..."</p>
-<p>- type: MyType2</p>
-<p>description: "this is the argument that can be repeated ..."</p>
-<p>      variadic: true</p>
-<p>      result:</p>
-<p>type: MyTypeRez</p>
-<p>      implementation: scripts/my.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  my_func_with_different_argument_types:
+    signatures:
+      - arguments:
+        - type: MyType1
+          description: "this is the first argument ..."
+        - type: string
+          description: "this is the second argument ..."
+        - type: string
+          description: "this is the third argument ..."
+        - type: MyType2
+          description: "this is the argument that can be repeated ..."
+        variadic: true
+        result: 
+          type: MyTypeRez
+        implementation: scripts/my.py
+```
 Same as the above, but in compact notation:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  my_func_with_different_argument_types:</p>
-<p>signatures:</p>
-<p>    - arguments: [MyType1, string, string, MyType2]</p>
-<p>      variadic: true</p>
-<p>      result: MyTypeRez</p>
-<p>      implementation: scripts/my.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  my_func_with_different_argument_types:
+    signatures:
+      - arguments: [MyType1, string, string, MyType2]
+        variadic: true
+        result: MyTypeRez
+      implementation: scripts/my.py
+```
 ##### Function with no arguments
 
 The arguments list can be empty or completely missing. In such a case,
 when using the function the arguments will be an empty list:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  get_random_nr:</p>
-<p>signatures:</p>
-<p>      - result: float</p>
-<p>        implementation: scripts/myrnd.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  get_random_nr:
+    signatures:
+      - result: float
+        implementation: scripts/myrnd.py
+```
 ##### Function with polymorphic arguments/result inside of lists
 
 Function signatures with different types within the arguments and result
 lists:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>  union:</p>
-<p>signatures:</p>
-<p>     - arguments:</p>
-<p>        - type: list</p>
-<p>          entry_schema: integer</p>
-<p>   variadic: true</p>
-<p>        result:</p>
-<p>          type: list</p>
-<p>          entry_schema: integer</p>
-<p>        implementation: scripts/libpi.py</p>
-<p>      - arguments:</p>
-<p>        - type: list</p>
-<p>          entry_schema: float</p>
-<p>   variadic: true</p>
-<p>        result:</p>
-<p>          type: list</p>
-<p>          entry_schema: float</p>
-<p>        implementation: scripts/libpi.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  union:
+    signatures:
+      - arguments:
+        - type: list
+          entry_schema: integer
+        variadic: true
+        result:
+          type: list
+          entry_schema: integer
+        implementation: scripts/libpi.py
+      - arguments:
+        - type: list
+          entry_schema: float
+        variadic: true
+        result:
+          type: list
+          entry_schema: float
+        implementation: scripts/libpi.py
+```
 ##### Defining a list in a map argument
 
 The following shows the use of a argument that is a map of lists of
 MyType:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>functions:</p>
-<p>complex_arg_function:</p>
-<p>signatures:</p>
-<p>- arguments:</p>
-<p>- type: map</p>
-<p>key_schema: string</p>
-<p>entry_schema:</p>
-<p>type: list</p>
-<p>entry_schema: MyType</p>
-<p>      result: string</p>
-<p>      implementation: scripts/complex.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+functions:
+  complex_arg_function:
+    signatures:
+      - arguments: 
+        - type: map
+          key_schema: string
+          entry_schema:
+            type: list
+            entry_schema: MyType
+        result: string
+        implementation: scripts/complex.py
+```
 ##### User-defined function usage
 
 The following shows more examples of function usage. Note that in the
@@ -11348,23 +7743,12 @@ usage of the polymorphic union function, the TOSCA parser knows to
 identify the right signature via the types of the function arguments.
 Also note the usage of a user-defined function with no parameters; an
 empty list is used for the arguments.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>properties:</p>
-<p>integer_union: {$union: [[1, 7], [3, 4, 9], [15, 16]]}</p>
-<p>float_union: {$union: [[3.5, 8.8], [1.3]]}</p>
-<p>rnd: {$get_random_nr: []}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+properties:
+  integer_union: {$union: [[1, 7], [3, 4, 9], [15, 16]]}
+  float_union: {$union: [[3.5, 8.8], [1.3]]}
+  rnd: {$get_random_nr: []}
+```
 Substitution
 ------------
 
@@ -11389,32 +7773,20 @@ allows the consumption of complex systems using a simplified vision.
 #### Grammar
 
 The grammar of the substitution_mapping section is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_type: &lt;<a
-href="#TYPE_YAML_STRING">node_type_name</a>&gt;</p>
-<p>substitution_filter : &lt;node_filter&gt;</p>
-<p>properties:</p>
-<p>&lt;property_mappings&gt;</p>
-<p>capabilities:</p>
-<p>&lt;capability_mappings&gt;</p>
-<p>requirements:</p>
-<p>&lt;requirement_mappings&gt;</p>
-<p>attributes:</p>
-<p>&lt;attribute_mappings&gt;</p>
-<p>interfaces:</p>
-<p>&lt;interface_mappings&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+node_type: <node_type_name>
+substitution_filter : <node_filter>
+properties:
+  <property_mappings>
+capabilities:
+  <capability_mappings>
+requirements:
+  <requirement_mappings>
+attributes:
+  <attribute_mappings>
+interfaces:
+  <interface_mappings>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -11444,6 +7816,8 @@ have the following meaning:
 
 #### Examples
 
+TBD
+
 #### Additional requirements
 
 - The substitution mapping MUST provide mapping for every property,
@@ -11472,40 +7846,17 @@ mapping:
 #### Grammar
 
 The single-line grammar of a property_mapping is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;property_name&gt;: &lt;property_value&gt; # This use is
-deprecated</p>
-<p>&lt;property_name&gt;: [ &lt;input_name&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<property_name>: <property_value> # This use is deprecated
+<property_name>: [ <input_name> ]
+```
 The multi-line grammar is as follows :
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;property_name&gt;:</p>
-<p>mapping: [ &lt; input_name &gt; ]</p>
-<p>&lt;property_name&gt;:</p>
-<p>value: &lt;property_value&gt; # This use is deprecated</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<property_name>: 
+  mapping: [ < input_name > ]
+<property_name>: 
+  value: <property_value> # This use is deprecated
+```
 #### Notes
 
 - Single line grammar for a property value assignment is not allowed for
@@ -11563,10 +7914,9 @@ mapping:
 #### Grammar
 
 The single-line grammar of an attribute_mapping is as follows:
-
-| \<attribute_name\>: \[ \<output_name\> \] |
-|-------------------------------------------|
-
+```
+<attribute_name>: [ <output_name> ]
+```
 ### Capability mapping
 
 A capability mapping allows to map the capability of one of the nodes of
@@ -11587,31 +7937,18 @@ mapping:
 #### Grammar
 
 The single-line grammar of a capability_mapping is as follows:
-
-| \<capability_name\>: \[ \<node_template_name\>, \<node_template_capability_name\> \] |
-|--------------------------------------------------------------------------------------|
-
+```
+<capability_name>: [ <node_template_name>, <node_template_capability_name> ]
+```
 The multi-line grammar is as follows :
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;capability_name&gt;:</p>
-<p>mapping: [ &lt;node_template_name&gt;,
-&lt;node_template_capability_name&gt; ]</p>
-<p>properties:</p>
-<p>&lt;property_name&gt;: &lt;property_value&gt;</p>
-<p>attributes:</p>
-<p>&lt;attribute_name&gt;: &lt;attribute_value&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<capability_name>: 
+  mapping: [ <node_template_name>, <node_template_capability_name> ]
+  properties:
+    <property_name>: <property_value>
+  attributes:
+    <attribute_name>: <attribute_value>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -11660,31 +7997,18 @@ mapping:
 #### Grammar
 
 The single-line grammar of a requirement_mapping is as follows:
-
-| \<requirement_name\>: \[ \<node_template_name\>, \<node_template_requirement_name\> \] |
-|----------------------------------------------------------------------------------------|
-
+```
+<requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
+```
 The multi-line grammar is as follows :
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;requirement_name&gt;:</p>
-<p>mapping: [ &lt;node_template_name&gt;,
-&lt;node_template_requirement_name&gt; ]</p>
-<p>properties:</p>
-<p>&lt;property_name&gt;: &lt;property_value&gt;</p>
-<p>attributes:</p>
-<p>&lt;attribute_name&gt;: &lt;attribute_value&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<requirement_name>: 
+  mapping: [ <node_template_name>, <node_template_requirement_name> ]
+  properties:
+    <property_name>: <property_value>
+  attributes:
+    <attribute_name>: <attribute_value>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -11721,25 +8045,13 @@ implementation for.
 <!----
 {"id": "1110", "author": "Calin Curescu [2]", "date": "2018-08-23T08:33:00Z", "comment": "This could change if we introduce the operations keyname in the interface definitions", "target": "Grammar"}-->
 
-
 The grammar of an interface_mapping is as follows:
 <!----
 {"id": "1111", "author": "Chris Lauwers", "date": "2020-08-03T18:40:00Z", "comment": "What about\nnotification mappings?", "target": "follows"}-->
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;interface_name&gt;:</p>
-<p>&lt;operation_name&gt;: &lt;workflow_name&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<interface_name>:
+  <operation_name>: <workflow_name>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -11800,76 +8112,28 @@ The Group Type is a TOSCA type entity and has the common keynames listed
 in Section 4.2.5.2 Common keynames in type definitions. In addition, the
 Group Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 13%" />
-<col style="width: 20%" />
-<col style="width: 48%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Group Type.</td>
-</tr>
-<tr class="even">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#attribute-definition">attribute definitions</a></p></td>
-<td>An optional map of attribute definitions for the Group Type.</td>
-</tr>
-<tr class="odd">
-<td>members</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of one or more names of Node Types that are valid
-(allowed) as members of the Group Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|properties|no|map of property definitions|An optional map of property definitions for the Group Type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Group Type.|
+|members |no|list of string|An optional list of one or more names of Node Types that are valid (allowed) as members of the Group Type.|
 
 #### Grammar
 
 Group Types have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">group_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_group_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">group_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-definition">attribute_definitions</a>&gt;</p>
-<p>members: [ &lt;list_of_valid_member_types&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<group_type_name>:
+  derived_from: <parent_group_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <group_description>
+  properties:
+    <property_definitions>
+  attributes:
+    <attribute_definitions>
+  members: [ <list_of_valid_member_types> ]
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -11896,14 +8160,12 @@ have the following meaning:
   the Group Type; if the members keyname is not defined then there are
   no restrictions to the member types;
 
-<!-- -->
+  - note that the members of a group ultimately resolve to nodes, the
+    types here just restrict which nodes can be defined as members in a
+    group definition.
 
-- note that the members of a group ultimately resolve to nodes, the
-  types here just restrict which nodes can be defined as members in a
-  group definition.
-
-- A node type is matched if it is the specified type or is derived from
-  the node type
+  - A node type is matched if it is the specified type or is derived from
+    the node type
 
 #### Derivation rules
 
@@ -11924,24 +8186,12 @@ During Group Type derivation the keyname definitions follow these rules:
 #### Example
 
 The following represents a Group Type definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>group_types:</p>
-<p>mycompany.mytypes.groups.placement:</p>
-<p>description: My company’s group type for placing nodes of type
-Compute</p>
-<p>members: [ tosca.nodes.Compute ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+group_types:
+  mycompany.mytypes.groups.placement:
+    description: My company’s group type for placing nodes of type Compute
+    members: [ tosca.nodes.Compute ]
+```
 ### Group definition
 
 Collections of Nodes may be defined using a Group. A group definition
@@ -11953,97 +8203,30 @@ purposes, but is separate from the application’s service template.
 The following is the list of recognized keynames for a TOSCA group
 definition:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 14%" />
-<col style="width: 20%" />
-<col style="width: 49%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the group type the group definition is based
-upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the group definition.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="even">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional map of property value assignments for the group
-definition.</td>
-</tr>
-<tr class="odd">
-<td>attributes</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">attribute assignments</a></p></td>
-<td>An optional map of attribute value assignments for the group
-definition.</td>
-</tr>
-<tr class="even">
-<td>members</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional list of one or more node template names that are
-members of this group definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory name of the group type the group definition is based upon.|
+|description|no|string|The optional description for the group definition.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|properties|no|map of property assignments|An optional map of property value assignments for the group definition.|
+|attributes|no|map of attribute assignments|An optional map of attribute value assignments for the group definition.|
+|members|no|list of string|The optional list of one or more node template names that are members of this group definition.|
 
 #### Grammar
 
 Group definitions have one the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">group_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">group_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">group_description</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>attributes:</p>
-<p>&lt;<a href="#attribute-assignment">attribute_assignments</a>&gt;</p>
-<p>members: [ &lt;list_of_node_templates&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<group_name>:
+  type: <group_type_name>
+  description: <group_description>
+  metadata: 
+    <map of string>
+  properties:
+    <property_assignments>
+  attributes:
+    <attribute_assignments>
+  members: [ <list_of_node_templates> ]
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -12067,36 +8250,22 @@ have the following meaning:
   node template names or group symbolic names (within the same service
   template) that are members of this logical group
 
-<!-- -->
-
-- if the members keyname was defined (by specifying a
-  list_of_valid_member_types) in the group type of this group then the
-  nodes listed here must be compatible (i.e. be of that type or of type
-  that is derived from) with the node types in the
-  list_of_valid_member_types
+  - if the members keyname was defined (by specifying a
+    list_of_valid_member_types) in the group type of this group then the
+    nodes listed here must be compatible (i.e. be of that type or of type
+    that is derived from) with the node types in the
+    list_of_valid_member_types
 
 #### Example
 
 The following represents a group definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>groups:</p>
-<p>my_app_placement_group:</p>
-<p>type: tosca.groups.Root</p>
-<p>description: My application’s logical component grouping for
-placement</p>
-<p>members: [ my_web_server, my_sql_database ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+groups:
+  my_app_placement_group:
+    type: tosca.groups.Root
+    description: My application’s logical component grouping for placement
+    members: [ my_web_server, my_sql_database ]
+```
 ### Policy Type
 
 A Policy Type defines a type of a policy that affects or governs an
@@ -12111,76 +8280,29 @@ The Policy Type is a TOSCA type entity and has the common keynames
 listed in Section 4.2.5.2 Common keynames in type definitions. In
 addition, the Policy Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 16%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Policy Type.</td>
-</tr>
-<tr class="even">
-<td>targets</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of valid Node Types or Group Types the Policy Type
-can be applied to.</td>
-</tr>
-<tr class="odd">
-<td>triggers</td>
-<td>no</td>
-<td>map of <a href="#trigger-definition">trigger definitions</a></td>
-<td>An optional map of policy triggers for the Policy Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|properties|no|map of property definitions|An optional map of property definitions for the Policy Type.|
+|targets|no|list of string|An optional list of valid Node Types or Group Types the Policy Type can be applied to.|
+|triggers|no|map of trigger definitions |An optional map of policy triggers for the Policy Type.|
+
 
 #### Grammar
 
 Policy Types have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">policy_type_name</a>&gt;:</p>
-<p>derived_from: &lt;<a
-href="#TYPE_YAML_STRING">parent_policy_type_name</a>&gt;</p>
-<p>version: &lt;<a href="#tosca-version">version_number</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">policy_description</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#_Schema_Definition">property_definitions</a>&gt;</p>
-<p>targets: [ &lt;list_of_valid_target_types&gt; ]</p>
-<p>triggers:</p>
-<p>&lt;<a
-href="#trigger-definition">trigger_definitions</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<policy_type_name>:
+  derived_from: <parent_policy_type_name>
+  version: <version_number>
+  metadata: 
+    <map of string>
+  description: <policy_description>
+  properties:
+    <property_definitions> 
+  targets: [ <list_of_valid_target_types> ]
+  triggers:
+    <trigger_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -12228,23 +8350,12 @@ rules:
 #### Example
 
 The following represents a Policy Type definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policy_types:</p>
-<p>mycompany.mytypes.policies.placement.Container.Linux:</p>
-<p>description: My company’s placement policy for linux</p>
-<p>derived_from: tosca.policies.Root</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+policy_types:
+  mycompany.mytypes.policies.placement.Container.Linux:
+    description: My company’s placement policy for linux 
+    derived_from: tosca.policies.Root
+```
 ### Policy definition
 
 A policy definition defines a policy that can be associated with a TOSCA
@@ -12258,98 +8369,30 @@ definition:
 <!----
 {"id": "1167", "author": "Chris Lauwers", "date": "2022-10-03T19:59:00Z", "comment": "Policies apply to entire service templates,\nnot to individual node templates. What was the intended use of targets\nin policy definitions?", "target": "definition"}-->
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 14%" />
-<col style="width: 20%" />
-<col style="width: 49%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of the policy type the policy definition is based
-upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the policy definition.</td>
-</tr>
-<tr class="odd">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="even">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property assignments</a></p></td>
-<td>An optional map of property value assignments for the policy
-definition.</td>
-</tr>
-<tr class="odd">
-<td>targets</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>An optional list of valid Node Templates or Groups the Policy can be
-applied to.</td>
-</tr>
-<tr class="even">
-<td>triggers</td>
-<td>no</td>
-<td>map of <a href="#trigger-definition">trigger definitions</a></td>
-<td>An optional map of trigger definitions to invoke when the policy is
-applied by an orchestrator against the associated TOSCA entity. These
-triggers apply in addition to the triggers defined in the policy
-type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory name of the policy type the policy definition is based upon.|
+|description|no|string|The optional description for the policy definition.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|properties|no|map of property assignments|An optional map of property value assignments for the policy definition.|
+|targets|no|list of string|An optional list of valid Node Templates or Groups the Policy can be applied to.|
+|triggers|no|map of trigger definitions|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
 
 #### Grammar
 
 Policy definitions have one the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">policy_name</a>&gt;:</p>
-<p>type: &lt;<a href="#TYPE_YAML_STRING">policy_type_name</a>&gt;</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">policy_description</a>&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>properties:</p>
-<p>&lt;<a href="#property-assignment">property_assignments</a>&gt;</p>
-<p>targets: [&lt;list_of_policy_targets&gt;]</p>
-<p>triggers:</p>
-<p>&lt;trigger_definitions&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<policy_name>:
+  type: <policy_type_name>
+  description: <policy_description>
+  metadata: 
+    <map of string>
+  properties:
+    <property_assignments>
+  targets: [<list_of_policy_targets>]
+  triggers:
+    <trigger_definitions>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -12368,11 +8411,11 @@ have the following meaning:
 - list_of_policy_targets: represents the optional list of names of node
   templates or groups that the policy is to applied to.
 
-- if the targets keyname was defined (by specifying a
-  list_of_valid_target_types) in the policy type of this policy then the
-  targets listed here must be compatible (i.e. be of that type or of
-  type that is derived from) with the types (of nodes or groups) in the
-  list_of_valid_target_types.
+  - if the targets keyname was defined (by specifying a
+    list_of_valid_target_types) in the policy type of this policy then the
+    targets listed here must be compatible (i.e. be of that type or of
+    type that is derived from) with the types (of nodes or groups) in the
+    list_of_valid_target_types.
 
 - trigger_definitions: represents the optional map
   of [trigger definitions](#trigger-definition) for the policy; these
@@ -12385,26 +8428,13 @@ have the following meaning:
 #### Example
 
 The following represents a policy definition:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>policies:</p>
-<p>- my_compute_placement_policy:</p>
-<p>type: tosca.policies.placement</p>
-<p>description: Apply my placement policy to my application’s
-servers</p>
-<p>targets: [ my_server_1, my_server_2 ]</p>
-<p># remainder of policy definition left off for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  - my_compute_placement_policy:
+      type: tosca.policies.placement
+      description: Apply my placement policy to my application’s servers
+      targets: [ my_server_1, my_server_2 ]
+      # remainder of policy definition left off for brevity
+```
 ### Trigger definition
 
 A trigger definition defines the event, condition and action that is
@@ -12413,7 +8443,6 @@ used to “trigger” a policy with which it is associated.
 #### Keynames
 <!----
 {"id": "1181", "author": "Matt Rutkowski", "date": "2017-09-26T11:38:00Z", "comment": "RECALL; Policy type defn were to be consumed by a \u201cPolicy Engine\u201d that would create events on a known event monitoring service. We need to create diagram and explain the event-condition-action flow of policy (defn.)", "target": "Keynames"}-->
-
 
 The following is the list of recognized keynames for a TOSCA trigger
 definition:
@@ -12433,28 +8462,14 @@ definition:
 {"id": "1185", "author": "Calin Curescu", "date": "2020-05-06T11:29:00Z", "comment": "This does not make any sense. Needs to be deleted.", "target": ""}-->
 
 Trigger definitions have the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;<a href="#TYPE_YAML_STRING">trigger_name</a>&gt;:</p>
-<p>description: &lt;<a
-href="#TYPE_YAML_STRING">trigger_description</a>&gt;</p>
-<p>event: &lt;event_name&gt;</p>
-<p>condition: &lt;<a
-href="#BKM_Condition_Clause_Def">condition_clause</a>&gt;</p>
-<p>action:</p>
-<p>- &lt;<a
-href="#activity-definitions">list_of_activity_definition</a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<trigger_name>:
+  description: <trigger_description>
+  event: <event_name>
+  condition: <condition_clause>
+  action: 
+    - <list_of_activity_definition>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -12488,42 +8503,28 @@ be of the following types:
 
 - Delegate workflow activity definition:
 
-<!-- -->
-
-- Defines the name of the delegate workflow and optional input
-  assignments. This activity requires the target to be provided by the
-  orchestrator (no-op node or relationship).
-
-<!-- -->
+  - Defines the name of the delegate workflow and optional input
+    assignments. This activity requires the target to be provided by the
+    orchestrator (no-op node or relationship).
 
 - Set state activity definition:
 
-<!-- -->
-
-- Sets the state of a node.
-
-<!-- -->
+  - Sets the state of a node.
 
 - Call operation activity definition:
 
-<!-- -->
-
-- Calls an operation defined on a TOSCA interface of a node,
-  relationship or group. The operation name uses the
-  \<interface_name\>.\<operation_name\> notation. Optionally,
-  assignments for the operation inputs can also be provided. If
-  provided, they will override for this operation call the operation
-  inputs assignment in the node template.
-
-<!-- -->
+  - Calls an operation defined on a TOSCA interface of a node,
+    relationship or group. The operation name uses the
+    \<interface_name\>.\<operation_name\> notation. Optionally,
+    assignments for the operation inputs can also be provided. If
+    provided, they will override for this operation call the operation
+    inputs assignment in the node template.
 
 - Inline workflow activity definition:
 
-<!-- -->
-
-- Inlines another workflow defined in the service (allowing
-  reusability). The definition includes the name of a workflow to be
-  inlined and optional workflow input assignments.
+  - Inlines another workflow defined in the service (allowing
+    reusability). The definition includes the name of a workflow to be
+    inlined and optional workflow input assignments.
 
 #### Delegate workflow activity definition
 
@@ -12532,49 +8533,11 @@ be of the following types:
 The following is a list of recognized keynames for a delegate activity
 definition.
 
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 12%" />
-<col style="width: 19%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Keyname</strong></th>
-<th><strong>Mandatory</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>delegate</td>
-<td>yes</td>
-<td><p>string or empty</p>
-<p>(see grammar below)</p></td>
-<td><p>Defines the name of the delegate workflow and optional input
-assignments.</p>
-<p>This activity requires the target to be provided by the orchestrator
-(no-op node or relationship).</p></td>
-</tr>
-<tr class="even">
-<td>workflow</td>
-<td>no</td>
-<td>string</td>
-<td>The name of the delegate workflow. Mandatory in the extended
-notation.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td>map of <a href="#parameter-definition">parameter
-assignments</a></td>
-<td>The optional map of input parameter assignments for the delegate
-workflow.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|delegate|yes|string or empty  (see grammar below)|Defines the name of the delegate workflow and optional input assignments. This activity requires the target to be provided by the orchestrator (no-op node or relationship).|
+|workflow|no|string|The name of the delegate workflow. Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the delegate workflow.|
 
 ##### Grammar
 
@@ -12582,29 +8545,16 @@ A delegate activity definition has the following grammar. The short
 notation can be used if no input assignments are provided.
 
 #####  Short notation
-
-| \- delegate: \<[delegate_workflow_name](#TYPE_YAML_STRING)\> |
-|--------------------------------------------------------------|
-
+```
+- delegate: <delegate_workflow_name>
+```
 #####  Extended notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- delegate:</p>
-<p>workflow: &lt;<a
-href="#TYPE_YAML_STRING"><u>delegate_workflow_name</u></a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment"><u>parameter_assignments</u></a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+- delegate: 
+   workflow: <delegate_workflow_name>
+   inputs:
+     <parameter_assignments>
+```
 
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -12632,10 +8582,9 @@ definition.
 ##### Grammar
 
 A set state activity definition has the following grammar.
-
-| \- set_state: \<new_node_state\> |
-|----------------------------------|
-
+```
+- set_state: <new_node_state>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -12652,53 +8601,11 @@ input assignments can be optionally provided.
 The following is a list of recognized keynames for a call operation
 activity definition.
 
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 12%" />
-<col style="width: 19%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Keyname</strong></th>
-<th><strong>Mandatory</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>call_operation</td>
-<td>yes</td>
-<td><p>string or empty</p>
-<p>(see grammar below)</p></td>
-<td><p>Defines the opration call. The operation name uses the
-&lt;interface_name&gt;.&lt;operation_name&gt; notation.</p>
-<p>Optionally, assignments for the operation inputs can also be
-provided. If provided, they will override for this operation call the
-operation inputs assignment in the node template.</p></td>
-</tr>
-<tr class="even">
-<td>operation</td>
-<td>no</td>
-<td>string</td>
-<td><p>The name of the operation to call, using the
-&lt;interface_name&gt;.&lt;operation_name&gt; notation.</p>
-<p>Mandatory in the extended notation.</p></td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td>map of <a href="#parameter-definition">parameter
-assignments</a></td>
-<td>The optional map of input parameter assignments for the called
-operation. Any provided input assignments will override the operation
-input assignment in the target node template for this operation
-call.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|call_operation|yes|string or empty (see grammar below)|Defines the opration call. The operation name uses the \<interface_name\>.\<operation_name\> notation. Optionally, assignments for the operation inputs can also be provided. If provided, they will override for this operation call the operation inputs assignment in the node template.|
+|operation|no|string|The name of the operation to call, using the \<interface_name\>.\<operation_name\> notation.  Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the called operation. Any provided input assignments will override the operation input assignment in the target node template for this operation call.|
 
 ##### Grammar
 
@@ -12706,30 +8613,16 @@ A call operation activity definition has the following grammar. The
 short notation can be used if no input assignments are provided.
 
 #####  Short notation
-
-| \- call_operation: \<operation_name\> |
-|---------------------------------------|
-
+```
+- call_operation: <operation_name>
+```
 #####  Extended notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- call_operation:</p>
-<p>operation: &lt;<a
-href="#TYPE_YAML_STRING"><u>operation_name</u></a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment"><u>parameter_assignments</u></a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+- call_operation: 
+   operation: <operation_name>
+   inputs:
+     <parameter_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -12754,47 +8647,11 @@ input assignments.
 The following is a list of recognized keynames for an inline workflow
 activity definition.
 
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 12%" />
-<col style="width: 19%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Keyname</strong></th>
-<th><strong>Mandatory</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>inline</td>
-<td>yes</td>
-<td><p>string or empty</p>
-<p>(see grammar below)</p></td>
-<td>The definition includes the name of a workflow to be inlined and
-optional workflow input assignments.</td>
-</tr>
-<tr class="even">
-<td>workflow</td>
-<td>no</td>
-<td><u>string</u></td>
-<td>The name of the inlined workflow. Mandatory in the extended
-notation.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter assignments</a></p></td>
-<td>The optional map of input parameter assignments for the inlined
-workflow.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|inline|yes|string or empty (see grammar below)|The definition includes the name of a workflow to be inlined and optional workflow input assignments.|
+|workflow|no|string|The name of the inlined workflow. Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the inlined workflow.|
 
 ##### Grammar
 
@@ -12802,30 +8659,16 @@ An inline workflow activity definition has the following grammar. The
 short notation can be used if no input assignments are provided.
 
 #####  Short notation
-
-| \- inline: \<inlined_workflow_name\> |
-|--------------------------------------|
-
+```
+- inline: <inlined_workflow_name>
+```
 #####  Extended notation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- inline:</p>
-<p>workflow: &lt;<a
-href="#TYPE_YAML_STRING"><u>inlined_workflow_name</u></a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a
-href="#parameter-value-assignment"><u>parameter_assignments</u></a>&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+- inline: 
+   workflow: <inlined_workflow_name>
+   inputs:
+     <parameter_assignments>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -12839,23 +8682,12 @@ have the following meaning:
 
 The following represents a list of activity definitions (using the short
 notation):
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>- delegate: deploy</p>
-<p>- set_state: started</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
-<p>- inline: my_workflow</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+ - delegate: deploy
+ - set_state: started
+ - call_operation: tosca.interfaces.node.lifecycle.Standard.start
+ - inline: my_workflow
+```
 Workflows
 ---------
 
@@ -12871,110 +8703,35 @@ the workflow using an external workflow language.
 The following is the list of recognized keynames for a TOSCA workflow
 definition:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 12%" />
-<col style="width: 16%" />
-<col style="width: 55%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description for the workflow definition.</td>
-</tr>
-<tr class="even">
-<td>metadata</td>
-<td>no</td>
-<td><a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a></td>
-<td>Defines a section used to declare additional metadata
-information.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td>The optional map of input parameter definitions.</td>
-</tr>
-<tr class="even">
-<td>precondition</td>
-<td>no</td>
-<td>condition clause</td>
-<td>Condition clause that must evaluate to true before the workflow can
-be processed.</td>
-</tr>
-<tr class="odd">
-<td>steps</td>
-<td>no</td>
-<td>map of <a href="#workflow-step-definition">step definitions</a></td>
-<td>An optional map of valid imperative workflow step definitions.</td>
-</tr>
-<tr class="even">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">operation
-implementation definition</a></td>
-<td>The optional definition of an external workflow definition. This
-keyname is mutually exclusive with the <strong>steps</strong> keyname
-above.</td>
-</tr>
-<tr class="odd">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p>attribute mappings</p></td>
-<td>The optional map of attribute mappings that specify workflow output
-values and their mappings onto attributes of a node or relationship
-defined in the service.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|description|no|string|The optional description for the workflow definition.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|inputs|no|map of parameter definitions|The optional map of input parameter definitions.|
+|precondition|no|condition clause|Condition clause that must evaluate to true before the workflow can be processed.|
+|steps|no|map of step definitions|An optional map of valid imperative workflow step definitions.|
+|implementation|no|operation implementation definition|The optional definition of an external workflow definition. This keyname is mutually exclusive with the steps keyname above.|
+|outputs|no|map of attribute mappings|The optional map of attribute mappings that specify workflow  output values and their mappings onto attributes of a node or relationship defined in the service.|
 
 #### Grammar
 
 Imperative workflow definitions have the following grammar:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>&lt;workflow_name&gt;:</p>
-<p>description: &lt;workflow_description&gt;</p>
-<p>metadata:</p>
-<p>&lt;<a href="#tosca-map-type">map</a> of <a
-href="#TYPE_YAML_STRING">string</a>&gt;</p>
-<p>inputs:</p>
-<p>&lt;<a href="#parameter-definition">parameter_definitions</a>&gt;</p>
-<p>precondition:</p>
-<p>&lt;condition_clause&gt;</p>
-<p>steps:</p>
-<p>&lt;<a href="#workflow-step-definition">workflow_steps</a>&gt;</p>
-<p>implementation:</p>
-<p>&lt;<a
-href="#artifact-definition">operation_implementation_definitions</a>&gt;</p>
-<p>outputs:</p>
-<p>&lt;attribute_mappings&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+<workflow_name>:
+  description: <workflow_description>
+  metadata: 
+    <map of string>
+  inputs:
+    <parameter_definitions>
+  precondition:
+    <condition_clause>
+  steps:
+    <workflow_steps>
+  implementation:
+    <operation_implementation_definitions>
+  outputs:
+    <attribute_mappings>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -12991,10 +8748,10 @@ have the following meaning:
 - operation_implementation_definition: represents a full inline
   definition of an implementation artifact
 
-attribute_mappings: represents the optional map of attribute_mappings
-that consists of named output values returned by operation
-implementations (i.e. artifacts) and associated mappings that specify
-the attribute into which this output value must be stored.
+- attribute_mappings: represents the optional map of attribute_mappings
+  that consists of named output values returned by operation
+  implementations (i.e. artifacts) and associated mappings that specify
+  the attribute into which this output value must be stored.
 
 ### Workflow precondition definition
 
@@ -13018,117 +8775,34 @@ They are the building blocks of a declarative workflow.
 The following is the list of recognized keynames for a TOSCA workflow
 step definition:
 
-<table>
-<colgroup>
-<col style="width: 17%" />
-<col style="width: 12%" />
-<col style="width: 15%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>target</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The target of the step (this can be a node template name, a group
-name)</td>
-</tr>
-<tr class="even">
-<td>target_relationship</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional name of a requirement of the target in case the step
-refers to a relationship rather than a node or group. Note that this is
-applicable only if the target is a node.</td>
-</tr>
-<tr class="odd">
-<td>operation_host</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>The node on which operations should be executed (for TOSCA
-call_operation activities).</p>
-<p>This element is mandatory only for relationships and groups
-target.</p>
-<p>If target is a relationship then operation_host is mandatory and
-valid_values are SOURCE or TARGET – referring to the relationship source
-or target node.</p>
-<p>If target is a group then operation_host is optional.</p>
-<p>If not specified the operation will be triggered on every node of the
-group.</p>
-<p>If specified the valid_value is a node_type or the name of a node
-template.</p></td>
-</tr>
-<tr class="even">
-<td>filter</td>
-<td>no</td>
-<td>list of <a href="#validation-clause-definition">validation
-clauses</a></td>
-<td>Filter is a list of validation clauses that allows to provide a
-filtering logic.</td>
-</tr>
-<tr class="odd">
-<td>activities</td>
-<td>yes</td>
-<td>list of <a href="#activity-definitions">activity definition</a></td>
-<td>The list of sequential activities to be performed in this step.</td>
-</tr>
-<tr class="even">
-<td>on_success</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional list of step names to be performed after this one has
-been completed with success (all activities has been correctly
-processed).</td>
-</tr>
-<tr class="odd">
-<td>on_failure</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional list of step names to be called after this one in case
-one of the step activity failed.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|target|yes|string|The target of the step (this can be a node template name, a group name)|
+|target_relationship|no|string|The optional name of a requirement of the target in case the step refers to a relationship rather than a node or group. Note that this is applicable only if the target is a node.|
+|operation_host|no|string|The node on which operations should be executed (for TOSCA call_operation activities). This element is mandatory only for relationships and groups target. If target is a relationship then operation_host is mandatory and valid_values are SOURCE or TARGET – referring to the relationship source or target node. If target is a group then operation_host is optional. If not specified the operation will be triggered on every node of the group. If specified the valid_value is a node_type or the name of a node template.|
+|filter|no|list of validation clauses|Filter is a list of validation clauses that allows to provide a filtering logic.|
+|activities|yes|list of activity definition|The list of sequential activities to be performed in this step.|
+|on_success|no|list of string|The optional list of step names to be performed after this one has been completed with success (all activities has been correctly processed).|
+|on_failure|no|list of string|The optional list of step names to be called after this one in case one of the step activity failed.|
 
 #### Grammar
 
 Workflow step definitions have the following grammars:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>steps:</p>
-<p>&lt;<a href="#TYPE_YAML_STRING">step_name</a>&gt;</p>
-<p>target: &lt;<a href="#TYPE_YAML_STRING">target_name</a>&gt;</p>
-<p>target_relationship: &lt;target_requirement_name&gt;</p>
-<p>operation_host: &lt;operation_host_name&gt;</p>
-<p>filter:</p>
-<p>- &lt;<a
-href="#BKM_Condition_Clause_Def">list_of_condition_clause_definition</a>&gt;</p>
-<p>activities:</p>
-<p>- &lt;<a
-href="#activity-definitions">list_of_activity_definition</a>&gt;</p>
-<p>on_success:</p>
-<p>- &lt;target_step_name&gt;</p>
-<p>on_failure:</p>
-<p>- &lt;target_step_name&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+steps:
+  <step_name>
+    target: <target_name>
+    target_relationship: <target_requirement_name>
+    operation_host: <operation_host_name>
+    filter:
+      - <list_of_condition_clause_definition>
+    activities:
+      - <list_of_activity_definition>
+    on_success:
+      - <target_step_name>
+    on_failure:
+      - <target_step_name>
+```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -13163,136 +8837,83 @@ The get_input function is used to retrieve the values of parameters
 declared within the inputs section of a TOSCA Service Template.
 
 #### Grammar 
-
-| \$get_input: \<input_parameter_name\> |
-|---------------------------------------|
-
+```
+$get_input: <input_parameter_name>
+```
 or
-
-| \$get_input: \[ \<input_parameter_name\>, \<nested_input_parameter_name_or_index_1\>, ..., \<nested_input_parameter_name_or_index_n\> \] |
-|------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+$get_input: [ <input_parameter_name>, <nested_input_parameter_name_or_index_1>, ..., <nested_input_parameter_name_or_index_n> ]
+```
 Note that the first signature does not conform to the custom function
 definition, but it does not have to as it is a TOSCA built-in function.
 
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;input_parameter_name&gt;</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The name of the parameter as defined in the inputs section of the
-service template.</td>
-</tr>
-<tr class="even">
-<td>&lt;nested_input_parameter_name_or_index_*&gt;</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a>| <a
-href="#TYPE_YAML_INTEGER">integer</a></td>
-<td><p>Some TOSCA input parameters are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some parameters represent list types. In these cases, an index may be
-provided to reference a specific entry in the list (as identified by the
-previous parameter) to return.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|\<input_parameter_name\>|yes|string|The name of the parameter as defined in the inputs section of the service template.|
+|\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 #### Examples
 
 The following snippet shows an example of the simple get_input grammar:
+```
+inputs:
+  cpus:
+    type: integer
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>num_cpus: { $get_input: cpus }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+node_templates:
+  my_server:
+    type: tosca.nodes.Compute
+    capabilities:
+      host:
+        properties:
+          num_cpus: { $get_input: cpus }
+```
 The following template shows an example of the nested get_input grammar.
 The template expects two input values, each of which has a complex data
 type. The get_input function is used to retrieve individual fields from
 the complex input data.
+```
+data_types:
+  NetworkInfo:
+    derived_from: tosca.Data.Root
+    properties:
+      name:
+        type: string
+      gateway:
+        type: string
+        
+  RouterInfo:
+    derived_from: tosca.Data.Root
+    properties:
+      ip:
+        type: string
+      external:
+        type: string
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>data_types:</p>
-<p>NetworkInfo:</p>
-<p>derived_from: tosca.Data.Root</p>
-<p>properties:</p>
-<p>name:</p>
-<p>type: string</p>
-<p>gateway:</p>
-<p>type: string</p>
-<p>RouterInfo:</p>
-<p>derived_from: tosca.Data.Root</p>
-<p>properties:</p>
-<p>ip:</p>
-<p>type: string</p>
-<p>external:</p>
-<p>type: string</p>
-<p>service_template:</p>
-<p>inputs:</p>
-<p>management_network:</p>
-<p>type: NetworkInfo</p>
-<p>router:</p>
-<p>type: RouterInfo</p>
-<p>node_templates:</p>
-<p>Bono_Main:</p>
-<p>type: vRouter.Cisco</p>
-<p>directives: [ substitutable ]</p>
-<p>properties:</p>
-<p>mgmt_net_name: { $get_input: [management_network, name]}</p>
-<p>mgmt_cp_v4_fixed_ip: { $get_input: [router, ip]}</p>
-<p>mgmt_cp_gateway_ip: { $get_input: [management_network, gateway]}</p>
-<p>mgmt_cp_external_ip: { $get_input: [router, external]}</p>
-<p>requirements:</p>
-<p>- lan_port:</p>
-<p>node: host_with_net</p>
-<p>capability: virtualBind</p>
-<p>- mgmt_net: mgmt_net</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+service_template:
+  inputs:
+    management_network:
+      type: NetworkInfo
+    router:
+      type: RouterInfo
+      
+  node_templates:
+    Bono_Main:
+      type: vRouter.Cisco
+      directives: [ substitutable ]
+      properties:
+        mgmt_net_name: { $get_input: [management_network, name]}
+        mgmt_cp_v4_fixed_ip: { $get_input: [router, ip]}
+        mgmt_cp_gateway_ip: { $get_input: [management_network, gateway]}
+        mgmt_cp_external_ip: { $get_input: [router, external]}
+      requirements:
+        - lan_port: 
+            node: host_with_net
+            capability: virtualBind
+        - mgmt_net: mgmt_net
+```
 ### get_property
 
 The get_property function is used to retrieve property values of
@@ -13307,101 +8928,39 @@ graph of the TOSCA application (as realized by the TOSCA orchestrator).
 #### Grammar 
 <!----
 {"id": "1321", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-169](comments.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.", "target": "Grammar "}-->
-
-
-| \$get_property: \[ \<tosca_traversal_path\>, \<property_name\>, \<nested_property_name_or_index_1\>, ..., \<nested_property_name_or_index_n\> \] |
-|--------------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+$get_property: [ <tosca_traversal_path>, <property_name>, <nested_property_name_or_index_1>, ..., <nested_property_name_or_index_n> ]
+```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 12%" />
-<col style="width: 64%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt; tosca_traversal_path &gt;</td>
-<td>yes</td>
-<td>Using the &lt;tosca_traversal_path&gt; we can traverse the
-representation graph to extract information from a certain node or
-relationship. We start from a specific node or relationship identified
-by its symbolic name (or by the SELF keyword representing the node or
-relationship containing the definition) and then we may further traverse
-the relationships and nodes of the representation graph (using a
-variable number of steps) until reaching the desired node or
-relationship. In the following subsection the specification of the
-&lt;tosca_traversal_path&gt; is explicated.</td>
-</tr>
-<tr class="even">
-<td>&lt;property_name&gt;</td>
-<td>yes</td>
-<td>The name of the property definition the function will return the
-value from.</td>
-</tr>
-<tr class="odd">
-<td>&lt;nested_property_name_or_index_*&gt;</td>
-<td>no</td>
-<td><p>Some TOSCA properties are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some properties represent list types. In these cases, an index may be
-provided to reference a specific entry in the list (as identified by the
-previous parameter) to return.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|\< tosca_traversal_path \>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. In the following subsection the specification of the \<tosca_traversal_path\> is explicated.|
+|\<property_name\>|yes|The name of the property definition the function will return the value from.|
+|\<nested_property_name_or_index_*\> |no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 ##### The simplified TOSCA_PATH definition in BNF format
-
-*\<tosca_traversal_path\> ::= \<initial_context\>, \<node_context\> \|*
-
-> *\<initial_context\>, \<rel_context\>*
-
-*\<initial_context\> ::= \<node_symbolic_name\> \|*
-
-*\<relationship_symbolic_name\>* \|
-
-*SELF*
-
-*\<rel_context\> ::= SOURCE, \<node_context\> \| *
-
-*TARGET, \<node_context\> \| *
-
-*CAPABILITY \|*
-
-*\<empty\>*
-
-*\<node_context\> ::= RELATIONSHIP, \<requirement_name\>,
-\<idx_of_out_rel_in_req\>, \<rel_context\> \|*
-
-*CAPABILITY, \<capability_name\>, RELATIONSHIP, \<idx_of_incoming_rel\>,
-\<rel_context\> \|*
-
-*CAPABILITY, \<capability_name\> \|*
-
-*\<empty\>*
-
-*\<idx_of_out_rel_in_req\> ::= \<integer_index\> \| *
-
-*ALL \| *
-
-*\<empty\>*
-
-*\< idx_of_incoming_rel \> ::= \<integer_index\> \| *
-
-*ALL \| *
-
-*\<empty\>*
-
+```
+<tosca_path> ::=         <initial_context>, <node_context> |
+                         <initial_context>, <rel_context>
+<initial_context> ::=    <node_symbolic_name> | 
+                         <relationship_symbolic_name> |
+                         SELF 
+<rel_context> ::=        SOURCE, <node_context> | 
+                         TARGET, <node_context> | 
+                         CAPABILITY |
+                         <empty>
+<node_context> ::=       RELATIONSHIP, <requirement_name>, <id_of_outgoing_rel>, <rel_context> |
+                         CAPABILITY, <capability_name>, RELATIONSHIP, <id_of_incoming_rel>, <rel_context> |
+                         CAPABILITY, <capability_name> |
+                         <empty>
+<id_of_outgoing_rel> ::= <integer_index> | 
+                         ALL | 
+                         <empty>
+<id_of_incoming_rel> ::= <integer_index> |
+                         ALL | 
+                         <empty>
+```
 The initial context (if we refer to a node or relationship) determines
 if the next context is a relationship context or a node context. Then,
 each *\<node_context\>* can further resolve to a *\<rel_context\>* and
@@ -13460,113 +9019,81 @@ expression from v1.3 to v2.0:
 
 - Changed the following syntax to work better in multi-step traversal:
 
-<!-- -->
+  - The initial SOURCE, … becomes SELF, SOURCE, …
 
-- The initial SOURCE, … becomes SELF, SOURCE, …
-
-- The initial TARGET, … becomes SELF, TARGET, …
+  - The initial TARGET, … becomes SELF, TARGET, …
 
 #### Examples
 <!----
 {"id": "1322", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "WD03: TODO: Need examples for returning simple types and complex/nested structures (e.g., Maps of Maps)", "target": "Examples"}-->
 
-
 The following example shows how to use the get_property function with an
 actual Node Template name:
+```
+node_templates:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql_database:</p>
-<p>type: tosca.nodes.Database</p>
-<p>properties:</p>
-<p>name: sql_database1</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>...</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>inputs:</p>
-<p>wp_db_name: { $get_property: [ mysql_database, name ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  mysql_database:
+    type: tosca.nodes.Database
+    properties:
+      name: sql_database1
 
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          inputs:
+            wp_db_name: { $get_property: [ mysql_database, name ] }
+```
 The following example shows how to use the get_property function
 traversing from the relationship to its target node:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_templates:</p>
-<p>my_connection:</p>
-<p>type: ConnectsTo</p>
-<p>interfaces:</p>
-<p>Configure:</p>
-<p>inputs:</p>
-<p>targets_value: { $get_property: [ SELF, TARGET, value ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_templates:
+    my_connection:
+      type: ConnectsTo
+      interfaces:
+        Configure:
+          inputs: 
+            targets_value: { $get_property: [ SELF, TARGET, value ] }
+```
 The following example shows how to use the get_property function using
 the SELF keyword, and traversing from a wordpress node (via the first
 relationship of the database_endpoint requirement to the target
 capability in the target node) and accessing the port property of that
 capability:
+```
+node_templates:  
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql_database:</p>
-<p>type: tosca.nodes.Database</p>
-<p>...</p>
-<p>capabilities:</p>
-<p>database_endpoint:</p>
-<p>properties:</p>
-<p>port: 3306</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>requirements:</p>
-<p>...</p>
-<p>- database_endpoint: mysql_database</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: wordpress_install.sh</p>
-<p>configure:</p>
-<p>implementation: wordpress_configure.sh</p>
-<p>inputs:</p>
-<p>...</p>
-<p>wp_db_port:</p>
-<p>$get_property:</p>
-<p>- SELF</p>
-<p>- RELATIONSHIP</p>
-<p>- database_endpoint</p>
-<p>- 0</p>
-<p>- CAPABILITY</p>
-<p>- port</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  mysql_database:
+    type: tosca.nodes.Database
+    ...
+    capabilities:
+      database_endpoint:
+        properties:
+          port: 3306
 
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    requirements:
+      ...
+      - database_endpoint: mysql_database
+    interfaces:
+      Standard:
+        create: wordpress_install.sh
+        configure: 
+          implementation: wordpress_configure.sh            
+          inputs:
+            ...
+            wp_db_port:
+              $get_property:
+               - SELF
+               - RELATIONSHIP
+               - database_endpoint
+               - 0
+               - CAPABILITY
+               - port
+```
 NOTE that in the above example the index 0 is used but can also be
 omitted with the same semantic meaning.
 
@@ -13574,50 +9101,41 @@ The following example shows how to use the get_property function to
 traverse over two requirement relationships, from the wordpress node to
 its database node and further to its DBMS host to get its
 admin_credential property:
+```
+node_templates:  
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>mysql_database:</p>
-<p>type: tosca.nodes.Database</p>
-<p>...</p>
-<p>capabilities:</p>
-<p>database_endpoint:</p>
-<p>properties:</p>
-<p>port: 3306</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>requirements:</p>
-<p>...</p>
-<p>- database_endpoint: mysql_database</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: wordpress_install.sh</p>
-<p>configure:</p>
-<p>implementation: wordpress_configure.sh</p>
-<p>inputs:</p>
-<p>...</p>
-<p>host_dbms_admin_credential:</p>
-<p>$get_property:</p>
-<p>- SELF</p>
-<p>- RELATIONSHIP</p>
-<p>- database_endpoint</p>
-<p>- TARGET</p>
-<p>- RELATIONSHIP</p>
-<p>- host</p>
-<p>- TARGET</p>
-<p>- admin_credential</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  mysql_database:
+    type: tosca.nodes.Database
+    ...
+    capabilities:
+      database_endpoint:
+        properties:
+          port: 3306
 
-TODO: An example of second index (i.e. 1) and index ALL !!!
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    requirements:
+      ...
+      - database_endpoint: mysql_database
+    interfaces:
+      Standard:
+        create: wordpress_install.sh
+        configure: 
+          implementation: wordpress_configure.sh            
+          inputs:
+            ...
+            host_dbms_admin_credential:
+              $get_property:
+               - SELF
+               - RELATIONSHIP
+               - database_endpoint
+               - TARGET
+               - RELATIONSHIP
+               - host
+               - TARGET
+               - admin_credential
+```
+> TODO: An example of second index (i.e. 1) and index ALL !!!
 
 ### get_attribute
 
@@ -13631,58 +9149,16 @@ invoked.
 #### Grammar 
 <!----
 {"id": "1326", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-169](commentsExtended.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.", "target": "Grammar "}-->
-
-
-| \$get_attribute: \[\<tosca_traversal_path\>, \<attribute_name\>, \<nested_attribute_name_or_index_1\>, ..., \<nested_attribute_name_or_index_n\> \] |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-
+```
+$get_attribute: [<tosca_traversal_path>, <attribute_name>, <nested_attribute_name_or_index_1>, ..., <nested_attribute_name_or_index_n> ]
+```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 12%" />
-<col style="width: 64%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;tosca_traversal_path&gt;</td>
-<td>yes</td>
-<td>Using the &lt;tosca_traversal_path&gt; we can traverse the
-representation graph to extract information from a certain node or
-relationship. We start from a specific node or relationship identified
-by its symbolic name (or by the SELF keyword representing the node or
-relationship containing the definition) and then we may further traverse
-the relationships and nodes of the representation graph (using a
-variable number of steps) until reaching the desired node or
-relationship. The specification of the &lt;tosca_traversal_path&gt; is
-explicated in the get_property section.</td>
-</tr>
-<tr class="even">
-<td>&lt;attribute_name&gt;</td>
-<td>yes</td>
-<td>The name of the attribute definition the function will return the
-value from.</td>
-</tr>
-<tr class="odd">
-<td>&lt;nested_attribute_name_or_index_*&gt;</td>
-<td>no</td>
-<td><p>Some TOSCA attributes are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some attributes represent list types. In these cases, an index may be
-provided to reference a specific entry in the list (as identified by the
-previous parameter) to return.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|\<tosca_traversal_path\>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The specification of the \<tosca_traversal_path\> is explicated in the get_property section.|
+|\<attribute_name\> |yes|The name of the attribute definition the function will return the value from.|
+|\<nested_attribute_name_or_index_*\> |no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 #### Examples:
 
@@ -13696,79 +9172,20 @@ with “get_attribute” function name.
 
 ### get_artifact
 
-
-
-modelable entities defined in the same service template.
+The get_artifact function is used to retrieve artifact location between modelable entities defined in the same service template.
 
 #### Grammar 
-
-| \$get_artifact: \[ \<modelable_entity_name\>, \<artifact_name\>, \<location\>, \<remove\> \] |
-|----------------------------------------------------------------------------------------------|
-
+```
+$get_artifact: [ <modelable_entity_name>, <artifact_name>, <location>, <remove> ]
+```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 12%" />
-<col style="width: 9%" />
-<col style="width: 55%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;modelable entity name&gt; | SELF | SOURCE | TARGET | HOST</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory name of a modelable entity (e.g., Node Template or
-Relationship Template name) as declared in the service template that
-contains the property definition the function will return the value
-from. See section B.1 for valid keywords.</td>
-</tr>
-<tr class="even">
-<td>&lt;artifact_name&gt;</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The name of the artifact definition the function will return the
-value from.</td>
-</tr>
-<tr class="odd">
-<td>&lt;location&gt; | LOCAL_FILE</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td><p>Location value must be either a valid path e.g.
-‘/etc/var/my_file’ or ‘LOCAL_FILE’.</p>
-<p>If the value is LOCAL_FILE the orchestrator is responsible for
-providing a path as the result of the get_artifact call where the
-artifact file can be accessed. The orchestrator will also remove the
-artifact from this location at the end of the operation.</p>
-<p>If the location is a path specified by the user the orchestrator is
-responsible to copy the artifact to the specified location. The
-orchestrator will return the path as the value of the get_artifact
-function and leave the file here after the execution of the
-operation.</p></td>
-</tr>
-<tr class="even">
-<td>remove</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_BOOLEAN">boolean</a></td>
-<td><p>Boolean flag to override the orchestrator default behavior so it
-will remove or not the artifact at the end of the operation
-execution.</p>
-<p>If not specified the removal will depends of the location e.g.
-removes it in case of ‘LOCAL_FILE’ and keeps it in case of a path.</p>
-<p>If true the artifact will be removed by the orchestrator at the end
-of the operation execution, if false it will not be removed.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Type|Description|
+| ----- | ------- | ----- | ----- |
+|\<modelable entity name\> \| SELF \| SOURCE \| TARGET \| HOST|yes|string|The mandatory name of a modelable entity (e.g., Node Template or Relationship Template name) as declared in the service template that contains the property definition the function will return the value from. See section B.1 for valid keywords.|
+|<artifact_name\>|yes|string|The name of the artifact definition the function will return the value from.|
+|\<location\> \| LOCAL_FILE|no|string|Location value must be either a valid path e.g. ‘/etc/var/my_file’ or ‘LOCAL_FILE’. If the value is LOCAL_FILE the orchestrator is responsible for providing a path as the result of the get_artifact call where the artifact file can be accessed. The orchestrator will also remove the artifact from this location at the end of the operation. If the location is a path specified by the user the orchestrator is responsible to copy the artifact to the specified location. The orchestrator will return the path as the value of the get_artifact function and leave the file here after the execution of the operation.|
+|remove|no|boolean|Boolean flag to override the orchestrator default behavior so it will remove or not the artifact at the end of the operation execution. If not specified the removal will depends of the location e.g. removes it in case of ‘LOCAL_FILE’ and keeps it in case of a path. If true the artifact will be removed by the orchestrator at the end of the operation execution, if false it will not be removed.|
 
 #### Examples
 
@@ -13777,32 +9194,22 @@ The following example uses a snippet of a WordPress
 get_artifact function with an actual Node Template name:
 
 ##### Example: Retrieving artifact without specified location
+```
+node_templates:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>...</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>create:</p>
-<p>implementation: wordpress_install.sh</p>
-<p>inputs</p>
-<p>wp_zip: { $get_artifact: [ SELF, zip ] }</p>
-<p>artifacts:</p>
-<p>zip: /data/wordpress.zip</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          create:
+            implementation: wordpress_install.sh
+            inputs
+              wp_zip: { $get_artifact: [ SELF, zip ] }
+    artifacts:
+      zip: /data/wordpress.zip
+```
 In such implementation the TOSCA orchestrator may provide the
 wordpress.zip archive as
 
@@ -13818,32 +9225,22 @@ wordpress.zip archive as
 
 The following example explains how to force the orchestrator to copy the
 file locally before calling the operation’s implementation script:
+```
+node_templates:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>...</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>create:</p>
-<p>implementation: wordpress_install.sh</p>
-<p>inputs</p>
-<p>wp_zip: { $get_artifact: [ SELF, zip, LOCAL_FILE] }</p>
-<p>artifacts:</p>
-<p>zip: /data/wordpress.zip</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          create:
+            implementation: wordpress_install.sh
+            inputs
+              wp_zip: { $get_artifact: [ SELF, zip, LOCAL_FILE] }
+    artifacts:
+      zip: /data/wordpress.zip
+```
 In such implementation the TOSCA orchestrator must provide the
 wordpress.zip archive as a local path (example:
 [/tmp/wordpress.zip](file:///\\home\user\wordpress.zip)) and **will
@@ -13854,32 +9251,22 @@ remove it** after the operation is completed.
 The following example explains how to force the orchestrator to copy the
 file locally to a specific location before calling the operation’s
 implementation script:
+```
+node_templates:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>...</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>create:</p>
-<p>implementation: wordpress_install.sh</p>
-<p>inputs</p>
-<p>wp_zip: { $get_artifact: [ SELF, zip, C:/wpdata/wp.zip ] }</p>
-<p>artifacts:</p>
-<p>zip: /data/wordpress.zip</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          create:
+            implementation: wordpress_install.sh
+            inputs
+              wp_zip: { $get_artifact: [ SELF, zip, C:/wpdata/wp.zip ] }
+    artifacts:
+      zip: /data/wordpress.zip
+```
 In such implementation the TOSCA orchestrator must provide the
 wordpress.zip archive as a local path (example: C:/wpdata/wp.zip ) and
 **will let it** after the operation is completed.
@@ -13891,44 +9278,19 @@ returns the value of the property, attribute, or parameter for which the
 validation clause is defined.
 
 #### Grammar 
-
-| \$value: \[\<nested_value_name_or_index\>, ... \] |
-|---------------------------------------------------|
-
+```
+$value: [<nested_value_name_or_index>, ... ]
+```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 12%" />
-<col style="width: 64%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;nested_value_name_or_index&gt;</td>
-<td>no</td>
-<td><p>Some TOSCA data are complex (i.e., composed as nested
-structures). These parameters are used to dereference into the names of
-these nested structures when needed.</p>
-<p>Some data represent lists. In these cases, an index may be provided
-to reference a specific entry in the list (as identified by the previous
-parameter) to return.</p></td>
-</tr>
-</tbody>
-</table>
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|<nested_value_name_or_index\> |no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 Boolean Functions
+-----------------
 <!----
 {"id": "1332", "author": "Calin Curescu", "date": "2022-12-06T16:00:00Z", "comment": "I would not call them condition functions since they can appear also outside conditions.", "target": " Functions"}-->
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 TOSCA includes a number of functions that return Boolean values. These
 functions are used in validation expressions and in condition clauses in
@@ -13945,10 +9307,9 @@ true if all its arguments evaluate to true. It evaluates to false in all
 other cases.
 
 ##### Grammar 
-
-| \$and: \[ \<boolean_arg1\>, \<boolean_arg2\>, ... \<boolean_argn\>\] |
-|----------------------------------------------------------------------|
-
+```
+$and: [ <boolean_arg1>, <boolean_arg2>, ... <boolean_argn>]
+```
 #####  Note
 
 Note that the evaluation of the arguments in the \$and function may stop
@@ -13962,10 +9323,9 @@ false if all of its arguments evaluate to false. It evaluates to true in
 all other cases.
 
 ##### Grammar 
-
-| \$or: \[ \<boolean_arg1\>, \<boolean_arg2\>, ... \<boolean_argn\>\] |
-|---------------------------------------------------------------------|
-
+```
+$or: [ <boolean_arg1>, <boolean_arg2>, ... <boolean_argn>]
+```
 ##### Note
 
 Note that the evaluation of the arguments in the \$or function may stop
@@ -13979,10 +9339,9 @@ its argument evaluates to false and evaluates to false if its argument
 evaluates to true.
 
 ##### Grammar 
-
-| \$not: \[ \<boolean_arg\> \] |
-|------------------------------|
-
+```
+$not: [ <boolean_arg> ]
+```
 #### xor
 
 The \$xor function takes two Boolean arguments. It evaluates to false if
@@ -13990,10 +9349,9 @@ both arguments either evaluate to true or both arguments evaluate to
 false, and evaluates to true otherwise.
 
 ##### Grammar 
-
-| \$xor: \[ \<boolean_arg1\>, \<boolean_arg2\> \] |
-|-------------------------------------------------|
-
+```
+$xor: [ <boolean_arg1>, <boolean_arg2> ]
+```
 ### Comparison Functions
 
 The following is the list of recognized comparison functions.
@@ -14008,7 +9366,6 @@ The following is the list of recognized comparison functions.
 <!----
 {"id": "1333", "author": "Calin Curescu", "date": "2023-01-04T16:19:00Z", "comment": "TODO explanation on how versions are\n  compared!!!", "target": "TODO explanation on how versions are\n  compared!!\\!"}-->
 
-
 #### equal
 
 The function takes two arguments of any type. It evaluates to true if
@@ -14016,10 +9373,9 @@ the arguments are equal (that is in both type and value) and evaluates
 to false otherwise.
 
 ##### Grammar 
-
-| \$equal: \[ \<any_type_arg1\>, \<any_type_arg2\> \] |
-|-----------------------------------------------------|
-
+```
+$equal: [ <any_type_arg1>, <any_type_arg2> ]
+```
 #### greater_than
 
 The function takes two arguments of integer, float, string, timestamp,
@@ -14028,10 +9384,9 @@ both arguments are of the same type, and if the first argument is
 greater than the second argument and evaluates to false otherwise.
 
 ##### Grammar 
-
-| \$greater_than: \[ \<comparable_type_arg1\>, \<comparable_type_arg2\> \] |
-|--------------------------------------------------------------------------|
-
+```
+$greater_than: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
 #### greater_or_equal
 
 The function takes two arguments of integer, float, string, timestamp,
@@ -14041,10 +9396,9 @@ greater than or equal to the second argument and evaluates to false
 otherwise.
 
 ##### Grammar 
-
-| \$greater_or_equal: \[ \<comparable_type_arg1\>, \<comparable_type_arg2\> \] |
-|------------------------------------------------------------------------------|
-
+```
+$greater_or_equal: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
 #### less_than
 
 The function takes two arguments of integer, float, string, timestamp,
@@ -14053,10 +9407,9 @@ both arguments are of the same type, and if the first argument is less
 than the second argument and evaluates to false otherwise.
 
 ##### Grammar 
-
-| \$less_than: \[ \<comparable_type_arg1\>, \<comparable_type_arg2\> \] |
-|-----------------------------------------------------------------------|
-
+```
+$less_than: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
 #### less_or_equal
 
 The function takes two arguments of integer, float, string, timestamp,
@@ -14065,10 +9418,9 @@ both arguments are of the same type, and if the first argument is less
 than or equal to the second argument and evaluates to false otherwise.
 
 ##### Grammar 
-
-| \$less_or_equal: \[ \<comparable_type_arg1\>, \<comparable_type_arg2\> \] |
-|---------------------------------------------------------------------------|
-
+```
+$less_or_equal: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
 #### valid_values
 
 The function takes two arguments. The first argument is of any type and
@@ -14080,12 +9432,13 @@ second argument list and false otherwise.
 arguments). A good candidate to remove!
 
 #####  Grammar 
-
-| \$valid_values: \[ \<any_type_arg1\>, \<any_type_list_arg2\> \] |
-|-----------------------------------------------------------------|
-
+```
+$valid_values: [ <any_type_arg1>, <any_type_list_arg2> ]
+```
 #### matches
-
+```
+$matches: [ <string_type_arg1>, <regex_pattern_arg2> ]
+```
 The function takes two arguments. The first argument is a general
 string, and the second argument is a string that encodes a regular
 expression pattern. It evaluates to true if the first argument matches
@@ -14093,9 +9446,6 @@ the regular expression pattern represented by the second argument and
 false otherwise.
 
 #####  Grammar 
-
-| \$matches: \[ \<string_type_arg1\>, \<regex_pattern_arg2\> \] |
-|---------------------------------------------------------------|
 
 #####  Note
 
@@ -14118,10 +9468,9 @@ of the first argument. For lists this means that the values of the
 second list are the last values of the first list in the same order.
 
 #####  Grammar 
-
-| \$has_suffix: \[ \<string_or_list_type_arg1\>, \<string_or_list_type_arg2\> \] |
-|--------------------------------------------------------------------------------|
-
+```
+$has_suffix: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
+```
 #### has_prefix
 
 The function takes two arguments. Both arguments are either of type
@@ -14130,10 +9479,9 @@ of the first argument. For lists this means that the values of the
 second list are the first values of the first list in the same order.
 
 #####  Grammar 
-
-| \$has_prefix: \[ \<string_or_list_type_arg1\>, \<string_or_list_type_arg2\> \] |
-|--------------------------------------------------------------------------------|
-
+```
+$has_prefix: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
+```
 #### contains
 
 The function takes two arguments. Both arguments are either of type
@@ -14144,10 +9492,9 @@ values of the second list are contained in the first list in an
 uninterrupted sequence and in the same order.
 
 #####  Grammar 
-
-| \$contains: \[ \<string_or_list_type_arg1\>, \<string_or_list_type_arg2\> \] |
-|------------------------------------------------------------------------------|
-
+```
+$contains: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
+```
 #### has_entry
 
 The function takes two arguments. The first argument is a list or a map.
@@ -14159,10 +9506,9 @@ argument is a value in any of the key-value pairs in the first argument
 map.
 
 #####  Grammar 
-
-| \$has_entry: \[ \<list_or_map_type_arg1\>, \<any_type_arg2\> \] |
-|-----------------------------------------------------------------|
-
+```
+$has_entry: [ <list_or_map_type_arg1>, <any_type_arg2> ]
+```
 #### has_key
 
 The function takes two arguments. The first argument is a map. The
@@ -14171,10 +9517,9 @@ argument. It evaluates to true if the second argument is a key in any of
 the key-value pairs in the first argument map.
 
 #####  Grammar 
-
-| \$has_key: \[ \<map_type_arg1\>, \<any_type_arg2\> \] |
-|-------------------------------------------------------|
-
+```
+$has_key: [ <map_type_arg1>, <any_type_arg2> ]
+```
 #### has_all_entries
 
 The function takes two arguments. The first argument is a list or a map.
@@ -14184,10 +9529,9 @@ entries in the second argument there is an equal value entry in the
 first argument.
 
 #####  Grammar 
-
-| \$has_all_entries: \[ \<list_or_map_type_arg1\>, \<list_type_arg2\> \] |
-|------------------------------------------------------------------------|
-
+```
+$has_all_entries: [ <list_or_map_type_arg1>, <list_type_arg2> ]
+```
 #### has_all_keys
 
 The function takes two arguments. The first argument is a map. The
@@ -14196,10 +9540,9 @@ of the first argument. It evaluates to true if for all entries in the
 second argument there is an equal value key in the first argument.
 
 #####  Grammar 
-
-| \$has_all_keys: \[ \<map_type_arg1\>, \<list_type_arg2\> \] |
-|-------------------------------------------------------------|
-
+```
+$has_all_keys: [ <map_type_arg1>, <list_type_arg2> ]
+```
 #### has_any_entry
 
 The function takes two arguments. The first argument is a list or a map.
@@ -14209,10 +9552,9 @@ entry in the second argument that is equal to an entry in the first
 argument.
 
 #####  Grammar 
-
-| \$has_any_entry: \[ \<list_or_map_type_arg1\>, \<list_type_arg2\> \] |
-|----------------------------------------------------------------------|
-
+```
+$has_any_entry: [ <list_or_map_type_arg1>, <list_type_arg2> ]
+```
 #### has_any_key
 
 The function takes two arguments. The first argument is a map. The
@@ -14221,11 +9563,10 @@ of the first argument. It evaluates to true if there is an entry in the
 second argument which is equal to a key in the first argument.
 
 #####  Grammar 
-
-| \$has_any_key: \[ \<map_type_arg1\>, \<list_type_arg2\> \] |
-|------------------------------------------------------------|
-
-String, list, and map functions
+```
+$has_any_key: [ <map_type_arg1>, <list_type_arg2> ]
+```
+## String, list, and map functions
 <!----
 {"id": "1334", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-212](commentsIds.xml) \u2013 Concat intrinsic function", "target": ""}-->
 <span class="comment-start" id="1335" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1335"></span>
@@ -14238,10 +9579,9 @@ the number of nicode characters in the string, or the numbers of values
 in the list, or the number of key-values pairs in the map.
 
 ####  Grammar 
-
-| \$length: \[ \<string_list_or_map_type_arg\> \] |
-|-------------------------------------------------|
-
+```
+$length: [ <string_list_or_map_type_arg> ]
+```
 ### concat
 
 The concat function takes one or more arguments of either the type
@@ -14253,32 +9593,19 @@ strings and lists. This function does not recurse into the entries of
 the lists.
 
 #### Grammar 
-
-| \$concat: \[\<string_or_list_type_arg1\>, … \] |
-|------------------------------------------------|
-
+```
+$concat: [<string_or_list_type_arg1>, … ]
+```
 #### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>description: Concatenate the URL for a server from other template
-values</p>
-<p>server_url:</p>
-<p>value: { $concat: [ 'http://',</p>
-<p>$get_attribute: [ server, public_address ],</p>
-<p>':',</p>
-<p>$get_attribute: [ server, port ] ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+  description: Concatenate the URL for a server from other template values
+  server_url:
+  value: { $concat: [ 'http://', 
+                     $get_attribute: [ server, public_address ],
+                     ':', 
+                     $get_attribute: [ server, port ] ] }
+```
 ### join
 
 The join function takes either one or two arguments where the first one
@@ -14292,82 +9619,28 @@ clear!!\!
 <!----
 {"id": "1336", "author": "Calin Curescu", "date": "2023-01-17T17:54:00Z", "comment": "Make a better example.", "target": "!!! Make an\nexample for concat and join where the differences are\nclear!!\\!"}-->
 
-
 #### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>$join: [&lt;list_of_strings&gt; ]</p>
-<p>$join: [&lt;list of strings&gt;, &lt;delimiter&gt; ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+$join: [<list_of_strings> ]
+$join: [<list of strings>, <delimiter> ]
+```
 #### Arguments
 
-<table>
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 12%" />
-<col style="width: 11%" />
-<col style="width: 61%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Argument</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt;list of strings&gt;</td>
-<td>yes</td>
-<td><p>list of</p>
-<p><a href="#TYPE_YAML_STRING">string</a> or</p>
-<p><a href="#TYPE_YAML_STRING">string</a> value expressions</p></td>
-<td>A list of one or more strings (or expressions that result in a list
-of string values) which can be joined together into a single
-string.</td>
-</tr>
-<tr class="even">
-<td>&lt;delimiter&gt;</td>
-<td>no</td>
-<td>string</td>
-<td>An optional delimiter used to join the string in the provided
-list.</td>
-</tr>
-</tbody>
-</table>
+Argument|Mandatory|Type|Description
+| ----- | ------- | ----- | ----- |
+|\<list of strings\>|yes|list of string or string value expressions|A list of one or more strings (or expressions that result in a list of string values) which can be joined together into a single string.|
+|\<delimiter\>|no|string|An optional delimiter used to join the string in the provided list.|
 
 #### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>example1:</p>
-<p># Result: prefix_1111_suffix</p>
-<p>value: { $join: [ ["prefix", 1111, "suffix" ], "_" ] }</p>
-<p>example2:</p>
-<p># Result: 9.12.1.10,9.12.1.20</p>
-<p>value: { $join: [ { $get_input: my_IPs }, “,” ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+   example1:
+       # Result: prefix_1111_suffix
+       value: { $join: [ ["prefix", 1111, "suffix" ], "_" ] }
+   example2:
+       # Result: 9.12.1.10,9.12.1.20
+       value: { $join: [ { $get_input: my_IPs }, “,” ] } 
+```
 ### token
 
 The token function is used within a TOSCA service template on a string
@@ -14375,10 +9648,9 @@ to parse out (tokenize) substrings separated by one or more token
 characters within a larger string.
 
 #### Grammar 
-
-| \$token: \[ \<string_with_tokens\>, \<string_of_token_chars\>, \<substring_index\> \] |
-|---------------------------------------------------------------------------------------|
-
+```
+$token: [ <string_with_tokens>, <string_of_token_chars>, <substring_index> ]
+```
 #### Arguments
 
 | Argument              | Mandatory | Type                          | Description                                                                                                                                                           |
@@ -14388,27 +9660,14 @@ characters within a larger string.
 | substring_index       | yes       | [integer](#TYPE_YAML_INTEGER) | The integer indicates the index of the substring to return from the composite string. Note that the first substring is denoted by using the ‘0’ (zero) integer value. |
 
 #### Examples
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>outputs:</p>
-<p>webserver_port:</p>
-<p>description: the port provided at the end of my server’s endpoint’s
-IP address</p>
-<p>value: { token: [ $get_attribute: [ my_server, data_endpoint,
-ip_address ],</p>
-<p>‘:’,</p>
-<p>1 ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+outputs:
+   webserver_port:
+     description: the port provided at the end of my server’s endpoint’s IP address
+     value: { token: [ $get_attribute: [ my_server, data_endpoint, ip_address ], 
+                       ‘:’,
+                       1 ] }
+```
 Set functions
 -------------
 
@@ -14422,14 +9681,11 @@ non-duplicate entries from all the argument lists. By non-duplicate is
 meant that no two entries in the result list are equal.
 
 #### Grammar 
-
-| \$union: \[ \<list_arg1\>, … \] |
-|---------------------------------|
-
-
+```
+$union: [ <list_arg1>, … ]
+```
 <!----
 {"id": "1342", "author": "Chris Lauwers", "date": "2022-10-10T20:39:00Z", "comment": "We should rename this section to String\nManipulation Functions", "target": ""}-->
-
 
 #### Note 
 
@@ -14444,21 +9700,19 @@ schema of the same type. The result is a list that contains all entries
 that can be found in each of the argument lists.
 
 #### Grammar 
-
-| \$intersection: \[ \<list_arg1\>, … \] |
-|----------------------------------------|
-
+```
+$intersection: [ <list_arg1>, … ]
+```
 #### Note 
 
 The intersection applied to only one list will return a result where all
 the duplicate entries of the argument list are eliminated. Note also
 that the order of the elements in the result list is not specified.
 
-Arithmetic functions
+## Arithmetic functions
+------------------------
 <!----
 {"id": "1343", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-212](https://www.oasis-open.org/committees/tosca/) \u2013 Concat intrinsic function", "target": ""}-->
-
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### sum
 
@@ -14467,10 +9721,9 @@ scalar type. The result is of the same type as the arguments and its
 value is the arithmetic sum of the arguments’ values.
 
 #### Grammar 
-
-| \$sum: \[ \<int_float_or_scalar_type_arg1\>, \< int_float_or_scalar_type_arg2\>, … \] |
-|---------------------------------------------------------------------------------------|
-
+```
+$sum: [ <int_float_or_scalar_type_arg1>, < int_float_or_scalar_type_arg2>, … ]
+```
 ### difference
 
 The function takes two arguments of either integer, float, or scalar
@@ -14479,10 +9732,9 @@ the arithmetic subtraction of the second argument value from the first
 argument value.
 
 #### Grammar 
-
-| \$difference: \[ \<int_float_scalar_type_arg1\>, \< int_float_scalar_type_arg2\> \] |
-|-------------------------------------------------------------------------------------|
-
+```
+$difference: [ <int_float_scalar_type_arg1>, < int_float_scalar_type_arg2> ]
+```
 ### product
 
 The function takes either:
@@ -14498,23 +9750,10 @@ The function takes either:
   arguments values.
 
 #### Grammar 
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>$product: [ &lt;scalar_type_arg1&gt;, &lt;
-int_or_float_type_arg2&gt; ]</p>
-<p>$product: [ &lt;int_or_float_type_arg1&gt;, &lt;
-int_or_float_type_arg2&gt;, … ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+$product: [ <scalar_type_arg1>, < int_or_float_type_arg2> ]
+$product: [ <int_or_float_type_arg1>, < int_or_float_type_arg2>, … ]
+```
 ### quotient
 
 The function takes two arguments where the first argument is of an
@@ -14531,10 +9770,9 @@ or float type. The result is of
   must be used.
 
 #### Grammar 
-
-| \$quotient: \[ \<int_float_or_scalar_type_arg1\>, \< int_or_float_type_arg2\> \] |
-|----------------------------------------------------------------------------------|
-
+```
+$quotient: [ <int_float_or_scalar_type_arg1>, < int_or_float_type_arg2> ]
+```
 ### remainder
 
 The function takes two arguments where the first argument is of an
@@ -14543,10 +9781,9 @@ result is of the same type as the first argument and its value is the
 remainder of the division to the second argument.
 
 #### Grammar 
-
-| \$remainder: \[ \<int_or_scalar_type_arg1\>, \< int_type_arg2\> \] |
-|--------------------------------------------------------------------|
-
+```
+$remainder: [ <int_or_scalar_type_arg1>, < int_type_arg2> ]
+```
 ### round
 
 The function takes a float argument. The result is an integer with the
@@ -14554,20 +9791,18 @@ closest value to the float argument. Equal value distance is rounded
 down (e.g. 3.5 is rounded down to 3, while 3.53 is rounded up to 4).
 
 #### Grammar 
-
-| \$round: \[ \<float_type_arg\> \] |
-|-----------------------------------|
-
+```
+$round: [ <float_type_arg> ]
+```
 ### floor
 
 The function takes a float argument. The result is an integer with the
 closest value that is less or equal to the value of the float argument.
 
 #### Grammar 
-
-| \$floor: \[ \<float_type_arg\> \] |
-|-----------------------------------|
-
+```
+$floor: [ <float_type_arg> ]
+```
 ### ceil
 
 The function takes a float argument. The result is an integer with the
@@ -14575,10 +9810,9 @@ closest value that is greater or equal to the value of the float
 argument.
 
 #### Grammar 
-
-| \$ceil: \[ \<float_type_arg\> \] |
-|----------------------------------|
-
+```
+$ceil: [ <float_type_arg> ]
+```
 TOSCA Cloud Service Archive (CSAR) format
 =========================================
 
@@ -14627,10 +9861,9 @@ colon. Values that represent binary data MUST be base64 encoded. Values
 that extend beyond one line can be spread over multiple lines if each
 subsequent line starts with at least one space. Such spaces are then
 collapsed when the value string is read.
-
-| \<name\>: \<value\> |
-|---------------------|
-
+```
+<name>: <value>
+```
 Each name/value pair is in a separate line. A list of related name/value
 pairs, i.e. a list of consecutive name/value pairs is called a block.
 Blocks are separated by an empty line. The first block, called block_0,
@@ -14639,24 +9872,13 @@ Other blocks may be used to represent custom generic metadata or
 metadata pertaining to files in the CSAR. A **TOSCA.meta** file is only
 required to include block_0. The structure of block_0 in the TOSCA meta
 file is as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>CSAR-Version: digit.digit</p>
-<p>Created-By: string</p>
-<p>Entry-Definitions: string</p>
-<p>Other-Definitions: string</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-he name/value pairs are as follows:
+```
+CSAR-Version: digit.digit
+Created-By: string
+Entry-Definitions: string
+Other-Definitions: string
+```
+The name/value pairs are as follows:
 
 - **CSAR-Version**: This is the version number of the CSAR
   specification. It defines the structure of the CSAR and the format of
@@ -14693,7 +9915,6 @@ contained in the CSAR.
 <!----
 {"id": "1382", "author": "Calin Curescu", "date": "2019-01-30T16:36:00Z", "comment": "MustFix.  \nIn version 1.0 (pre YAML) the subsequent blocks that contained\ndefinitions were used to provide definitions for types imported in the\nservice template, that is these files were parsed instead of taking the\ndefinitions from external repositoris.  \nSince 1.0 yaml, the files are specified explicitly in the imports\nstatements.  \nNevertheless, by allowing the other definition blocks (as per this\nparagraph formulation) we allow also the old style of imports by the\ndefinitions in the other blocks.  \nI think this puts a burden on the implementation of orchestrators and\nquite confusing. So we should deprecate the usage of definitions in the\nother blocks.  \nMoreover, the other blocks can contain other file type decriptions (for\nartifacts) in the other blocks. E.g:  \nName: Plans/AddUser.bpmn  \nContent-Type: application/vnd.oasis.bpmn  \nThese also seem obsolete and useless.  \nI think we should deprecate the other blocks in the TOSCA.meta\nfile", "target": "Note that any further TOSCA definitions files required by the\ndefinitions specified by **Entry-Definitions** or **Other-Definitions**\ncan be found by a TOSCA orchestrator by processing respective\n**imports** statements. Note also that artifact files (e.g. scripts,\nbinaries, configuration files) used by the TOSCA definitions and\nincluded in the CSAR are fully described and referred via relative path\nnames in artifact definitions in the respective TOSCA definitions files\ncontained in the CSAR."}-->
 
-
 ### Custom keynames in the TOSCA.meta file
 
 Users can populate other blocks than block_0 in the TOSCA.meta file with
@@ -14715,24 +9936,12 @@ scope, etc.) when using custom keynames.
 
 The following listing represents a valid **TOSCA.meta** file according
 to this TOSCA specification.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>CSAR-Version: 2.0</p>
-<p>Created-By: OASIS TOSCA TC</p>
-<p>Entry-Definitions: tosca_elk.yaml</p>
-<p>Other-Definitions: definitions/tosca_moose.yaml
-definitions/tosca_deer.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+CSAR-Version: 2.0
+Created-By: OASIS TOSCA TC
+Entry-Definitions: tosca_elk.yaml 
+Other-Definitions: definitions/tosca_moose.yaml definitions/tosca_deer.yaml
+```
 This **TOSCA.meta** file indicates its structure (as well as the overall
 CSAR structure) by means of the **CSAR-Version** keyname with value
 **2.0**. The **Entry-Definitions** keyname points to a TOSCA definitions
@@ -14763,54 +9972,16 @@ have only one service template defined in a yaml file.
 
 The following represents a valid TOSCA template file acting as the CSAR
 Entry-Definitions file in an archive without TOSCA-Metadata directory.
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>metadata:</p>
-<p>template_name: my_template</p>
-<p>template_author: OASIS TOSCA TC</p>
-<p>template_version: 1.0</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-Security Considerations
-=======================
-
-<span class="mark">(**Note:** OASIS strongly recommends that Technical
-Committees consider issues that could affect security when implementing
-their specification and document them for implementers and adopters. For
-some purposes, you may find it required, e.g. if you apply for IANA
-registration.</span>
-
-<span class="mark">While it may not be immediately obvious how your
-specification might make systems vulnerable to attack, most
-specifications, because they involve communications between systems,
-message formats, or system settings, open potential channels for
-exploit. For example, IETF \[[RFC3552](#RFC3552)\] lists “eavesdropping,
-replay, message insertion, deletion, modification, and
-man-in-the-middle” as well as potential denial of service attacks as
-threats that must be considered and, if appropriate, addressed in IETF
-RFCs.</span>
-
-<span class="mark">In addition to considering and describing foreseeable
-risks, this section should include guidance on how implementers and
-adopters can protect against these risks.</span>
-
-<span class="mark">We encourage editors and TC members concerned with
-this subject to read *Guidelines for Writing RFC Text on Security
-Considerations,* IETF \[[RFC3552](#RFC3552)\], for more
-information.)</span>
+metadata:
+  template_name: my_template
+  template_author: OASIS TOSCA TC
+  template_version: 1.0
+```
 
 -------
-
 # Conformance
 <!-- Required section -->
 
@@ -14856,12 +10027,10 @@ if it satisfies all the statements below:
 1.  It is valid according to the grammar, rules and requirements defined
     in section 3 “TOSCA definitions in YAML”.
 
-<!-- -->
-
-20. When using functions defined in section 4 “TOSCA functions”, it is
+2.  When using functions defined in section 4 “TOSCA functions”, it is
     valid according to the grammar specified for these functions.
 
-21. When using or referring to data types, artifact types, capability
+3.  When using or referring to data types, artifact types, capability
     types, interface types, node types, relationship types, group types,
     policy types defined in section 5 “TOSCA normative type
     definitions”, it is valid according to the definitions given in
@@ -14878,20 +10047,18 @@ if it satisfies all the statements below:
     to conform as TOSCA YAML service template while clearly intending
     to.
 
-<!-- -->
-
-22. It implements the requirements and semantics associated with the
+2.  It implements the requirements and semantics associated with the
     definitions and grammar in section 3 “TOSCA definitions in YAML”,
     including those listed in the “additional requirements” subsections.
 
-23. It resolves the imports, either explicit or implicit, as described
+3.  It resolves the imports, either explicit or implicit, as described
     in section 3 “TOSCA definitions in YAML”.
 
-24. It generates errors as required in error cases described in sections
+4.  It generates errors as required in error cases described in sections
     3.1 (TOSCA Namespace URI and alias), 3.2 (Parameter and property
     type) and 3.6 (Type-specific definitions).
 
-25. It normalizes string values as described in section 5.4.9.3
+5.  It normalizes string values as described in section 5.4.9.3
     (Additional Requirements)
 
 Conformance Clause 3: TOSCA orchestrator
@@ -14903,26 +10070,24 @@ orchestrator if it satisfies all the statements below:
 1.  It is conforming as a TOSCA Processor as defined in conformance
     clause 2: TOSCA Processor.
 
-<!-- -->
-
-26. It can process all types of artifact described in section 5.3
+2.  It can process all types of artifact described in section 5.3
     “Artifact types” according to the rules and grammars in this
     section.
 
-27. It can process TOSCA archives as intended in section 6 “TOSCA Cloud
+3.  It can process TOSCA archives as intended in section 6 “TOSCA Cloud
     Service Archive (CSAR) format” and other related normative sections.
 
-28. It can understand and process the functions defined in section 4
+4. It can understand and process the functions defined in section 4
     “TOSCA functions” according to their rules and semantics.
 
-29. It can understand and process the normative type definitions
+5. It can understand and process the normative type definitions
     according to their semantics and requirements as described in
     section 5 “TOSCA normative type definitions”.
 
-30. It can understand and process the networking types and semantics
+6.  It can understand and process the networking types and semantics
     defined in section 7 “TOSCA Networking”.
 
-31. It generates errors as required in error cases described in sections
+7.  It generates errors as required in error cases described in sections
     2.10 (Using node template substitution for chaining subsystems), 5.4
     (Capabilities Types) and 5.7 (Interface Types).).
 
@@ -14936,9 +10101,7 @@ if it satisfies at least one of the statements below:
     produces a conforming TOSCA service template, as defined in Clause
     1: TOSCA YAML service template,
 
-<!-- -->
-
-32. When requested to generate a TOSCA archive, it always produces a
+2.  When requested to generate a TOSCA archive, it always produces a
     conforming TOSCA archive, as defined in Clause 5: TOSCA archive.
 
 Conformance Clause 5: TOSCA archive
@@ -14949,8 +10112,6 @@ satisfies all the statements below:
 
 1.  It is valid according to the structure and rules defined in section
     6 “TOSCA Cloud Service Archive (CSAR) format”.
-
--------
 
 # Appendix A. References
 
