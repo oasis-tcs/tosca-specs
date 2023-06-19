@@ -4271,66 +4271,13 @@ refined in subsequent Node or Relationship Type derivations.
 The following is the list of recognized keynames for a TOSCA interface
 definition:
 
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 15%" />
-<col style="width: 59%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td>string</td>
-<td>The mandatory name of the Interface Type this interface definition
-is based upon.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description for this interface definition.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions and
-refinements</a></p></td>
-<td>The optional map of input parameter refinements and new input
-parameter definitions available to all operations defined for this
-interface (the input parameters to be refined have been defined in the
-Interface Type definition).</td>
-</tr>
-<tr class="even">
-<td>operations</td>
-<td>no</td>
-<td>map of <a href="#operation-definition">operation
-refinements</a></td>
-<td>The optional map of operations refinements for this interface. The
-referred operations must have been defined in the Interface Type
-definition.</td>
-</tr>
-<tr class="odd">
-<td>notifications</td>
-<td>no</td>
-<td>map of <a href="#notification-definition">notification</a>
-refinements</td>
-<td>The optional map of notifications refinements for this interface.
-The referred operations must have been defined in the Interface Type
-definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory name of the Interface Type this interface definition is based upon.|
+|description|no|string|The optional description for this interface definition.|
+|inputs|no|map of parameter definitions and refinements|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the Interface Type definition).|
+|operations|no|map of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
+|notifications|no|map of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
 
 ##### Grammar
 
@@ -4477,59 +4424,12 @@ may not contain an attribute mapping as part of its output definition
 The following is the list of recognized keynames for a TOSCA operation
 definition (including definition refinement)
 
-<table>
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 12%" />
-<col style="width: 15%" />
-<col style="width: 48%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description string for the associated operation.</td>
-</tr>
-<tr class="even">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">operation
-implementation definition</a></td>
-<td>The optional definition of the operation implementation. May not be
-used in an interface type definition (i.e. where an operation is
-initially defined), but only during refinements.</td>
-</tr>
-<tr class="odd">
-<td>inputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td>The optional map of parameter definitions for operation input
-values.</td>
-</tr>
-<tr class="even">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#parameter-definition">parameter definitions</a></p></td>
-<td><p>The optional map of parameter definitions for operation output
-values.</p>
-<p>Only as part of node and relationship type definitions, the output
-definitions may include mappings onto attributes of the node or
-relationship type that contains the definition.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|description|no|string|The optional description string for the associated operation.|
+|implementation|no|operation implementation definition|The optional definition of the operation implementation. May not be used in an interface type definition (i.e. where an operation is initially defined), but only during refinements. |
+|inputs|no|map of parameter definitions|The optional map of parameter definitions for operation input values.|
+|outputs|no|map of parameter definitions|The optional map of parameter definitions for operation output values. Only as part of node and relationship type definitions, the output definitions may include mappings onto attributes of the node or relationship type that contains the definition.|
 
 ##### Grammar
 
@@ -4688,50 +4588,11 @@ attribute to map to (for output parameters).
 The following is the list of recognized keynames for an operation
 assignment:
 
-<table>
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 12%" />
-<col style="width: 19%" />
-<col style="width: 46%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">operation
-implementation definition</a></td>
-<td>The optional definition of the operation implementation. Overrides
-implementation provided at operation definition.</td>
-</tr>
-<tr class="even">
-<td>inputs</td>
-<td>no</td>
-<td>map of <a href="#parameter-value-assignment">parameter value
-assignments</a></td>
-<td>The optional map of parameter value assignments for assigning values
-to operation inputs.</td>
-</tr>
-<tr class="odd">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of <a href="\l">parameter</a></p>
-<p><a href="\l">mapping assignments</a></p></td>
-<td>The optional map of parameter mapping assignments that specify how
-operation outputs are mapped onto attributes of the node or relationship
-that contains the operation definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|implementation|no|operation implementation definition|The optional definition of the operation implementation. Overrides implementation provided at operation definition.|
+|inputs|no|map of parameter value assignments|The optional map of parameter value assignments for assigning values to operation inputs. |
+|outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how operation outputs are mapped onto attributes of the node or relationship that contains the operation definition. |
 
 ##### Grammar
 
@@ -4844,49 +4705,11 @@ it may not contain an attribute mapping as part of its output definition
 The following is the list of recognized keynames for a TOSCA
 notification definition:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 12%" />
-<col style="width: 18%" />
-<col style="width: 54%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING"><span>string</span></a></td>
-<td>The optional description string for the associated
-notification.</td>
-</tr>
-<tr class="even">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">notification
-implementation definition</a></td>
-<td>The optional definition of the notification implementation.</td>
-</tr>
-<tr class="odd">
-<td>outputs</td>
-<td>no</td>
-<td>map of parameter definitions</td>
-<td><p>The optional map of parameter definitions that specify
-notification output values.</p>
-<p>Only as part of node and relationship type definitions, the output
-definitions may include their mappings onto attributes of the node type
-or relationship type that contains the definition.</p></td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|description|no|string|The optional description string for the associated notification.|
+|implementation|no|notification implementation definition|The optional definition of the notification implementation.|
+|outputs|no|map of parameter definitions|The optional map of parameter definitions that specify notification output values.  Only as part of node and relationship type definitions, the output definitions may include their mappings onto attributes of the node type or relationship type that contains the definition. |
 
 ##### Grammar
 
@@ -5002,42 +4825,10 @@ attribute to map to.
 The following is the list of recognized keynames for a TOSCA
 notification assignment:
 
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 12%" />
-<col style="width: 17%" />
-<col style="width: 55%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>implementation</td>
-<td>no</td>
-<td><a
-href="#operation-and-notification-implementation-definition">notification
-implementation definition</a></td>
-<td>The optional definition of the notification implementation.
-Overrides implementation provided at notification definition.</td>
-</tr>
-<tr class="even">
-<td>outputs</td>
-<td>no</td>
-<td><p>map of <a href="\l">parameter</a></p>
-<p><a href="\l">mapping assignments</a></p></td>
-<td>The optional map of parameter mapping assignments that specify how
-notification outputs values are mapped onto attributes of the node or
-relationship type that contains the notification definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|implementation|no|notification implementation definition|The optional definition of the notification implementation. Overrides implementation provided at notification definition.|
+|outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how notification outputs values are mapped onto attributes of the node or relationship type that contains the notification definition.|
 
 ##### Grammar
 
@@ -5123,48 +4914,11 @@ notification implementation definition and should not be used in such.
 The following is the list of recognized keynames for an operation
 implementation definition or a notification implementation definition:
 
-<table>
-<colgroup>
-<col style="width: 17%" />
-<col style="width: 11%" />
-<col style="width: 13%" />
-<col style="width: 57%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>primary</td>
-<td>no</td>
-<td><a href="#artifact-definition">artifact definition</a></td>
-<td>The optional implementation artifact (i.e., the primary script file
-within a TOSCA CSAR file).</td>
-</tr>
-<tr class="even">
-<td>dependencies</td>
-<td>no</td>
-<td><p>list of</p>
-<p><a href="#artifact-definition">artifact definition</a></p></td>
-<td><p>The optional list of one or more dependent or secondary
-implementation artifacts which are referenced by the primary
-implementation artifact (e.g., a library the script installs or a</p>
-<p>secondary script).</p></td>
-</tr>
-<tr class="odd">
-<td>timeout</td>
-<td>no</td>
-<td>integer</td>
-<td>Timeout value in seconds. Has no meaning and should not be used
-within a notification implementation definition.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|primary|no|artifact definition|The optional implementation artifact (i.e., the primary script file within a TOSCA CSAR file).  |
+|dependencies|no|list of  artifact definition|The optional list of one or more dependent or secondary implementation artifacts which are referenced by the primary implementation artifact (e.g., a library the script installs or a secondary script).  |
+|timeout|no|integer|Timeout value in seconds. Has no meaning and should not be used within a notification implementation definition.|
 
 ##### Grammar
 
@@ -5263,43 +5017,11 @@ The Artifact Type is a TOSCA type entity and has the common keynames
 listed in Section 4.2.5.2 Common keynames in type definitions. In
 addition, the Artifact Type has the following recognized keynames:
 
-<table>
-<colgroup>
-<col style="width: 19%" />
-<col style="width: 24%" />
-<col style="width: 12%" />
-<col style="width: 43%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>mime_type</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional mime type property for the Artifact Type.</td>
-</tr>
-<tr class="even">
-<td>file_ext</td>
-<td>no</td>
-<td>list of <a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional file extension property for the Artifact Type.</td>
-</tr>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#_Schema_Definition">property definitions</a></p></td>
-<td>An optional map of property definitions for the Artifact Type.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|mime_type|no|string|The optional mime type property for the Artifact Type.|
+|file_ext|no|list of string|The optional file extension property for the Artifact Type.|
+|properties|no|map of property definitions|An optional map of property definitions for the Artifact Type.|
 
 ##### Grammar
 
@@ -5406,93 +5128,17 @@ operations.
 The following is the list of recognized keynames for a TOSCA artifact
 definition when using the extended notation:
 
-<table>
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keyname</th>
-<th>Mandatory</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory artifact type for the artifact definition.</td>
-</tr>
-<tr class="even">
-<td>file</td>
-<td>yes</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The mandatory URI string (relative or absolute) which can be used to
-locate the artifact’s file.</td>
-</tr>
-<tr class="odd">
-<td>repository</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional name of the repository definition which contains the
-location of the external repository that contains the artifact. The
-artifact is expected to be referenceable by its file URI within the
-repository.</td>
-</tr>
-<tr class="even">
-<td>description</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The optional description for the artifact definition.</td>
-</tr>
-<tr class="odd">
-<td>deploy_path</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>The file path the associated file will be deployed on within the
-target node’s container.</td>
-</tr>
-<tr class="even">
-<td>artifact_version</td>
-<td>no</td>
-<td>string</td>
-<td>The version of this artifact. One use of this artifact_version is to
-declare the particular version of this artifact type, in addition to its
-mime_type (that is declared in the artifact type definition). Together
-with the mime_type it may be used to select a particular artifact
-processor for this artifact. For example, a python interpreter that can
-interpret python version 2.7.0.</td>
-</tr>
-<tr class="odd">
-<td>checksum</td>
-<td>no</td>
-<td>string</td>
-<td>The checksum used to validate the integrity of the artifact.</td>
-</tr>
-<tr class="even">
-<td>checksum_algorithm</td>
-<td>no</td>
-<td>string</td>
-<td>Algorithm used to calculate the artifact checksum (e.g. MD5, SHA
-<mark>[Ref]).</mark> Shall be specified if checksum is specified for an
-artifact.</td>
-</tr>
-<tr class="odd">
-<td>properties</td>
-<td>no</td>
-<td><p>map of</p>
-<p><a href="#property-assignment">property</a></p>
-<p>assignments</p></td>
-<td>The optional map of property assignments associated with the
-artifact.</td>
-</tr>
-</tbody>
-</table>
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|type|yes|string|The mandatory artifact type for the artifact definition.|
+|file|yes|string|The mandatory URI string (relative or absolute) which can be used to locate the artifact’s file.|
+|repository|no|string|The optional name of the repository definition which contains the location of the external repository that contains the artifact.  The artifact is expected to be referenceable by its file URI within the repository.|
+|description|no|string|The optional description for the artifact definition.|
+|deploy_path|no|string|The file path the associated file will be deployed on within the target node’s container. |
+|artifact_version|no|string|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
+|checksum|no|string|The checksum used to validate the integrity of the artifact.|
+|checksum_algorithm|no|string|Algorithm used to calculate the artifact checksum (e.g. MD5, SHA [Ref]). Shall be specified if checksum is specified for an artifact.|
+|properties|no|map of property assignments|The optional map of property assignments associated with the artifact.|
 
 ##### Grammar
 
