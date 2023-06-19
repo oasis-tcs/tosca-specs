@@ -5,6 +5,7 @@
 ## Schema Definition
 
 |Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory data type for the key or entry. If this schema definition is for a map key, then the referred type must be derived originally from string.|
 |description|no|string|The optional description for the schema.|
 |validation|no|validation clauses\|The optional validation clause that must evaluate to True for the property.|
@@ -77,16 +78,16 @@
 
 ## Policy Type
 
-| ----- | ------- | ----- | ------- |
 |Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
 |properties|no|map of property definitions|An optional map of property definitions for the Policy Type.|
 |targets|no|list of string|An optional list of valid Node Types or Group Types the Policy Type can be applied to.|
 |triggers|no|map of trigger definitions |An optional map of policy triggers for the Policy Type.|
 
 ## Policy Definition
 
-| ----- | ------- | ----- | ------- |
 |Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory name of the policy type the policy definition is based upon.|
 |description|no|string|The optional description for the policy definition.|
 |metadata|no|map of string|Defines a section used to declare additional metadata information. |
@@ -182,7 +183,6 @@
 # join arguments
 
 Argument|Mandatory|Type|Description
-Description|
 | ----- | ------- | ----- | ----- |
 |<list of  strings>|yes|list of string or string value expressions|A list of one or more strings (or expressions that result in a list of string values) which can be joined together into a single string.|
 |<delimiter>|no|string|An optional delimiter used to join the string in the provided list.|
