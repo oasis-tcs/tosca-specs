@@ -8285,7 +8285,7 @@ service_template:
 Using this syntax, the target of the requirement mapping is a *list*
 of target requirements rather than a single requirement.
 
-### Requirement Mapping Rules
+#### Requirement Mapping Rules
 This section documents the rules for requirement mapping. The types
 defined in the following code snippet are used to illustrate the
 rules:
