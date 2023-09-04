@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 06
 
-## 25 August 2023
+## 4 September 2023
 
 #### This stage:
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.md (Authoritative) \
