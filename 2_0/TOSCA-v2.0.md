@@ -7757,9 +7757,8 @@ their ability to provide substituting implementations using the
 
 ### Substitution mapping
 
-The `substitution_mapping` section in a node
-template serves four purposes:
-
+The `substitution_mapping` section in a service template serves four
+purposes:
 1. It identifies the nodes for which the service template is a
    substitution candidate by specifying a node type and an associated
    substitution filter.
@@ -7777,19 +7776,27 @@ template serves four purposes:
    and how events generated in the substituting service are escalated
    to notifications on the substituted node.
 
+Note that while capabilities and relationships may define properties
+and attributes, capability mappings and requirement mappings do not
+propagate these values. Capability and requirement mappings are used
+exclusively to control service topology. If capability or relationship
+values must be passed between an abstract node and its substituting
+service, property and attribute mappings must be used to define how
+these values are mapped.
+
 > This *event escalation* mechanism needs to be better defined.
 
 #### Keynames
 
-| Keyname             | Mandatory | Type                                   | Description                                                                                                                                                                                |
-|---------------------|-----------|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| node_type           | yes       | string                                 | The mandatory name of the Node Type of the nodes for which the service template can provide an implementation.                                                                                               |
-| substitution_filter | no        | [node filter](#node-filter-definition) | The optional filter that further constrains the abstract nodes for which this service template can provide an implementation.                                                     |
-| properties          | no        | map of property mappings               | The optional map of property mappings that map properties of the substituted node to inputs of the service template.                                                                      |
-| attributes          | no        | map of attribute mappings              | The optional map of attribute mappings that map outputs from the service template to attributes of the substituted node.                                                                   |
-| capabilities        | no        | map of capability mappings             | The optional map of capability mappings.                                                                                                                                                  |
-| requirements        | no        | list of requirement mappings           | The optional list of requirement mappings.                                                                                                                                                  |
-| interfaces          | no        | map of interfaces mappings             | The optional map of interface mappings that map interface operations called on the substituted node to implementations workflows on the substituting service. |
+|Keyname|Mandatory|Type|Description|
+|---|---|---|---|
+|node_type|yes|string|The name of the Node Type of the nodes for which the service template can provide an implementation.|
+|substitution_filter|no|condition clause|The filter that further constrains the abstract nodes for which this service template can provide an implementation. For an abstract node that needs to be substituted, the condition clause specified by the substitution filter must evaluate to `True` for this template to be a valid substitution candidate.|
+|properties|no|map of property mappings|The map of property mappings that map properties of the substituted node to inputs of the service template.|
+|attributes|no|map of attribute mappings|The map of attribute mappings that map outputs from the service template to attributes of the substituted node.|
+|capabilities|no|map of capability mappings|The map of capability mappings.|
+|requirements|no|list of requirement mappings|The list of requirement mappings.|
+|interfaces|no|map of interfaces mappings|The map of interface mappings that map interface operations called on the substituted node to implementations workflows on the substituting service.|
 
 #### Grammar
 
@@ -7799,64 +7806,50 @@ node_type: <node_type_name>
 substitution_filter : <substitution_filter>
 properties:
   <property_mappings>
+attributes:
+  <attribute_mappings>
 capabilities:
   <capability_mappings>
 requirements:
   <requirement_mappings>
-attributes:
-  <attribute_mappings>
 interfaces:
   <interface_mappings>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-
-- **node_type_name**: represents the mandatory Node Type name for
-  which the Service Template is offering an implementation.
-
-- **substitution_filter**: represents the optional filter that reduces
-  the set of abstract nodes for which this service template
-  is an implementation by only substituting for those nodes
-  whose properties and capabilities satisfy the condition expression
-  specified in the filter.
-
-- **properties**: represents the optional map of property
+- **node_type_name**: represents the Node Type name for which the
+  Service Template can offer an implementation.
+- **substitution_filter**: represents a filter that reduces the set of
+  abstract nodes for which this service template is an implementation
+  by only substituting for those nodes whose properties and
+  capabilities satisfy the condition clause specified in the filter.
+- **properties**: represents the map of *property to input* mappings.
+- **attributes**: represents the map of *output to attribute*
   mappings.
-
-- **capability_mappings**: represents the optional map of capability
+- **capability_mappings**: represents the map of capability mappings.
+- **requirement_mappings**: represents the list of requirement
   mappings.
-
-- **requirement_mappings**: represents the optional list of
-  requirement mappings.
-
-- **attributes**: represents the optional map of attribute
-  mappings.
-
-- **interfaces:** represents the optional map of interface
-  mappings.
+- **interfaces:** represents the map of interface mappings.
 
 #### Examples
 
-TBD
+> To be provided
 
 #### Notes
 
 - The `node_type` specified in the substitution mapping SHOULD not
   provide implementations for interface operations defined in the
   type.
-
 - A substituting service template MUST be a valid TOSCA template in
   its own right (i.e., when not used as a substituting
   implementation). Specifically, all the required properties of all
   its node templates must have valid property assignments.
 
 ### Property mapping
-
-A property mapping allows to map a property value of a substituted
-node to an input value of the substituting service template.
+A property mapping allows a property value of a substituted node to be
+mapped to an input value of the substituting service template.
 
 #### Grammar
-
 The grammar of a property_mapping is as follows:
 ```
 <property_name>: <input_name> 
@@ -7864,101 +7857,66 @@ The grammar of a property_mapping is as follows:
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-
 - **input_name**: represents the name of an input defined for the
   substituting service template.
-
 - **property_name**: represents the name of a property of the
   substituted node (defined using a corresponding property definition
   in the specified Node Type)
-
 - **property_path**: represents a *TOSCA Path* expression that
   references a property of a capability or requirement of the
   substituted node.
 
 #### Additional requirements
-
 - Mappings must be type-compatible (i.e., properties mapped to input
   must have the type specified in the corresponding input definition).
 - Property mappings must be defined for all *mandatory* service
   template inputs that do not define a `default` value.
 
 ### Attribute mapping
-
-An attribute mapping allows to map the attribute of a substituted node
-type an output of the service template.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA attribute
-mapping:
-
-| Keyname | Mandatory | Type            | Description                                                              |
-|---------|-----------|-----------------|--------------------------------------------------------------------------|
-| mapping | no        | list of strings | An array with 1 string element that references an output of the service. |
+An attribute mapping allows an output value of the substituting
+service template to be mapped to an attribute of the substituted node.
 
 #### Grammar
-
-The single-line grammar of an attribute_mapping is as follows:
+The grammar of an attribute_mapping is as follows:
 ```
-<attribute_name>: [ <output_name> ]
-```
-### Capability mapping
-
-A capability mapping allows to map the capability of one of the nodes of
-the service template to the capability of the node type the service
-template offers an implementation for.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA capability
-mapping:
-
-| Keyname    | Mandatory | Type                             | Description                                                                                                                                                   |
-|------------|-----------|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| mapping    | no        | list of strings (with 2 members) | A list of strings with 2 members, the first one being the name of a node template, the second the name of a capability of the specified node template.        |
-| properties | no        | map of property assignments      | This field is mutually exclusive with the mapping keyname and allows to provide a capability assignment for the template and specify it’s related properties. |
-| attributes | no        | map of attributes assignments    | This field is mutually exclusive with the mapping keyname and allows to provide a capability assignment for the template and specify it’s related attributes. |
-
-#### Grammar
-
-The single-line grammar of a capability_mapping is as follows:
-```
-<capability_name>: [ <node_template_name>, <node_template_capability_name> ]
-```
-The multi-line grammar is as follows :
-```
-<capability_name>: 
-  mapping: [ <node_template_name>, <node_template_capability_name> ]
-  properties:
-    <property_name>: <property_value>
-  attributes:
-    <attribute_name>: <attribute_value>
+<attribute_name>: <output_name> 
+<attribute_path>: <output_name> 
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
+- **output_name**: represents the name of an output defined in the
+  substituting service template.
+- **attribute_name**: represents the name of an attribute of the
+  substituted node (defined using a corresponding attribute definition
+  in the specified Node Type)
+- **attribute_path**: represents a *TOSCA Path* expression that
+  references an attribute of a capability or requirement of the
+  substituted node.
 
+#### Additional requirements
+- Mappings must be type-compatible (i.e., outputs mapped to attributes
+  must have the type specified in the corresponding attribute
+  definition).
+
+### Capability mapping
+A capability mapping allows a capability of one of the nodes in the
+substituting service template to be mapped to a capability of the
+substituted node.
+
+#### Grammar
+The grammar of a capability_mapping is as follows:
+```
+<capability_name>: [ <node_template_name>, <node_template_capability_name> ]
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
 - capability_name: represents the name of the capability as it appears
-  in the Node Type definition for the Node Type (name) that is declared
-  as the value for on the substitution_mappings’ “node_type” key.
-
+  in the Node Type definition for the substituted node.
 - node_template_name: represents a valid name of a Node Template
-  definition (within the same service_template declaration as the
-  substitution_mapping is declared).
-
+  definition within the substituting service template.
 - node_template_capability_name: represents a valid name of a
   [capability definition](#capability-definition) within the
   \<node_template_name\> declared in this mapping.
-
-- property_name: represents the name of a property of the capability.
-
-- property_value: represents the value to assign to a property of the
-  capability.
-
-- attribute_name: represents the name a an attribute of the capability.
-
-- attribute_value: represents the value to assign to an attribute of the
-  capability.
 
 ### Requirement mapping
 
@@ -8022,49 +7980,29 @@ have the following meaning:
   requirement.
 
 ### Interface mapping
-
-An interface mapping allows to map a workflow of the service template to
-an operation of the node type the service template offers an
-implementation for.
+An interface mapping allows an interface operation on the substituted
+node to be mapped to workflow in the substituting service template.
 
 #### Grammar
 <!----
 {"id": "1110", "author": "Calin Curescu [2]", "date": "2018-08-23T08:33:00Z", "comment": "This could change if we introduce the operations keyname in the interface definitions", "target": "Grammar"}-->
-
-The grammar of an interface_mapping is as follows:
 <!----
 {"id": "1111", "author": "Chris Lauwers", "date": "2020-08-03T18:40:00Z", "comment": "What about\nnotification mappings?", "target": "follows"}-->
+The grammar of an interface_mapping is as follows:
 ```
 <interface_name>:
   <operation_name>: <workflow_name>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-
 - **interface_name:** represents the name of the interface as it appears
   in the Node Type definition for the Node Type (name) that is declared
-  as the value for on the substitution_mappings’ “node_type” key. Or the
-  name of a new management interface to add to the generated type.
-
+  as the value for on the substitution_mappings’ `node_type` key.
 - **operation_name:** represents the name of the operation as it appears
-  in the interface type definition.
-
-- **workflow_name:** represents the name of a workflow of the template
-  to map to the specified operation.
-
-#### Notes
-
-- Declarative workflow generation will be applied by the TOSCA
-  orchestrator after the service template have been substituted. Unless
-  one of the normative operations of the standard interface is mapped
-  through an interface mapping. In that case the declarative workflow
-  generation will consider the substitution node as any other node
-  calling the create, configure and start mapped workflows as if they
-  where single operations.
-
-- Operation implementation being TOSCA workflows the TOSCA orchestrator
-  replace the usual operation_call activity by an inline activity using
-  the specified workflow.
+  in the interface type definition for <interface_name>.
+- **workflow_name:** represents the name of a workflow defined in the
+  substituting service template to which to map the specified
+  interface operation.
 
 Groups and Policies
 -------------------
