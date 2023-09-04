@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 06
 
-## 25 August 2023
+## 4 September 2023
 
 #### This stage:
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.md (Authoritative) \
@@ -7757,9 +7757,8 @@ their ability to provide substituting implementations using the
 
 ### Substitution mapping
 
-The `substitution_mapping` section in a node
-template serves four purposes:
-
+The `substitution_mapping` section in a service template serves four
+purposes:
 1. It identifies the nodes for which the service template is a
    substitution candidate by specifying a node type and an associated
    substitution filter.
@@ -7777,19 +7776,27 @@ template serves four purposes:
    and how events generated in the substituting service are escalated
    to notifications on the substituted node.
 
+Note that while capabilities and relationships may define properties
+and attributes, capability mappings and requirement mappings do not
+propagate these values. Capability and requirement mappings are used
+exclusively to control service topology. If capability or relationship
+values must be passed between an abstract node and its substituting
+service, property and attribute mappings must be used to define how
+these values are mapped.
+
 > This *event escalation* mechanism needs to be better defined.
 
 #### Keynames
 
-| Keyname             | Mandatory | Type                                   | Description                                                                                                                                                                                |
-|---------------------|-----------|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| node_type           | yes       | string                                 | The mandatory name of the Node Type of the nodes for which the service template can provide an implementation.                                                                                               |
-| substitution_filter | no        | [node filter](#node-filter-definition) | The optional filter that further constrains the abstract nodes for which this service template can provide an implementation.                                                     |
-| properties          | no        | map of property mappings               | The optional map of property mappings that map properties of the substituted node to inputs of the service template.                                                                      |
-| attributes          | no        | map of attribute mappings              | The optional map of attribute mappings that map outputs from the service template to attributes of the substituted node.                                                                   |
-| capabilities        | no        | map of capability mappings             | The optional map of capability mappings.                                                                                                                                                  |
-| requirements        | no        | list of requirement mappings           | The optional list of requirement mappings.                                                                                                                                                  |
-| interfaces          | no        | map of interfaces mappings             | The optional map of interface mappings that map interface operations called on the substituted node to implementations workflows on the substituting service. |
+|Keyname|Mandatory|Type|Description|
+|---|---|---|---|
+|node_type|yes|string|The name of the Node Type of the nodes for which the service template can provide an implementation.|
+|substitution_filter|no|condition clause|The filter that further constrains the abstract nodes for which this service template can provide an implementation. For an abstract node that needs to be substituted, the condition clause specified by the substitution filter must evaluate to `True` for this template to be a valid substitution candidate.|
+|properties|no|map of property mappings|The map of property mappings that map properties of the substituted node to inputs of the service template.|
+|attributes|no|map of attribute mappings|The map of attribute mappings that map outputs from the service template to attributes of the substituted node.|
+|capabilities|no|map of capability mappings|The map of capability mappings.|
+|requirements|no|list of requirement mappings|The list of requirement mappings.|
+|interfaces|no|map of interfaces mappings|The map of interface mappings that map interface operations called on the substituted node to implementations workflows on the substituting service.|
 
 #### Grammar
 
@@ -7799,64 +7806,50 @@ node_type: <node_type_name>
 substitution_filter : <substitution_filter>
 properties:
   <property_mappings>
+attributes:
+  <attribute_mappings>
 capabilities:
   <capability_mappings>
 requirements:
   <requirement_mappings>
-attributes:
-  <attribute_mappings>
 interfaces:
   <interface_mappings>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-
-- **node_type_name**: represents the mandatory Node Type name for
-  which the Service Template is offering an implementation.
-
-- **substitution_filter**: represents the optional filter that reduces
-  the set of abstract nodes for which this service template
-  is an implementation by only substituting for those nodes
-  whose properties and capabilities satisfy the condition expression
-  specified in the filter.
-
-- **properties**: represents the optional map of property
+- **node_type_name**: represents the Node Type name for which the
+  Service Template can offer an implementation.
+- **substitution_filter**: represents a filter that reduces the set of
+  abstract nodes for which this service template is an implementation
+  by only substituting for those nodes whose properties and
+  capabilities satisfy the condition clause specified in the filter.
+- **properties**: represents the map of *property to input* mappings.
+- **attributes**: represents the map of *output to attribute*
   mappings.
-
-- **capability_mappings**: represents the optional map of capability
+- **capability_mappings**: represents the map of capability mappings.
+- **requirement_mappings**: represents the list of requirement
   mappings.
-
-- **requirement_mappings**: represents the optional list of
-  requirement mappings.
-
-- **attributes**: represents the optional map of attribute
-  mappings.
-
-- **interfaces:** represents the optional map of interface
-  mappings.
+- **interfaces:** represents the map of interface mappings.
 
 #### Examples
 
-TBD
+> To be provided
 
 #### Notes
 
 - The `node_type` specified in the substitution mapping SHOULD not
   provide implementations for interface operations defined in the
   type.
-
 - A substituting service template MUST be a valid TOSCA template in
   its own right (i.e., when not used as a substituting
   implementation). Specifically, all the required properties of all
   its node templates must have valid property assignments.
 
 ### Property mapping
-
-A property mapping allows to map a property value of a substituted
-node to an input value of the substituting service template.
+A property mapping allows a property value of a substituted node to be
+mapped to an input value of the substituting service template.
 
 #### Grammar
-
 The grammar of a property_mapping is as follows:
 ```
 <property_name>: <input_name> 
@@ -7864,207 +7857,797 @@ The grammar of a property_mapping is as follows:
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-
 - **input_name**: represents the name of an input defined for the
   substituting service template.
-
 - **property_name**: represents the name of a property of the
   substituted node (defined using a corresponding property definition
   in the specified Node Type)
-
 - **property_path**: represents a *TOSCA Path* expression that
   references a property of a capability or requirement of the
   substituted node.
 
 #### Additional requirements
-
 - Mappings must be type-compatible (i.e., properties mapped to input
   must have the type specified in the corresponding input definition).
 - Property mappings must be defined for all *mandatory* service
   template inputs that do not define a `default` value.
 
 ### Attribute mapping
-
-An attribute mapping allows to map the attribute of a substituted node
-type an output of the service template.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA attribute
-mapping:
-
-| Keyname | Mandatory | Type            | Description                                                              |
-|---------|-----------|-----------------|--------------------------------------------------------------------------|
-| mapping | no        | list of strings | An array with 1 string element that references an output of the service. |
+An attribute mapping allows an output value of the substituting
+service template to be mapped to an attribute of the substituted node.
 
 #### Grammar
-
-The single-line grammar of an attribute_mapping is as follows:
+The grammar of an attribute_mapping is as follows:
 ```
-<attribute_name>: [ <output_name> ]
-```
-### Capability mapping
-
-A capability mapping allows to map the capability of one of the nodes of
-the service template to the capability of the node type the service
-template offers an implementation for.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA capability
-mapping:
-
-| Keyname    | Mandatory | Type                             | Description                                                                                                                                                   |
-|------------|-----------|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| mapping    | no        | list of strings (with 2 members) | A list of strings with 2 members, the first one being the name of a node template, the second the name of a capability of the specified node template.        |
-| properties | no        | map of property assignments      | This field is mutually exclusive with the mapping keyname and allows to provide a capability assignment for the template and specify it’s related properties. |
-| attributes | no        | map of attributes assignments    | This field is mutually exclusive with the mapping keyname and allows to provide a capability assignment for the template and specify it’s related attributes. |
-
-#### Grammar
-
-The single-line grammar of a capability_mapping is as follows:
-```
-<capability_name>: [ <node_template_name>, <node_template_capability_name> ]
-```
-The multi-line grammar is as follows :
-```
-<capability_name>: 
-  mapping: [ <node_template_name>, <node_template_capability_name> ]
-  properties:
-    <property_name>: <property_value>
-  attributes:
-    <attribute_name>: <attribute_value>
+<attribute_name>: <output_name> 
+<attribute_path>: <output_name> 
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
+- **output_name**: represents the name of an output defined in the
+  substituting service template.
+- **attribute_name**: represents the name of an attribute of the
+  substituted node (defined using a corresponding attribute definition
+  in the specified Node Type)
+- **attribute_path**: represents a *TOSCA Path* expression that
+  references an attribute of a capability or requirement of the
+  substituted node.
 
+#### Additional requirements
+- Mappings must be type-compatible (i.e., outputs mapped to attributes
+  must have the type specified in the corresponding attribute
+  definition).
+
+### Capability mapping
+A capability mapping allows a capability of one of the nodes in the
+substituting service template to be mapped to a capability of the
+substituted node.
+
+#### Grammar
+The grammar of a capability_mapping is as follows:
+```
+<capability_name>: [ <node_template_name>, <node_template_capability_name> ]
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
 - capability_name: represents the name of the capability as it appears
-  in the Node Type definition for the Node Type (name) that is declared
-  as the value for on the substitution_mappings’ “node_type” key.
-
+  in the Node Type definition for the substituted node.
 - node_template_name: represents a valid name of a Node Template
-  definition (within the same service_template declaration as the
-  substitution_mapping is declared).
-
+  definition within the substituting service template.
 - node_template_capability_name: represents a valid name of a
   [capability definition](#capability-definition) within the
   \<node_template_name\> declared in this mapping.
 
-- property_name: represents the name of a property of the capability.
-
-- property_value: represents the value to assign to a property of the
-  capability.
-
-- attribute_name: represents the name a an attribute of the capability.
-
-- attribute_value: represents the value to assign to an attribute of the
-  capability.
-
 ### Requirement mapping
 
-A requirement mapping allows to map the requirement of one of the nodes
-of the service template to the requirement of the node type the service
-template offers an implementation for.
+A requirement mapping defines how requirements of the substituted node
+are mapped to one or more requirements of nodes in the substituting
+service. The term *requirement mapping* is somewhat of a misnomer,
+since mapping a requirement results in the target node of that
+requirement also being used as the target node for the *mapped*
+requirement. As a result, requirement mappings are a mechanism for
+passing nodes between templates.
 
-#### Keynames
+The grammar for requirement mapping differs slightly from other
+substitution mapping grammars for the following two reasons:
+1. It is possible for a substituted node to have multiple requirements
+   with the same name, each of which may need to be mapped
+   separately.
+2. It is possible for the same requirement in a substituted node to be
+   mapped multiple times.
 
-The following is the list of recognized keynames for a TOSCA requirement
-mapping:
+To accommodate these use cases, requirement mappings are defined using
+YAML *lists* rather than *maps*. In addition, each of the mappings in
+the list may in turn identify a *list* of requirements.
 
-| Keyname    | Mandatory | Type                          | Description                                                                                                                                                                                                                                                                                                            |
-|------------|-----------|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| mapping    | no        | list of strings (2 members)   | A list of strings with 2 elements, the first one being the name of a node template, the second the name of a requirement of the specified node template.                                                                                                                                                               |
-| properties | no        | List of property assignment   | This field is mutually
-<!----
-{"id": "1103", "author": "Chris Lauwers", "date": "2020-08-03T18:36:00Z", "comment": "These need to be removed.", "target": "mutually"}-->
- exclusive with the mapping keyname and allow to provide a requirement for the template and specify it’s related properties. |
-| attributes | no        | List of attributes assignment | This field is mutually exclusive with the mapping keyname and allow to provide a requirement for the template and specify it’s related attributes.                                                                                                                                                                     |
+#### Mapping Multiple Requirements with the Same Name
+The following example shows a `Client` node type that defines a
+`service` requirement with a `count_range` of `[2, 2]`, which means
+that nodes of type `Client` need exactly two `service` relationships
+to nodes of type `Server`.
 
-#### Grammar
+```yaml
+tosca_definitions_version: tosca_2_0
+capability_types:
+  Service:
+    description: >-
+      Ability to provide service.
+relationship_types:
+  ServedBy:
+    description: >-
+      Connection to a service.
+node_types:
+  Client:
+    requirements:
+      - service:
+          capability: Service
+          relationship: ServedBy
+          node: Server
+          count_range: [ 2, 2]
+  Server:
+    capabilities:
+      service:
+        type: Service
+```
+This following figure shows a service that consists of one such client
+nodes connected to two server nodes.
+```mermaid
+graph LR;
+    subgraph T [Simple Service]
+      client --> |service| server1 
+      client --> |service| server2
+    end
+```
+This service can be implemented using the following TOSCA service
+template:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+service_template:
+  node_templates:
+    server1:
+      type: Server
+    server2:
+      type: Server
+    client:
+      type: Client
+      directives: [ substitute ]
+      requirements:
+        - service: server1
+        - service: server2
+```
+In this template, the `client` node is annotated with the
+`substitute` directive, which means that a substituting template must
+be found to instantiate this node. The following figure shows one
+possible substitution.
+```mermaid
+graph BT
+    S --> |substitutes| client
 
-The single-line grammar of a requirement_mapping is as follows:
+    subgraph T [Top-Level Topology]
+        client --> |service| server1 
+        client --> |service| server2
+    end
+    
+    subgraph S [Substituting Topology]
+        direction BT
+        software1 --> |host| compute
+        software2 --> |host| compute
+        software1 -.-> |mapped<br/>service<br/>requirement| server1
+        software2 -.-> |mapped<br/>service<br/>requirement| server2
+   end
+```
+This substitution decomposes the `client` node into two different
+`software` nodes, each with exactly one `service` requirement. The
+requirement mapping syntax must *distribute* the two `service`
+requirements from the substituted `client` node between the `service`
+requirements of the two software nodes in the substituting
+template. The substitution mapping code in the following substituting
+service template shows how this is accomplished:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+capability_types:
+  Host:
+    description: >-
+      Ability to host software.
+relationship_types:
+  HostedOn:
+    description: >-
+      Relationship to a host.
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 1, 1 ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software1, service ]
+      - service: [ software2, service ]
+  node_templates:
+    software1:
+      type: ClientSoftware
+      requirements:
+        - host: compute1
+    software2:
+      type: ClientSoftware
+      requirements:
+        - host: compute2
+    compute1:
+      type: Compute
+    compute2:
+      type: Compute
+```
+The following figure shows an alternative substitution where both
+`service` requirements of the substituted `client` node are mapped to
+corresponding requirements of a single `software` node in the
+substituting topology:
+```mermaid
+flowchart RL
+    S --> |substitutes| client
+
+    subgraph T [Top-Level Topology]
+        direction RL
+        client --> |service| server1 
+        client --> |service| server2
+    end
+    
+    subgraph S [Substituting Topology]
+        direction LR
+        software --> |host| compute
+        software -.-> |mapped<br/>service<br/>requirement| server1
+        software -.-> |mapped<br/>service<br/>requirement| server2
+   end
+```
+The requirement mapping syntax for this template distributes the two
+`service` requirements from the substituted `client` node to *the
+same* software node in the substituting template using two identical
+mappings for the two `service` requirements as follows:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+capability_types:
+  Host:
+    description: >-
+      Ability to host software.
+relationship_types:
+  HostedOn:
+    description: >-
+      Relationship to a host.
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 2, 2 ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software, service ]
+      - service: [ software, service ]
+  node_templates:
+    software:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    compute:
+      type: Compute
+```
+As a convience feature, it is possible to *group* identical mapping
+statements using the syntax in the following example. This syntax
+states that two `service` requirements of the substituted node are
+mapped to two corresponding `service` requirements of the `software`
+node in the substituting template.
+```yaml
+tosca_definitions_version: tosca_2_0
+
+imports:
+  - types.yaml
+capability_types:
+  Host:
+    description: >-
+      Ability to host software.
+relationship_types:
+  HostedOn:
+    description: >-
+      Relationship to a host.
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 2, 2 ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - [service, 2 ]: [ software, service ]
+  node_templates:
+    software:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    compute:
+      type: Compute
+```
+#### Mapping Requirements Multiple Times
+Imagine a scenario where nodes of type `Client` need to be hosted on
+nodes of type `Compute` as shown by the following type definitions:
+```yaml
+tosca_definitions_version: tosca_2_0
+
+capability_types:
+  Host:
+    description: >-
+      Ability to host software.
+relationship_types:
+  HostedOn:
+    description: >-
+      Relationship to a host.
+node_types:
+  Client:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+          node: Compute
+          count_range: [1, 1]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+```
+The following figure shows a service that contains one node of type
+`Client`, one node of type `Compute`, and the `host` relationship
+between them:
+```mermaid
+flowchart RL
+    subgraph T [Top-Level Topology]
+        client --> |host| compute
+   end
+```
+This example can be implemented using the following service template:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+service_template:
+  node_templates:
+    compute:
+      type: Compute
+    client:
+      type: Client
+      directives: [ substitute ]
+      requirements:
+        - host: compute
+```
+The following figure shows a substituting topology that *decomposes*
+the node of type `Client` into two software components, each of which
+needs to be hosted on the same `compute` node defined in the top-level
+template that defines the `client` node.
+```mermaid
+flowchart RL
+    S --> |substitutes| client
+
+    subgraph T [Top-Level Topology]
+        client --> |host| compute 
+    end
+    
+    subgraph S [Substituting Topology]
+        software1 -.-> |mapped<br/>host<br/>requirement| compute
+        software2 -.-> |mapped<br/>host<br/>requirement| compute
+   end
+```
+The requirement mapping syntax must *replicate* the single `host`
+requirements from the substituted `client` node to the two software
+nodes in the subsituting template. The substitution mapping code in
+the following substituting service template shows how this is
+accomplished by mapping the `host` requirement of the `client` node
+twice, once to the `host` requirement of the `software1` node and once
+to the `host` requirement of the `software2` node.
+```yaml
+tosca_definitions_version: tosca_2_0
+
+imports:
+  - types.yaml
+
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+          count_range: [ 1, 1 ]
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - host:
+          - [ software1, host ]
+          - [ software2, host ]
+  node_templates:
+    software1:
+      type: ClientSoftware
+    software2:
+      type: ClientSoftware
+```
+Using this syntax, the target of the requirement mapping is a *list*
+of target requirements rather than a single requirement.
+
+#### Requirement Mapping Rules
+This section documents the rules for requirement mapping. The types
+defined in the following code snippet are used to illustrate the
+rules:
+```yaml
+tosca_definitions_version: tosca_2_0
+capability_types:
+  Service:
+    description: >-
+      Ability to provide service.
+relationship_types:
+  ServedBy:
+    description: >-
+      Connection to a service.
+node_types:
+  Client:
+    requirements:
+      - service:
+          capability: Service
+          relationship: ServedBy
+          node: Server
+          count_range: [ 1, 4 ]
+  Server:
+    capabilities:
+      service:
+        type: Service
+```
+In this example, the `Client` node type defines a `service`
+requirement with a `count_range` of `[1, 4]`. This means that a client
+can have up to four `service` connections to a `Server` node, but only
+one of those is mandatory.
+
+#### Requirement Assignments
+
+Any service template that uses the `Client` node type must specify the
+correct number of requirement assignments, i.e, the number of
+mandatory requirements must be greater than or equal to the lower
+bound of the `count_range` and he total number of requirement
+assignments (optional as well as mandatory) must be less than or equal
+to the upper bound of the count range.
+
+The following shows a valid service template that uses `Client` and
+`Server` nodes.
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+service_template:
+  node_templates:
+    server1:
+      type: Server
+    server2:
+      type: Server
+    server3:
+      type: Server
+    client:
+      type: Client
+      directives: [ substitute ]
+      requirements:
+        - service: server1
+        - service: server2
+        - service: server3
+```
+In this example, the requirement assignments specify the target nodes
+directly, but it is also valid to leave requirements dangling as in
+the following example:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+service_template:
+  node_templates:
+    server1:
+      type: Server
+    server2:
+      type: Server
+    server3:
+      type: Server
+    client:
+      type: Client
+      directives: [ substitute ]
+      requirements:
+        - service: server1
+        - service:
+            optional: True
+        - service:
+            optional: True
+```
+In this example, only the first `service` assignment is mandatory. The
+next two are optional. However, after the orchestrator *fulfills* the
+dangling (optional) requirements, the resulting service topology for
+this second example will likely be identical to the service topology
+in the first example, since the orchestrator is able to fulfill both
+of the optional requirements using `server` nodes in this topology.
+
+Note that after requirements have been fulfilled, it no longer matters
+whether the requirement were mandatory or optional. All that matters
+is that if the service topology is valid, the number of established
+relationships is guaranteed to fall within the `count_range` specified
+in the corresponding requirement definition.
+
+#### Mapping Requirements
+This section introduces the rules for requirement mappings:
+
+1. As in earlier versions of the spec, requirements from a
+   *substituted* node can only be mapped onto *dangling* requirements
+   in the substituting template.
+2. The total number of requirements mapped onto *mandatory*
+   requirements in the substituting template must not exceed the lower
+   bound of the `count_range` in the corresponding requirement
+   definition in the substituted node's type.
+3. The total number of requirement mappings must not exceed the upper
+   bound of the `count_range` in the corresponding requirement
+   definition in the substituted node's type. Note that this is a
+   convenience rule only, since according to rule 2, any *excess*
+   mappings would have to map onto optional requirements, and as a
+   result can safely be ignored.
+
+Note that there are no constraints on the minimum number of
+requirement mappings. More specifically, the total number of
+requirement mappings is allowed to be smaller than the lower bound of
+the `count_range` in the corresponding requirement definition.
+
+The following code snippet shows a valid substituting template for the
+`client` node in the template shown above:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+capability_types:
+  Host:
+    description: >-
+      Ability to host software.
+relationship_types:
+  HostedOn:
+    description: >-
+      Relationship to a host.
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 1, 1 ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software, service ]
+  node_templates:
+    software:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    compute:
+      type: Compute
+```
+While the substituted `client` node in the template above has three
+requirement assigments with target nodes, only one of those
+requirements is mapped to a requirement in the substituting template.
+
+The next code snippet shows a slightly different substituting template
+for the `client` node in the template shown above. This template
+*decomposes* the `client` node into three different software nodes,
+each with a single `service` requirement to its own server. The
+substitution mapping defines three requirement mappings for the
+`service` requirement of the `client` node, one to each of the
+`service` requirements of the `software` nodes in the substituting
+template.
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+capability_types:
+  Host:
+    description: >-
+      Ability to host software.
+relationship_types:
+  HostedOn:
+    description: >-
+      Relationship to a host.
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 1, 1 ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software1, service ]
+      - service: [ software2, service ]
+      - service: [ software3, service ]
+  node_templates:
+    software1:
+      type: ClientSoftware
+      requirements:
+        - host: compute1
+    software2:
+      type: ClientSoftware
+      requirements:
+        - host: compute2
+    software3:
+      type: ClientSoftware
+      requirements:
+        - host: compute3
+    compute1:
+      type: Compute
+    compute2:
+      type: Compute
+    compute3:
+      type: Compute
+```
+Unfortunately, this substituting template is invalid. Since the
+`service` requirement of each `software` node is mandatory, this
+template needs three different `service` requirements in any node of
+type `Client` for which it is a substitution. This cannot be
+guaranteed, since the `service` requirement definition in the `Client`
+node type specifies a `count_range` with a lower bound of one, which
+means that only such requirement is guaranteed to exist.
+
+The following shows a corrected version of this substituting template:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+capability_types:
+  Host:
+    description: >-
+      Ability to host software.
+relationship_types:
+  HostedOn:
+    description: >-
+      Relationship to a host.
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 0, 1 ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software1, service ]
+      - service: [ software2, service ]
+      - service: [ software3, service ]
+  node_templates:
+    software1:
+      type: ClientSoftware
+      requirements:
+        - host: compute1
+        - service:
+            optional: False
+    software2:
+      type: ClientSoftware
+      requirements:
+        - host: compute2
+    software3:
+      type: ClientSoftware
+      requirements:
+        - host: compute3
+    compute1:
+      type: Compute
+    compute2:
+      type: Compute
+    compute3:
+      type: Compute
+```
+In this template, the `service` requirement of the `ClientSoftware`
+node type is defined with a `count_range` of `[0, 1]`, which means the
+requirement is no longer mandatory. Only the `software1` node template
+annotates its `service` requirement as mandatory (using the `optional:
+False` statement). The other two software nodes leave their `service`
+requirement optional. As a result, this is now a valid substituting
+template for nodes of type `Client` that define a `service`
+requirement with `count_range` equal to `[1, 4]`.
+
+Requirement mapping must take one more rule into account: if the
+number of requirement mappings is greater than the lower bound of the
+`count_range`, the orchestrator must first perform those mappings that
+map requirements onto **mandatory** requirements in the substituting
+template, and then it will perform the remaining mappings (which
+presumably will map onto optional requirements in the substituting
+template). This is done independent of the order in which the
+requirement mappings are specified.
+
+#### Handling `UNBOUNDED` Count Ranges
+*To be provided*
+
+#### Requirement Mappoing Grammar
+The one-to-one mapping grammar of a requirement_mapping is as follows:
 ```
 <requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
 ```
-The multi-line grammar is as follows :
+The one-to-many mapping grammar of a requirement_mapping is as follows:
 ```
-<requirement_name>: 
-  mapping: [ <node_template_name>, <node_template_requirement_name> ]
-  properties:
-    <property_name>: <property_value>
-  attributes:
-    <attribute_name>: <attribute_value>
+<requirement_name>:
+  - [ <node_template_name_1>, <node_template_requirement_name_1> ]
+  - ...
+  - [ <node_template_name_n>, <node_template_requirement_name_n> ]
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- requirement_name: represents the name of the requirement as it appears
-  in the Node Type definition for the Node Type (name) that is declared
-  as the value for on the substitution_mappings’ “node_type” key.
-
+- requirement_name: represents the name of the requirement as it
+  appears in the type definition for the Node Type name that is
+  declared as the value for on the substitution_mappings’ `node_type`
+  key.
 - node_template_name: represents a valid name of a Node Template
-  definition (within the same service_template declaration as the
-  substitution_mapping is declared).
-
+  definition within the same substituting service template
 - node_template_requirement_name: represents a valid name of a
   requirement definition within the \<node_template_name\> declared in
   this mapping.
 
-- property_name: represents the name of a property of the requirement.
-
-- property_value: represents the value to assign to a property of the
-  requirement.
-
-- attribute_name: represents the name of an attribute of the
-  requirement.
-
-- attribute_value: represents the value to assign to an attribute of the
-  requirement.
-
 ### Interface mapping
-
-An interface mapping allows to map a workflow of the service template to
-an operation of the node type the service template offers an
-implementation for.
+An interface mapping allows an interface operation on the substituted
+node to be mapped to workflow in the substituting service template.
 
 #### Grammar
 <!----
 {"id": "1110", "author": "Calin Curescu [2]", "date": "2018-08-23T08:33:00Z", "comment": "This could change if we introduce the operations keyname in the interface definitions", "target": "Grammar"}-->
-
-The grammar of an interface_mapping is as follows:
 <!----
 {"id": "1111", "author": "Chris Lauwers", "date": "2020-08-03T18:40:00Z", "comment": "What about\nnotification mappings?", "target": "follows"}-->
+The grammar of an interface_mapping is as follows:
 ```
 <interface_name>:
   <operation_name>: <workflow_name>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-
 - **interface_name:** represents the name of the interface as it appears
   in the Node Type definition for the Node Type (name) that is declared
-  as the value for on the substitution_mappings’ “node_type” key. Or the
-  name of a new management interface to add to the generated type.
-
+  as the value for on the substitution_mappings’ `node_type` key.
 - **operation_name:** represents the name of the operation as it appears
-  in the interface type definition.
-
-- **workflow_name:** represents the name of a workflow of the template
-  to map to the specified operation.
-
-#### Notes
-
-- Declarative workflow generation will be applied by the TOSCA
-  orchestrator after the service template have been substituted. Unless
-  one of the normative operations of the standard interface is mapped
-  through an interface mapping. In that case the declarative workflow
-  generation will consider the substitution node as any other node
-  calling the create, configure and start mapped workflows as if they
-  where single operations.
-
-- Operation implementation being TOSCA workflows the TOSCA orchestrator
-  replace the usual operation_call activity by an inline activity using
-  the specified workflow.
+  in the interface type definition for <interface_name>.
+- **workflow_name:** represents the name of a workflow defined in the
+  substituting service template to which to map the specified
+  interface operation.
 
 Groups and Policies
 -------------------
