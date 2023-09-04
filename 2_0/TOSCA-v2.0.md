@@ -1,17 +1,12 @@
-
 ![OASIS Logo](http://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
-
 -------
-
 # TOSCA Version 2.0
 <!----
 {"id": "0", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T17:56:00Z", "comment": "I have\nprovided a number of comments. Some of these are pure editorial, e.g\nspelling, wording and cut and paste error correction. Other comments\nfall into these themes:  \nYAML is the only language  \nFolded comment style and double quotes  \nPolicy definition in general and period in particular  \nNode states  \nNormative types in examples  \nEnvironment variables and artefact arguments  \nGet_node_type and node filters  \nDocumentation of optional and required\nelements", "target": "0"}-->
 
 ## Committee Specification Draft 06
 
-## 16 June 2023
-
-&nbsp;
+## 25 August 2023
 
 #### This stage:
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.md (Authoritative) \
@@ -114,14 +109,14 @@ normative.*
 The following terms are used throughout this specification and have the
 following definitions when used in context of this document.
 
-| Term                   | Definition                                                                                                                                                                                                                                                                                                                                                           |
-|------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Instance Model         | A deployed service is a running instance of a Service Template. The instance is typically derived by running a declarative workflow that is automatically generated based on the node templates and relationship templates defined in the service template.                                                                                                          |
-| Node Template          | A *Node Template* specifies the occurrence of a component node as part of a service template. Each Node Template refers to a Node Type that defines the semantics of the node (e.g., properties, attributes, requirements, capabilities, interfaces). Node Types are defined separately for reuse purposes.                                                          |
-| Relationship Template  | A *Relationship Template* specifies the occurrence of a relationship between nodes in a service template. Each Relationship Template refers to a Relationship Type that defines the semantics relationship (e.g., properties, attributes, interfaces, etc.). Relationship Types are defined separately for reuse purposes.                                           |
-| Service Template       | A *Service Template* is typically used to specify the “topology” (or structure) and “orchestration” (or invocation of management behavior) of IT services so that they can be provisioned and managed in accordance with constraints and policies.                                                                                                                   |
-| Topology Model         | A Topology Model defines the structure of a service in the context of a Service Template. A Topology model consists of a set of Node Template and Relationship Template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
-| Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
+|Term|Definition|
+|---|---|
+|Representation Model|A deployed service is a running instance of a Service Template. The instance is typically derived by running a declarative workflow that is automatically generated based on the node templates and relationship templates defined in the service template.|
+|Node Template| A *Node Template* specifies the occurrence of a component node as part of a service template. Each Node Template refers to a Node Type that defines the semantics of the node (e.g., properties, attributes, requirements, capabilities, interfaces). Node Types are defined separately for reuse purposes.                                                          |
+|Relationship Template| A *Relationship Template* specifies the occurrence of a relationship between nodes in a service template. Each Relationship Template refers to a Relationship Type that defines the semantics of the relationship (e.g., properties, attributes, interfaces, etc.). Relationship Types are defined separately for reuse purposes.                                           |
+|Service Template| A *Service Template* is used to specify the *topology* (or structure) and *orchestration* (or invocation of management behavior) of services so that they can be provisioned and managed in accordance with constraints and policies.                                                                                                                   |
+|Topology Model| A Topology Model defines the structure of a service in the context of a Service Template. A Topology model consists of a set of Node Template and Relationship Template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
+|Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
 
 ### 1.2.2 Acronyms and abbreviations
 
@@ -193,10 +188,10 @@ following:
 
 - Infrastructure-as-a-Service Clouds: automate the deployment and
   management of workloads in IaaS clouds such as OpenStack, Amazon Web
-  Services, Microsoft Azure, and others.
-- Cloud-native applications: deploy containerized applications and
-  micro-services, for example by interfacing to orchestration platforms
-  such as Kubernetes.
+  Services, Microsoft Azure, Google Cloud, and others.
+- Cloud-Native Applications: deploy containerized applications,
+  micro-services, and service meshes, for example by interfacing to
+  orchestration platforms such as Kubernetes.
 - Network Functions Virtualization: define the management of Virtual
   Network Functions and their composition into complex network services.
 - Software Defined Networking: support on-demand creation of network
@@ -205,7 +200,7 @@ following:
   any deployment or operational considerations.
 - IoT and Edge computing: deploy services at the network edge with the
   goal of minimizing latency.
-- Process automation: support open and interoperable process control
+- Process Automation: support open and interoperable process control
   architectures.
 
 This list is by no means intended to be exhaustive and only serves to
@@ -214,8 +209,7 @@ TOSCA’s automated lifecycle management capabilities.
 
 Implementations
 ---------------
-
-Different kinds of processors and artifacts qualify as implementations
+Many kinds of processors and artifacts qualify as implementations
 of TOSCA. Those that this specification is explicitly mentioning or
 referring to fall into the following categories:
 
@@ -259,15 +253,16 @@ depicted in Figure 1.
 Service Templates, Node Templates, and Relationships
 ----------------------------------------------------
 
-Within a TOSCA file, a Service Template defines the topology model of a
-service as a directed acyclic graph. Each node in this graph is
-represented by a *Node Template*. A Node Template specifies the presence
-of an entity of a specific *Node Type* as a component of a service. A
-Node Type defines the properties of such a component (via *Node Type
-Properties*) and the operations (via *Interfaces*) available to
-manipulate the component. Node Types are defined separately for reuse
-purposes. In a service template a Node Template assigns values to the
-properties defined in the Node Type.
+Within a TOSCA file, a Service Template defines the topology model of
+a service as a directed graph. Each node in this graph is represented
+by a *Node Template*. A Node Template specifies the presence of an
+entity of a specific *Node Type* as a component of a service. A Node
+Type defines the semantics of such a component, including the
+properties of the component (via *Property Definitions*) and the
+operations (via *Interface Definitions*) available to manipulate the
+component. Node Types are defined separately for reuse purposes and
+organized into profiles. In a service template a Node Template assigns
+values to the properties defined in the Node Type.
 
 ![TOSCA File](images/tosca_file.png)
 
@@ -307,8 +302,8 @@ that includes the relationship definition is implicitly defined as the
 source node of the relationship and the target node is explicitly
 specified as part of the relationship definition. Each relationship
 definition refers to a Relationship Type that defines the semantics and
-any properties of the relationship. Relationship Types are defined
-separately for reuse purposes.
+any properties of the relationship. Relationship Types can be defined
+separately for reuse purposes and organized into profiles.
 
 In the example above, a relationship can be established from the process
 engine Node Template to the application server Node Template with the
@@ -518,7 +513,7 @@ Archive Format for Cloud Applications
 In order to support in a certain environment for the execution and
 management of the lifecycle of a cloud application, all corresponding
 artifacts have to be available in that environment. This means that
-beside the service template of the cloud application, the deployment
+beside the TOSCA file of the cloud application, the deployment
 artifacts and implementation artifacts have to be available in that
 environment. To ease the task of ensuring the availability of all of
 these, this specification defines a corresponding archive format called
@@ -797,21 +792,17 @@ parent types (according to the derivation rules of that type entity). If
 a keyname definition is inherited, the derived type does not have to
 provide such definition.
 
-TOSCA Service
+TOSCA File
 -------------
 <!----
 {"id": "172", "author": "Calin Curescu", "date": "2020-04-20T18:49:00Z", "comment": "TBD. Here comes some intro and generic description of the different specification blocks that will build the following sections.", "target": "TOSCA Service"}-->
-
-A TOSCA Service is specified by a TOSCA Service Template.
 <!----
 {"id": "173", "author": "Michael Rehder", "date": "2020-12-15T08:38:00Z", "comment": "This isn\u2019t true \u2013 if a \u201cService Template\u201d\ncan contain just supporting parts like type definitions then it won\u2019t\ncontain a \u201cTOSCA Service\u201d.  \nIn the end, I think that the term \u201cService Template\u201d is very confusing\nas it is never used as a \u201ctemplate\u201d, as an object. It\u2019s a collection of\ndefinitions, some of which are supporting and one of which is the\nworking code definition for the service to be realized.  \n\u201cService Definition\u201d is a more practical term.", "target": "A TOSCA Service is\nspecified by a TOSCA Service <span class=\"comment-start\" id=\"174\"\nauthor=\"Chris Lauwers\" date=\"2022-12-05T18:44:00Z\">We haven't defined\nservice template yet.</span>Template"}-->
-
-### TOSCA file definition
 <!----
 {"id": "178", "author": "Chris Lauwers", "date": "2022-06-22T14:26:00Z", "comment": "Update to reflect new naming", "target": "TOSCA file definition"}-->
 
-A TOSCA file contains definitions of building blocks for use in cloud
-applications or complete models of cloud applications. This section
+A TOSCA file contains reusable definitions of building blocks for use in cloud
+applications or complete models of cloud applications or both. This section
 describes the top-level TOSCA keynames—along with their grammars—that
 are allowed to appear in a TOSCA file.
 
@@ -828,10 +819,10 @@ The following is the list of recognized keynames for a TOSCA file:
 |dsl_definitions|no |N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout the TOSCA file.|
 |repositories|no|map of Repository definitions|Declares the map of external repositories that contain artifacts that are referenced in the TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
 |imports|no|list of Import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
-|artifact_types|no|map of Artifact Types|This section contains amap of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
+|artifact_types|no|map of Artifact Types|This section contains a map of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
 |data_types|no|map of Data Types|Declares a map of TOSCA Data Type definitions for use in the TOSCA file and/or external TOSCA files.|
-|capability_types|no|map of Capability Types|This section contains amap of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
-|interface_types|no|map of Interface Types|This section contains amap of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
+|capability_types|no|map of Capability Types|This section contains a map of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
+|interface_types|no|map of Interface Types|This section contains a map of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
 |relationship_types|no|map of Relationship Types|This section contains a map of relationship type definitions for use in the TOSCA file and/or external TOSCA files.|
 |node_types|no|map of Node Types|This section contains a map of node type definitions for use in the TOSCA file and/or external TOSCA files.|
 |group_types|no|map of Group Types|This section contains a map of group type definitions for use in the TOSCA file and/or external TOSCA files.|
@@ -1151,7 +1142,7 @@ imports:
 ##### artifact_types
 
 This optional keyname lists the Artifact Types that are defined by this
-TOSCA file..
+TOSCA file.
 
 ###### Keyname
 ```
@@ -2303,10 +2294,10 @@ template:
 |dsl_definitions|no |N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout the TOSCA file.|
 |repositories|no|map of Repository definitions|Declares the map of external repositories that contain artifacts that are referenced in the TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
 |imports|no|list of Import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
-|artifact_types|no|map of Artifact Types|This section contains amap of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
+|artifact_types|no|map of Artifact Types|This section contains a map of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
 |data_types|no|map of Data Types|Declares a map of TOSCA Data Type definitions for use in the TOSCA file and/or external TOSCA files.|
-|capability_types|no|map of Capability Types|This section contains amap of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
-|interface_types|no|map of Interface Types|This section contains amap of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
+|capability_types|no|map of Capability Types|This section contains a map of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
+|interface_types|no|map of Interface Types|This section contains a map of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
 |relationship_types|no|map of Relationship Types|This section contains a map of relationship type definitions for use in the TOSCA file and/or external TOSCA files.|
 |node_types|no|map of Node Types|This section contains a map of node type definitions for use in the TOSCA file and/or external TOSCA files.|
 |group_types|no|map of Group Types|This section contains a map of group type definitions for use in the TOSCA file and/or external TOSCA files.|
@@ -7752,30 +7743,60 @@ properties:
 Substitution
 ------------
 
+The TOSCA *substitution* feature allows nodes in a service topology to
+be *decomposed* using *substituting services* that describe the
+internals of those nodes. Substitution provides a *declarative*
+mechanism for implementing TOSCA nodes that can be used as an
+alternative to *implementation artifacts*. Substitution allows for
+simplified representations of complex systems that *abstract away*
+technology or vendor-specific implementation details. Abstract nodes
+that expect to be *substituted* are based on node templates that are
+annotated with the `substitute` directive. Service templates advertize
+their ability to provide substituting implementations using the
+`substitution_mapping` section in the service template definition.
+
 ### Substitution mapping
 
-A substitution mapping allows a given service template to be used as an
-implementation of abstract node templates of a specific node type. This
-allows the consumption of complex systems using a simplified vision.
+The `substitution_mapping` section in a node
+template serves four purposes:
+
+1. It identifies the nodes for which the service template is a
+   substitution candidate by specifying a node type and an associated
+   substitution filter.
+2. It defines how configuration and state values flow between the
+   substituted node and the substituting template: property mappings
+   specify how configuration values are propagated from the
+   substituted node to the substituting service, and attribute
+   mappings specify how runtime values are propagated back from the
+   substituting service to the substituted node.
+3. It dictates how the topology graph of the substituting service is
+   *stitched in* to the top-level topology graph that contains the
+   substituted node (using requirement and capability mappings).
+4. It specifies how interface operations called on the substituted
+   node are implemented using workflows on the substituting service,
+   and how events generated in the substituting service are escalated
+   to notifications on the substituted node.
+
+> This *event escalation* mechanism needs to be better defined.
 
 #### Keynames
 
 | Keyname             | Mandatory | Type                                   | Description                                                                                                                                                                                |
 |---------------------|-----------|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| node_type           | yes       | string                                 | The mandatory name of the Node Type the service template is providing an implementation for.                                                                                               |
-| substitution_filter | no        | [node filter](#node-filter-definition) | The optional filter that further constrains the abstract node templates for which this service template can provide an implementation.                                                     |
-| properties          | no        | map of property mappings               | The optional map of properties mapping allowing to map properties of the node_type to inputs of the service template.                                                                      |
-| attributes          | no        | map of attribute mappings              | The optional map of attribute mappings allowing to map outputs from the service template to attributes of the node_type.                                                                   |
-| capabilities        | no        | map of capability mappings             | The optional map of capabilities mapping.                                                                                                                                                  |
-| requirements        | no        | map of requirement mappings            | The optional map of requirements mapping.                                                                                                                                                  |
-| interfaces          | no        | map of interfaces mappings             | The optional map of interface mapping allows to map an interface and operations of the node type to implementations that could be either workflows or node template interfaces/operations. |
+| node_type           | yes       | string                                 | The mandatory name of the Node Type of the nodes for which the service template can provide an implementation.                                                                                               |
+| substitution_filter | no        | [node filter](#node-filter-definition) | The optional filter that further constrains the abstract nodes for which this service template can provide an implementation.                                                     |
+| properties          | no        | map of property mappings               | The optional map of property mappings that map properties of the substituted node to inputs of the service template.                                                                      |
+| attributes          | no        | map of attribute mappings              | The optional map of attribute mappings that map outputs from the service template to attributes of the substituted node.                                                                   |
+| capabilities        | no        | map of capability mappings             | The optional map of capability mappings.                                                                                                                                                  |
+| requirements        | no        | list of requirement mappings           | The optional list of requirement mappings.                                                                                                                                                  |
+| interfaces          | no        | map of interfaces mappings             | The optional map of interface mappings that map interface operations called on the substituted node to implementations workflows on the substituting service. |
 
 #### Grammar
 
 The grammar of the substitution_mapping section is as follows:
 ```
 node_type: <node_type_name>
-substitution_filter : <node_filter>
+substitution_filter : <substitution_filter>
 properties:
   <property_mappings>
 capabilities:
@@ -7790,112 +7811,77 @@ interfaces:
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- node_type_name: represents the mandatory Node Type name that the
-  Service Template is offering an implementation for.
+- **node_type_name**: represents the mandatory Node Type name for
+  which the Service Template is offering an implementation.
 
-- node_filter: represents the optional node filter that reduces the set
-  of abstract node templates for which this service template is an
-  implementation by only substituting for those node templates whose
-  properties and capabilities satisfy the condition expression specified
-  in the node filter.
+- **substitution_filter**: represents the optional filter that reduces
+  the set of abstract nodes for which this service template
+  is an implementation by only substituting for those nodes
+  whose properties and capabilities satisfy the condition expression
+  specified in the filter.
 
-- **properties**: represents the \<optional\> map of properties
+- **properties**: represents the optional map of property
   mappings.
 
-- **capability_mappings**: represents the \<optional\> map of capability
+- **capability_mappings**: represents the optional map of capability
   mappings.
 
-- **requirement_mappings**: represents the \<optional\> map of
+- **requirement_mappings**: represents the optional list of
   requirement mappings.
 
-- **attributes**: represents the \<optional\> map of attributes
+- **attributes**: represents the optional map of attribute
   mappings.
 
-- **interfaces:** represents the \<optional\> map of interfaces
+- **interfaces:** represents the optional map of interface
   mappings.
 
 #### Examples
 
 TBD
 
-#### Additional requirements
-
-- The substitution mapping MUST provide mapping for every property,
-  capability and requirement defined in the specified \<node_type\>
-
 #### Notes
 
-- The node_type specified in the substitution mapping SHOULD be abstract
-  (does not provide implementation for normative operations).
+- The `node_type` specified in the substitution mapping SHOULD not
+  provide implementations for interface operations defined in the
+  type.
+
+- A substituting service template MUST be a valid TOSCA template in
+  its own right (i.e., when not used as a substituting
+  implementation). Specifically, all the required properties of all
+  its node templates must have valid property assignments.
 
 ### Property mapping
 
-A property mapping allows to map the property of a substituted node type
-to an input of the service template.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA property
-mapping:
-
-| Keyname | Mandatory | Type                               | Description                                                                                                                                   |
-|---------|-----------|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| mapping | no        | list of strings                    | An array with 1 string element that references an input of the service.                                                                       |
-| value   | no        | matching the type of this property | This **deprecated** keyname allows to explicitly assigne a value to this property. This field is mutually exclusive with the mapping keyname. |
+A property mapping allows to map a property value of a substituted
+node to an input value of the substituting service template.
 
 #### Grammar
 
-The single-line grammar of a property_mapping is as follows:
+The grammar of a property_mapping is as follows:
 ```
-<property_name>: <property_value> # This use is deprecated
-<property_name>: [ <input_name> ]
+<property_name>: <input_name> 
+<property_path>: <input_name>
 ```
-The multi-line grammar is as follows :
-```
-<property_name>: 
-  mapping: [ < input_name > ]
-<property_name>: 
-  value: <property_value> # This use is deprecated
-```
-#### Notes
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
 
-- Single line grammar for a property value assignment is not allowed for
-  properties of type in order to avoid collision with the mapping single
-  line grammar.
+- **input_name**: represents the name of an input defined for the
+  substituting service template.
 
-- The property_value mapping grammar has been deprecated. The original
-  intent of the *property-to-constant-value* mapping was not to provide
-  a *mapping*, but rather to present a *matching* mechanism to drive
-  selection of the appropriate substituting template when more than one
-  template was available as a substitution for the abstract node. In
-  that case, a service template was only a valid candidate for
-  substitution if the property value in the abstract node template
-  matched the constant value specified in the property_value mapping for
-  that property. With the introduction of substitution filter syntax to
-  drive matching, there is no longer a need for the
-  property-to-constant-value mapping functionality.
+- **property_name**: represents the name of a property of the
+  substituted node (defined using a corresponding property definition
+  in the specified Node Type)
 
-- The previous version of the specification allowed direct mappings from
-  properties of the abstract node template to properties of node
-  templates in the substituting service template. Support for these
-  mappings has been deprecated since they would have resulted in
-  unpredictable behavior, for the following reason. If the substituting
-  template is a valid TOSCA template, then all the (required) properties
-  of all its node templates must have valid property assignments already
-  defined. If the substitution mappings of the substituting template
-  include direct property-to-property mappings, the the substituting
-  template ends up with two conflicting property assignments: one
-  defined in the substituting template itself, and one defined by the
-  substitution mappings. These conflicting assignments lead to
-  unpredictable behavior.
+- **property_path**: represents a *TOSCA Path* expression that
+  references a property of a capability or requirement of the
+  substituted node.
 
-#### Additional constraints
+#### Additional requirements
 
-- When Input mapping it may be referenced by multiple nodes in the
-  topologies with resulting attributes values that may differ later on
-  in the various nodes. In any situation, the attribute reflecting the
-  property of the substituted type will remain a constant value set to
-  the one of the input at deployment time.
+- Mappings must be type-compatible (i.e., properties mapped to input
+  must have the type specified in the corresponding input definition).
+- Property mappings must be defined for all *mandatory* service
+  template inputs that do not define a `default` value.
 
 ### Attribute mapping
 
