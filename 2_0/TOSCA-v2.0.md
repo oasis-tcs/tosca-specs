@@ -9016,15 +9016,14 @@ used to “trigger” a policy with which it is associated.
 The following is the list of recognized keynames for a TOSCA trigger
 definition:
 
-| Keyname     | Mandatory | Type                                                 | Description                                                                                                                                                                                                                                                                                                      |
-|-------------|-----------|------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| description | no        | [[string](#TYPE_YAML_STRING)](#TYPE_YAML_STRING)     | The optional description string for the trigger.                                                                                                                                                                                                                                                                 |
-| event       | yes       | [string](#TYPE_YAML_STRING)                          | The mandatory name
+|Keyname|Mandatory|Type|Description|
+|---|---|---|---|
+|description | no|[string](#TYPE_YAML_STRING)| The optional description string for the trigger.|
+|event    | yes    | [string](#TYPE_YAML_STRING)| The mandatory name of the event that activates the trigger’s action. |
+|condition  | no    | [condition clause](#BKM_Condition_Clause_Def)| The optional condition that must evaluate to true in order for the trigger’s action to be performed. Note: this is optional since sometimes the event occurrence itself is enough to trigger the action.|
+|action|yes|list of [activity definition](#activity-definitions)|The list of sequential activities to be performed when the event is triggered, and the condition is met (i.e., evaluates to true).|
 <!----
 {"id": "1182", "author": "Chris Lauwers", "date": "2022-10-03T20:01:00Z", "comment": "We need to clarify the context in which event names can be interpreted. Are they globally scoped?", "target": "name"}-->
- of the event that activates the trigger’s action. |
-| condition   | no        | [condition clause](#BKM_Condition_Clause_Def)        | The optional condition that must evaluate to true in order for the trigger’s action to be performed. Note: this is optional since sometimes the event occurrence itself is enough to trigger the action.                                                                                                         |
-| action      | yes       | list of [activity definition](#activity-definitions) | The list of sequential activities to be performed when the event is triggered, and the condition is met (i.e., evaluates to true).                                                                                                                                                                               |
 
 #### Grammar
 <!----
