@@ -235,6 +235,118 @@ define a state machine by defining the following:
   attribute value changes or whenever the `state` attribute value
   changes.
 
+The following example shows how the `Standard` interface in the Simple
+Profile could be described using this grammar:
+```yaml
+data_types:
+  State:
+    derived_from: string
+    validation:
+      $valid_values:
+        - $value: []
+        - - initial
+          - created
+          - configured
+          - started
+    
+interface_types:
+  Standard:
+    attributes:
+      state:
+        type: State
+      desired_state:
+        type: State
+    operations:
+      create:
+        preconditions:
+          $equal:
+            - $get_attribute: [ INTERFACE, state ]
+            - initial
+        set_attribute: [ INTERFACE, state, created ]
+        triggers:
+          - condition: 
+              $valid_values:
+                - $get_attribute: [ INTERFACE, desired_state ]
+                - [ configured, started ]
+            target: SELF
+            event: Standard.configure
+          - condition: 
+              $equal:
+                - $get_attribute: [ INTERFACE, desired_state ]
+                - initial
+            target: SELF
+            event: Standard.delete
+      configure:
+        preconditions:
+          $equal:
+            - $get_attribute: [ INTERFACE, state ]
+            - created
+        set_attribute: [ INTERFACE, state, configured ]
+        triggers:
+          - condition: 
+              $equal:
+                - $get_attribute: [ INTERFACE, desired_state ]
+                - started
+            target: SELF
+            event: Standard.start
+          - condition: 
+              $equal:
+                - $get_attribute: [ INTERFACE, desired_state ]
+                - initial
+            target: SELF
+            event: Standard.delete
+      start:
+        preconditions:
+          $equal:
+            - $get_attribute: [ INTERFACE, state ]
+            - configured
+        set_attribute: [ INTERFACE, state, started ]
+        triggers:
+          - condition: 
+              $equal:
+                - $get_attribute: [ INTERFACE, desired_state ]
+                - configured
+            target: SELF
+            event: Standard.stop
+          - condition: 
+              $equal:
+                - $get_attribute: [ INTERFACE, desired_state ]
+                - initial
+            target: SELF
+            event: Standard.delete
+      stop:
+        preconditions:
+          $equal:
+            - $get_attribute: [ INTERFACE, state ]
+            - started
+        set_attribute: [ INTERFACE, state, configured]
+        triggers:
+          - condition: 
+              $equal:
+                - $get_attribute: [ INTERFACE, desired_state ]
+                - started
+            target: SELF
+            event: Standard.start
+          - condition: 
+              $equal:
+                - $get_attribute: [ INTERFACE, desired_state ]
+                - initial
+            target: SELF
+            event: Standard.delete
+      delete:
+        preconditions:
+          $valid_values:
+            - $get_attribute: [ INTERFACE, state ]
+            - [ created, configured ]
+        $set_attribute: [ INTERFACE, state, initial ]
+        triggers:
+          - condition: 
+              $valid_values:
+                - $get_attribute: [ INTERFACE, desired_state ]
+                - [ created, configured, started ]
+            target: SELF
+            event: Standard.create
+```
 ## Defining Reusable Localized Component Behavior
 
 Interface types define state machines for individual interfaces. However:
