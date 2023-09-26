@@ -248,6 +248,7 @@ data_types:
           - created
           - configured
           - started
+          - error
     
 interface_types:
   Standard:
@@ -259,93 +260,80 @@ interface_types:
     operations:
       create:
         preconditions:
-          $equal:
-            - $get_attribute: [ INTERFACE, state ]
-            - initial
-        set_attribute: [ INTERFACE, state, created ]
+          $equal: [{$get_attribute: [ INTERFACE, state ]}, initial]
+        on_success:
+          $set_attribute: [ INTERFACE, state, created ]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $valid_values:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - [ configured, started ]
-            target: SELF
-            event: Standard.configure
+              $has_entry: [[ configured, started ], {$get_attribute: [ INTERFACE, desired_state ]}]
+            target: INTERFACE
+            event: configure
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - initial
-            target: SELF
-            event: Standard.delete
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
+            target: INTERFACE
+            event: delete
       configure:
         preconditions:
-          $equal:
-            - $get_attribute: [ INTERFACE, state ]
-            - created
-        set_attribute: [ INTERFACE, state, configured ]
+          $equal: [{$get_attribute: [ INTERFACE, state ]}, created]
+        on_success:
+          set_attribute: [ INTERFACE, state, configured ]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - started
-            target: SELF
-            event: Standard.start
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, started]
+            target: INTERFACE
+            event: start
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - initial
-            target: SELF
-            event: Standard.delete
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
+            target: INTERFACE
+            event: delete
       start:
         preconditions:
-          $equal:
-            - $get_attribute: [ INTERFACE, state ]
-            - configured
-        set_attribute: [ INTERFACE, state, started ]
+          $equal: [{$get_attribute: [ INTERFACE, state ]}, configured]
+        on_success:
+          set_attribute: [ INTERFACE, state, started ]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - configured
-            target: SELF
-            event: Standard.stop
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, configured]
+            target: INTERFACE
+            event: stop
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - initial
-            target: SELF
-            event: Standard.delete
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
+            target: INTERFACE
+            event: delete
       stop:
         preconditions:
-          $equal:
-            - $get_attribute: [ INTERFACE, state ]
-            - started
-        set_attribute: [ INTERFACE, state, configured]
+          $equal: [{$get_attribute: [ INTERFACE, state ]}, started]
+        on_success:
+          set_attribute: [ INTERFACE, state, configured]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - started
-            target: SELF
-            event: Standard.start
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, started]
+            target: INTERFACE
+            event: start
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - initial
-            target: SELF
-            event: Standard.delete
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
+            target: INTERFACE
+            event: delete
       delete:
         preconditions:
-          $valid_values:
-            - $get_attribute: [ INTERFACE, state ]
-            - [ created, configured ]
-        $set_attribute: [ INTERFACE, state, initial ]
+          $has_entry: [[ created, configured, error ], {$get_attribute: [ INTERFACE, state ]} ]
+        on_success:
+          $set_attribute: [ INTERFACE, state, initial ]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $valid_values:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - [ created, configured, started ]
-            target: SELF
-            event: Standard.create
+              $has_entry: [[ created, configured, started ], {$get_attribute: [ INTERFACE, desired_state ]}]
+            target: INTERFACE
+            event: create
 ```
 ## Defining Reusable Localized Component Behavior
 
