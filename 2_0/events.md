@@ -236,7 +236,19 @@ define a state machine by defining the following:
   changes.
 
 The following example shows how the `Standard` interface in the Simple
-Profile could be described using this grammar:
+Profile could be described. The state machine implemented by the
+`Standard` interface is shown in the following figure:
+```mermaid
+stateDiagram-v2
+  initial --> created: create
+  created --> configured: configure
+  configured --> started: start
+  started --> configured: stop
+  created --> initial: delete
+  configured --> initial: delete
+```
+The interface definition and the associated state machine can be
+expressed using the following grammar:
 ```yaml
 data_types:
   State:
@@ -335,6 +347,90 @@ interface_types:
             target: INTERFACE
             event: create
 ```
+Similarly, the `Configure` interface defined in the Simple Profile
+could be defined using this grammar as well. Note that we don't define
+`triggers` in the interface type definition, since the interface
+operations of the `Configure` interface are intended to be
+*interleaved* with interface operations defined in the Standard
+interface on node types. This interleaving behavior will be defined in
+the node type and relationship type definitions.
+```yaml
+interface_types:
+  Configure:
+    attributes:
+      source_state:
+        type: string
+        constraints:
+          $valid_values:
+            - $value: []
+            - - initial
+              - configured
+              - established
+              - added
+              - removed
+              - error
+      target_state:
+        type: string
+        constraints:
+          $valid_values:
+            - $value: []
+            - - initial
+              - configured
+              - established
+              - added
+              - removed
+              - error
+    operations:
+      pre_configure_source:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, source_state ]}, initial]
+        on_success:
+          $set_attribute: [ INTERFACE, source_state, configured ]
+        on_failure:
+          $set_attribute: [ INTERFACE, source_state, error ]
+      pre_configure_target:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, initial]
+        on_success:
+          $set_attribute: [ INTERFACE, target_state, configured ]
+        on_failure:
+          $set_attribute: [ INTERFACE, target_state, error ]
+      post_configure_source:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, source_state ]}, configured]
+        on_success:
+          $set_attribute: [ INTERFACE, source_state, established ]
+        on_failure:
+          $set_attribute: [ INTERFACE, source_state, error ]
+      post_configure_target:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, configured]
+        on_success:
+          $set_attribute: [ INTERFACE, target_state, established ]
+        on_failure:
+          $set_attribute: [ INTERFACE, target_state, error ]
+      add_target:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, established]
+        on_success:
+          $set_attribute: [ INTERFACE, target_state, added ]
+        on_failure:
+          $set_attribute: [ INTERFACE, target_state, error ]
+      add_source:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, source_state ]}, established]
+        on_success:
+          $set_attribute: [ INTERFACE, source_state, added ]
+        on_failure:
+          $set_attribute: [ INTERFACE, source_state, error ]
+      remove_target:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, added]
+        on_success:
+          $set_attribute: [ INTERFACE, target_state, removed ]
+        on_failure:
+          $set_attribute: [ INTERFACE, target_state, error ]
+```
 ## Defining Reusable Localized Component Behavior
 
 Interface types define state machines for individual interfaces. However:
@@ -353,17 +449,43 @@ responsible for this coordination by *refining* the preconditions
 associated with interface events and by adding additional event
 triggers. As a result, interface definitions create *localized*
 component behaviors that are effectively *fine grained*
-workflows. These mini-workflows specify local behaviors (in node type
-definitions) for interleaving events defined in the node's interface
-types with relationship operations defined in the interface types
-associated with the incoming and outgoing relationships.  When nodes
-and relationships are organized in a service topology graph, these
-fine grained workflows propagate events across tge graph which causes
+workflows. These mini-workflows specify local behaviors for
+interleaving operations defined in node types with with interface
+operations defined in the relationship types.  When nodes and
+relationships are organized in a service topology graph, these fine
+grained workflows propagate events across tge graph which causes
 end-to-end behavior to emerge. This *emergent behavior* is an
 generalization of the automatically created declarative workflows of
 TOSCA v1.x.
 
-Unlike *imperative workflows*, the localized *mine workflows*
+The remainder of this section illustrates how operations of interfaces
+defined in relationship types could be interleaved with interface
+operations defined on source and target nodes of this relationship. We
+use the `Standard` and `Configure` interface types defined in the
+Simple Profiles as example. The desired interleaving is shown in the
+following figures:
+```mermaid
+sequenceDiagram
+    Source Node->>Source Node: create
+    Source Node->>Relationship: 
+    Relationship->>Relationship: pre_configure_source
+    Relationship->>Source Node: 
+    Source Node->>Source Node: configure
+    Source Node->>Relationship: 
+    Relationship->>Relationship: post_configure_source
+    Relationship->>Source Node: 
+    Source Node->>Source Node: start
+    Source Node->>Relationship: 
+    Relationship->>Relationship: add_source
+```
+### Interface Definitions in Relationship Types
+ (as identified
+using the `valid_source_node_types` and `valid_target_node_types`
+keywords. We use the `Root` relationship type defined in Simple
+Profile as an example.
+
+### Interface Definitions in Node Types
+Unlike *imperative workflows*, the localized *mini workflows*
 specified in interface definitions have the following characteristics:
 - The apply to all nodes of a specific type, rather that to specific
   nodes in a service template.
