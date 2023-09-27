@@ -348,7 +348,7 @@ interface_types:
             event: create
 ```
 Similarly, the `Configure` interface defined in the Simple Profile
-could be defined using this grammar as well. Note that we don't define
+can be defined using this grammar as well. Note that we don't define
 `triggers` in the interface type definition, since the interface
 operations of the `Configure` interface are intended to be
 *interleaved* with interface operations defined in the Standard
@@ -451,19 +451,30 @@ triggers. As a result, interface definitions create *localized*
 component behaviors that are effectively *fine grained*
 workflows. These mini-workflows specify local behaviors for
 interleaving operations defined in node types with with interface
-operations defined in the relationship types.  When nodes and
-relationships are organized in a service topology graph, these fine
-grained workflows propagate events across tge graph which causes
-end-to-end behavior to emerge. This *emergent behavior* is an
-generalization of the automatically created declarative workflows of
-TOSCA v1.x.
+operations defined in the relationship types.  Unlike the *imperative
+workflows* in Version 1.x, the localized *mini workflows* specified in
+interface definitions have the following characteristics:
+- They apply to all nodes of a specific type, rather that to specific
+  nodes in a service template.
+- Events can be propagated based on the types used in requirement
+  definitions and capability definitions without needing to identify
+  specific target nodes by name.
+
+When nodes and relationships are organized in a service topology
+graph, these fine grained workflows propagate events across tge graph
+which causes end-to-end behavior to emerge. This *emergent behavior*
+is a generalization of the automatically created declarative workflows
+of TOSCA v1.x.
 
 The remainder of this section illustrates how operations of interfaces
 defined in relationship types could be interleaved with interface
 operations defined on source and target nodes of this relationship. We
 use the `Standard` and `Configure` interface types defined in the
-Simple Profiles as example. The desired interleaving is shown in the
-following figures:
+Simple Profiles as example.
+
+The desired interleaving between interface operations on a
+relationship and interface operations on the source node of that
+relationships is shown in the following figure:
 ```mermaid
 sequenceDiagram
     Source Node->>Source Node: create
@@ -478,21 +489,108 @@ sequenceDiagram
     Source Node->>Relationship: 
     Relationship->>Relationship: add_source
 ```
-### Interface Definitions in Relationship Types
- (as identified
-using the `valid_source_node_types` and `valid_target_node_types`
-keywords. We use the `Root` relationship type defined in Simple
-Profile as an example.
+Similarly, the interleaving between interface operations on a
+relationship and interface operations on the target node of that
+relationship is shown in the following figure:
+```mermaid
+sequenceDiagram
+    Target Node->>Target Node: create
+    Target Node->>Relationship: 
+    Relationship->>Relationship: pre_configure_target
+    Relationship->>Target Node: 
+    Target Node->>Target Node: configure
+    Target Node->>Relationship: 
+    Relationship->>Relationship: post_configure_target
+    Relationship->>Target Node: 
+    Target Node->>Target Node: start
+    Target Node->>Relationship: 
+    Relationship->>Relationship: add_target
+```
+To correctly define this desired interleaving, the interface
+definitions in the `Root` relationship type and the `Root` node type
+must add additional `preconditions` as well as additional
+`triggers`. The following shows the definition of the `Configure`
+interface in the `Root` relationship type:
+```yaml
+relationship_types:
+  Root:
+    valid_source_node_types: [ Root ]
+    valid_target_node_types: [ Root ]
+    interfaces:
+      configure:
+        type: Configure
+        operations:
+          pre_configure_source:
+            triggers:
+                target: [SELF, SOURCE, INTERFACE,  standard]
+                event: configure
+          pre_configure_target:
+            triggers:
+                target: [SELF, TARGET, INTERFACE,  standard]
+                event: configure
+          post_configure_source:
+            triggers:
+                target: [SELF, SOURCE, INTERFACE,  standard]
+                event: start
+          post_configure_target:
+            triggers:
+                target: [SELF, TARGET, INTERFACE,  standard]
+                event: start
+```
+Note that in this grammar, the `valid_source_node_types` and
+`valid_target_node_types` keywords are used to make the orchestrator
+aware of the possible types of the nodes at the source and the target
+of the `Root` relationship. This allows for validation of the triggers
+at design time.
 
-### Interface Definitions in Node Types
-Unlike *imperative workflows*, the localized *mini workflows*
-specified in interface definitions have the following characteristics:
-- The apply to all nodes of a specific type, rather that to specific
-  nodes in a service template.
-- Events can be propagated based on the types used in requirement
-  definitions and capability definitions without needing to identify
-  specific target nodes by name.
+The interface definitions in *node types* can be slightly more
+complicated than the interface definitions in *relationship types*
+since:
+- Nodes can define multiple requirements, each of which can result in
+  multiple relationships of various types.
+- Nodes can define multiple capabilities, each of which can be
+  targeted by multiple relationships of various types.
 
+An example is shown in the following figure:
+
+This has the following implications:
+- `triggers` may need to send events to multiple relationships where
+  the exact number of those relationships cannot be determined from
+  the requirement definitions and capability definitions in the node
+  type.
+- `preconditions` may need to check state variables of multiple
+  relationships where the exact number of those relationships cannot
+  be determined from the the requirement definitions and capability
+  definitions in the node type.
+
+To accommodate these scnearios, we introduce the following new
+function:
+
+- `$for_each`: iterate over a list
+
+This function allow us to define the `Standard` interface on the
+`Root` node type as follows
+```yaml
+node_types:
+  Root:
+    interfaces:
+      standard:
+        type: Standard
+        operations:
+          create:
+            triggers:
+              - target: [SELF, CAPABILITY, ALL, SOURCE] # List of targets
+                event: pre_configure_target
+          configure:
+            preconditions:
+              $for_each:
+                - @rel_out                              # variable name
+                - [SELF, RELATIONSHIP, ALL]]            # list over which to iterate
+                - $equal: [{$get_attribute: [ @rel_out, target_state ]}, configured ]
+            triggers:
+              - target: [SELF, CAPABILITY, ALL, SOURCE]
+                event: post_configure_target
+```
 ## Defining Service Lifecycle Management Actions
 
 Events definitions are supported not just in interfaces but also at
