@@ -236,7 +236,19 @@ define a state machine by defining the following:
   changes.
 
 The following example shows how the `Standard` interface in the Simple
-Profile could be described using this grammar:
+Profile could be described. The state machine implemented by the
+`Standard` interface is shown in the following figure:
+```mermaid
+stateDiagram-v2
+  initial --> created: create
+  created --> configured: configure
+  configured --> started: start
+  started --> configured: stop
+  created --> initial: delete
+  configured --> initial: delete
+```
+The interface definition and the associated state machine can be
+expressed using the following grammar:
 ```yaml
 data_types:
   State:
@@ -248,6 +260,7 @@ data_types:
           - created
           - configured
           - started
+          - error
     
 interface_types:
   Standard:
@@ -259,93 +272,164 @@ interface_types:
     operations:
       create:
         preconditions:
-          $equal:
-            - $get_attribute: [ INTERFACE, state ]
-            - initial
-        set_attribute: [ INTERFACE, state, created ]
+          $equal: [{$get_attribute: [ INTERFACE, state ]}, initial]
+        on_success:
+          $set_attribute: [ INTERFACE, state, created ]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $valid_values:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - [ configured, started ]
-            target: SELF
-            event: Standard.configure
+              $has_entry: [[ configured, started ], {$get_attribute: [ INTERFACE, desired_state ]}]
+            target: INTERFACE
+            event: configure
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - initial
-            target: SELF
-            event: Standard.delete
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
+            target: INTERFACE
+            event: delete
       configure:
         preconditions:
-          $equal:
-            - $get_attribute: [ INTERFACE, state ]
-            - created
-        set_attribute: [ INTERFACE, state, configured ]
+          $equal: [{$get_attribute: [ INTERFACE, state ]}, created]
+        on_success:
+          set_attribute: [ INTERFACE, state, configured ]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - started
-            target: SELF
-            event: Standard.start
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, started]
+            target: INTERFACE
+            event: start
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - initial
-            target: SELF
-            event: Standard.delete
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
+            target: INTERFACE
+            event: delete
       start:
         preconditions:
-          $equal:
-            - $get_attribute: [ INTERFACE, state ]
-            - configured
-        set_attribute: [ INTERFACE, state, started ]
+          $equal: [{$get_attribute: [ INTERFACE, state ]}, configured]
+        on_success:
+          set_attribute: [ INTERFACE, state, started ]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - configured
-            target: SELF
-            event: Standard.stop
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, configured]
+            target: INTERFACE
+            event: stop
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - initial
-            target: SELF
-            event: Standard.delete
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
+            target: INTERFACE
+            event: delete
       stop:
         preconditions:
-          $equal:
-            - $get_attribute: [ INTERFACE, state ]
-            - started
-        set_attribute: [ INTERFACE, state, configured]
+          $equal: [{$get_attribute: [ INTERFACE, state ]}, started]
+        on_success:
+          set_attribute: [ INTERFACE, state, configured]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - started
-            target: SELF
-            event: Standard.start
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, started]
+            target: INTERFACE
+            event: start
           - condition: 
-              $equal:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - initial
-            target: SELF
-            event: Standard.delete
+              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
+            target: INTERFACE
+            event: delete
       delete:
         preconditions:
-          $valid_values:
-            - $get_attribute: [ INTERFACE, state ]
-            - [ created, configured ]
-        $set_attribute: [ INTERFACE, state, initial ]
+          $has_entry: [[ created, configured, error ], {$get_attribute: [ INTERFACE, state ]} ]
+        on_success:
+          $set_attribute: [ INTERFACE, state, initial ]
+        on_failure:
+          $set_attribute: [ INTERFACE, state, error ]
         triggers:
           - condition: 
-              $valid_values:
-                - $get_attribute: [ INTERFACE, desired_state ]
-                - [ created, configured, started ]
-            target: SELF
-            event: Standard.create
+              $has_entry: [[ created, configured, started ], {$get_attribute: [ INTERFACE, desired_state ]}]
+            target: INTERFACE
+            event: create
+```
+Similarly, the `Configure` interface defined in the Simple Profile
+can be defined using this grammar as well. Note that we don't define
+`triggers` in the interface type definition, since the interface
+operations of the `Configure` interface are intended to be
+*interleaved* with interface operations defined in the Standard
+interface on node types. This interleaving behavior will be defined in
+the node type and relationship type definitions.
+```yaml
+interface_types:
+  Configure:
+    attributes:
+      source_state:
+        type: string
+        constraints:
+          $valid_values:
+            - $value: []
+            - - initial
+              - configured
+              - established
+              - added
+              - removed
+              - error
+      target_state:
+        type: string
+        constraints:
+          $valid_values:
+            - $value: []
+            - - initial
+              - configured
+              - established
+              - added
+              - removed
+              - error
+    operations:
+      pre_configure_source:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, source_state ]}, initial]
+        on_success:
+          $set_attribute: [ INTERFACE, source_state, configured ]
+        on_failure:
+          $set_attribute: [ INTERFACE, source_state, error ]
+      pre_configure_target:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, initial]
+        on_success:
+          $set_attribute: [ INTERFACE, target_state, configured ]
+        on_failure:
+          $set_attribute: [ INTERFACE, target_state, error ]
+      post_configure_source:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, source_state ]}, configured]
+        on_success:
+          $set_attribute: [ INTERFACE, source_state, established ]
+        on_failure:
+          $set_attribute: [ INTERFACE, source_state, error ]
+      post_configure_target:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, configured]
+        on_success:
+          $set_attribute: [ INTERFACE, target_state, established ]
+        on_failure:
+          $set_attribute: [ INTERFACE, target_state, error ]
+      add_target:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, established]
+        on_success:
+          $set_attribute: [ INTERFACE, target_state, added ]
+        on_failure:
+          $set_attribute: [ INTERFACE, target_state, error ]
+      add_source:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, source_state ]}, established]
+        on_success:
+          $set_attribute: [ INTERFACE, source_state, added ]
+        on_failure:
+          $set_attribute: [ INTERFACE, source_state, error ]
+      remove_target:
+        preconditions:
+          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, added]
+        on_success:
+          $set_attribute: [ INTERFACE, target_state, removed ]
+        on_failure:
+          $set_attribute: [ INTERFACE, target_state, error ]
 ```
 ## Defining Reusable Localized Component Behavior
 
@@ -365,24 +449,148 @@ responsible for this coordination by *refining* the preconditions
 associated with interface events and by adding additional event
 triggers. As a result, interface definitions create *localized*
 component behaviors that are effectively *fine grained*
-workflows. These mini-workflows specify local behaviors (in node type
-definitions) for interleaving events defined in the node's interface
-types with relationship operations defined in the interface types
-associated with the incoming and outgoing relationships.  When nodes
-and relationships are organized in a service topology graph, these
-fine grained workflows propagate events across tge graph which causes
-end-to-end behavior to emerge. This *emergent behavior* is an
-generalization of the automatically created declarative workflows of
-TOSCA v1.x.
-
-Unlike *imperative workflows*, the localized *mine workflows*
-specified in interface definitions have the following characteristics:
-- The apply to all nodes of a specific type, rather that to specific
+workflows. These mini-workflows specify local behaviors for
+interleaving operations defined in node types with with interface
+operations defined in the relationship types.  Unlike the *imperative
+workflows* in Version 1.x, the localized *mini workflows* specified in
+interface definitions have the following characteristics:
+- They apply to all nodes of a specific type, rather that to specific
   nodes in a service template.
 - Events can be propagated based on the types used in requirement
   definitions and capability definitions without needing to identify
   specific target nodes by name.
 
+When nodes and relationships are organized in a service topology
+graph, these fine grained workflows propagate events across tge graph
+which causes end-to-end behavior to emerge. This *emergent behavior*
+is a generalization of the automatically created declarative workflows
+of TOSCA v1.x.
+
+The remainder of this section illustrates how operations of interfaces
+defined in relationship types could be interleaved with interface
+operations defined on source and target nodes of this relationship. We
+use the `Standard` and `Configure` interface types defined in the
+Simple Profiles as example.
+
+The desired interleaving between interface operations on a
+relationship and interface operations on the source node of that
+relationships is shown in the following figure:
+```mermaid
+sequenceDiagram
+    Source Node->>Source Node: create
+    Source Node->>Relationship: 
+    Relationship->>Relationship: pre_configure_source
+    Relationship->>Source Node: 
+    Source Node->>Source Node: configure
+    Source Node->>Relationship: 
+    Relationship->>Relationship: post_configure_source
+    Relationship->>Source Node: 
+    Source Node->>Source Node: start
+    Source Node->>Relationship: 
+    Relationship->>Relationship: add_source
+```
+Similarly, the interleaving between interface operations on a
+relationship and interface operations on the target node of that
+relationship is shown in the following figure:
+```mermaid
+sequenceDiagram
+    Target Node->>Target Node: create
+    Target Node->>Relationship: 
+    Relationship->>Relationship: pre_configure_target
+    Relationship->>Target Node: 
+    Target Node->>Target Node: configure
+    Target Node->>Relationship: 
+    Relationship->>Relationship: post_configure_target
+    Relationship->>Target Node: 
+    Target Node->>Target Node: start
+    Target Node->>Relationship: 
+    Relationship->>Relationship: add_target
+```
+To correctly define this desired interleaving, the interface
+definitions in the `Root` relationship type and the `Root` node type
+must add additional `preconditions` as well as additional
+`triggers`. The following shows the definition of the `Configure`
+interface in the `Root` relationship type:
+```yaml
+relationship_types:
+  Root:
+    valid_source_node_types: [ Root ]
+    valid_target_node_types: [ Root ]
+    interfaces:
+      configure:
+        type: Configure
+        operations:
+          pre_configure_source:
+            triggers:
+                target: [SELF, SOURCE, INTERFACE,  standard]
+                event: configure
+          pre_configure_target:
+            triggers:
+                target: [SELF, TARGET, INTERFACE,  standard]
+                event: configure
+          post_configure_source:
+            triggers:
+                target: [SELF, SOURCE, INTERFACE,  standard]
+                event: start
+          post_configure_target:
+            triggers:
+                target: [SELF, TARGET, INTERFACE,  standard]
+                event: start
+```
+Note that in this grammar, the `valid_source_node_types` and
+`valid_target_node_types` keywords are used to make the orchestrator
+aware of the possible types of the nodes at the source and the target
+of the `Root` relationship. This allows for validation of the triggers
+at design time.
+
+The interface definitions in *node types* can be slightly more
+complicated than the interface definitions in *relationship types*
+since:
+- Nodes can define multiple requirements, each of which can result in
+  multiple relationships of various types.
+- Nodes can define multiple capabilities, each of which can be
+  targeted by multiple relationships of various types.
+
+An example is shown in the following figure:
+
+This has the following implications:
+- `triggers` may need to send events to multiple relationships where
+  the exact number of those relationships cannot be determined from
+  the requirement definitions and capability definitions in the node
+  type.
+- `preconditions` may need to check state variables of multiple
+  relationships where the exact number of those relationships cannot
+  be determined from the the requirement definitions and capability
+  definitions in the node type.
+
+To accommodate these scnearios, we introduce the following new
+function:
+
+- `$for_each`: iterate over a list
+
+This function allow us to define the `Standard` interface on the
+`Root` node type as follows
+```yaml
+node_types:
+  Root:
+    interfaces:
+      standard:
+        type: Standard
+        operations:
+          create:
+            triggers:
+              - target: [SELF, CAPABILITY, ALL, SOURCE] # List of targets
+                event: pre_configure_target
+          configure:
+            preconditions:
+              $for_each:
+                - @rel_out                              # variable name
+                - [SELF, RELATIONSHIP, ALL]]            # list over which to iterate
+                - $equal: [{$get_attribute: [ @rel_out, target_state ]}, configured ]
+            triggers:
+              - target: [SELF, CAPABILITY, ALL, SOURCE]
+                event: post_configure_target
+```
 ## Defining Service Lifecycle Management Actions
 
 Events definitions are supported not just in interfaces but also at
