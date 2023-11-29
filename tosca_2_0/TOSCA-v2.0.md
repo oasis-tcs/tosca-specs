@@ -5252,35 +5252,23 @@ primitive type in order to add validation clauses.
 Primitive Types: (section 4.4.1)
 
 - string
-
 - integer
-
 - float
-
 - boolean
-
 - bytes
-
 - nil
 
 Special Types: (section 4.4.2)
 
-- range
-
 - timestamp
-
 - scalar-unit.size
-
 - scalar-unit.time
-
 - scalar-unit.frequency
-
 - scalar-unit.bitrate
 
 Collection Types: (section 4.4.3)
 
 - list
-
 - map
 
 > Notes that were originally in the metadata section:
