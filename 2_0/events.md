@@ -1,22 +1,20 @@
 # Unified Event Handling
 
-One of the main differentiating features of TOSCA is that it supports
-declarative service lifecycle management based on graph-based service
-models. Declarative automation is supported by *declarative workflows*
-that are created automatically by the orchestrator based on
+One of TOSCA's differentiating features is its support for declarative
+service lifecycle management based on graph-based service
+models. Declarative automation is supported through *declarative
+workflows* that are created automatically by the orchestrator based on
 dependencies encoded in the service topology graph combined with the
 semantics of the standard interface types defined in the Simple
-Profile. In addition, TOSCA supports *imperative workflows* for
-defining lifecycle management actions as well. And finally, TOSCA
-supports *policy triggers* intended to support closed-loop
-automation. Each of these pieces of functionality uses different
-grammar elements that are someone overlapping. TOSCA v2.0 introduces a
-unified framework that harmonizes these various pieces of TOSCA
-functionality and broadens the scope of supported lifecycle management
-actions in the process.
+Profile. In addition, TOSCA also supports *imperative workflows* for
+defining lifecycle management actions. And finally, TOSCA supports
+*policy triggers* intended to support closed-loop automation. Each of
+these pieces of functionality uses different grammar elements that are
+somewhat overlapping. TOSCA v2.0 introduces a unified framework that
+harmonizes these various pieces of TOSCA functionality and broadens
+the scope of supported lifecycle management actions in the process.
 
 ## Motivation
-
 The lifecycle management framework introduced in TOSCA v2.0 is
 motivated by a number of obervations. 
 
@@ -45,8 +43,8 @@ motivated by a number of obervations.
 - Lifecycle management in TOSCA v1.x focuses almost exclusively on Day
   0 service design and Day 1 service orchestration. The TOSCA 1.x
   standard makes an implicit assumption that service templates are
-  designed only for the purpose of deploying (and potentially
-  undeploying) services only as follows:
+  designed primarily for the purpose of deploying (and potentially
+  undeploying) services as follows:
   - *Deploying* a service involves instantiating a *service
     representation* from a service template, fulfilling requirements
     if necessary, performing substitutions if necessary, and then
@@ -58,7 +56,7 @@ motivated by a number of obervations.
     removed, or whether requirements fulfilled by the orchestrator
     should be *undone*.
 
-  This list is completely inadequate. For example:
+  This list is insufficient for full lifecycle management. For example:
   - In practice, operators may want to perform *dry-runs* before
     deploying services. This means that the orchestrator may want to
     separate out a *provisioning* phase from an *activation* phase or
@@ -99,53 +97,51 @@ motivated by a number of obervations.
 The new Service Lifecycle Management framework introduced in TOSCA
 v2.0 is based on a *unified event handling* approach that harmonizes
 syntax for interface and interface type definitions, for workflow
-definitions, and for policy definitions.
-
-The basic pattern for unified event handling is shown in the following
-figure:
-
+definitions, and for policy definitions. This syntax uses a basic
+pattern as shown in the following figure:
 ```mermaid
 flowchart TB
     A[[receive event]]
     A --> S0
     subgraph S0 [handle event]
       direction TB
-      B{precondition<br>satisfied ?}
-      B --> |Yes| D(update attributes)
-      D --> E(execute handlers)
-      B --> |No| C(ignore)
+      B{condition}
+      B --> |False| C(ignore)
+      B --> |True| E[[execute handlers]]
+      E --> F{result}
+      F --> |Success| S00((o))
+      F --> |Failure| S01((o))
     end
-    S0 --> S00((o))
     S00 --> S1
     S00 --> S2
-    S00 --> S3
+    S01 --> S3
     subgraph S1 [trigger]
       direction TB
-      F1{condition<br>satisfied ?}
-      F1 --> |Yes| G1[[send event]]
-      F1 --> |No| H1(done)
+      F1{condition}
+      F1 --> |True| G1[[send event]]
+      F1 --> |False| H1(ignore)
     end
     subgraph S2 [trigger]
       direction TB
-      F2{condition<br>satisfied ?}
-      F2 --> |Yes| G2[[send event]]
-      F2 --> |No| H2(done)
+      F2{condition}
+      F2 --> |True| G2[[send event]]
+      F2 --> |False| H2(ignore)
     end
     subgraph S3 [trigger]
       direction TB
-      F3{condition<br>satisfied ?}
-      F3 --> |Yes| G3[[send event]]
-      F3 --> |No| H3(done)
+      F3{condition}
+      F3 --> |True| G3[[send event]]
+      F3 --> |False| H3(ignore)
     end
 ```
-The figure illustrates the following pattern:
+This pattern is used as follows:
 - Entities in a TOSCA service topology advertize the ability to
   receive `events`. Events can reflect a requested management
   operation on the associated entity or signal a change in the state
   of entity. Events replace and generalize *interface operations* and
   *interface notifications* supported in the TOSCA v1.x
   standard. Events can be defined on nodes, on relationships, and on
-  entire service topologies.
+  service templates.
 - Each event can optionally define an associated `precondition` that
   is evaluated when the event is received. Preconditions are evaluated
   within the context of the entity that defines the event. The
@@ -167,15 +163,20 @@ The figure illustrates the following pattern:
   implementation artifacts, TOSCA v2.0 defines a single list of
   handles. TOSCA v2.0 also supports per-handler input and output
   definitions.
-- After all event handlers have been executed, a set of `triggers` are
+- If all event handlers executed succesfully, a list of `triggers` are
   run. Triggers conditionally send new events along the service
-  topology graph. Triggers are a generalization of the `on_success`
-  and `on_failure` keywords in the TOSCA v1.x workflow step
-  grammar. Rather than conditially *triggering* follow-up actions
-  based on the return values of the handlers, arbitrary conditions can
-  be used to determine which follow-up actions should be taken next.
+  topology graph. A list of triggers is defined using the `on_success`
+  keyword associated with the event definition. This keyword is a
+  generalization of the `on_success` keyword in the TOSCA v1.x
+  workflow step grammar. Similarly, an `on_failure` keyword is used to
+  define a list of `triggers` that are run if one or more of the event
+  handlers fail.
+- Trigger events are sent conditionally based on the value of a
+  `condition` clause associated with the trigger. If the `condition`
+  clause evaluates to `true`, the event is sent. If it evaluates to
+  `false`, the trigger is ignored.
 
-In this model, events are the common construct for delegating control
+Using this model, events are the common construct for delegating control
 between entities, similar to how objects in an object-oriented system
 interact. Events provide a shared *mechanism* that can be used to
 harmonize different pieces of TOSCA functionality. The *event
@@ -186,7 +187,7 @@ behavior.
   (i.e., the various interface states, the `events` that cause
   transitions between these events, and the `conditions` that must be
   satisfied before events can be handled or before events can be
-  propagated across the topology graph.
+  propagated across the service topology graph.
 - Events enable the creation of reusable components, where the logic
   for managing the lifecycle of a component can largely be defined
   locally within that component based on knowledge (defined in the
@@ -274,9 +275,9 @@ interface_types:
         preconditions:
           $equal: [{$get_attribute: [ INTERFACE, state ]}, initial]
         on_success:
-          $set_attribute: [ INTERFACE, state, created ]
+          set_state: [ INTERFACE, state, created ]
         on_failure:
-          $set_attribute: [ INTERFACE, state, error ]
+          set_state: [ INTERFACE, state, error ]
         triggers:
           - condition: 
               $has_entry: [[ configured, started ], {$get_attribute: [ INTERFACE, desired_state ]}]
@@ -292,7 +293,7 @@ interface_types:
         on_success:
           set_attribute: [ INTERFACE, state, configured ]
         on_failure:
-          $set_attribute: [ INTERFACE, state, error ]
+          set_state: [ INTERFACE, state, error ]
         triggers:
           - condition: 
               $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, started]
@@ -308,7 +309,7 @@ interface_types:
         on_success:
           set_attribute: [ INTERFACE, state, started ]
         on_failure:
-          $set_attribute: [ INTERFACE, state, error ]
+          set_state: [ INTERFACE, state, error ]
         triggers:
           - condition: 
               $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, configured]
@@ -324,7 +325,7 @@ interface_types:
         on_success:
           set_attribute: [ INTERFACE, state, configured]
         on_failure:
-          $set_attribute: [ INTERFACE, state, error ]
+          set_state: [ INTERFACE, state, error ]
         triggers:
           - condition: 
               $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, started]
@@ -338,9 +339,9 @@ interface_types:
         preconditions:
           $has_entry: [[ created, configured, error ], {$get_attribute: [ INTERFACE, state ]} ]
         on_success:
-          $set_attribute: [ INTERFACE, state, initial ]
+          set_state: [ INTERFACE, state, initial ]
         on_failure:
-          $set_attribute: [ INTERFACE, state, error ]
+          set_state: [ INTERFACE, state, error ]
         triggers:
           - condition: 
               $has_entry: [[ created, configured, started ], {$get_attribute: [ INTERFACE, desired_state ]}]
@@ -385,51 +386,51 @@ interface_types:
         preconditions:
           $equal: [{$get_attribute: [ INTERFACE, source_state ]}, initial]
         on_success:
-          $set_attribute: [ INTERFACE, source_state, configured ]
+          set_state: [ INTERFACE, source_state, configured ]
         on_failure:
-          $set_attribute: [ INTERFACE, source_state, error ]
+          set_state: [ INTERFACE, source_state, error ]
       pre_configure_target:
         preconditions:
           $equal: [{$get_attribute: [ INTERFACE, target_state ]}, initial]
         on_success:
-          $set_attribute: [ INTERFACE, target_state, configured ]
+          set_state: [ INTERFACE, target_state, configured ]
         on_failure:
-          $set_attribute: [ INTERFACE, target_state, error ]
+          set_state: [ INTERFACE, target_state, error ]
       post_configure_source:
         preconditions:
           $equal: [{$get_attribute: [ INTERFACE, source_state ]}, configured]
         on_success:
-          $set_attribute: [ INTERFACE, source_state, established ]
+          set_state: [ INTERFACE, source_state, established ]
         on_failure:
-          $set_attribute: [ INTERFACE, source_state, error ]
+          set_state: [ INTERFACE, source_state, error ]
       post_configure_target:
         preconditions:
           $equal: [{$get_attribute: [ INTERFACE, target_state ]}, configured]
         on_success:
-          $set_attribute: [ INTERFACE, target_state, established ]
+          set_state: [ INTERFACE, target_state, established ]
         on_failure:
-          $set_attribute: [ INTERFACE, target_state, error ]
+          set_state: [ INTERFACE, target_state, error ]
       add_target:
         preconditions:
           $equal: [{$get_attribute: [ INTERFACE, target_state ]}, established]
         on_success:
-          $set_attribute: [ INTERFACE, target_state, added ]
+          set_state: [ INTERFACE, target_state, added ]
         on_failure:
-          $set_attribute: [ INTERFACE, target_state, error ]
+          set_state: [ INTERFACE, target_state, error ]
       add_source:
         preconditions:
           $equal: [{$get_attribute: [ INTERFACE, source_state ]}, established]
         on_success:
-          $set_attribute: [ INTERFACE, source_state, added ]
+          set_state: [ INTERFACE, source_state, added ]
         on_failure:
-          $set_attribute: [ INTERFACE, source_state, error ]
+          set_state: [ INTERFACE, source_state, error ]
       remove_target:
         preconditions:
           $equal: [{$get_attribute: [ INTERFACE, target_state ]}, added]
         on_success:
-          $set_attribute: [ INTERFACE, target_state, removed ]
+          set_state: [ INTERFACE, target_state, removed ]
         on_failure:
-          $set_attribute: [ INTERFACE, target_state, error ]
+          set_state: [ INTERFACE, target_state, error ]
 ```
 ## Defining Reusable Localized Component Behavior
 
@@ -629,9 +630,10 @@ The grammar for defining events is shown in the following table:
 |Keyname|Mandatory|Type|Description|
 |---|---|---|---|
 |precondition|no|boolean |A boolean function that must evaluate to `true` for the event to be handled. If the precondition is `false` the event is ignored.|
-|set_attribute|no|map of values|Interface attribute values to set when the event is received. Keys in the map identify the attribute values. Values in the map are assigned to the attributes.|
+|set_state|no|map of values|Interface attribute values to set when the event is received. Keys in the map identify interface attribute values. Values in the map are assigned to the attributes.|
 |handlers|no|list of Event Handler Definitions|A list of handlers that are conditionally executed when the event is received.|
-|triggers|no|list of Event Trigger Definitions|A list of triggers that can send new events after this event has been handled.|
+|on_success|no|list of Event Trigger Definitions|A list of triggers that can send new events after this event has been handled successfully.|
+|on_failure|no|list of Event Trigger Definitions|A list of triggers that can send new events if handling this event has resulted in a failure.|
 
 ## Event Handler Definition
 The grammar for defining event handlers in event definitions is shown
