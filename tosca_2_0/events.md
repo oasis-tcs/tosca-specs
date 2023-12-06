@@ -544,6 +544,51 @@ aware of the possible types of the nodes at the source and the target
 of the `Root` relationship. This allows for validation of the triggers
 at design time.
 
+The following shows alternative syntax for sending events. In this
+syntax, the `target` and the 'event` are combined into a single `TOSCA
+Path` expression. This syntax has the advantage that it can identify
+*groups of nodes* or *groups of relationships* to which to send
+events.
+
+```yaml
+#for each nodes of types [tosca.nodes.nfv.VNF]
+  #for each entry in node_activities
+    #for each event/operation add this to the event definition:
+      instantiate:
+        precondition:
+          $and:
+            - $equal: [{$get_attribute: [ INTERFACE, vnf_lcm, state ]}, initial]
+            - $not: {$has_entry: [{get_attribute: [SELF, RELATIONSHIP, dependsOn, ALL, TARGET, INTERFACE, vnf_lcm, state]}, "initial"]}     
+        on_entry:
+          - set_attribute: [[SELF, INTERFACE, interface_name, state], instantiating]
+        on_success:
+          - set_attribute: [[SELF, INTERFACE, interface_name, state], instantiated]
+          - trigger:
+            - condition: true
+              event: [SELF, CAPABILITY, Dependency, RELATIONSHIP, ALL, SOURCE, INTERFACE, vnf_lcm, OPERATION, instantiate]
+        on_failure:
+          #here comes the content of on_failure
+```
+An alternative grammar use a `set` keyword instead of `set_attribute`:
+```yaml
+#for each nodes of types [tosca.nodes.nfv.VNF]
+  #for each entry in node_activities
+    #for each event/operation add this to the event definition:
+      instantiate:
+        precondition:
+          $and:
+            - $equal: [{$get_state: state}, initial]
+            - $not: {$has_entry: [{get_attribute: [SELF, RELATIONSHIP, dependsOn, ALL, TARGET, INTERFACE, vnf_lcm, state]}, "initial"]}     
+        on_entry:
+          - set: [state1, instantiating]
+        on_success:
+          - set: [state2, instantiated]
+          - trigger:
+            - condition: true
+              event: [SELF, CAPABILITY, Dependency, RELATIONSHIP, ALL, SOURCE, INTERFACE, vnf_lcm, OPERATION, instantiate]
+        on_failure:
+          #here comes the content of on_failure
+```
 The interface definitions in *node types* can be slightly more
 complicated than the interface definitions in *relationship types*
 since:
