@@ -203,6 +203,9 @@ service_template:
 > terminated, re-started, etc, but the instance in the instance model
 > will stay. Now in the case of an update/upgrade this may change, but
 > it’s no different from the nodes with a single occurrence.
+>
+> \[Paul] Then it should be possible to read the value of NODE_INDEX for any node at any time. i.e. There is a property which can be accessed with a TOSCAPATH statement. Is this property implict or should it be made explict? If explict then every node template which has a count must also have an explictly defined NODE_INDEX property. if implict then we must allow a query of NODE_INDEX not to error even when requested of a node created using a template which does not have a count keyword. I prefer to make it explict.
+> 
 
 > \[Calin\] Note also that there is no reason to constrain the
 > occurences keyword. I mean in the usual topology templates we can
@@ -241,6 +244,8 @@ the relationships allows multiple occurrences.
 *One-to-many* relationships are less common, but they can just as easily
 be accommodated using existing TOSCA grammar, as long as the requirement
 in the single node accommodates multiple occurrences.
+
+>/[Paul] This could be illustrated by having two vPEs at each site
 
 ### Matched Pairs
 
@@ -393,8 +398,8 @@ left_nodes:
 ```
 
 A second relevant choice is if the relationips are established in a
-ordered way (e.g. I pair the New York rack with a new York power source,
-and the LA rack with the LA power source) or random (i.e. pair a scale
+ordered way (e.g. I pair the Austin rack with an Austin power source,
+and the Boston with the Boston source) or random (i.e. pair a scale
 instance of the transcoder to a scale instance of the stream analytics
 engine). For example an ordered \[1, 1\] pair vs a random \[1, 1\] pair:
 
