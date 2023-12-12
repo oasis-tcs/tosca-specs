@@ -86,7 +86,7 @@ is as follows:
 
 | Keyname     | Required | Type    | Constraints                       | Description                                                                                                                           |
 |-------------|----------|---------|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| count       | no       | integer | when not specified, defaults to 1 | The optional number of instances that will be created from this node template. If not specified, only one single instance is created. |
+| count       | no       | integer | when not specified, defaults to 1 | The optional number of nodes in the representation graph that will be created from this node template. If not specified,  one single node is created. |
 
 It is expected that the value of the `count` is provided as an input
 to the service template. This enables the creation of a simplified
@@ -232,9 +232,7 @@ Specific mechanisms depend on the type of the relationship.
 In the SD-WAN service template above, each of the site node instances
 has a relationship to a VPN node that can only be instantiated once.
 This is an example of a *many-to-one* relationship, which can be readily
-supported using existing relationship syntax. Of course, care must be
-taken to ensure that the capability in the single node that terminates
-the relationships allows multiple occurrences.
+supported using existing relationship syntax. 
 
 ### One-to-Many Relationships
 
@@ -280,6 +278,7 @@ left_nodes:
         node: right_nodes
         count: { get_input: nr_on_right }
 ```
+In this example, `right_nodes` represents the group of all node representations created from the `right_nodes` node template. A total number of `count` relationships will be created to those nodes. The orchestrator must select a different node for each relationship.
 
 ### Many-to-Many Relationships
 
@@ -299,7 +298,7 @@ topology_template:
       type:RightType
       count: { get_input: nr_on_right }
     left_nodes:
-      type:LeftType
+      type: LeftType
       count: { get_input: nr_on_left }
       requirements:
         …
@@ -424,21 +423,15 @@ flowchart LR
     A6 --> B6
 
 ```
+The following shows an ordered example:
 ```yaml
 #defining a 1:1 ordered pattern
 left_nodes:
   …
   requirements:
     - multi_rel:
-        node: [right_nodes, {$remainder: [INDEX, {get_input: nr_on_right}]
-        count: 1
-        allocation:
-          properties:
-            pattern: 1
-            #note that the initial pattern property capacity is 1
-
+        node: [right_nodes, NODE_INDEX}]
 ```
-
 ```yaml
 #defining a 1:1 random pattern
 left_nodes:
@@ -451,7 +444,6 @@ left_nodes:
           properties:
             pattern: 1
             #note that the initial pattern property capacity is 1
-
 ```
 
 Finally, what do we do if the multiplicity on the left or the right
@@ -466,3 +458,19 @@ allocation capacity on the right side. In the random case some nodes
 on the right side might not get a relationship while some can get
 more. In the ordered case as shown above all will get first a
 relationship before the second is filled.
+
+The following shows an ordered example:
+```yaml
+#defining a 1:1 ordered pattern
+left_nodes:
+  …
+  requirements:
+    - multi_rel:
+        node: [right_nodes, {$remainder: [INDEX, {get_input: nr_on_right}]
+        count: 1
+        allocation:
+          properties:
+            pattern: 1
+            #note that the initial pattern property capacity is 1
+```
+> In this example, INDEX is used inside a function, where it cannot be evaluated. We need a $get_index function instead.
