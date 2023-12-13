@@ -262,7 +262,6 @@ data_types:
           - configured
           - started
           - error
-    
 interface_types:
   Standard:
     attributes:
@@ -273,79 +272,70 @@ interface_types:
     operations:
       create:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, state ]}, initial]
+          $equal: [{$get_state: [ state ]}, initial]
         on_success:
-          set_state: [ INTERFACE, state, created ]
+          set: [ state, created ]
         on_failure:
-          set_state: [ INTERFACE, state, error ]
+          set: [ state, error ]
         triggers:
           - condition: 
-              $has_entry: [[ configured, started ], {$get_attribute: [ INTERFACE, desired_state ]}]
-            target: INTERFACE
+              $has_entry: [[ configured, started ], {$get_state: [ desired_state ]}]
             event: configure
           - condition: 
-              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
-            target: INTERFACE
+              $equal: [{$get_state: [ desired_state ]}, initial]
             event: delete
       configure:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, state ]}, created]
+          $equal: [{$get_state: [ state ]}, created]
         on_success:
-          set_attribute: [ INTERFACE, state, configured ]
+          set: [ state, configured ]
         on_failure:
-          set_state: [ INTERFACE, state, error ]
+          set: [ state, error ]
         triggers:
           - condition: 
-              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, started]
-            target: INTERFACE
+              $equal: [{$get_state: [ desired_state ]}, started]
             event: start
           - condition: 
-              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
-            target: INTERFACE
+              $equal: [{$get_state: [ desired_state ]}, initial]
             event: delete
       start:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, state ]}, configured]
+          $equal: [{$get_state: [ state ]}, configured]
         on_success:
-          set_attribute: [ INTERFACE, state, started ]
+          set: [ state, started ]
         on_failure:
-          set_state: [ INTERFACE, state, error ]
+          set: [ state, error ]
         triggers:
           - condition: 
-              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, configured]
-            target: INTERFACE
+              $equal: [{$get_state: [ desired_state ]}, configured]
             event: stop
           - condition: 
-              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
-            target: INTERFACE
+              $equal: [{$get_state: [ desired_state ]}, initial]
             event: delete
       stop:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, state ]}, started]
+          $equal: [{$get_state: [ state ]}, started]
         on_success:
-          set_attribute: [ INTERFACE, state, configured]
+          set: [ state, configured]
         on_failure:
-          set_state: [ INTERFACE, state, error ]
+          set: [ state, error ]
         triggers:
           - condition: 
-              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, started]
-            target: INTERFACE
+              $equal: [{$get_state: [ desired_state ]}, started]
             event: start
           - condition: 
-              $equal: [{$get_attribute: [ INTERFACE, desired_state ]}, initial]
-            target: INTERFACE
+              $equal: [{$get_state: [ desired_state ]}, initial]
             event: delete
       delete:
         preconditions:
-          $has_entry: [[ created, configured, error ], {$get_attribute: [ INTERFACE, state ]} ]
+          $has_entry: [[ created, configured, error ], {$get_state: [ state ]} ]
         on_success:
-          set_state: [ INTERFACE, state, initial ]
+          set: [ state, initial ]
         on_failure:
-          set_state: [ INTERFACE, state, error ]
+          set: [ state, error ]
         triggers:
           - condition: 
-              $has_entry: [[ created, configured, started ], {$get_attribute: [ INTERFACE, desired_state ]}]
-            target: INTERFACE
+              $has_entry: [[ created, configured, started ], {$get_state: [ desired_state ]}]
             event: create
 ```
 Similarly, the `Configure` interface defined in the Simple Profile
@@ -384,53 +374,53 @@ interface_types:
     operations:
       pre_configure_source:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, source_state ]}, initial]
+          $equal: [{$get_state: [ source_state ]}, initial]
         on_success:
-          set_state: [ INTERFACE, source_state, configured ]
+          set: [ source_state, configured ]
         on_failure:
-          set_state: [ INTERFACE, source_state, error ]
+          set: [ source_state, error ]
       pre_configure_target:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, initial]
+          $equal: [{$get_state: [ target_state ]}, initial]
         on_success:
-          set_state: [ INTERFACE, target_state, configured ]
+          set: [ target_state, configured ]
         on_failure:
-          set_state: [ INTERFACE, target_state, error ]
+          set: [ target_state, error ]
       post_configure_source:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, source_state ]}, configured]
+          $equal: [{$get_state: [ source_state ]}, configured]
         on_success:
-          set_state: [ INTERFACE, source_state, established ]
+          set: [ source_state, established ]
         on_failure:
-          set_state: [ INTERFACE, source_state, error ]
+          set: [ source_state, error ]
       post_configure_target:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, configured]
+          $equal: [{$get_state: [ target_state ]}, configured]
         on_success:
-          set_state: [ INTERFACE, target_state, established ]
+          set: [ target_state, established ]
         on_failure:
-          set_state: [ INTERFACE, target_state, error ]
+          set: [ target_state, error ]
       add_target:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, established]
+          $equal: [{$get_state: [ target_state ]}, established]
         on_success:
-          set_state: [ INTERFACE, target_state, added ]
+          set: [ target_state, added ]
         on_failure:
-          set_state: [ INTERFACE, target_state, error ]
+          set: [ target_state, error ]
       add_source:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, source_state ]}, established]
+          $equal: [{$get_state: [ source_state ]}, established]
         on_success:
-          set_state: [ INTERFACE, source_state, added ]
+          set: [ source_state, added ]
         on_failure:
-          set_state: [ INTERFACE, source_state, error ]
+          set: [ source_state, error ]
       remove_target:
         preconditions:
-          $equal: [{$get_attribute: [ INTERFACE, target_state ]}, added]
+          $equal: [{$get_state: [ target_state ]}, added]
         on_success:
-          set_state: [ INTERFACE, target_state, removed ]
+          set: [ target_state, removed ]
         on_failure:
-          set_state: [ INTERFACE, target_state, error ]
+          set: [ target_state, error ]
 ```
 ## Defining Reusable Localized Component Behavior
 
@@ -522,21 +512,21 @@ relationship_types:
         type: Configure
         operations:
           pre_configure_source:
-            triggers:
-                target: [SELF, SOURCE, INTERFACE,  standard]
-                event: configure
+            on_success:
+              triggers:
+                - event: [SELF, SOURCE, INTERFACE, standard, configure]
           pre_configure_target:
-            triggers:
-                target: [SELF, TARGET, INTERFACE,  standard]
-                event: configure
+            on_success:
+              triggers:
+                -event: [SELF, TARGET, INTERFACE, standard, configure]
           post_configure_source:
-            triggers:
-                target: [SELF, SOURCE, INTERFACE,  standard]
-                event: start
+            on_success:
+              triggers:
+                - event: [SELF, SOURCE, INTERFACE, standard, start]
           post_configure_target:
-            triggers:
-                target: [SELF, TARGET, INTERFACE,  standard]
-                event: start
+            on_success:
+              triggers:
+                - event: [SELF, TARGET, INTERFACE, standard, start]
 ```
 Note that in this grammar, the `valid_source_node_types` and
 `valid_target_node_types` keywords are used to make the orchestrator
@@ -544,51 +534,6 @@ aware of the possible types of the nodes at the source and the target
 of the `Root` relationship. This allows for validation of the triggers
 at design time.
 
-The following shows alternative syntax for sending events. In this
-syntax, the `target` and the 'event` are combined into a single `TOSCA
-Path` expression. This syntax has the advantage that it can identify
-*groups of nodes* or *groups of relationships* to which to send
-events.
-
-```yaml
-#for each nodes of types [tosca.nodes.nfv.VNF]
-  #for each entry in node_activities
-    #for each event/operation add this to the event definition:
-      instantiate:
-        precondition:
-          $and:
-            - $equal: [{$get_attribute: [ INTERFACE, vnf_lcm, state ]}, initial]
-            - $not: {$has_entry: [{get_attribute: [SELF, RELATIONSHIP, dependsOn, ALL, TARGET, INTERFACE, vnf_lcm, state]}, "initial"]}     
-        on_entry:
-          - set_attribute: [[SELF, INTERFACE, interface_name, state], instantiating]
-        on_success:
-          - set_attribute: [[SELF, INTERFACE, interface_name, state], instantiated]
-          - trigger:
-            - condition: true
-              event: [SELF, CAPABILITY, Dependency, RELATIONSHIP, ALL, SOURCE, INTERFACE, vnf_lcm, OPERATION, instantiate]
-        on_failure:
-          #here comes the content of on_failure
-```
-An alternative grammar use a `set` keyword instead of `set_attribute`:
-```yaml
-#for each nodes of types [tosca.nodes.nfv.VNF]
-  #for each entry in node_activities
-    #for each event/operation add this to the event definition:
-      instantiate:
-        precondition:
-          $and:
-            - $equal: [{$get_state: state}, initial]
-            - $not: {$has_entry: [{get_attribute: [SELF, RELATIONSHIP, dependsOn, ALL, TARGET, INTERFACE, vnf_lcm, state]}, "initial"]}     
-        on_entry:
-          - set: [state1, instantiating]
-        on_success:
-          - set: [state2, instantiated]
-          - trigger:
-            - condition: true
-              event: [SELF, CAPABILITY, Dependency, RELATIONSHIP, ALL, SOURCE, INTERFACE, vnf_lcm, OPERATION, instantiate]
-        on_failure:
-          #here comes the content of on_failure
-```
 The interface definitions in *node types* can be slightly more
 complicated than the interface definitions in *relationship types*
 since:
@@ -609,7 +554,7 @@ This has the following implications:
   be determined from the the requirement definitions and capability
   definitions in the node type.
 
-To accommodate these scnearios, we introduce the following new
+To accommodate these scenearios, we introduce the following new
 function:
 
 - `$for_each`: iterate over a list
@@ -624,19 +569,39 @@ node_types:
         type: Standard
         operations:
           create:
-            triggers:
-              - target: [SELF, CAPABILITY, ALL, SOURCE] # List of targets
-                event: pre_configure_target
+	    on_success:
+              triggers:
+                - event: [SELF, CAPABILITY, ALL, SOURCE, pre_configure_target]
           configure:
             preconditions:
               $for_each:
                 - @rel_out                              # variable name
                 - [SELF, RELATIONSHIP, ALL]]            # list over which to iterate
                 - $equal: [{$get_attribute: [ @rel_out, target_state ]}, configured ]
-            triggers:
-              - target: [SELF, CAPABILITY, ALL, SOURCE]
-                event: post_configure_target
+            on_success:
+	      triggers:
+                - event: [SELF, CAPABILITY, ALL, SOURCE, post_configure_target]
 ```
+The following shows alternative syntax for preconditions that doesn't require `for_each` functions:
+```yaml
+#for each nodes of types [tosca.nodes.nfv.VNF]
+  #for each entry in node_activities
+    #for each event/operation add this to the event definition:
+      instantiate:
+        precondition:
+          $and:
+            - $equal: [{$get_attribute: [ INTERFACE, vnf_lcm, state ]}, initial]
+            - $not: {$has_entry: [{get_attribute: [SELF, RELATIONSHIP, dependsOn, ALL, TARGET, INTERFACE, vnf_lcm, state]}, "initial"]}     
+        on_entry:
+          - set: [ state, instantiating]
+        on_success:
+          - set: [ state, instantiated]
+          - trigger:
+            - event: [SELF, CAPABILITY, Dependency, RELATIONSHIP, ALL, SOURCE, INTERFACE, vnf_lcm, OPERATION, instantiate]
+        on_failure:
+          #here comes the content of on_failure
+```
+
 ## Defining Service Lifecycle Management Actions
 
 Events definitions are supported not just in interfaces but also at
@@ -663,7 +628,7 @@ TOSCA v1.x specification. For example:
   attempt to recover from failures automatically but escalate to an
   external system (or operator) if the recovery process is
   unsuccesful.
-- How should partial failure scnenarios be handled? Retry? Rollback?
+- How should partial failure scenarios be handled? Retry? Rollback?
   Since there is likely no single approach that works best for all
   application domains, TOSCA should support defining the selected
   approach.
