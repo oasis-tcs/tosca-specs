@@ -1,4 +1,4 @@
-# Creating Multiple Node Representations from the Same Node Template
+### Creating Multiple Node Representations from the Same Node Template
 
 TOSCA service templates specify a set of nodes that need to be
 *instantiated* at service deployment time. Some service templates may
@@ -71,7 +71,7 @@ service templates must be created, one for each possible number of
 SD-WAN sites. This leads to undesirable template proliferation. The
 next section presents an alternative.
 
-## Specifying Number of Node Representations
+#### Specifying Number of Node Representations
 
 To avoid the need for multiple service templates, TOSCA allows all VPN
 Site nodes to be created from the same Site node template in the
@@ -126,7 +126,7 @@ service_template:
         - vpn: sdwan
 ```
 
-## Node-Specific Input Values
+#### Node-Specific Input Values
 
 The service template in the previous section conveniently ignores the
 location property of the Site node. As shown earlier, the location
@@ -191,7 +191,7 @@ service_template:
 > the majority will do), then we use the single value input. If the
 > occurrences are more, then we use lists.
 
-## Cardinality of Relationships
+#### Cardinality of Relationships
 
 We may also need to accommodate scenarios where a node template with
 multiple representations defines a requirement to another node
@@ -200,7 +200,7 @@ introduces grammar for specifying the cardinality of such
 requirements. Specific mechanisms depend on the type of the
 relationships to be established.
 
-### Many-to-One Relationships
+##### Many-to-One Relationships
 
 In the SD-WAN service template above, each of the site node
 representations has a relationship to a VPN node that can only be
@@ -227,7 +227,7 @@ This template specifies that all four node representations created
 from the `left` node template must use the one node representation
 created from the`right` node template as their target node.
 
-### One-to-Many Relationships
+##### One-to-Many Relationships
 
 An example of a *one-to-many* relationship is shown in the following
 figure:
@@ -277,7 +277,7 @@ requirement, it defaults to 1 and the orchestrator will only establish
 one single relationship to one of the `right` nodes. Which one of the
 `right` nodes is selected is implementation-specific.
 
-### Full mesh
+##### Full mesh
 
 In a *full mesh* scenario, all nodes on the left establish
 relationships to all of the nodes on the right as shown in the
@@ -328,7 +328,7 @@ service_template:
             count: {$get_input: number_of_right}
 ```
 
-### Matched Pairs
+##### Matched Pairs
 
 For some services, representations created from different node
 templates must remain matched up in pairs. For example, let’s extend
@@ -338,21 +338,12 @@ connections over an underlay. Let’s assume that Site nodes establish a
 HostedOn relationship to the vPE nodes. The extended service topology
 is shown in the following figure:
 ```mermaid
-flowchart
-    subgraph W [SD-WAN Deployment]
-	VPN(VPN)
-	SiteA(Austin)
-	SiteB(Boston)
-	vPeA(vPE Austin)
-	vPeB(vPE Boston)
-        SiteA --> VPN
-        SiteA --> vPeA
-        SiteB --> VPN
-        SiteB --> vPeB
-    end
+flowchart LR
+    A((Site)) --> B((VPN))
+    A((Site)) --> c((vPE))
 ```
 In this example, the intent is for each site node to remain paired
-with its own vPE node for that site. A generic example of the
+with its own vPE node for that site. A generic illustration of the
 *matched pairs* scenario is shown in the following figure:
 
 ```mermaid
@@ -402,7 +393,7 @@ service_template:
         - uses: [right, NODE_INDEX]
 ```
 
-### Random Pairs
+##### Random Pairs
 
 Some scenarios require nodes to be organized in pairs, but the
 ordering of the nodes is not important. The following figure shows and
@@ -473,7 +464,7 @@ This scenario works as follows:
   incoming relationships will be established. This ensures that each
   target node is only allocated once.
 
-### Many-to-Many Relationships
+##### Many-to-Many Relationships
 
 The mechanisms introduced above can also be used to define more
 complex *many-to-many* scenarios. For example, a 1:2 pattern is shown
@@ -518,7 +509,7 @@ service_template:
       requirements:
         - uses:
             node: right
-	    count: 2
+            count: 2
             allocations:
               target_count: 1
 ```
@@ -569,7 +560,7 @@ service_template:
       requirements:
         - uses:
             node: right
-	    count: 2
+            count: 2
             allocations:
               target_count: 1
 ```
@@ -580,7 +571,7 @@ pairing scenarios. In that case, more complicated expressions might be
 needed to specify target node indices or to restrict capacity.  For
 example, if nodes are expected to be paired but there are more nodes
 on the left that on the right, some nodes The following code snippet
-shows a *matched pairs* example where the orchestrator may have to
+shows a *mismatched pairs* example where the orchestrator may have to
 cycle through the target nodes multiple times:
 
 ```yaml
