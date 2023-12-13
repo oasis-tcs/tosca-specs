@@ -3441,11 +3441,9 @@ node_templates:
   creation of a relationship to a target capability, the new
   “allocation” keyname is used within a requirement assignment.
 
-#### Requirement
+#### Requirement Type 
 <!----
 {"id": "591", "author": "Chris Lauwers", "date": "2022-06-22T20:47:00Z", "comment": "It seems to me that the only reason this section is here is to point out a difference with the XML spec. I recommend removing it.", "target": "Requirement"}-->
- Type 
-
 Requirement types are not defined in TOSCA. TOSCA seeks to simplify the
 modeling by not declaring specific Requirement Types with nodes
 declaring their features sets using TOSCA Capability Types. So, it
