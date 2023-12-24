@@ -271,7 +271,7 @@ interface_types:
         type: State
     operations:
       create:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ state ]}, initial]
         on_success:
           set: [ state, created ]
@@ -285,7 +285,7 @@ interface_types:
               $equal: [{$get_state: [ desired_state ]}, initial]
             event: delete
       configure:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ state ]}, created]
         on_success:
           set: [ state, configured ]
@@ -299,7 +299,7 @@ interface_types:
               $equal: [{$get_state: [ desired_state ]}, initial]
             event: delete
       start:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ state ]}, configured]
         on_success:
           set: [ state, started ]
@@ -313,7 +313,7 @@ interface_types:
               $equal: [{$get_state: [ desired_state ]}, initial]
             event: delete
       stop:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ state ]}, started]
         on_success:
           set: [ state, configured]
@@ -327,7 +327,7 @@ interface_types:
               $equal: [{$get_state: [ desired_state ]}, initial]
             event: delete
       delete:
-        preconditions:
+        precondition:
           $has_entry: [[ created, configured, error ], {$get_state: [ state ]} ]
         on_success:
           set: [ state, initial ]
@@ -373,49 +373,49 @@ interface_types:
               - error
     operations:
       pre_configure_source:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ source_state ]}, initial]
         on_success:
           set: [ source_state, configured ]
         on_failure:
           set: [ source_state, error ]
       pre_configure_target:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ target_state ]}, initial]
         on_success:
           set: [ target_state, configured ]
         on_failure:
           set: [ target_state, error ]
       post_configure_source:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ source_state ]}, configured]
         on_success:
           set: [ source_state, established ]
         on_failure:
           set: [ source_state, error ]
       post_configure_target:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ target_state ]}, configured]
         on_success:
           set: [ target_state, established ]
         on_failure:
           set: [ target_state, error ]
       add_target:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ target_state ]}, established]
         on_success:
           set: [ target_state, added ]
         on_failure:
           set: [ target_state, error ]
       add_source:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ source_state ]}, established]
         on_success:
           set: [ source_state, added ]
         on_failure:
           set: [ source_state, error ]
       remove_target:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ target_state ]}, added]
         on_success:
           set: [ target_state, removed ]
