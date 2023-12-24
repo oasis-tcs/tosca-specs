@@ -797,6 +797,8 @@ applications or complete models of cloud applications or both. This section
 describes the top-level TOSCA keynames—along with their grammars—that
 are allowed to appear in a TOSCA file.
 
+## TOSCA File Definition
+
 ### Keynames
 
 The following is the list of recognized keynames for a TOSCA file:
