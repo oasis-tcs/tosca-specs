@@ -252,91 +252,67 @@ The interface definition and the associated state machine can be
 expressed using the following grammar:
 ```yaml
 data_types:
-  State:
+  StandardState:
     derived_from: string
     validation:
-      $valid_values:
-        - $value: []
-        - - initial
-          - created
-          - configured
-          - started
-          - error
+      $valid_values: [$value, [initial, creating, created, configuring, configured, starting, started, stopping, deleting]]
 interface_types:
   Standard:
     attributes:
       state:
-        type: State
-      desired_state:
-        type: State
+        type: StandardState
+        default: initial
+      error:
+        type: boolean
+        default: False
     operations:
       create:
-        preconditions:
-          $equal: [{$get_state: [ state ]}, initial]
+        precondition:
+          $equal: [{$get_state: [state]}, initial]
+        on_entry:
+          set: {state: creating}
         on_success:
-          set: [ state, created ]
+          set: {state: created}
         on_failure:
-          set: [ state, error ]
-        triggers:
-          - condition: 
-              $has_entry: [[ configured, started ], {$get_state: [ desired_state ]}]
-            event: configure
-          - condition: 
-              $equal: [{$get_state: [ desired_state ]}, initial]
-            event: delete
+          set: {error: True}
       configure:
-        preconditions:
-          $equal: [{$get_state: [ state ]}, created]
+        precondition:
+          $equal: [{$get_state: [state]}, created]
+        on_entry:
+          set: {state: configuring}
         on_success:
-          set: [ state, configured ]
+          set: {state: configured}
         on_failure:
-          set: [ state, error ]
-        triggers:
-          - condition: 
-              $equal: [{$get_state: [ desired_state ]}, started]
-            event: start
-          - condition: 
-              $equal: [{$get_state: [ desired_state ]}, initial]
-            event: delete
+          set: {error: True}
       start:
-        preconditions:
-          $equal: [{$get_state: [ state ]}, configured]
+        precondition:
+          $equal: [{$get_state: [state]}, configured]
+        on_entry:
+          set: {state: starting}
         on_success:
-          set: [ state, started ]
+          set: {state: started}
         on_failure:
-          set: [ state, error ]
-        triggers:
-          - condition: 
-              $equal: [{$get_state: [ desired_state ]}, configured]
-            event: stop
-          - condition: 
-              $equal: [{$get_state: [ desired_state ]}, initial]
-            event: delete
+          set: {error: True}
       stop:
-        preconditions:
-          $equal: [{$get_state: [ state ]}, started]
+        precondition:
+          $equal: [{$get_state: [state]}, started]
+        on_entry:
+          set: {state: stopping}
         on_success:
-          set: [ state, configured]
+          set: {state: configured}
         on_failure:
-          set: [ state, error ]
-        triggers:
-          - condition: 
-              $equal: [{$get_state: [ desired_state ]}, started]
-            event: start
-          - condition: 
-              $equal: [{$get_state: [ desired_state ]}, initial]
-            event: delete
+          set: {error: True}
       delete:
-        preconditions:
-          $has_entry: [[ created, configured, error ], {$get_state: [ state ]} ]
+        precondition:
+          $or: [$equal: [{$get_state: [state]}, configured], $equal: [{$get_state: [error]}, True]]
+        on_entry:
+          set: {state: deleting}
         on_success:
-          set: [ state, initial ]
+          set:
+            state: initial
+            error: False
         on_failure:
-          set: [ state, error ]
-        triggers:
-          - condition: 
-              $has_entry: [[ created, configured, started ], {$get_state: [ desired_state ]}]
-            event: create
+          set: {error: True}
 ```
 Similarly, the `Configure` interface defined in the Simple Profile
 can be defined using this grammar as well. Note that we don't define
@@ -373,49 +349,49 @@ interface_types:
               - error
     operations:
       pre_configure_source:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ source_state ]}, initial]
         on_success:
           set: [ source_state, configured ]
         on_failure:
           set: [ source_state, error ]
       pre_configure_target:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ target_state ]}, initial]
         on_success:
           set: [ target_state, configured ]
         on_failure:
           set: [ target_state, error ]
       post_configure_source:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ source_state ]}, configured]
         on_success:
           set: [ source_state, established ]
         on_failure:
           set: [ source_state, error ]
       post_configure_target:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ target_state ]}, configured]
         on_success:
           set: [ target_state, established ]
         on_failure:
           set: [ target_state, error ]
       add_target:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ target_state ]}, established]
         on_success:
           set: [ target_state, added ]
         on_failure:
           set: [ target_state, error ]
       add_source:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ source_state ]}, established]
         on_success:
           set: [ source_state, added ]
         on_failure:
           set: [ source_state, error ]
       remove_target:
-        preconditions:
+        precondition:
           $equal: [{$get_state: [ target_state ]}, added]
         on_success:
           set: [ target_state, removed ]
