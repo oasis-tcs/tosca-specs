@@ -1,0 +1,14051 @@
+Technical Committee:
+
+[OASIS Topology and Orchestration Specification for Cloud Applications
+(TOSCA) TC](https://www.oasis-open.org/committees/tosca/)
+
+Chairs:
+
+Paul Lipton (<paul.lipton@live.com>), Individual Member
+
+Chris Lauwers (<lauwers@ubicity.com>), Individual Member
+
+Editors:
+
+Chris Lauwers (<lauwers@ubicity.com>), Individual Member
+
+Calin Curescu (<calin.curescu@ericsson.com>), Ericsson
+
+Additional artifacts:
+
+This document is one component of a Work Product that also includes:
+
+- *TOSCA Version 2.0.* Edited by Chris Lauwers and Calin Curescu. Latest
+  version:
+  <https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.docx>.
+
+Related work:
+
+This document is related to:
+
+- <span class="mark">related documents (list full titles, with
+  hyperlinks if available)</span>
+
+Abstract:
+
+This document is intended as an introduction to TOSCA.
+
+Status:
+
+This [Working
+Draft](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2018-05-22#dWorkingDraft)
+(WD) has been produced by one or more TC Members; it has not yet been
+voted on by the TC or
+[approved](https://www.oasis-open.org/policies-guidelines/tc-process#committeeDraft)
+as a Committee Note Draft. The OASIS document [Approval
+Process](https://www.oasis-open.org/policies-guidelines/tc-process#standApprovProcess)
+begins officially with a TC vote to approve a WD as a Committee Note
+Draft. A TC may approve a Working Draft, revise it, and re-approve it
+any number of times as a Committee Note Draft.
+
+URI patterns:
+
+Initial publication URI:  
+https://docs.oasis-open.org/tosca/tosca-intro/v2.0/cnd01/tosca-intro-v2.0-cnd01.docx.
+
+Permanent "Latest version" URI:  
+https://docs.oasis-open.org/tosca/tosca-intro/v2.0/tosca-intro-v2.0.docx.
+
+(Managed by OASIS TC Administration; please don't modify.)
+
+Notices
+
+Copyright © OASIS Open 2020. All Rights Reserved.
+
+All capitalized terms in the following text have the meanings assigned
+to them in the OASIS Intellectual Property Rights Policy (the "OASIS IPR
+Policy"). The full
+[Policy](https://www.oasis-open.org/policies-guidelines/ipr) may be
+found at the OASIS website.
+
+This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implementation may be prepared, copied, published, and
+distributed, in whole or in part, without restriction of any kind,
+provided that the above copyright notice and this section are included
+on all such copies and derivative works. However, this document itself
+may not be modified in any way, including by removing the copyright
+notice or references to OASIS, except as needed for the purpose of
+developing any document or deliverable produced by an OASIS Technical
+Committee (in which case the rules applicable to copyrights, as set
+forth in the OASIS IPR Policy, must be followed) or as required to
+translate it into languages other than English.
+
+The limited permissions granted above are perpetual and will not be
+revoked by OASIS or its successors or assigns.
+
+This document and the information contained herein is provided on an "AS
+IS" basis and OASIS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED
+WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+# Table of Contents
+
+[1 Introduction [6](#introduction)](#introduction)
+
+[1.1 References (non-normative)
+[6](#references-non-normative)](#references-non-normative)
+
+[1.2 Section Level 2 [6](#section-level-2)](#section-level-2)
+
+[1.2.1 Section Level 3 [6](#section-level-3)](#section-level-3)
+
+[2 TOSCA by example [7](#tosca-by-example)](#tosca-by-example)
+
+[2.1 A “hello world” template for TOSCA
+[7](#a-hello-world-template-for-tosca)](#a-hello-world-template-for-tosca)
+
+[2.2 Requesting input parameters and providing output
+[8](#requesting-input-parameters-and-providing-output)](#requesting-input-parameters-and-providing-output)
+
+[2.3 TOSCA template for a simple software installation
+[9](#tosca-template-for-a-simple-software-installation)](#tosca-template-for-a-simple-software-installation)
+
+[2.4 Using YAML Macros to simplify templates
+[11](#using-yaml-macros-to-simplify-templates)](#using-yaml-macros-to-simplify-templates)
+
+[3 TOSCA Base Profile [12](#tosca-base-profile)](#tosca-base-profile)
+
+[4 Interfaces, Operations, and Artifacts
+[13](#interfaces-operations-and-artifacts)](#interfaces-operations-and-artifacts)
+
+[4.1 Overriding behavior of predefined node types
+[13](#overriding-behavior-of-predefined-node-types)](#overriding-behavior-of-predefined-node-types)
+
+[4.2 TOSCA template for database content deployment
+[13](#tosca-template-for-database-content-deployment)](#tosca-template-for-database-content-deployment)
+
+[4.3 TOSCA template for a two-tier application
+[15](#tosca-template-for-a-two-tier-application)](#tosca-template-for-a-two-tier-application)
+
+[4.4 Using a custom script to establish a relationship in a template
+[17](#using-a-custom-script-to-establish-a-relationship-in-a-template)](#using-a-custom-script-to-establish-a-relationship-in-a-template)
+
+[4.5 Using custom relationship types in a TOSCA template
+[18](#using-custom-relationship-types-in-a-tosca-template)](#using-custom-relationship-types-in-a-tosca-template)
+
+[4.5.1 Definition of a custom relationship type
+[19](#definition-of-a-custom-relationship-type)](#definition-of-a-custom-relationship-type)
+
+[4.6 Defining generic dependencies between nodes in a template
+[20](#defining-generic-dependencies-between-nodes-in-a-template)](#defining-generic-dependencies-between-nodes-in-a-template)
+
+[4.6.1 Example: declaring input variables for all operations on a single
+interface
+[20](#example-declaring-input-variables-for-all-operations-on-a-single-interface)](#example-declaring-input-variables-for-all-operations-on-a-single-interface)
+
+[4.6.2 Example: declaring input variables for a single operation
+[21](#example-declaring-input-variables-for-a-single-operation)](#example-declaring-input-variables-for-a-single-operation)
+
+[5 TOSCA workflows [22](#tosca-workflows)](#tosca-workflows)
+
+[5.1 Normative workflows
+[22](#normative-workflows)](#normative-workflows)
+
+[5.1.1 Notes [22](#notes)](#notes)
+
+[5.2 Declarative workflows
+[22](#declarative-workflows)](#declarative-workflows)
+
+[5.2.1 Notes [22](#notes-1)](#notes-1)
+
+[5.2.2 Relationship impacts on topology weaving
+[23](#relationship-impacts-on-topology-weaving)](#relationship-impacts-on-topology-weaving)
+
+[5.2.3 Limitations [26](#limitations)](#limitations)
+
+[5.3 Imperative workflows
+[26](#imperative-workflows)](#imperative-workflows)
+
+[5.3.1 Defining sequence of operations in an imperative workflow
+[26](#defining-sequence-of-operations-in-an-imperative-workflow)](#defining-sequence-of-operations-in-an-imperative-workflow)
+
+[5.3.2 Definition of a simple workflow
+[28](#definition-of-a-simple-workflow)](#definition-of-a-simple-workflow)
+
+[5.3.3 Specifying preconditions to a workflow
+[31](#specifying-preconditions-to-a-workflow)](#specifying-preconditions-to-a-workflow)
+
+[5.3.4 Workflow reusability
+[32](#workflow-reusability)](#workflow-reusability)
+
+[5.3.5 Defining conditional logic on some part of the workflow
+[34](#defining-conditional-logic-on-some-part-of-the-workflow)](#defining-conditional-logic-on-some-part-of-the-workflow)
+
+[5.3.6 Define inputs for a workflow
+[35](#define-inputs-for-a-workflow)](#define-inputs-for-a-workflow)
+
+[5.3.7 Handle operation failure
+[36](#handle-operation-failure)](#handle-operation-failure)
+
+[**7.3.8 Use a custom workflow language**
+[37](#_Toc5736864)](#_Toc5736864)
+
+[5.4 Making declarative more flexible and imperative more generic
+[38](#making-declarative-more-flexible-and-imperative-more-generic)](#making-declarative-more-flexible-and-imperative-more-generic)
+
+[5.4.2 Weaving improvements
+[38](#weaving-improvements)](#weaving-improvements)
+
+[6 Instance Model [41](#instance-model)](#instance-model)
+
+[6.1 Topology Template Model versus Instance Model
+[41](#topology-template-model-versus-instance-model)](#topology-template-model-versus-instance-model)
+
+[6.2 Using attributes implicitly reflected from properties
+[41](#using-attributes-implicitly-reflected-from-properties)](#using-attributes-implicitly-reflected-from-properties)
+
+[6.3 Returning output values from operations
+[42](#returning-output-values-from-operations)](#returning-output-values-from-operations)
+
+[6.3.1 Example: setting output values to a node attribute
+[42](#example-setting-output-values-to-a-node-attribute)](#example-setting-output-values-to-a-node-attribute)
+
+[6.3.2 Example: setting output values to a capability attribute
+[43](#example-setting-output-values-to-a-capability-attribute)](#example-setting-output-values-to-a-capability-attribute)
+
+[6.4 Receiving asynchronous notifications
+[43](#receiving-asynchronous-notifications)](#receiving-asynchronous-notifications)
+
+[6.5 Creating Multiple Node Instances from the Same Node Template
+[44](#creating-multiple-node-instances-from-the-same-node-template)](#creating-multiple-node-instances-from-the-same-node-template)
+
+[6.5.1 Specifying Number of Occurrences
+[45](#specifying-number-of-occurrences)](#specifying-number-of-occurrences)
+
+[6.5.2 Specifying Inputs [46](#specifying-inputs)](#specifying-inputs)
+
+[7 Describing abstract requirements for nodes and capabilities in a
+TOSCA template
+[48](#describing-abstract-requirements-for-nodes-and-capabilities-in-a-tosca-template)](#describing-abstract-requirements-for-nodes-and-capabilities-in-a-tosca-template)
+
+[7.1 Using a node_filter to define hosting infrastructure requirements
+for a software
+[48](#using-a-node_filter-to-define-hosting-infrastructure-requirements-for-a-software)](#using-a-node_filter-to-define-hosting-infrastructure-requirements-for-a-software)
+
+[7.2 Using an abstract node template to define infrastructure
+requirements for software
+[49](#using-an-abstract-node-template-to-define-infrastructure-requirements-for-software)](#using-an-abstract-node-template-to-define-infrastructure-requirements-for-software)
+
+[7.3 Using a node_filter to define requirements on a database for an
+application
+[50](#using-a-node_filter-to-define-requirements-on-a-database-for-an-application)](#using-a-node_filter-to-define-requirements-on-a-database-for-an-application)
+
+[8 Substitution Mapping
+[52](#substitution-mapping)](#substitution-mapping)
+
+[8.1 Using node template substitution for model composition
+[52](#using-node-template-substitution-for-model-composition)](#using-node-template-substitution-for-model-composition)
+
+[8.1.1 Understanding node template instantiation through a TOSCA
+Orchestrator
+[52](#understanding-node-template-instantiation-through-a-tosca-orchestrator)](#understanding-node-template-instantiation-through-a-tosca-orchestrator)
+
+[8.1.2 Definition of the top-level service template
+[52](#definition-of-the-top-level-service-template)](#definition-of-the-top-level-service-template)
+
+[8.1.3 Definition of the database stack in a service template
+[54](#definition-of-the-database-stack-in-a-service-template)](#definition-of-the-database-stack-in-a-service-template)
+
+[8.2 Using node template substitution for chaining subsystems
+[56](#using-node-template-substitution-for-chaining-subsystems)](#using-node-template-substitution-for-chaining-subsystems)
+
+[8.2.1 Defining the overall subsystem chain
+[56](#defining-the-overall-subsystem-chain)](#defining-the-overall-subsystem-chain)
+
+[8.2.2 Defining a subsystem (node) type
+[58](#defining-a-subsystem-node-type)](#defining-a-subsystem-node-type)
+
+[8.2.3 Defining the details of a subsystem
+[58](#defining-the-details-of-a-subsystem)](#defining-the-details-of-a-subsystem)
+
+[8.3 Using node template substitution to provide product choice
+[61](#using-node-template-substitution-to-provide-product-choice)](#using-node-template-substitution-to-provide-product-choice)
+
+[8.3.1 Defining a service template with vendor-independent component
+[61](#defining-a-service-template-with-vendor-independent-component)](#defining-a-service-template-with-vendor-independent-component)
+
+[8.3.2 Defining vendor-specific component options
+[62](#defining-vendor-specific-component-options)](#defining-vendor-specific-component-options)
+
+[8.3.3 Substitution matching using substitution filters
+[63](#substitution-matching-using-substitution-filters)](#substitution-matching-using-substitution-filters)
+
+[8.4 Abstract nodes and target node filters matching
+[64](#abstract-nodes-and-target-node-filters-matching)](#abstract-nodes-and-target-node-filters-matching)
+
+[8.4.1 Reminder on types [64](#reminder-on-types)](#reminder-on-types)
+
+[8.4.2 Orchestrator catalogs
+[65](#orchestrator-catalogs)](#orchestrator-catalogs)
+
+[8.4.3 Abstract node template matching
+[65](#abstract-node-template-matching)](#abstract-node-template-matching)
+
+[8.4.4 Target node filter matching
+[69](#target-node-filter-matching)](#target-node-filter-matching)
+
+[8.4.5 Post matching properties
+[73](#post-matching-properties)](#post-matching-properties)
+
+[9 TOSCA Policies [74](#tosca-policies)](#tosca-policies)
+
+[9.1 Grouping node templates
+[74](#grouping-node-templates)](#grouping-node-templates)
+
+[9.2 A declarative approach
+[76](#a-declarative-approach)](#a-declarative-approach)
+
+[9.2.1 Declarative considerations
+[76](#declarative-considerations)](#declarative-considerations)
+
+[9.3 Consideration of Event, Condition and Action
+[76](#consideration-of-event-condition-and-action)](#consideration-of-event-condition-and-action)
+
+[9.4 Types of policies [76](#types-of-policies)](#types-of-policies)
+
+[9.4.1 Access control policies
+[76](#access-control-policies)](#access-control-policies)
+
+[9.4.2 Placement policies
+[77](#placement-policies)](#placement-policies)
+
+[9.4.3 Quality-of-Service (QoS) policies
+[77](#quality-of-service-qos-policies)](#quality-of-service-qos-policies)
+
+[9.5 Policy relationship considerations
+[77](#policy-relationship-considerations)](#policy-relationship-considerations)
+
+[9.6 Use Cases [78](#use-cases)](#use-cases)
+
+[9.6.1 Placement [78](#placement)](#placement)
+
+[9.6.2 Scaling [79](#scaling)](#scaling)
+
+[10 TOSCA Cloud Service Archive (CSAR) format
+[81](#_Toc8675949)](#_Toc8675949)
+
+[10.1 Overall Structure of a CSAR [81](#_Toc8675950)](#_Toc8675950)
+
+[10.2 TOSCA Meta File [81](#_Toc8675951)](#_Toc8675951)
+
+[10.2.1 Custom keynames in the TOSCA.meta file
+[82](#_Toc8675952)](#_Toc8675952)
+
+[10.2.2 Example [82](#_Toc8675953)](#_Toc8675953)
+
+[10.3 Archive without TOSCA-Metadata [82](#_Toc8675954)](#_Toc8675954)
+
+[10.3.1 Example [82](#_Toc8675955)](#_Toc8675955)
+
+[11 Component Modeling Use Cases
+[84](#component-modeling-use-cases)](#component-modeling-use-cases)
+
+[11.1.1 Use Case: Exploring the HostedOn relationship using
+WebApplication and WebServer
+[84](#use-case-exploring-the-hostedon-relationship-using-webapplication-and-webserver)](#use-case-exploring-the-hostedon-relationship-using-webapplication-and-webserver)
+
+[11.1.2 Use Case: Establishing a ConnectsTo relationship to WebServer
+[85](#use-case-establishing-a-connectsto-relationship-to-webserver)](#use-case-establishing-a-connectsto-relationship-to-webserver)
+
+[11.1.3 Use Case: Attaching (local) BlockStorage to a Compute node
+[85](#use-case-attaching-local-blockstorage-to-a-compute-node)](#use-case-attaching-local-blockstorage-to-a-compute-node)
+
+[11.1.4 Use Case: Reusing a BlockStorage Relationship using Relationship
+Type or Relationship Template
+[86](#use-case-reusing-a-blockstorage-relationship-using-relationship-type-or-relationship-template)](#use-case-reusing-a-blockstorage-relationship-using-relationship-type-or-relationship-template)
+
+[12 Application Modeling Use Cases
+[90](#application-modeling-use-cases)](#application-modeling-use-cases)
+
+[12.1 Use cases [90](#use-cases-1)](#use-cases-1)
+
+[12.1.1 Overview [90](#overview)](#overview)
+
+[12.1.2 Compute: Create a single Compute instance with a host Operating
+System
+[91](#compute-create-a-single-compute-instance-with-a-host-operating-system)](#compute-create-a-single-compute-instance-with-a-host-operating-system)
+
+[12.1.3 Software Component 1: Automatic deployment of a Virtual Machine
+(VM) image artifact
+[93](#software-component-1-automatic-deployment-of-a-virtual-machine-vm-image-artifact)](#software-component-1-automatic-deployment-of-a-virtual-machine-vm-image-artifact)
+
+[12.1.4 Block Storage 1: Using the normative AttachesTo Relationship
+Type
+[95](#block-storage-1-using-the-normative-attachesto-relationship-type)](#block-storage-1-using-the-normative-attachesto-relationship-type)
+
+[12.1.5 Block Storage 2: Using a custom AttachesTo Relationship Type
+[96](#block-storage-2-using-a-custom-attachesto-relationship-type)](#block-storage-2-using-a-custom-attachesto-relationship-type)
+
+[12.1.6 Block Storage 3: Using a Relationship Template of type
+AttachesTo
+[98](#block-storage-3-using-a-relationship-template-of-type-attachesto)](#block-storage-3-using-a-relationship-template-of-type-attachesto)
+
+[12.1.7 Block Storage 4: Single Block Storage shared by 2-Tier
+Application with custom AttachesTo Type and implied relationships
+[100](#block-storage-4-single-block-storage-shared-by-2-tier-application-with-custom-attachesto-type-and-implied-relationships)](#block-storage-4-single-block-storage-shared-by-2-tier-application-with-custom-attachesto-type-and-implied-relationships)
+
+[12.1.8 Block Storage 5: Single Block Storage shared by 2-Tier
+Application with custom AttachesTo Type and explicit Relationship
+Templates
+[102](#block-storage-5-single-block-storage-shared-by-2-tier-application-with-custom-attachesto-type-and-explicit-relationship-templates)](#block-storage-5-single-block-storage-shared-by-2-tier-application-with-custom-attachesto-type-and-explicit-relationship-templates)
+
+[12.1.9 Block Storage 6: Multiple Block Storage attached to different
+Servers
+[104](#block-storage-6-multiple-block-storage-attached-to-different-servers)](#block-storage-6-multiple-block-storage-attached-to-different-servers)
+
+[12.1.10 Object Storage 1: Creating an Object Storage service
+[107](#object-storage-1-creating-an-object-storage-service)](#object-storage-1-creating-an-object-storage-service)
+
+[12.1.11 Network 1: Server bound to a new network
+[107](#network-1-server-bound-to-a-new-network)](#network-1-server-bound-to-a-new-network)
+
+[12.1.12 Network 2: Server bound to an existing network
+[109](#network-2-server-bound-to-an-existing-network)](#network-2-server-bound-to-an-existing-network)
+
+[12.1.13 Network 3: Two servers bound to a single network
+[110](#network-3-two-servers-bound-to-a-single-network)](#network-3-two-servers-bound-to-a-single-network)
+
+[12.1.14 Network 4: Server bound to three networks
+[112](#network-4-server-bound-to-three-networks)](#network-4-server-bound-to-three-networks)
+
+[12.1.15 WebServer-DBMS 1: WordPress + MySQL, single instance
+[113](#webserver-dbms-1-wordpress-mysql-single-instance)](#webserver-dbms-1-wordpress-mysql-single-instance)
+
+[12.1.16 WebServer-DBMS 2: Nodejs with PayPal Sample App and MongoDB on
+separate instances
+[117](#webserver-dbms-2-nodejs-with-paypal-sample-app-and-mongodb-on-separate-instances)](#webserver-dbms-2-nodejs-with-paypal-sample-app-and-mongodb-on-separate-instances)
+
+[12.1.17 Multi-Tier-1: Elasticsearch, Logstash, Kibana (ELK) use case
+with multiple instances
+[120](#multi-tier-1-elasticsearch-logstash-kibana-elk-use-case-with-multiple-instances)](#multi-tier-1-elasticsearch-logstash-kibana-elk-use-case-with-multiple-instances)
+
+[12.1.18 Container-1: Containers using Docker single Compute instance
+(Containers only)
+[124](#container-1-containers-using-docker-single-compute-instance-containers-only)](#container-1-containers-using-docker-single-compute-instance-containers-only)
+
+[12.1.19 Artifacts: Compute Node with Multiple Artifacts
+[126](#artifacts-compute-node-with-multiple-artifacts)](#artifacts-compute-node-with-multiple-artifacts)
+
+[13 TOSCA networking use cases
+[128](#tosca-networking-use-cases)](#tosca-networking-use-cases)
+
+[13.1 Networking and Service Template Portability
+[128](#networking-and-service-template-portability)](#networking-and-service-template-portability)
+
+[13.2 Connectivity semantics
+[128](#connectivity-semantics)](#connectivity-semantics)
+
+[13.3 Expressing connectivity semantics
+[129](#expressing-connectivity-semantics)](#expressing-connectivity-semantics)
+
+[13.3.1 Connection initiation semantics
+[129](#connection-initiation-semantics)](#connection-initiation-semantics)
+
+[13.3.2 Specifying layer 4 ports
+[131](#specifying-layer-4-ports)](#specifying-layer-4-ports)
+
+[13.4 Network provisioning
+[131](#network-provisioning)](#network-provisioning)
+
+[13.4.1 Declarative network provisioning
+[131](#declarative-network-provisioning)](#declarative-network-provisioning)
+
+[13.4.2 Implicit network fulfillment
+[131](#implicit-network-fulfillment)](#implicit-network-fulfillment)
+
+[13.4.3 Controlling network fulfillment
+[131](#controlling-network-fulfillment)](#controlling-network-fulfillment)
+
+[13.5 Network Types [135](#network-types)](#network-types)
+
+[13.5.1 tosca.nodes.network.Network
+[135](#tosca.nodes.network.network)](#tosca.nodes.network.network)
+
+[13.5.2 tosca.nodes.network.Port
+[138](#tosca.nodes.network.port)](#tosca.nodes.network.port)
+
+[13.5.3 tosca.capabilities.network.Linkable
+[139](#tosca.capabilities.network.linkable)](#tosca.capabilities.network.linkable)
+
+[13.5.4 tosca.relationships.network.LinksTo
+[140](#tosca.relationships.network.linksto)](#tosca.relationships.network.linksto)
+
+[13.5.5 tosca.relationships.network.BindsTo
+[140](#tosca.relationships.network.bindsto)](#tosca.relationships.network.bindsto)
+
+[13.6 Network modeling approaches
+[141](#network-modeling-approaches)](#network-modeling-approaches)
+
+[13.6.1 Option 1: Specifying a network outside the application’s Service
+Template
+[141](#option-1-specifying-a-network-outside-the-applications-service-template)](#option-1-specifying-a-network-outside-the-applications-service-template)
+
+[13.6.2 Option 2: Specifying network requirements within the
+application’s Service Template
+[145](#option-2-specifying-network-requirements-within-the-applications-service-template)](#option-2-specifying-network-requirements-within-the-applications-service-template)
+
+[14 TOSCA Orchestrators
+[146](#tosca-orchestrators)](#tosca-orchestrators)
+
+[14.1 Artifact Processing and creating Portable Service Templates
+[146](#artifact-processing-and-creating-portable-service-templates)](#artifact-processing-and-creating-portable-service-templates)
+
+[14.1.1 CSAR Onboarding [147](#csar-onboarding)](#csar-onboarding)
+
+[14.1.2 Artifacts Processing
+[148](#artifacts-processing)](#artifacts-processing)
+
+[14.1.3 Dynamic Artifacts [151](#dynamic-artifacts)](#dynamic-artifacts)
+
+[14.1.4 Discussion of Examples
+[151](#discussion-of-examples)](#discussion-of-examples)
+
+[14.1.5 Artifact Types and Metadata
+[159](#artifact-types-and-metadata)](#artifact-types-and-metadata)
+
+[Appendix A. Acknowledgments [160](#acknowledgments)](#acknowledgments)
+
+[Appendix B. Some Section [162](#some-section)](#some-section)
+
+[B.1 Subsidiary Appendix Section
+[162](#subsidiary-appendix-section)](#subsidiary-appendix-section)
+
+[B.1.1 Sub-subsidiary Appendix Section
+[162](#sub-subsidiary-appendix-section)](#sub-subsidiary-appendix-section)
+
+[Appendix C. Revision History
+[163](#revision-history)](#revision-history)
+
+# Introduction
+
+<span class="mark">Type introductory text here.</span>
+
+## References (non-normative)
+
+**NOTE (remove this note and following examples before publication)**:
+
+Recommended approach: Set up \[Reference\] label elements as
+"Bookmarks", then use hyperlinks to them within the document. (**Here’s
+how**: Insert hyperlink -\>Place in this document -\> scroll down to
+Bookmarks, select appropriate one.)
+
+Use the "Ref" paragraph style to format references.
+
+The proper format for citation of technical work produced by an OASIS TC
+(whether Standards Track or Non-Standards Track) is:
+
+\[Citation Label\] Work Product
+[title](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#workProductName)
+(italicized). Edited by Albert Alston, Bob Ballston, and Calvin Carlson.
+Approval date (DD Month YYYY). OASIS
+[Stage](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#stage)
+Identifier and
+[Revision](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#revision)
+Number (*e.g.*, OASIS Committee Specification Draft 01). Principal URI
+([version-specific
+URI](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#this-version),
+*e.g*., with stage component: somespec-v1.0-csd01.html). Latest version:
+([latest version
+URI](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#latest-version),
+without stage identifiers).
+
+For example:
+
+**\[OpenDoc-1.2\]** *Open Document Format for Office Applications
+(OpenDocument) Version 1.2*. Edited by Patrick Durusau and Michael
+Brauer. 19 January 2011. OASIS Committee Specification Draft 07.
+<http://docs.oasis-open.org/office/v1.2/csd07/OpenDocument-v1.2-csd07.html>.
+Latest version:
+<http://docs.oasis-open.org/office/v1.2/OpenDocument-v1.2.html>.
+
+Reference sources:
+
+For references to IETF RFCs, use the approved citation formats at:  
+<http://docs.oasis-open.org/templates/ietf-rfc-list/ietf-rfc-list.html>.
+
+For references to W3C Recommendations, use the approved citation formats
+at:
+<http://docs.oasis-open.org/templates/w3c-recommendations-list/w3c-recommendations-list.html>.
+
+## Section Level 2
+
+text
+
+### Section Level 3
+
+text
+
+#### Section Level 4
+
+text
+
+##### Section Level 5 -deepest recommended level
+
+text
+
+# TOSCA by example
+
+This **non-normative** section contains several sections that show how
+to model applications with TOSCA using YAML by example starting with a
+“Hello World” template up through examples that show complex composition
+modeling.
+
+## A “hello world” template for TOSCA
+
+As mentioned before, TOSCA assumes the existence of a small set of
+pre-defined, normative set of node types (e.g., a ‘Compute’ node) along
+with other types, which will be introduced through the course of this
+document, for creating TOSCA Service Templates. It is envisioned that
+many additional node types for building service templates will be
+created by communities. Some may be published as profiles that build
+upon the TOSCA specification. Using the normative TOSCA Compute node
+type, a very basic “Hello World” TOSCA template for deploying just a
+single server would look as follows:
+
+Example 1 - TOSCA Simple "Hello World"
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;-</p>
+<p>Template for deploying a single server with predefined
+properties.</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>db_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p># Host container properties</p>
+<p>host:</p>
+<p>properties:</p>
+<p>num_cpus: 1</p>
+<p>disk_size: 10 GB</p>
+<p>mem_size: 4096 MB</p>
+<p># Guest Operating System properties</p>
+<p>os:</p>
+<p>properties:</p>
+<p># host Operating System image properties</p>
+<p>architecture: x86_64</p>
+<p>type: linux</p>
+<p>distribution: rhel</p>
+<p>version: 6.5</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The template above contains a very simple topology template” with only a
+single ‘Compute’ node template named “db_server that declares some basic
+values for properties within two of the several capabilities that are
+built into the Compute node type definition. All TOSCA Orchestrators are
+expected to know how to instantiate a Compute node since it is normative
+and expected to represent a well-known function that is portable across
+TOSCA implementations. This expectation is true for all normative TOSCA
+Node and Relationship types that are defined in the specification. This
+means, with TOSCA’s approach, that the application developer does not
+need to provide any deployment or implementation artifacts that contain
+code or logic to orchestrate these common software components. TOSCA
+orchestrators simply select or allocate the correct node (resource) type
+that fulfills the application topologies requirements using the
+properties declared in the node and its capabilities.
+
+In the above example, the “host” capability contains properties that
+allow application developers to optionally supply the number of CPUs,
+memory size and disk size they believe they need when the Compute node
+is instantiated in order to run their applications. Similarly, the “os”
+capability is used to provide values to indicate what host operating
+system the Compute node should have when it is instantiated.
+
+The logical diagram of the “hello world” Compute node would look as
+follows:
+
+<img src="media/image1.png" style="width:2.05943in;height:3.01764in" />
+
+As you can see, the Compute node also has attributes and other built-in
+capabilities, such as Bindable and Endpoint, each with additional
+properties that will be discussed in other examples later in this
+document. Although the Compute node has no direct properties apart from
+those in its capabilities, other TOSCA node type definitions may have
+properties that are part of the node type itself in addition to having
+Capabilities. TOSCA orchestration engines are expected to validate all
+property values provided in a node template against the property
+definitions in their respective node type definitions referenced in the
+service template. The tosca_definitions_version keyname in the TOSCA
+service template identifies the versioned set of normative TOSCA type
+definitions to use for validating those types defined in TOSCA including
+the Compute node type. Specifically, the value tosca_2_0 indicates TOSCA
+v2.0.0 definitions would be used for validation. Other type definitions
+may be imported from other service templates using the import keyword
+discussed later.
+
+## Requesting input parameters and providing output
+
+Typically, one would want to allow users to customize deployments by
+providing input parameters instead of using hardcoded values inside a
+template. In addition, output values are provided to pass information
+that perhaps describes the state of the deployed template to the user
+who deployed it (such as the private IP address of the deployed server).
+A refined service template with corresponding inputs and outputs
+sections is shown below.
+
+Example 2 - Template with input and output parameter sections
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying a single server with predefined
+properties.</p>
+<p>topology_template:</p>
+<p><strong>inputs</strong>:</p>
+<p>db_server_num_cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>node_templates:</p>
+<p>db_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p># Host container properties</p>
+<p>host:</p>
+<p>properties:</p>
+<p># Compute properties</p>
+<p>num_cpus: { get_input: db_server_num_cpus }</p>
+<p>mem_size: 2048 MB</p>
+<p>disk_size: 10 GB</p>
+<p>mem_size: 4096 MB</p>
+<p># Guest Operating System properties</p>
+<p>os:</p>
+<p># omitted for brevity</p>
+<p><strong>outputs</strong>:</p>
+<p>server_ip:</p>
+<p>description: The private IP address of the provisioned server.</p>
+<p>value: { get_attribute: [ db_server, private_address ] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The inputs and outputs sections are contained in the topology_template
+element of the TOSCA template, meaning that they are scoped to node
+templates within the topology template. Input parameters defined in the
+inputs section can be assigned to properties of node template within the
+containing topology template; output parameters can be obtained from
+attributes of node templates within the containing topology template.
+
+Note that the inputs section of a TOSCA template allows for defining
+optional constraints on each input parameter to restrict possible user
+input. Further note that TOSCA provides for a set of intrinsic functions
+like get_input, get_property or get_attribute to reference elements
+within the template or to retrieve runtime values.
+
+## TOSCA template for a simple software installation
+
+Software installations can be modeled in TOSCA as node templates that
+get related to the node template for a server on which the software
+would be installed. With a number of existing software node types (e.g.
+either created by the TOSCA work group or a community) template authors
+can just use those node types for writing service templates as shown
+below.
+
+Example 3 - Simple (MySQL) software installation on a TOSCA Compute node
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying a single server with MySQL
+software on top.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>mysql_rootpw:</p>
+<p>type: string</p>
+<p>mysql_port:</p>
+<p>type: integer</p>
+<p># rest omitted here for brevity</p>
+<p>node_templates:</p>
+<p>db_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># rest omitted here for brevity</p>
+<p><strong>mysql:</strong></p>
+<p><strong>type: tosca.nodes.DBMS.MySQL</strong></p>
+<p><strong>properties:</strong></p>
+<p><strong>root_password: { get_input: mysql_rootpw }</strong></p>
+<p><strong>port: { get_input: mysql_port }</strong></p>
+<p><strong>requirements:</strong></p>
+<p><strong>- host: db_server</strong></p>
+<p>outputs:</p>
+<p># omitted here for brevity</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The example above makes use of a node type tosca.nodes.DBMS.MySQL for
+the mysql node template to install MySQL on a server. This node type
+allows for setting a property root_password to adapt the password of the
+MySQL root user at deployment. The set of properties and their schema
+has been defined in the node type definition. By means of the
+**get_input** function, a value provided by the user at deployment time
+is used as the value for the **root_password** property. The same is
+true for the **port** property.
+
+The **mysql** node template is related to the **db_server** node
+template (of type tosca.nodes.Compute) via the **requirements** section
+to indicate where MySQL is to be installed. In the TOSCA metamodel,
+nodes get related to each other when one node has a requirement against
+some capability provided by another node. What kinds of requirements
+exist is defined by the respective node type. In case of MySQL, which is
+software that needs to be installed or hosted on a compute resource, the
+underlying node type named tosca.nodes.SoftwareComponent has a
+predefined requirement called **host**, which needs to be fulfilled by
+pointing to a node template of type tosca.nodes.Compute.
+
+The logical relationship between the mysql node and its host db_server
+node would appear as follows:
+
+<img src="media/image2.png" style="width:2.44959in;height:3.83333in" />
+
+Within the list of requirements, each list entry is a map that contains
+a single key/value pair where the symbolic name of a requirement
+definition is the *key* and the identifier of the fulfilling node is the
+*value.* The value is essentially the symbolic name of the other node
+template; specifically, or the example above, the **host** requirement
+is fulfilled by referencing the db_server node template. The underlying
+TOSCA DBMS node type already has a complete requirement definition for
+the host requirement of type Compute and assures that a HostedOn TOSCA
+relationship will automatically be created and will only allow a valid
+target host node is of type Compute. This approach allows the template
+author to simply provide the name of a valid Compute node (i.e.,
+db_server) as the value for the mysql node’s host requirement and not
+worry about defining anything more complex if they do not want to.
+
+## Using YAML Macros to simplify templates
+
+The YAML 1.2 specification allows for defining of
+[aliases](http://yaml.org/spec/1.2/spec.html#id2786196), which allow for
+authoring a block of YAML (or node) once and indicating it is an
+“anchor” and then referencing it elsewhere in the same document as an
+“alias”. Effectively, YAML parsers treat this as a “macro” and copy the
+anchor block’s code to wherever it is referenced. Use of this feature is
+especially helpful when authoring TOSCA Service Templates where similar
+definitions and property settings may be repeated multiple times when
+describing a multi-tier application.
+
+For example, an application that has a web server and database (i.e., a
+two-tier application) may be described using two Compute nodes (one to
+host the web server and another to host the database). The author may
+want both Compute nodes to be instantiated with similar properties such
+as operating system, distribution, version, etc.
+
+To accomplish this, the author would describe the reusable properties
+using a named anchor in the “dsl_definitions” section of the TOSCA
+Service Template and reference the anchor name as an alias in any
+Compute node templates where these properties may need to be reused. For
+example:
+
+Example 22 - Using YAML anchors in TOSCA templates
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA template that just defines a YAML macro for commonly reused
+Compute</p>
+<p>properties.</p>
+<p>dsl_definitions:</p>
+<p><mark>my_compute_node_props</mark>: &amp;my_compute_node_props</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: 1</p>
+<p>mem_size: 2 GB</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties: *<mark>my_compute_node_props</mark></p>
+<p>my_database:</p>
+<p>type: Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties: *<mark>my_compute_node_props</mark></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+# TOSCA Base Profile
+
+- Introduce node types and data types
+
+- Introduce Profile as a collection of types
+
+- Introduce Base Profile as collection of “built-in” types
+
+- Explain automatic import of Base Profile
+
+- Introduce Semantic versioning
+
+# Interfaces, Operations, and Artifacts
+
+## Overriding behavior of predefined node types
+
+Node types in TOSCA have associated implementations that provide the
+automation (e.g. in the form of scripts such as Bash, Chef or Python)
+for the normative lifecycle operations of a node. For example, the node
+type implementation for a MySQL database would associate scripts to
+TOSCA node operations like configure, start, or stop to manage the state
+of MySQL at runtime.
+
+Many node types may already come with a set of operational scripts that
+contain basic commands that can manage the state of that specific node.
+If it is desired, template authors can provide a custom script for one
+or more of the operations defined by a node type in their node template
+which will override the default implementation in the type. The
+following example shows a mysql node template where the template author
+provides their own configure script:
+
+Example 4 - Node Template overriding its Node Type's "configure"
+interface
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying a single server with MySQL
+software on top.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>db_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># rest omitted here for brevity</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p>properties:</p>
+<p>root_password: { get_input: mysql_rootpw }</p>
+<p>port: { get_input: mysql_port }</p>
+<p>requirements:</p>
+<p>- host: db_server</p>
+<p><strong>interfaces:</strong></p>
+<p><strong>Standard:</strong></p>
+<p><mark>configure</mark><strong>:
+<mark>scripts/my_own_configure.sh</mark></strong></p>
+<p>outputs:</p>
+<p># omitted here for brevity</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In the example above, the my_own_configure.sh script is provided for the
+configure operation of the MySQL node type’s Standard lifecycle
+interface. The path given in the example above (i.e., ‘scripts/’) is
+interpreted relative to the template file, but it would also be possible
+to provide an absolute URI to the location of the script.
+
+In other words, operations defined by node types can be thought of as
+“hooks” into which automation can be injected. Typically, node type
+implementations provide the automation for those “hooks”. However,
+within a template, custom automation can be injected to run in a hook in
+the context of the one, specific node template (i.e. without changing
+the node type).
+
+## TOSCA template for database content deployment
+
+In the Example 4, shown above, the deployment of the MySQL middleware
+only, i.e. without actual database content was shown. The following
+example shows how such a template can be extended to also contain the
+definition of custom database content on-top of the MySQL DBMS software.
+
+Example 5 - Template for deploying database content on-top of MySQL DBMS
+middleware
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying a single server with predefined
+properties.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>wordpress_db_name:</p>
+<p>type: string</p>
+<p>wordpress_db_user:</p>
+<p>type: string</p>
+<p>wordpress_db_password:</p>
+<p>type: string</p>
+<p># rest omitted here for brevity</p>
+<p>node_templates:</p>
+<p>db_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># rest omitted here for brevity</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p># rest omitted here for brevity</p>
+<p><strong>wordpress_db:</strong></p>
+<p><strong>type: tosca.nodes.Database.MySQL</strong></p>
+<p><strong>properties:</strong></p>
+<p><strong>name: { get_input: wordpress_db_name }</strong></p>
+<p><strong>user: { get_input: wordpress_db_user }</strong></p>
+<p><strong>password: { get_input: wordpress_db_password }</strong></p>
+<p><strong>artifacts:</strong></p>
+<p>db_content<strong>:</strong></p>
+<p><strong>file:
+<mark>files/wordpress_db_content.txt</mark></strong></p>
+<p><strong>type: tosca.artifacts.File</strong></p>
+<p><strong>requirements:</strong></p>
+<p><strong>- host: mysql</strong></p>
+<p><strong>interfaces:</strong></p>
+<p><strong>Standard:</strong></p>
+<p><strong>create:</strong></p>
+<p><strong>implementation: db_create.sh</strong></p>
+<p><strong>inputs:</strong></p>
+<p><strong># Copy DB file artifact to server’s staging area</strong></p>
+<p><strong>db_data: {</strong> get_artifact<strong>: [ SELF,</strong>
+db_content <strong>] }</strong></p>
+<p>outputs:</p>
+<p># omitted here for brevity</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In the example above, the wordpress_db node template of type
+tosca.nodes.Database.MySQL represents an actual MySQL database instance
+managed by a MySQL DBMS installation. The requirements section of the
+wordpress_db node template expresses that the database it represents is
+to be hosted on a MySQL DBMS node template named mysql which is also
+declared in this template.
+
+In the **artifacts** section of the wordpress_db the node template,
+there is an artifact definition named db_content which represents a text
+file wordpress_db_content.txt which in turn will be used to add content
+to the SQL database as part of the create operation.
+
+As you can see above, a script is associated with the create operation
+with the name db_create.sh. The TOSCA Orchestrator sees that this is not
+a named artifact declared in the node’s artifact section, but instead a
+filename for a normative TOSCA implementation artifact script type
+(i.e., tosca.artifacts.Implementation.Bash). Since this is an
+implementation type for TOSCA, the orchestrator will execute the script
+automatically to create the node on db_server, but first it will prepare
+the local environment with the declared inputs for the operation. In
+this case, the orchestrator would see that the db_data input is using
+the get_artifact function to retrieve the file
+(wordpress_db_content.txt) which is associated with the db_content
+artifact name prior to executing the db_create.sh script.
+
+The logical diagram for this example would appear as follows:
+
+> <img src="media/image3.png" style="width:4.56667in;height:4.67287in" />
+
+Note that while it would be possible to define one node type and
+corresponding node templates that represent both the DBMS middleware and
+actual database content as one entity, TOSCA normative node types
+distinguish between middleware (container) and application (containee)
+node types. This allows on one hand to have better re-use of generic
+middleware node types without binding them to content running on top of
+them, and on the other hand this allows for better substitutability of,
+for example, middleware components like a DBMS during the deployment of
+TOSCA models.
+
+## TOSCA template for a two-tier application
+
+The definition of multi-tier applications in TOSCA is quite similar to
+the example shown in section 2.2, with the only difference that multiple
+software node stacks (i.e., node templates for middleware and
+application layer components), typically hosted on different servers,
+are defined and related to each other. The example below defines a web
+application stack hosted on the **web_server** “compute” resource, and a
+database software stack similar to the one shown earlier in section 6
+hosted on the **db_server** compute resource.
+
+Example 6 - Basic two-tier application (web application and database
+server tiers)
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying a two-tier application servers on
+2 servers.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># Admin user name and password to use with the WordPress
+application</p>
+<p>wp_admin_username:</p>
+<p>type: string</p>
+<p>wp_admin_password:</p>
+<p>type: string</p>
+<p>mysql_root_password:</p>
+<p>type: string</p>
+<p>context_root:</p>
+<p>type: string</p>
+<p># rest omitted here for brevity</p>
+<p>node_templates:</p>
+<p>db_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># rest omitted here for brevity</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p># rest omitted here for brevity</p>
+<p>wordpress_db:</p>
+<p>type: tosca.nodes.Database.MySQL</p>
+<p># rest omitted here for brevity</p>
+<p><strong>web_server:</strong></p>
+<p><strong>type: tosca.nodes.Compute</strong></p>
+<p><strong># rest omitted here for brevity</strong></p>
+<p><strong>apache:</strong></p>
+<p><strong>type: tosca.nodes.WebServer.Apache</strong></p>
+<p><strong>requirements:</strong></p>
+<p><strong>- host: web_server</strong></p>
+<p><strong># rest omitted here for brevity</strong></p>
+<p><strong>wordpress:</strong></p>
+<p><strong>type: tosca.nodes.WebApplication.WordPress</strong></p>
+<p><strong>properties:</strong></p>
+<p><strong>context_root: { get_input: context_root }</strong></p>
+<p><strong>admin_user: { get_input: wp_admin_username }</strong></p>
+<p><strong>admin_password: { get_input: wp_admin_password }</strong></p>
+<p>db_host<strong>: { get_attribute: [ db_server, private_address ]
+}</strong></p>
+<p><strong>requirements:</strong></p>
+<p><strong>- host: apache</strong></p>
+<p><strong>- database_endpoint: wordpress_db</strong></p>
+<p><strong>interfaces:</strong></p>
+<p><strong>Standard:</strong></p>
+<p><strong>inputs:</strong></p>
+<p><strong>db_host: { get_attribute: [ db_server, private_address ]
+}</strong></p>
+<p><strong>db_port: { get_property: [ mysql, port ] }</strong></p>
+<p><strong>db_name: { get_property: [ wordpress_db, name ]
+}</strong></p>
+<p><strong>db_user: { get_property: [ wordpress_db, user ]
+}</strong></p>
+<p><strong>db_password: { get_property: [ wordpress_db, password ]
+}</strong></p>
+<p>outputs:</p>
+<p># omitted here for brevity</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The web application stack consists of the **wordpress**
+\[[WordPress](#REF_WORDPRESS)\], the **apache**
+\[[Apache](#REF_APACHE)\] and the **web_server** node templates. The
+**wordpress** node template represents a custom web application of type
+**tosca.nodes.WebApplication.WordPress** which is hosted on an Apache
+web server represented by the **apache** node template. This hosting
+relationship is expressed via the **host** entry in the **requirements**
+section of the **wordpress** node template. The **apache** node
+template, finally, is hosted on the **web_server** compute node.
+
+The database stack consists of the **wordpress_db**, the **mysql** and
+the **db_server** node templates. The **wordpress_db** node represents a
+custom database of type **tosca.nodes.Database.MySQL** which is hosted
+on a MySQL DBMS represented by the **mysql** node template. This node,
+in turn, is hosted on the **db_server** compute node.
+
+The **wordpress** node requires a connection to the **wordpress_db**
+node, since the WordPress application needs a database to store its data
+in. This relationship is established through the **database**\_endpoint
+entry in the **requirements** section of the **wordpress** node
+template’s declared node type. For configuring the WordPress web
+application, information about the database to connect to is required as
+input to the **configure** operation. Therefore, the input parameters
+are defined and values for them are retrieved from the properties and
+attributes of the **wordpress_db** node via the **get_property** and
+get_attribute functions. In the above example, these inputs are defined
+at the interface-level and would be available to all operations of the
+Standard interface (i.e., the tosca.interfaces.node.lifecycle.Standard
+interface) within the wordpress node template and not just the configure
+operation.
+
+## Using a custom script to establish a relationship in a template
+
+In previous examples, the template author did not have to think about
+explicit relationship types to be used to link a requirement of a node
+to another node of a model, nor did the template author have to think
+about special logic to establish those links. For example, the **host**
+requirement in previous examples just pointed to another node template
+and based on metadata in the corresponding node type definition the
+relationship type to be established is implicitly given.
+
+In some cases, it might be necessary to provide special processing logic
+to be executed when establishing relationships between nodes at runtime.
+For example, when connecting the WordPress application from previous
+examples to the MySQL database, it might be desired to apply custom
+configuration logic in addition to that already implemented in the
+application node type. In such a case, it is possible for the template
+author to provide a custom script as implementation for an operation to
+be executed at runtime as shown in the following example.
+
+Example 7 - Providing a custom relationship script to establish a
+connection
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying a two-tier application on two
+servers.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>db_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># rest omitted here for brevity</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p># rest omitted here for brevity</p>
+<p>wordpress_db:</p>
+<p>type: tosca.nodes.Database.MySQL</p>
+<p># rest omitted here for brevity</p>
+<p>web_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># rest omitted here for brevity</p>
+<p>apache:</p>
+<p>type: tosca.nodes.WebServer.Apache</p>
+<p>requirements:</p>
+<p>- host: web_server</p>
+<p># rest omitted here for brevity</p>
+<p>wordpress:</p>
+<p>type: tosca.nodes.WebApplication.WordPress</p>
+<p>properties:</p>
+<p># omitted here for brevity</p>
+<p>requirements:</p>
+<p>- host: apache</p>
+<p><strong>- database_endpoint:</strong></p>
+<p><strong>node: wordpress_db</strong></p>
+<p>relationship: <strong><mark>wp_db_connection</mark></strong></p>
+<p># rest omitted here for brevity</p>
+<p>wordpress_db:</p>
+<p>type: tosca.nodes.Database.MySQL</p>
+<p>properties:</p>
+<p># omitted here for the brevity</p>
+<p>requirements:</p>
+<p>- host: mysql</p>
+<p><strong>relationship_templates:</strong></p>
+<p><strong><mark>wp_db_connection</mark>:</strong></p>
+<p><strong>type: ConnectsTo</strong></p>
+<p><strong>interfaces:</strong></p>
+<p><strong>Configure:</strong></p>
+<p><strong>pre_configure_source:</strong> scripts/wp_db_configure.sh</p>
+<p>outputs:</p>
+<p># omitted here for brevity</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The node type definition for the wordpress node template is WordPress
+which declares the complete **database_endpoint** requirement
+definition. This database_endpoint declaration indicates it must be
+fulfilled by any node template that provides an Endpoint.Database
+Capability Type using a ConnectsTo relationship. The wordpress_db node
+template’s underlying MySQL type definition indeed provides the
+Endpoint.Database Capability type. In this example however, no explicit
+relationship template is declared; therefore, TOSCA orchestrators would
+automatically create a ConnectsTo relationship to establish the link
+between the wordpress node and the wordpress_db node at runtime.
+
+The ConnectsTo relationship (see 5.7.4) also provides a default
+Configure interface with operations that optionally get executed when
+the orchestrator establishes the relationship. In the above example, the
+author has provided the custom script wp_db_configure.sh to be executed
+for the operation called pre_configure_source. The script file is
+assumed to be located relative to the referencing service template such
+as a relative directory within the TOSCA Cloud Service Archive (CSAR)
+packaging format. This approach allows for conveniently hooking in
+custom behavior without having to define a completely new derived
+relationship type.
+
+## Using custom relationship types in a TOSCA template
+
+In the previous section it was shown how custom behavior can be injected
+by specifying scripts inline in the requirements section of node
+templates. When the same custom behavior is required in many templates,
+it does make sense to define a new relationship type that encapsulates
+the custom behavior in a re-usable way instead of repeating the same
+reference to a script (or even references to multiple scripts) in many
+places.
+
+Such a custom relationship type can then be used in templates as shown
+in the following example.
+
+Example 8 - A web application Node Template requiring a custom database
+connection type
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying a two-tier application on two
+servers.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>wordpress:</p>
+<p>type: tosca.nodes.WebApplication.WordPress</p>
+<p>properties:</p>
+<p># omitted here for brevity</p>
+<p>requirements:</p>
+<p>- host: apache</p>
+<p>- database_endpoint:</p>
+<p>node: wordpress_db<br />
+relationship: <mark>my.types.WordpressDbConnection</mark></p>
+<p>wordpress_db:</p>
+<p>type: tosca.nodes.Database.MySQL</p>
+<p>properties:</p>
+<p># omitted here for the brevity</p>
+<p>requirements:</p>
+<p>- host: mysql</p>
+<p># other resources not shown here ...</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In the example above, a special relationship type
+**my.types.WordpressDbConnection** is specified for establishing the
+link between the **wordpress** node and the **wordpress_db** node
+through the use of the **relationship** keyword in the **database**
+reference. It is assumed, that this special relationship type provides
+some extra behavior (e.g., an operation with a script) in addition to
+what a generic “connects to” relationship would provide. The definition
+of this custom relationship type is shown in the following section.
+
+### Definition of a custom relationship type
+
+The following YAML snippet shows the definition of the custom
+relationship type used in the previous section. This type derives from
+the base “ConnectsTo” and overrides one operation defined by that base
+relationship type. For the pre_configure_source operation defined in the
+Configure interface of the ConnectsTo relationship type, a script
+implementation is provided. It is again assumed that the custom
+configure script is located at a location relative to the referencing
+service template, perhaps provided in some application packaging format
+(e.g., the TOSCA Cloud Service Archive (CSAR) format).
+
+Example 9 - Defining a custom relationship type
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Definition of custom WordpressDbConnection relationship
+type</p>
+<p>relationship_types:</p>
+<p><mark>my.types.WordpressDbConnection</mark>:</p>
+<p>derived_from: tosca.relationships.ConnectsTo</p>
+<p>interfaces:</p>
+<p>Configure:</p>
+<p>pre_configure_source: scripts/wp_db_configure.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Defining generic dependencies between nodes in a template
+
+In some cases, it can be necessary to define a generic dependency
+between two nodes in a template to influence orchestration behavior,
+i.e. to first have one node processed before another dependent node gets
+processed. This can be done by using the generic dependency requirement
+which is defined by the [TOSCA Root Node Type](#tosca.nodes.root) and
+thus gets inherited by all other node types in TOSCA (see section
+5.9.1).
+
+Example 10 - Simple dependency relationship between two nodes
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template with a generic dependency between two
+nodes.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>my_app:</p>
+<p>type: my.types.MyApplication</p>
+<p>properties:</p>
+<p># omitted here for brevity</p>
+<p>requirements:</p>
+<p>- dependency: <mark>some_service</mark></p>
+<p><mark>some_service</mark>:</p>
+<p>type: some.nodetype.SomeService</p>
+<p>properties:</p>
+<p># omitted here for brevity</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+As in previous examples, the relation that one node depends on another
+node is expressed in the requirements section using the built-in
+requirement named dependency that exists for all node types in TOSCA.
+Even if the creator of the MyApplication node type did not define a
+specific requirement for SomeService (similar to the database
+requirement in the example in section 2.6), the template author who
+knows that there is a timing dependency and can use the generic
+dependency requirement to express that constraint using the very same
+syntax as used for all other references. Passing information as inputs
+to Interfaces and Operations
+
+It is possible for type and template authors to declare input variables
+within an inputs block on interfaces to nodes or relationships in order
+to pass along information needed by their operations (scripts). These
+declarations can be scoped such as to make these variable values
+available to all operations on a node or relationships interfaces or to
+individual operations. TOSCA orchestrators will make these values
+available using the appropriate mechanisms depending on the type of
+implementation artifact used for each operation. For example, when using
+script artifacts, input values are passed as environment variables
+within the execution environments in which the scripts associated with
+lifecycle operations are run.
+
+### Example: declaring input variables for all operations on a single interface
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>wordpress:</p>
+<p>type: tosca.nodes.WebApplication.WordPress</p>
+<p>requirements:</p>
+<p>...</p>
+<p>- database_endpoint: mysql_database</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>inputs:</p>
+<p>wp_db_port: { get_property: [ SELF, database_endpoint, port ]
+}</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Example: declaring input variables for a single operation
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>wordpress:</p>
+<p>type: tosca.nodes.WebApplication.WordPress</p>
+<p>requirements:</p>
+<p>...</p>
+<p>- database_endpoint: mysql_database</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create: wordpress_install.sh</p>
+<p>configure:</p>
+<p>implementation: wordpress_configure.sh</p>
+<p>inputs:</p>
+<p>wp_db_port: { get_property: [ SELF, database_endpoint, port ]
+}</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In the case where an input variable name is defined at more than one
+scope within the same interfaces section of a node or template
+definition, the lowest (or innermost) scoped declaration would override
+those declared at higher (or more outer) levels of the definition.
+
+# TOSCA workflows
+
+TOSCA defines two different kinds of workflows that can be used to
+deploy (instantiate and start), manage at runtime or undeploy (stop and
+delete) a TOSCA topology: declarative workflows and imperative
+workflows. Declarative workflows are automatically generated by the
+TOSCA orchestrator based on the nodes, relationships, and groups defined
+in the topology. Imperative workflows are manually specified by the
+author of the topology and allows the specification of any use-case that
+has not been planned in the definition of node and relationships types
+or for advanced use-case (including reuse of existing scripts and
+workflows).
+
+Workflows can be triggered on deployment of a topology (deploy workflow)
+on undeployment (undeploy workflow) or during runtime, manually, or
+automatically based on policies defined for the topology.
+
+**Note:** The TOSCA orchestrators will execute a single workflow at a
+time on a topology to guarantee that the defined workflow can be
+consistent and behave as expected.
+
+## Normative workflows
+
+TOSCA defines several normative workflows that are used to operate a
+Topology. That is, reserved names of workflows that should be preserved
+by TOSCA orchestrators and that, if specified in the topology will
+override the workflow generated by the orchestrator :
+
+- deploy: is the workflow used to instantiate and perform the initial
+  deployment of the topology.
+
+- undeploy: is the workflow used to remove all instances of a topology.
+
+### Notes
+
+Future versions of the specification will describe the normative naming
+and declarative generation of additional workflows used to operate the
+topology at runtime.
+
+- scaling workflows: defined for every scalable nodes or based on
+  scaling policies
+
+- auto-healing workflows: defined in order to restart nodes that may
+  have failed
+
+## Declarative workflows
+
+Declarative workflows are the result of the weaving of topology’s node,
+relationships, and groups workflows.
+
+The weaving process generates the workflow of every single node in the
+topology, insert operations from the relationships and groups and
+finally add ordering consideration. The weaving process will also take
+care of the specific lifecycle of some nodes and the TOSCA orchestrator
+is responsible to trigger errors or warnings in case the weaving cannot
+be processed or lead to cycles for example.
+
+This section aims to describe and explain how a TOSCA orchestrator will
+generate a workflow based on the topology entities (nodes, relationships
+and groups).
+
+### Notes
+
+This section details specific constraints and considerations that
+applies during the weaving process.
+
+#### Orchestrator provided nodes lifecycle and weaving
+
+When a node is abstract the orchestrator is responsible for providing a
+valid matching resources for the node in order to deploy the topology.
+This consideration is also valid for dangling requirements (as they
+represents a quick way to define an actual node).
+
+The lifecycle of such nodes is the responsibility of the orchestrator
+and they may not answer to the normative TOSCA lifecycle. Their workflow
+is considered as "delegate" and acts as a black-box between the initial
+and started state in the install workflow and the started to deleted
+states in the uninstall workflow.
+
+If a relationship to some of this node defines operations or lifecycle
+dependency constraint that relies on intermediate states, the weaving
+SHOULD fail and the orchestrator SHOULD raise an error.
+
+### Relationship impacts on topology weaving
+
+This section explains how relationships impacts the workflow generation
+to enable the composition of complex topologies.
+
+#### tosca.relationships.DependsOn
+
+The depends on relationship is used to establish a dependency from a
+node to another. A source node that depends on a target node will be
+created only after the other entity has been started.
+
+#### Note
+
+DependsOn relationship SHOULD not be implemented. Even if the Configure
+interface can be implemented this is not considered as a best-practice.
+If you need specific implementation, please have a look at the
+ConnectsTo relationship.
+
+##### Example DependsOn
+
+This example show the usage of a generic DependsOn relationship between
+two custom software components.
+
+<img src="media/image4.png" style="width:6.5in;height:3.58333in"
+alt="../Capture%20d’écran%202016-05-19%20à%2016.15.03.png" />
+
+In this example the relationship configure interface doesn’t define
+operations so they don’t appear in the generated lifecycle.
+
+#### tosca.relationships.ConnectsTo
+
+The connects to relationship is similar to the DependsOn relationship
+except that it is intended to provide an implementation. The difference
+is more theoretical than practical but helps users to make an actual
+distinction from a meaning perspective.
+
+<img src="media/image5.png" style="width:6.5in;height:4.72222in"
+alt="../Capture%20d’écran%202016-05-31%20à%2013.55.32.png" />
+
+#### tosca.relationships.HostedOn
+
+The hosted_on dependency relationship allows to define a hosting
+relationship between an entity and another. The hosting relationship has
+multiple impacts on the workflow and execution:
+
+- The implementation artifacts of the source node is executed on the
+  same host as the one of the target node.
+
+- The create operation of the source node is executed only once the
+  target node reach the started state.
+
+- When multiple nodes are hosted on the same host node, the defined
+  operations will not be executed concurrently even if the theoretical
+  workflow could allow it (actual generated workflow will avoid
+  concurrency).
+
+##### Example Software Component HostedOn Compute
+
+This example explain the TOSCA weaving operation of a custom
+SoftwareComponent on a tosca.nodes.Compute instance. The compute node is
+an orchestrator provided node meaning that it’s lifecycle is delegated
+to the orchestrator. This is a black-box and we just expect a started
+compute node to be provided by the orchestrator.
+
+The software node lifecycle operations will be executed on the Compute
+node (host) instance.
+
+<img src="media/image6.png" style="width:6.49097in;height:3.61111in"
+alt="../Capture%20d’écran%202016-05-19%20à%2011.00.22.png" />
+
+##### Example Software Component HostedOn Software Component
+
+Tosca allows some more complex hosting scenarios where a software
+component could be hosted on another software component.
+
+<img src="media/image7.png" style="width:6.49097in;height:3.26875in"
+alt="../Capture%20d’écran%202016-05-19%20à%2013.40.41.png" />
+
+In such scenarios the software create operation is triggered only once
+the software_base node has reached the started state.
+
+##### Example 2 Software Components HostedOn Compute
+
+This example illustrate concurrency constraint introduced by the
+management of multiple nodes on a single compute.
+
+### Limitations
+
+#### Hosted nodes concurrency
+
+TOSCA implementation currently does not allow concurrent executions of
+scripts implementation artifacts (shell, python, ansible, puppet, chef
+etc.) on a given host. This limitation is not applied on multiple hosts.
+This limitation is expressed through the HostedOn relationship
+limitation expressing that when multiple components are hosted on a
+given host node then their operations will not be performed concurrently
+(generated workflow will ensure that operations are not concurrent).
+
+#### Dependent nodes concurrency
+
+When a node depends on another node no operations will be processed
+concurrently. In some situations, especially when the two nodes lies on
+different hosts we could expect the create operation to be executed
+concurrently for performance optimization purpose. The current version
+of the specification will allow to use imperative workflows to solve
+this use-case. However, this scenario is one of the scenario that we
+want to improve and handle in the future through declarative workflows.
+
+#### Target operations and get_attribute on source
+
+The current ConnectsTo workflow implies that the target node is started
+before the source node is even created. This means that
+pre_configure_target and post_configure_target operations cannot use any
+input based on source attribute. It is however possible to refer to
+get_property inputs based on source properties. For advanced
+configurations the add_source operation should be used.
+
+Note also that future plans on declarative workflows improvements aims
+to solve this kind of issues while it is currently possible to use
+imperative workflows.
+
+## Imperative workflows
+
+Imperative workflows are user defined and can define any really specific
+constraints and ordering of activities. They are really flexible and
+powerful and can be used for any complex use-case that cannot be solved
+in declarative workflows. However, they provide less reusability as they
+are defined for a specific topology rather than being dynamically
+generated based on the topology content.
+
+### Defining sequence of operations in an imperative workflow
+
+Imperative workflow grammar defines two ways to define the sequence of
+operations in an imperative workflow:
+
+- Leverage the on_success definition to define the next steps that will
+  be executed in parallel.
+
+- Leverage a sequence of activity in a step.
+
+#### Using on_success to define steps ordering
+
+The graph of workflow steps is build based on the values of on_success
+elements of the various defined steps. The graph is built based on the
+following rules:
+
+- All steps that defines an on_success operation must be executed before
+  the next step can be executed. So if A and C defines an on_success
+  operation to B, then B will be executed only when both A and C have
+  been successfully executed.
+
+- The multiple nodes defined by an on_success construct can be executed
+  in parallel.
+
+- Every step that doesn’t have any predecessor is considered as an
+  initial step and can run in parallel.
+
+- Every step that doesn’t define any successor is considered as final.
+  When all the final nodes executions are completed then the workflow is
+  considered as completed.
+
+##### Example
+
+The following example defines multiple steps and the on_success
+relationship between them.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>workflows:</p>
+<p>deploy:</p>
+<p>description: Workflow to deploy the application</p>
+<p>steps:</p>
+<p>A:</p>
+<p>on_success:</p>
+<p>- B</p>
+<p>- C</p>
+<p>B:</p>
+<p>on_success:</p>
+<p>- D</p>
+<p>C:</p>
+<p>on_success:</p>
+<p>- D</p>
+<p>D:</p>
+<p>E:</p>
+<p>on_success:</p>
+<p>- C</p>
+<p>- F</p>
+<p>F:</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The following schema is the visualization of the above definition in
+term of sequencing of the steps.
+
+<img src="media/image8.png" style="width:2.17076in;height:2.97037in"
+alt="../Capture%20d’écran%202016-05-03%20à%2013.29.54.png" />
+
+#### Define a sequence of activity on the same element
+
+The step definition of a TOSCA imperative workflow allows multiple
+activities to be defined :
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>workflows:</p>
+<p>my_workflow:</p>
+<p>steps:</p>
+<p>create_my_node:</p>
+<p>target: my_node</p>
+<p>activities:</p>
+<p>- set_state: creating</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
+<p>- set_state: created</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The sequence defined here defines three different activities that will
+be performed in a sequential way. This is just equivalent to writing
+multiple steps chained by an on_success together :
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>workflows:</p>
+<p>my_workflow:</p>
+<p>steps:</p>
+<p>creating_my_node:</p>
+<p>target: my_node</p>
+<p>activities:</p>
+<p>- set_state: creating</p>
+<p>on_success: create_my_node</p>
+<p>create_my_node:</p>
+<p>target: my_node</p>
+<p>activities:</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
+<p>on_success: created_my_node</p>
+<p>created_my_node:</p>
+<p>target: my_node</p>
+<p>activities:</p>
+<p>- set_state: created</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In both situations the resulting workflow is a sequence of activities:
+
+<img src="media/image9.png" style="width:1.11128in;height:1.60926in"
+alt="../Capture%20d’écran%202016-05-17%20à%2007.22.14.png" />
+
+### Definition of a simple workflow
+
+Imperative workflow allow user to define custom workflows allowing them
+to add operations that are not normative, or for example, to execute
+some operations in parallel when TOSCA would have performed sequential
+execution.
+
+As Imperative workflows are related to a topology, adding a workflow is
+as simple as adding a workflows section to your topology template and
+specifying the workflow and the steps that compose it.
+
+#### Example: Adding a non-normative custom workflow
+
+This sample topology add a very simple custom workflow to trigger the
+mysql backup operation.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p>requirements:</p>
+<p>- host: my_server</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.nodes.custom.Backup:</p>
+<p>operations:</p>
+<p>backup: backup.sh</p>
+<p>workflows:</p>
+<p>backup:</p>
+<p>description: Performs a snapshot of the MySQL data.</p>
+<p>steps:</p>
+<p>my_step:</p>
+<p>target: mysql</p>
+<p>activities:</p>
+<p>- call_operation:
+tosca.interfaces.nodes.custom.Backup.backup</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In such topology the TOSCA container will still use declarative workflow
+to generate the deploy and undeploy workflows as they are not specified
+and a backup workflow will be available for user to trigger.
+
+#### Example: Creating two nodes hosted on the same compute in parallel
+
+TOSCA declarative workflow generation constraint the workflow so that no
+operations are called in parallel on the same host. Looking at the
+following topology this means that the mysql and tomcat nodes will not
+be created in parallel but sequentially. This is fine in most of the
+situations as packet managers like apt or yum doesn’t not support
+concurrency, however if both create operations performs a download of
+zip package from a server most of people will hope to do that in
+parallel in order to optimize throughput.
+
+<img src="media/image10.png" style="width:2.13325in;height:2.83664in"
+alt="../Capture%20d’écran%202016-05-03%20à%2013.09.26.png" />
+
+Imperative workflows can help to solve this issue. Based on the above
+topology we will design a workflow that will create tomcat and mysql in
+parallel but we will also ensure that tomcat is started after mysql is
+started even if no relationship is defined between the components:
+
+<img src="media/image11.png" style="width:4.11289in;height:4.20648in"
+alt="../Capture%20d’écran%202016-05-10%20à%2016.26.30.png" />
+
+To achieve such workflow, the following topology will be defined:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p>requirements:</p>
+<p>- host: my_server</p>
+<p>tomcat:</p>
+<p>type: tosca.nodes.WebServer.Tomcat</p>
+<p>requirements:</p>
+<p>- host: my_server</p>
+<p>workflows:</p>
+<p>deploy:</p>
+<p>description: Override the TOSCA declarative workflow with the
+following.</p>
+<p>steps:</p>
+<p>compute_install</p>
+<p>target: my_server</p>
+<p>activities:</p>
+<p>- delegate: deploy</p>
+<p>on_success:</p>
+<p>- mysql_install</p>
+<p>- tomcat_install</p>
+<p>tomcat_install:</p>
+<p>target: tomcat</p>
+<p>activities:</p>
+<p>- set_state: creating</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
+<p>- set_state: created</p>
+<p>on_success:</p>
+<p>- tomcat_starting</p>
+<p>mysql_install:</p>
+<p>target: mysql</p>
+<p>activities:</p>
+<p>- set_state: creating</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
+<p>- set_state: created</p>
+<p>- set_state: starting</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
+<p>- set_state: started</p>
+<p>on_success:</p>
+<p>- tomcat_starting</p>
+<p>tomcat_starting:</p>
+<p>target: tomcat</p>
+<p>activities:</p>
+<p>- set_state: starting</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
+<p>- set_state: started</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Specifying preconditions to a workflow
+
+Pre conditions allows the TOSCA orchestrator to determine if a workflow
+can be executed based on the states and attribute values of the
+topology’s node. Preconditions must be added to the initial workflow.
+
+#### Example : adding precondition to custom backup workflow
+
+In this example we will use precondition so that we make sure that the
+mysql node is in the correct state for a backup.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p>requirements:</p>
+<p>- host: my_server</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.nodes.custom.Backup:</p>
+<p>operations:</p>
+<p>backup: backup.sh</p>
+<p>workflows:</p>
+<p>backup:</p>
+<p>description: Performs a snapshot of the MySQL data.</p>
+<p>preconditions:</p>
+<p>- target: my_server</p>
+<p>condition:</p>
+<p>- assert:</p>
+<p>- state: [{equal: available}]</p>
+<p>- target: mysql</p>
+<p>condition:</p>
+<p>- assert:</p>
+<p>- state: [{valid_values: [started, available]}]</p>
+<p>- my_attribute: [{equal: ready }]</p>
+<p>steps:</p>
+<p>my_step:</p>
+<p>target: mysql</p>
+<p>activities:</p>
+<p>- call_operation:
+tosca.interfaces.nodes.custom.Backup.backup</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+When the backup workflow will be triggered (by user or policy) the TOSCA
+engine will first check that preconditions are fulfilled. In this
+situation the engine will check that *my_server* node is in *available*
+state AND that *mysql* node is in *started* OR *available* states AND
+that *mysql* *my_attribute* value is equal to *ready*.
+
+### Workflow reusability
+
+TOSCA allows the reusability of a workflow in other workflows. Such
+concepts can be achieved thanks to the inline activity.
+
+#### Reusing a workflow to build multiple workflows
+
+The following example show how a workflow can inline an existing
+workflow and reuse it.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p>requirements:</p>
+<p>- host: my_server</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.nodes.custom.Backup:</p>
+<p>operations:</p>
+<p>backup: backup.sh</p>
+<p>workflows:</p>
+<p>start_mysql:</p>
+<p>steps:</p>
+<p>start_mysql:</p>
+<p>target: mysql</p>
+<p>activities :</p>
+<p>- set_state: starting</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
+<p>- set_state: started</p>
+<p>stop_mysql:</p>
+<p>steps:</p>
+<p>stop_mysql:</p>
+<p>target: mysql</p>
+<p>activities:</p>
+<p>- set_state: stopping</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.stop</p>
+<p>- set_state: stopped</p>
+<p>backup:</p>
+<p>description: Performs a snapshot of the MySQL data.</p>
+<p>preconditions:</p>
+<p>- target: my_server</p>
+<p>condition:</p>
+<p>- assert:</p>
+<p>- state: [{equal: available}]</p>
+<p>- target: mysql</p>
+<p>condition:</p>
+<p>- assert:</p>
+<p>- state: [{valid_values: [started, available]}]</p>
+<p>- my_attribute: [{equal: ready }]</p>
+<p>steps:</p>
+<p>backup_step:</p>
+<p>activities:</p>
+<p>- inline: stop</p>
+<p>- call_operation: tosca.interfaces.nodes.custom.Backup.backup</p>
+<p>- inline: start</p>
+<p>restart:</p>
+<p>steps:</p>
+<p>backup_step:</p>
+<p>activities:</p>
+<p>- inline: stop</p>
+<p>- inline: start</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The example above defines three workflows and show how the start_mysql
+and stop_mysql workflows are reused in the backup and restart workflows.
+
+Inlined workflows are inlined sequentially in the existing workflow for
+example the backup workflow would look like this:
+
+<img src="media/image12.png" style="width:1.10625in;height:2.96668in"
+alt="../Capture%20d’écran%202016-05-17%20à%2009.45.23.png" />
+
+#### Inlining a complex workflow
+
+It is possible of course to inline more complex workflows. The following
+example defines an inlined workflows with multiple steps including
+concurrent steps:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>workflows:</p>
+<p>inlined_wf:</p>
+<p>steps:</p>
+<p>A:</p>
+<p>target: node_a</p>
+<p>activities:</p>
+<p>- call_operation: a</p>
+<p>on_success:</p>
+<p>- B</p>
+<p>- C</p>
+<p>B:</p>
+<p>target: node_a</p>
+<p>activities:</p>
+<p>- call_operation: b</p>
+<p>on_success:</p>
+<p>- D</p>
+<p>C:</p>
+<p>target: node_a</p>
+<p>activities:</p>
+<p>- call_operation: c</p>
+<p>on_success:</p>
+<p>- D</p>
+<p>D:</p>
+<p>target: node_a</p>
+<p>activities:</p>
+<p>- call_operation: d</p>
+<p>E:</p>
+<p>target: node_a</p>
+<p>activities:</p>
+<p>- call_operation: e</p>
+<p>on_success:</p>
+<p>- C</p>
+<p>- F</p>
+<p>F:</p>
+<p>target: node_a</p>
+<p>activities:</p>
+<p>- call_operation: f</p>
+<p>main_workflow:</p>
+<p>steps:</p>
+<p>G:</p>
+<p>target: node_a</p>
+<p>activities:</p>
+<p>- set_state: initial</p>
+<p>- inline: inlined_wf</p>
+<p>- set_state: available</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+To describe the following workflow:
+
+<img src="media/image13.png" style="width:3.23125in;height:3.22622in"
+alt="../Capture%20d’écran%202016-05-17%20à%2011.54.41.png" />
+
+### Defining conditional logic on some part of the workflow
+
+Preconditions are used to validate if the workflow should be executed
+only for the initial workflow. If a workflow that is inlined defines
+some preconditions theses preconditions will be used at the instance
+level to define if the operations should be executed or not on the
+defined instance.
+
+This construct can be used to filter some steps on a specific instance
+or under some specific circumstances or topology state.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>cluster:</p>
+<p>type: tosca.nodes.DBMS.Cluster</p>
+<p>requirements:</p>
+<p>- host: my_server</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.nodes.custom.Backup:</p>
+<p>operations:</p>
+<p>backup: backup.sh</p>
+<p>workflows:</p>
+<p>backup:</p>
+<p>description: Performs a snapshot of the MySQL data.</p>
+<p>preconditions:</p>
+<p>- target: my_server</p>
+<p>condition:</p>
+<p>- assert:</p>
+<p>- state: [{equal: available}]</p>
+<p>- target: mysql</p>
+<p>condition:</p>
+<p>- assert:</p>
+<p>- state: [{valid_values: [started, available]}]</p>
+<p>- my_attribute: [{equal: ready }]</p>
+<p>steps:</p>
+<p>backup_step:</p>
+<p>target: cluster</p>
+<p>filter: # filter is a list of clauses. Matching between clauses is
+and.</p>
+<p>- or: # only one of sub-clauses must be true.</p>
+<p>- assert:</p>
+<p>- foo: [{equals: true}]</p>
+<p>- assert:</p>
+<p>- bar: [{greater_than: 2}, {less_than: 20}]</p>
+<p>activities:</p>
+<p>- call_operation:
+tosca.interfaces.nodes.custom.Backup.backup</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Define inputs for a workflow
+
+Inputs can be defined in a workflow and will be provided in the
+execution context of the workflow. If an operation defines a get_input
+function on one of its parameter the input will be retrieved from the
+workflow input, and if not found from the topology inputs.
+
+#### Example
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p>requirements:</p>
+<p>- host: my_server</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.nodes.custom.Backup:</p>
+<p>operations:</p>
+<p>backup:</p>
+<p>implementation: backup.sh</p>
+<p>inputs:</p>
+<p>storage_url: { get_input: storage_url }</p>
+<p>workflows:</p>
+<p>backup:</p>
+<p>description: Performs a snapshot of the MySQL data.</p>
+<p>preconditions:</p>
+<p>- target: my_server</p>
+<p>valid_states: [available]</p>
+<p>- target: mysql</p>
+<p>valid_states: [started, available]</p>
+<p>attributes:</p>
+<p>my_attribute: [ready]</p>
+<p>inputs:</p>
+<p>storage_url:</p>
+<p>type: string</p>
+<p>steps:</p>
+<p>my_step:</p>
+<p>target: mysql</p>
+<p>activities:</p>
+<p>- call_operation:
+tosca.interfaces.nodes.custom.Backup.backup</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+To trigger such a workflow, the TOSCA engine must allow user to provide
+inputs that match the given definitions.
+
+### Handle operation failure
+
+By default, failure of any activity of the workflow will result in the
+failure of the workflow and will results in stopping the steps to be
+executed.
+
+Exception: uninstall workflow operation failure SHOULD not prevent the
+other operations of the workflow to run (a failure in an uninstall
+script SHOULD not prevent from releasing resources from the cloud).
+
+For any workflow other than install and uninstall failures may leave the
+topology in an unknown state. In such situation the TOSCA engine may not
+be able to orchestrate the deployment. Implementation of on_failure
+construct allows to execute rollback operations and reset the state of
+the affected entities back to an orchestrator known state.
+
+#### Example
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p>requirements:</p>
+<p>- host: my_server</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.nodes.custom.Backup:</p>
+<p>operations:</p>
+<p>backup:</p>
+<p>implementation: backup.sh</p>
+<p>inputs:</p>
+<p>storage_url: { get_input: storage_url }</p>
+<p>workflows:</p>
+<p>backup:</p>
+<p>steps:</p>
+<p>backup_step:</p>
+<p>target: mysql</p>
+<p>activities:</p>
+<p>- set_state: backing_up # this state is not a TOSCA known state</p>
+<p>- call_operation: tosca.interfaces.nodes.custom.Backup.backup</p>
+<p>- set_state: available # this state is known by TOSCA
+orchestrator</p>
+<p>on_failure:</p>
+<p>- rollback_step</p>
+<p>rollback_step:</p>
+<p>target: mysql</p>
+<p>activities:</p>
+<p>- call_operation: tosca.interfaces.nodes.custom.Backup.backup</p>
+<p>- set_state: available # this state is known by TOSCA
+orchestrator</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+<img src="media/image14.png" style="width:4.91181in;height:2.55759in"
+alt="../Capture%20d’écran%202016-05-17%20à%2015.40.04.png" />
+
+<span id="_Toc5736864" class="anchor"></span>**7.3.8 Use a custom
+workflow language**
+
+TOSCA orchestrators may support additional workflow languages beyond the
+one which has been described in this specification.
+
+***7.3.8.1 Example***
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>workflows:</p>
+<p>my_workflow:</p>
+<p>implementation: my_workflow.bpmn.xml</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The **implementation** refers to the artifact **my_workflow.bpmn.xml**
+containing the workflow definition written in BPMN (Business Process
+Modeling Notation).
+
+***7.3.8.2 Example***
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>topology_template:</p>
+<p>workflows:</p>
+<p>my_workflow:</p>
+<p>implementation:</p>
+<p>description: workflow implemented in Mistral</p>
+<p>type: mycompany.artifacts.Implementation.Mistral</p>
+<p>file: my_workflow.workbook.mistral.yaml</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The **implementation** refers to the artifact **my_workflow_script**
+which is in fact a Mistral workbook written in the Mistral workflow
+definition language.
+
+## Making declarative more flexible and imperative more generic
+
+TOSCA 1.1 version provides the genericity and reusability of declarative
+workflows that is designed to address most of use-cases and the
+flexibility of imperative workflows to address more complex or specific
+use-cases.
+
+Each approach has some pros and cons and we are working so that the next
+versions of the specification can improve the workflow usages to try to
+allow more flexibility in a more generic way. Two non-exclusive leads
+are currently being discussed within the working group and may be
+included in the future versions of the specification.
+
+- Improvement of the declarative workflows in order to allow people to
+  extend the weaving logic of TOSCA to fit some specific need.
+
+- Improvement of the imperative workflows in order to allow partial
+  imperative workflows to be automatically included in declarative
+  workflows based on specific constraints on the topology elements.
+
+Implementation of the improvements will be done by adding some elements
+to the specification and will not break compatibility with the current
+specification.
+
+#### Notes
+
+- The weaving improvement section is a Work in Progress and is not final
+  in 2.0 version. The elements in this section are incomplete and may be
+  subject to change in next specification version.
+
+- Moreover, the weaving improvements is one of the track of
+  improvements. As describe improving the reusability of imperative
+  workflow is another track (that may both co-exists in next
+  specifications).
+
+### Weaving improvements
+
+Making declarative better experimental option.
+
+#### Node lifecycle definition
+
+Node workflow is defined at the node type level. The node workflow
+definition is used to generate the declarative workflow of a given node.
+
+The tosca.nodes.Root type defines workflow steps for both the install
+workflow (used to instantiate or deploy a topology) and the uninstall
+workflow (used to destroy or undeploy a topology). The workflow is
+defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_types:</p>
+<p>tosca.nodes.Root:</p>
+<p>workflows:</p>
+<p>install:</p>
+<p>steps:</p>
+<p>install_sequence:</p>
+<p>activities:</p>
+<p>- set_state: creating</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
+<p>- set_state: created</p>
+<p>- set_state: configuring</p>
+<p>- call_operation:
+tosca.interfaces.node.lifecycle.Standard.configure</p>
+<p>- set_state: configured</p>
+<p>- set_state: starting</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
+<p>- set_state: started</p>
+<p>uninstall:</p>
+<p>steps:</p>
+<p>uninstall_sequence:</p>
+<p>activities:</p>
+<p>- set_state: stopping</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.stop</p>
+<p>- set_state: stopped</p>
+<p>- set_state: deleting</p>
+<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.delete</p>
+<p>- set_state: deleted</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Relationship lifecycle and weaving
+
+While the workflow of a single node is quite simple the TOSCA weaving
+process is the real key element of declarative workflows. The process of
+weaving consist of the ability to create complex management workflows
+including dependency management in execution order between node
+operations, injection of operations to process specific instruction
+related to the connection to other nodes based the relationships and
+groups defined in a topology.
+
+This section describes the relationship weaving and how the description
+at a template level can be translated on an instance level.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>relationship_types:</p>
+<p>tosca.relationships.ConnectsTo:</p>
+<p>workflow:</p>
+<p>install: # name of the workflow for wich the weaving has to be taken
+in account</p>
+<p>source_weaving: # Instruct how to weave some tasks on the source
+workflow (executed on SOURCE instance)</p>
+<p>- after: configuring # instruct that this operation should be weaved
+after the target reach configuring state</p>
+<p>wait_target: created # add a join from a state of the target</p>
+<p>activity:
+tosca.interfaces.relationships.Configure.pre_configure_source</p>
+<p>- before: configured # instruct that this operation should be weaved
+before the target reach configured state</p>
+<p>activity:
+tosca.interfaces.relationships.Configure.post_configure_source</p>
+<p>- before: starting</p>
+<p>wait_target: started # add a join from a state of the target</p>
+<p>- after: started</p>
+<p>activity: tosca.interfaces.relationships.Configure.add_target</p>
+<p>target_weaving: # Instruct how to weave some tasks on the target
+workflow (executed on TARGET instance)</p>
+<p>- after: configuring # instruct that this operation should be weaved
+after the target reach configuring state</p>
+<p>after_source: created # add a join from a state of the source</p>
+<p>activity:
+tosca.interfaces.relationships.Configure.pre_configure_target</p>
+<p>- before: configured # instruct that this operation should be weaved
+before the target reach configured state</p>
+<p>activity:
+tosca.interfaces.relationships.Configure.post_configure_target</p>
+<p>- after: started</p>
+<p>activity:
+tosca.interfaces.relationships.Configure.add_source</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+# Instance Model
+
+## Topology Template Model versus Instance Model
+
+A TOSCA service template contains a **topology template,** which models
+the components of an application, their relationships and dependencies
+(a.k.a., a topology model) that get interpreted and instantiated by
+TOSCA Orchestrators. The actual node and relationship instances that are
+created represent a set of resources distinct from the template itself,
+called a **topology instance (model)**. The direction of this
+specification is to provide access to the instances of these resources
+for management and operational control by external administrators. This
+model can also be accessed by an orchestration engine during deployment
+– i.e. during the actual process of instantiating the template in an
+incremental fashion, That is, the orchestrator can choose the order of
+resources to instantiate (i.e., establishing a partial set of node and
+relationship instances) and have the ability, as they are being created,
+to access them in order to facilitate instantiating the remaining
+resources of the complete topology template.
+
+## Using attributes implicitly reflected from properties
+
+Most entity types in TOSCA (e.g., Node, Relationship, Capability Types,
+etc.) have [property definitions](#DEFN_ELEMENT_PROPERTY_DEFN), which
+allow template authors to set the values for as inputs when these
+entities are instantiated by an orchestrator. These property values are
+considered to reflect the desired state of the entity by the author.
+Once instantiated, the actual values for these properties on the
+realized (instantiated) entity are obtainable via attributes on the
+entity with the same name as the corresponding property.
+
+In other words, TOSCA orchestrators will automatically reflect (i.e.,
+make available) any property defined on an entity as an attribute of the
+entity with the same name as the property.
+
+Use of this feature is shown in the example below where a source node
+named my_client, of type ClientNode, requires a connection to another
+node named my_server of type ServerNode. As you can see, the ServerNode
+type defines a property named notification_port which defines a
+dedicated port number which instances of my_client may use to post
+asynchronous notifications to it during runtime. In this case, TOSCA
+assures that the notification_port property is implicitly reflected as
+an attribute in the my_server node (also with the name
+notification_port) when its node template is instantiated.
+
+Example 23 - Properties reflected as attributes
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA template that shows how the (notification_port) property is
+reflected as an attribute and can be referenced elsewhere.</p>
+<p>node_types:</p>
+<p>ServerNode:</p>
+<p>derived_from: SoftwareComponent</p>
+<p>properties:</p>
+<p><strong>notification_port</strong>:</p>
+<p>type: integer</p>
+<p>capabilities:</p>
+<p># omitted here for brevity</p>
+<p>ClientNode:</p>
+<p>derived_from: SoftwareComponent</p>
+<p>properties:</p>
+<p># omitted here for brevity</p>
+<p>requirements:</p>
+<p>- server:</p>
+<p>capability: Endpoint</p>
+<p>node: ServerNode</p>
+<p>relationship: ConnectsTo</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: ServerNode</p>
+<p>properties:</p>
+<p>notification_port: 8000</p>
+<p>my_client:</p>
+<p>type: ClientNode</p>
+<p>requirements:</p>
+<p>- server:</p>
+<p>node: my_server</p>
+<p>relationship: my_connection</p>
+<p>relationship_templates:</p>
+<p>my_connection:</p>
+<p>type: ConnectsTo</p>
+<p>interfaces:</p>
+<p>Configure:</p>
+<p>inputs:</p>
+<p>targ_notify_port: { get_attribute: [ TARGET,
+<strong>notification_port</strong> ] }</p>
+<p># other operation definitions omitted here for brevity</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+Specifically, the above example shows that the ClientNode type needs the
+notification_port value anytime a node of ServerType is connected to it
+using the ConnectsTo relationship in order to make it available to its
+Configure operations (scripts). It does this by using the get_attribute
+function to retrieve the notification_port attribute from the TARGET
+node of the ConnectsTo relationship (which is a node of type ServerNode)
+and assigning it to an environment variable named targ_notify_port.
+
+It should be noted that the actual port value of the notification_port
+attribute may or may not be the value 8000 as requested on the property;
+therefore, any node that is dependent on knowing its actual “runtime”
+value would use the get_attribute function instead of the get_property
+function.
+
+## Returning output values from operations
+
+Service template designers have the ability to define operation outputs
+that specify named output values that are expected to be returned by
+interface operations as well as the attributes on nodes or relationships
+into which these output values must be stored.
+
+### Example: setting output values to a node attribute
+
+The service template below shows an example service template that is
+used to create a compute node. The config operation of the Standard
+lifecycle returns both the private and the public IP addresses of the
+config node. The *attribute mappings grammar* is used to reflect these
+addresses into the appropriate Compute node attributes:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for creating compute node</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>node:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>configure:</p>
+<p>outputs:</p>
+<p>ip1: [ SELF, private_address ]</p>
+<p>ip2: [ SELF, public_address ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Example: setting output values to a capability attribute
+
+Some operation outputs may need to be reflected into attributes of
+capabilities of nodes, rather than in attributes of the nodes
+themselves. The following example shows how an IP address returned by a
+config operation is stored in the *ip_address* attribute of the
+*endpoint* capability of a *Compute* node:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_simple_yaml_1_2_0</p>
+<p>description: Template for creating compute node</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>compute:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>config:</p>
+<p>outputs:</p>
+<p>ip1: <mark>[ SELF, endpoint, ip_address ]</mark></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Receiving asynchronous notifications
+
+As shown in the previous section, TOSCA allows service template
+designers to reflect the results of executing interface operations into
+node or relationship artifacts using output mappings. However, there are
+many situations where components modeled by a node can change
+independently as a result of external events (e.g. load changes,
+failures, mode changes, etc.) rather than as a result of executing
+lifecycle management operations. To support those situations, TOSCA
+includes support for **notifications** that allow service template
+designers to specify how to asynchronously receive external events and
+how those events should result in node or relationship attribute
+changes.
+
+Just like operations, notifications are specified as part of interface
+definitions. The major difference between notifications and operations
+is that the former are called from the outside world to on the
+orchestrator, and not the other way around. As a result, notifications
+do not have inputs defined (since they are called asynchronously from
+the outside). Information carried in notifications is pushed to the
+orchestrator via notification outputs (similar to operation outputs).
+
+The following example shows how a health monitoring interface is used to
+allow the orchestrator to monitor the health of a database node by
+listening for heartbeats as well as by waiting for asynchronous failure
+alerts:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template showing a health monitoring interface</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>db_1:</p>
+<p>type: org.ego.nodes.Database</p>
+<p>interfaces:</p>
+<p>HealthMonitor:</p>
+<p>notifications:</p>
+<p>heartbeat:</p>
+<p>outputs:</p>
+<p>tick: [ SELF, still_alive ]</p>
+<p>failure_report:</p>
+<p>outputs:</p>
+<p>level: [SELF, failure_level]</p>
+<p>time: [SELF, failure_time]</p>
+<p>environment: [SELF, failure_context]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Creating Multiple Node Instances from the Same Node Template
+
+TOSCA service templates specify a set of nodes that need to be
+instantiated at service deployment time. Some service templates may
+include multiple nodes that perform the same role. For example, a
+template that models an SD-WAN service might contain multiple VPN Site
+nodes, one for each location that accesses the SD-WAN. Rather than
+having to create a separate service template for each possible number of
+VPN sites, it would be preferable to have a single service template that
+allows the number of VPN sites to be specified as an input to the
+template at deployment time. This section introduces ***experimental***
+TOSCA language extensions in support of this functionality.It is
+expected that these extensions will be formally standardized in a future
+version of this specifications.
+
+The discussion in this section uses an example SD-WAN deployment to
+three sites as shown in the following figure:
+
+VPN
+
+San Jose
+
+Austin
+
+Boston
+
+Example SD-WAN Service Deployment
+
+The following code snippet shows a TOSCA service template from which
+this service could have been deployed:
+
+Example 24 – TOSCA SD-WAN Service Template
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying SD-WAN with three sites.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>location1:</p>
+<p>type: Location</p>
+<p>location2:</p>
+<p>type: Location</p>
+<p>location3:</p>
+<p>type: Location</p>
+<p>node_templates:</p>
+<p>sdwan:</p>
+<p>type: VPN</p>
+<p>site1:</p>
+<p>type: VPNSite</p>
+<p>properties:</p>
+<p>location: { get_input: location1 }</p>
+<p>requirements:</p>
+<p>- vpn: sdwan</p>
+<p>site2:</p>
+<p>type: VPNSite</p>
+<p>properties:</p>
+<p>location: { get_input: location2 }</p>
+<p>requirements:</p>
+<p>- vpn: sdwan</p>
+<p>site3:</p>
+<p>type: VPNSite</p>
+<p>properties:</p>
+<p>location: { get_input: location3 }</p>
+<p>requirements:</p>
+<p>- vpn: sdwan</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+Unfortunately, this template can only be used to deploy an SD-WAN with
+three sites. To deploy a different number of sites, additional service
+templates would have t be created, one for each number of possible
+SD-WAN sites. This leads to template proliferation, which is
+undesirable. The next section explores alternatives.
+
+### Specifying Number of Occurrences
+
+To avoid the need for multiple service templates, TOSCA must provide a
+mechanism that allows all VPN Site nodes to be created from the same
+Site node template in the topology, and allow the number of sites to be
+specified at deployment time. Specifically, this functionality must:
+
+- Allow service template designers to specify that multiple node
+  instances can be created from a single node template
+
+- Allow service template designers to constrain how many node instances
+  can be created from a single node template
+
+- Allow users to specify at deployment time the exact number of
+  instances that need to be created from the single node template.
+
+To provide this functionality, the TOSCA node template definition
+grammar is extended with an **occurrences** keyword that specifies the
+minimum and maximum number of instances that can be created from this
+node template. If occurrences is not specified, only one single instance
+can be created. In addition, an **instance_count** keyword is used to
+specify the requested number of runtime instances of this node template.
+It is expected that the value of the instance_count is provided as an
+input to the topology template. These extensions enable the creation of
+a simplified SD-WAN service template that contains only one single VPN
+Site node as shown in the following code snippet:
+
+Example 25 – TOSCA SD-WAN Service Template
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying SD-WAN with a variable number of
+sites.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>numberOfSites:</p>
+<p>type: integer</p>
+<p>node_templates:</p>
+<p>sdwan:</p>
+<p>type: VPN</p>
+<p>site:</p>
+<p>type: VPNSite</p>
+<p>occurrences: [1, UNBOUNDED]</p>
+<p>instance_count: { get_input: numberOfSites }</p>
+<p>requirements:</p>
+<p>- vpn: sdwan</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Specifying Inputs
+
+The service template in the previous section conveniently ignores the
+location property of the Site node. As shown earlier, the location
+property is expected to be provided as an input value. If Site node
+templates can be instantiated multiple times, then it follows that
+multiple input values are required to initialize the location property
+for each of the Site node instances.
+
+To allow specific input values to be matched with specific node template
+instances, a new reserved keyword called INDEX is introduced. A TOSCA
+orchestrator will interpret this keyword as the runtime index in the
+list of node instances created from a single node template.
+
+The following service template shows how the INDEX keyword is used to
+retrieve specific values from a list of input values in a service
+template:
+
+Example 26 – TOSCA SD-WAN Service Template
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for deploying SD-WAN with a variable number of
+sites.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>numberOfSites:</p>
+<p>type: integer</p>
+<p>locations:</p>
+<p>type: list</p>
+<p>entry_schema: Location</p>
+<p>node_templates:</p>
+<p>sdwan:</p>
+<p>type: VPN</p>
+<p>site:</p>
+<p>type: VPNSite</p>
+<p>occurrences: [1, UNBOUNDED]</p>
+<p>instance_count: { get_input: numberOfSites }</p>
+<p>properties:</p>
+<p>location: { get_input: [ locations, INDEX ] }</p>
+<p>requirements:</p>
+<p>- vpn: sdwan</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+# Describing abstract requirements for nodes and capabilities in a TOSCA template
+
+In TOSCA templates, nodes are either:
+
+- **Concrete**: meaning that they have a deployment and/or one or more
+  implementation artifacts that are declared on the “create” operation
+  of the node’s Standard lifecycle interface, or they are
+
+- **Abstract**: where the template describes only the node type along
+  with its required capabilities and properties that must be satisfied.
+
+TOSCA Orchestrators, by default, when finding an abstract node in TOSCA
+Service Template during deployment will attempt to “select” a concrete
+implementation for the abstract node type that best matches and fulfills
+the requirements and property constraints the template author provided
+for that abstract node. The concrete implementation of the node could be
+provided by another TOSCA Service Template (perhaps located in a catalog
+or repository known to the TOSCA Orchestrator) or by an existing
+resource or service available within the target Cloud Provider’s
+platform that the TOSCA Orchestrator already has knowledge of.
+
+TOSCA supports two methods for template authors to express requirements
+for an abstract node within a TOSCA service template.
+
+1.  ***Using a target node_filter***: where a node template can describe
+    a requirement (relationship) for another node without including it
+    in the topology. Instead, the node provides a node_filter to
+    describe the target node type along with its capabilities and
+    property constrains
+
+2.  ***Using an abstract node template***: that describes the abstract
+    node’s type along with its property constraints and any requirements
+    and capabilities it also exports. This first method you have already
+    seen in examples from previous chapters where the Compute node is
+    abstract and selectable by the TOSCA Orchestrator using the supplied
+    Container and [OperatingSystem](#tosca.capabilities.operatingsystem)
+    capabilities property constraints.
+
+These approaches allow architects and developers to create TOSCA service
+templates that are composable and can be reused by allowing flexible
+matching of one template’s requirements to another’s capabilities.
+Examples of both these approaches are shown below.
+
+The following section describe how a user can define a requirement for
+an orchestrator to select an implementation and replace a node. For more
+details on how an orchestrator may perform matching and select a node
+from it’s catalog(s) you may look at section 14 of the specification.
+
+## Using a node_filter to define hosting infrastructure requirements for a software 
+
+Using TOSCA, it is possible to define only the software components of an
+application in a template and just express constrained requirements
+against the hosting infrastructure. At deployment time, the provider can
+then do a late binding and dynamically allocate or assign the required
+hosting infrastructure and place software components on top.
+
+This example shows how a single software component (i.e., the mysql node
+template) can define its host requirements that the TOSCA Orchestrator
+and provider will use to select or allocate an appropriate host Compute
+node by using matching criteria provided on a node_filter.
+
+Example 11 - An abstract "host" requirement using a node filter
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template with requirements against hosting
+infrastructure.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p>properties:</p>
+<p># omitted here for brevity</p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>node_filter:</p>
+<p>capabilities:</p>
+<p># Constraints for selecting “host” (Container Capability)</p>
+<p>- host:</p>
+<p>properties:</p>
+<p>- num_cpus: { in_range: [ 1, 4 ] }</p>
+<p>- mem_size: { greater_or_equal: 2 GB }</p>
+<p># Constraints for selecting “os” (OperatingSystem Capability)</p>
+<p>- os:</p>
+<p>properties:</p>
+<p>- architecture: { equal: x86_64 }</p>
+<p>- type: linux</p>
+<p>- distribution: ubuntu</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In the example above, the **mysql** component contains a host
+requirement for a node of type **Compute** which it inherits from its
+parent DBMS node type definition; however, there is no declaration or
+reference to any node template of type Compute. Instead, the mysql node
+template augments the abstract “host” requirement with a node_filter
+which contains additional selection criteria (in the form of property
+constraints that the provider must use when selecting or allocating a
+host Compute node.
+
+Some of the constraints shown above narrow down the boundaries of
+allowed values for certain properties such as mem_size or num_cpus for
+the “host” capability by means of qualifier functions such as
+**greater_or_equal**. Other constraints, express specific values such as
+for the architecture or distribution properties of the “os” capability
+which will require the provider to find a precise match.
+
+Note that when no qualifier function is provided for a property
+(filter), such as for the distribution property, it is interpreted to
+mean the equal operator as shown on the architecture property.
+
+## Using an abstract node template to define infrastructure requirements for software
+
+This previous approach works well if no other component (i.e., another
+node template) other than mysql node template wants to reference the
+same Compute node the orchestrator would instantiate. However, perhaps
+another component wants to also be deployed on the same host, yet still
+allow the flexible matching achieved using a node-filter. The
+alternative to the above approach is to create an abstract node template
+that represents the Compute node in the topology as follows:
+
+Example 12 - An abstract Compute node template with a node filter
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template with requirements against hosting
+infrastructure.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>mysql:</p>
+<p>type: <a
+href="#tosca.nodes.dbms.mysql">tosca.nodes.DBMS.MySQL</a></p>
+<p>properties:</p>
+<p># omitted here for brevity</p>
+<p>requirements:</p>
+<p>- host: <mark>mysql_compute</mark></p>
+<p># Abstract node template (placeholder) to be selected by provider</p>
+<p><mark>mysql_compute:</mark></p>
+<p>type: Compute</p>
+<p>directives: [ select ]</p>
+<p>node_filter:</p>
+<p>capabilities:</p>
+<p>- host:</p>
+<p>properties:</p>
+<p>num_cpus: { equal: 2 }</p>
+<p>mem_size: { greater_or_equal: 2 GB }</p>
+<p>- os:</p>
+<p>properties:</p>
+<p>architecture: { equal: x86_64 }</p>
+<p>type: linux</p>
+<p>distribution: ubuntu</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In this node template, the **msql_compute** node template is marked as
+abstract using the **select** directive. As you can see the resulting
+mysql_compute node template looks very much like the “hello world”
+template as shown in [Chapter
+2.1](file:///C:\Users\Chris\Downloads\hello_world#_A_) but this one also
+allows the TOSCA orchestrator more flexibility when “selecting” a host
+Compute node by providing flexible constraints for properties like
+mem_size.
+
+As we proceed, you will see that TOSCA provides many normative node
+types like Compute for commonly found services (e.g., BlockStorage,
+WebServer, Network, etc.). When these TOSCA normative node types are
+used in your application’s topology they are always assumed to be
+“implementable” by TOSCA Orchestrators which work with target
+infrastructure providers to find or allocate the best match for them
+based upon your application’s requirements and constraints.
+
+## Using a node_filter to define requirements on a database for an application
+
+In the same way requirements can be defined on the hosting
+infrastructure (as shown above) for an application, it is possible to
+express requirements against application or middleware components such
+as a database that is not defined in the same template. The provider may
+then allocate a database by any means, (e.g. using a
+database-as-a-service solution).
+
+Example 13 - An abstract database requirement using a node filter
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template with a TOSCA Orchestrator selectable database
+requirement using a node_filter.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>my_app:</p>
+<p>type: my.types.MyApplication</p>
+<p>properties:</p>
+<p>admin_user: { get_input: admin_username }</p>
+<p>admin_password: { get_input: admin_password }</p>
+<p>db_endpoint_url: { get_property: [SELF,
+<mark>database_endpoint</mark>, url_path ] }</p>
+<p>requirements:</p>
+<p>- <mark>database_endpoint</mark>:</p>
+<p>node: my.types.nodes.MyDatabase</p>
+<p>node_filter:</p>
+<p>properties:</p>
+<p>- db_version: { greater_or_equal: 5.5 }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In the example above, the application my_app requires a database node of
+type MyDatabase which has a db_version property value of
+greater_or_equal to the value 5.5.
+
+This example also shows how the get_property intrinsic function can be
+used to retrieve the url_path property from the database node that will
+be selected by the provider and connected to my_app at runtime due to
+fulfillment of the database_endpoint requirement. To locate the
+property, the get_property’s first argument is set to the keyword SELF
+which indicates the property is being referenced from something in the
+node itself. The second parameter is the name of the requirement named
+**database_endpoint** which contains the property we are looking for.
+The last argument is the name of the property itself (i.e., url_path)
+which contains the value we want to retrieve and assign to
+db_endpoint_url.
+
+The alternative representation, which includes a node template in the
+topology for database that is still selectable by the TOSCA orchestrator
+for the above example, is as follows:
+
+Example 14 - An abstract database node template
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template with a TOSCA Orchestrator selectable database
+using node template.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>my_app:</p>
+<p>type: my.types.MyApplication</p>
+<p>properties:</p>
+<p>admin_user: { get_input: admin_username }</p>
+<p>admin_password: { get_input: admin_password }</p>
+<p>db_endpoint_url: { get_property: [SELF,
+<mark>database_endpoint</mark>, url_path ] }</p>
+<p>requirements:</p>
+<p>- <mark>database_endpoint</mark>: my_abstract_database</p>
+<p>my_abstract_database:</p>
+<p>type: my.types.nodes.MyDatabase</p>
+<p>properties:</p>
+<p>- db_version: { greater_or_equal: 5.5 }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+# Substitution Mapping
+
+## Using node template substitution for model composition
+
+From an application perspective, it is often not necessary or desired to
+dive into platform details, but the platform/runtime for an application
+is abstracted. In such cases, the template for an application can use
+generic representations of platform components. The details for such
+platform components, such as the underlying hosting infrastructure and
+its configuration, can then be defined in separate template files that
+can be used for substituting the more abstract representations in the
+application level template file. Service designers use the substitute
+directive to declare node templates as abstract. At deployment time,
+TOSCA orchestrators are expected to *substitute* abstract node templates
+in a service template before service orchestration can be performed.
+
+### Understanding node template instantiation through a TOSCA Orchestrator
+
+When a topology template is instantiated by a TOSCA Orchestrator, the
+orchestrator has to first look for abstract node templates in the
+topology template. Abstract node templates are node templates that
+include the substitute directive. These abstract node templates must
+then be realized using *substituting service templates* that are
+compatible with the node types specified for each abstract node
+template. Such realizations can either be node types that include the
+appropriate implementation artifacts and deployment artifacts that can
+be used by the orchestrator to bring to life the real-world resource
+modeled by a node template. Alternatively, separate topology templates
+may be annotated as being suitable for realizing a node template in the
+top-level topology template.
+
+In the latter case, a TOSCA Orchestrator will use additional
+substitution mapping information provided as part of the substituting
+topology templates to derive how the substituted part gets “wired” into
+the overall deployment, for example, how capabilities of a node template
+in the top-level topology template get bound to capabilities of node
+templates in the substituting topology template.
+
+Thus, in cases where no “normal” node type implementation is available,
+or the node type corresponds to a whole subsystem that cannot be
+implemented as a single node, additional topology templates can be used
+for filling in more abstract placeholders in top level application
+templates.
+
+### Definition of the top-level service template
+
+The following sample defines a web application web_app connected to a
+database db. In this example, the complete hosting stack for the
+application is defined within the same topology template: the web
+application is hosted on a web server web_server, which in turn is
+installed (hosted) on a compute node server.
+
+The hosting stack for the database db, in contrast, is not defined
+within the same file but only the database is represented as a node
+template of type tosca.nodes.Database. The underlying hosting stack for
+the database is defined in a separate template file, which is shown
+later in this section. Within the current template, only a number of
+properties (user, password, name) are assigned to the database using
+hardcoded values in this simple example.
+
+<img src="media/image15.png" style="width:5.66809in;height:3.50263in" />
+
+Figure 1: Using template substitution to implement a database tier
+
+When a node template is to be substituted by another service template,
+this has to be indicated to an orchestrator by marking he node template
+as abstract using the **substitute** directive. Orchestrators can only
+instantiate abstract node templates by substituting them with a service
+template that consists entirely of concrete nodes. Note that abstract
+node template substitution may need to happen recursively before a
+service template is obtained that consists only of concrete nodes.
+
+Note that in contrast to the use case described in section 2.9.2 (where
+a database was abstractly referred to in the requirements section of a
+node and the database itself was not represented as a node template),
+the approach shown here allows for some additional modeling capabilities
+in cases where this is required.
+
+For example, if multiple components need to use the same database (or
+any other sub-system of the overall service), this can be expressed by
+means of normal relations between node templates, whereas such modeling
+would not be possible in requirements sections of disjoint node
+templates.
+
+Example 15 - Referencing an abstract database node template
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>topology_template:</p>
+<p>description: Template of an application connecting to a database.</p>
+<p>node_templates:</p>
+<p>web_app:</p>
+<p>type: tosca.nodes.WebApplication.MyWebApp</p>
+<p>requirements:</p>
+<p>- host: web_server</p>
+<p>- database_endpoint: <mark>db</mark></p>
+<p>web_server:</p>
+<p>type: tosca.nodes.WebServer</p>
+<p>requirements:</p>
+<p>- host: server</p>
+<p>server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># details omitted for brevity</p>
+<p><mark>db</mark>:</p>
+<p># This node is abstract as specified by the substitute directive</p>
+<p># and must be substituted with a topology provided by another
+template</p>
+<p># that exports a Database type’s capabilities.</p>
+<p>type: tosca.nodes.Database</p>
+<p><strong>directives:</strong></p>
+<p><strong>- substitute</strong></p>
+<p>properties:</p>
+<p>user: my_db_user</p>
+<p>password: secret</p>
+<p>name: my_db_name</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Definition of the database stack in a service template
+
+The following sample defines a template for a database including its
+complete hosting stack, i.e. the template includes a database node
+template, a template for the database management system (dbms) hosting
+the database, as well as a computer node server on which the DBMS is
+installed.
+
+This service template can be used standalone for deploying just a
+database and its hosting stack. In the context of the current use case,
+though, this template can also substitute the database node template in
+the previous snippet and thus fill in the details of how to deploy the
+database.
+
+In order to enable such a substitution, an additional metadata section
+substitution_mappings is added to the topology template to tell a TOSCA
+Orchestrator how exactly the topology template will fit into the context
+where it gets used. For example, requirements or capabilities of the
+node that gets substituted by the topology template have to be mapped to
+requirements or capabilities of internal node templates for allow for a
+proper wiring of the resulting overall graph of node templates.
+
+In short, the substitution_mappings section provides the following
+information:
+
+3.  It defines what node templates, i.e. node templates of which type,
+    can be substituted by the topology template.
+
+4.  It defines how capabilities of the substituted node (or the
+    capabilities defined by the node type of the substituted node
+    template, respectively) are bound to capabilities of node templates
+    defined in the topology template.
+
+5.  It defines how requirements of the substituted node (or the
+    requirements defined by the node type of the substituted node
+    template, respectively) are bound to requirements of node templates
+    defined in the topology template.
+
+<img src="media/image16.png" style="width:5.42175in;height:3.65in" />
+
+Figure 2: Substitution mappings
+
+The substitution_mappings section in the sample below denotes that this
+topology template can be used for substituting node templates of type
+tosca.nodes.Database. It further denotes that the database_endpoint
+capability of the substituted node gets fulfilled by the
+database_endpoint capability of the database node contained in the
+topology template.
+
+Example 16 - Using substitution mappings to export a database
+implementation
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>topology_template:</p>
+<p>description: Template of a database including its hosting stack.</p>
+<p>inputs:</p>
+<p>db_user:</p>
+<p>type: string</p>
+<p>db_password:</p>
+<p>type: string</p>
+<p># other inputs omitted for brevity</p>
+<p>substitution_mappings:</p>
+<p>node_type: tosca.nodes.Database</p>
+<p>capabilities:</p>
+<p>database_endpoint: [ database, database_endpoint ]</p>
+<p>node_templates:</p>
+<p>database:</p>
+<p>type: tosca.nodes.Database</p>
+<p>properties:</p>
+<p>user: { get_input: db_user }</p>
+<p># other properties omitted for brevity</p>
+<p>requirements:</p>
+<p>- host: dbms</p>
+<p>dbms:</p>
+<p>type: tosca.nodes.DBMS</p>
+<p># details omitted for brevity</p>
+<p>server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># details omitted for brevity</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+Note that the substitution_mappings section does not define any mappings
+for requirements of the Database node type, since all requirements are
+fulfilled by other nodes templates in the current topology template. In
+cases where a requirement of a substituted node is bound in the
+top-level service template as well as in the substituting topology
+template, a TOSCA Orchestrator should raise a validation error.
+
+Further note that no mappings for properties or attributes of the
+substituted node are defined. Instead, the inputs and outputs defined by
+the topology template are mapped to the appropriate properties and
+attributes or the substituted node. If there are more inputs than the
+substituted node has properties, default values must be defined for
+those inputs, since no values can be assigned through properties in a
+substitution case.
+
+## Using node template substitution for chaining subsystems
+
+A common use case when providing an end-to-end service is to define a
+chain of several subsystems that together implement the overall service.
+Those subsystems are typically defined as separate service templates to
+(1) keep the complexity of the end-to-end service template at a
+manageable level and to (2) allow for the re-use of the respective
+subsystem templates in many different contexts. The type of subsystems
+may be specific to the targeted workload, application domain, or custom
+use case. For example, a company or a certain industry might define a
+subsystem type for company- or industry specific data processing and
+then use that subsystem type for various end-user services. In addition,
+there might be generic subsystem types like a database subsystem that
+are applicable to a wide range of use cases.
+
+### Defining the overall subsystem chain
+
+Figure 3 shows the chaining of three subsystem types – a message queuing
+subsystem, a transaction processing subsystem, and a databank subsystem
+– that support, for example, an online booking application. On the front
+end, this chain provides a capability of receiving messages for handling
+in the message queuing subsystem. The message queuing subsystem in turn
+requires a number of receivers, which in the current example are two
+transaction processing subsystems. The two instances of the transaction
+processing subsystem might be deployed on two different hosting
+infrastructures or datacenters for high-availability reasons. The
+transaction processing subsystems finally require a database subsystem
+for accessing and storing application specific data. The database
+subsystem in the backend does not require any further component and is
+therefore the end of the chain in this example.
+
+<img src="media/image17.png" style="width:6.25338in;height:2.01994in" />
+
+Figure 3: Chaining of subsystems in a service template
+
+All of the node templates in the service template shown above are
+abstract and considered substitutable where each can be treated as their
+own subsystem; therefore, when instantiating the overall service, the
+orchestrator would realize each substitutable node template using other
+TOSCA service templates. These service templates would include more
+nodes and relationships that include the details for each subsystem. A
+simplified version of a TOSCA service template for the overall service
+is given in the following listing.
+
+Example 17 - Declaring a transaction subsystem as a chain of
+substitutable node templates
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>topology_template:</p>
+<p>description: Template of online transaction processing service.</p>
+<p>node_templates:</p>
+<p>mq:</p>
+<p>type: example.QueuingSubsystem</p>
+<p>directives:</p>
+<p>- substitute</p>
+<p>properties:</p>
+<p># properties omitted for brevity</p>
+<p>capabilities:</p>
+<p>message_queue_endpoint:</p>
+<p># details omitted for brevity</p>
+<p>requirements:</p>
+<p>- receiver: trans1</p>
+<p>- receiver: trans2</p>
+<p>trans1:</p>
+<p>type: example.TransactionSubsystem</p>
+<p>directives:</p>
+<p>- substitute</p>
+<p>properties:</p>
+<p>mq_service_ip: { get_attribute: [ mq, service_ip ] }</p>
+<p>receiver_port: 8080</p>
+<p>capabilities:</p>
+<p>message_receiver:</p>
+<p># details omitted for brevity</p>
+<p>requirements:</p>
+<p>- database_endpoint: dbsys</p>
+<p>trans2:</p>
+<p>type: example.TransactionSubsystem</p>
+<p>directives:</p>
+<p>- substitute</p>
+<p>properties:</p>
+<p>mq_service_ip: { get_attribute: [ mq, service_ip ] }</p>
+<p>receiver_port: 8080</p>
+<p>capabilities:</p>
+<p>message_receiver:</p>
+<p># details omitted for brevity</p>
+<p>requirements:</p>
+<p>- database_endpoint: dbsys</p>
+<p>dbsys:</p>
+<p>type: example.DatabaseSubsystem</p>
+<p>directives:</p>
+<p>- substitute</p>
+<p>properties:</p>
+<p># properties omitted for brevity</p>
+<p>capabilities:</p>
+<p>database_endpoint:</p>
+<p># details omitted for brevity</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+As can be seen in the example above, the subsystems are chained to each
+other by binding requirements of one subsystem node template to other
+subsystem node templates that provide the respective capabilities. For
+example, the receiver requirement of the message queuing subsystem node
+template mq is bound to transaction processing subsystem node templates
+trans1 and trans2.
+
+Subsystems can be parameterized by providing properties. In the listing
+above, for example, the IP address of the message queuing server is
+provided as property mq_service_ip to the transaction processing
+subsystems and the desired port for receiving messages is specified by
+means of the receiver_port property.
+
+If attributes of the instantiated subsystems need to be obtained, this
+would be possible by using the get_attribute intrinsic function on the
+respective subsystem node templates.
+
+### Defining a subsystem (node) type
+
+The types of subsystems that are required for a certain end-to-end
+service are defined as TOSCA node types as shown in the following
+example. Node templates of those node types can then be used in the
+end-to-end service template to define subsystems to be instantiated and
+chained for establishing the end-to-end service.
+
+The realization of the defined node type will be given in the form of a
+whole separate service template as outlined in the following section.
+
+Example 18 - Defining a TransactionSubsystem node type
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>node_types:</p>
+<p>example.TransactionSubsystem:</p>
+<p>properties:</p>
+<p>mq_service_ip:</p>
+<p>type: string</p>
+<p>receiver_port:</p>
+<p>type: integer</p>
+<p>attributes:</p>
+<p>receiver_ip:</p>
+<p>type: string</p>
+<p>receiver_port:</p>
+<p>type: integer</p>
+<p>capabilities:</p>
+<p>message_receiver: tosca.capabilities.Endpoint</p>
+<p>requirements:</p>
+<p>- database_endpoint: tosca.capabilities.Endpoint.Database</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+Configuration parameters that would be allowed for customizing the
+instantiation of any subsystem are defined as properties of the node
+type. In the current example, those are the properties mq_service_ip and
+receiver_port that had been used in the end-to-end service template in
+section 2.11.1.
+
+Observable attributes of the resulting subsystem instances are defined
+as attributes of the node type. In the current case, those are the IP
+address of the message receiver as well as the actually allocated port
+of the message receiver endpoint.
+
+### Defining the details of a subsystem
+
+The details of a subsystem, i.e. the software components and their
+hosting infrastructure, are defined as node templates and relationships
+in a service template. By means of substitution mappings that have been
+introduced in section 2.10.2, the service template is annotated to
+indicate to an orchestrator that it can be used as realization of a node
+template of a certain type, as well as how characteristics of the node
+type are mapped to internal elements of the service template.
+
+<img src="media/image18.png" style="width:5.87076in;height:3.45956in" />
+
+Figure 4: Defining subsystem details in a service template
+
+Figure 1 illustrates how a transaction processing subsystem as outlined
+in the previous section could be defined in a service template. In this
+example, it simply consists of a custom application app of type SomeApp
+that is hosted on a web server websrv, which in turn is running on a
+compute node.
+
+The application named app provides a capability to receive messages,
+which is bound to the message_receiver capability of the substitutable
+node type. It further requires access to a database, so the
+application’s database_endpoint requirement is mapped to the
+database_endpoint requirement of the TransactionSubsystem node type.
+
+Properties of the TransactionSubsystem node type are used to customize
+the instantiation of a subsystem. Those properties can be mapped to any
+node template for which the author of the subsystem service template
+wants to expose configurability. In the current example, the application
+app and the web server middleware websrv get configured through
+properties of the TransactionSubsystem node type. All properties of that
+node type are defined as inputs of the service template. The input
+parameters in turn get mapped to node templates by means of get_input
+function calls in the respective sections of the service template.
+
+Similarly, attributes of the whole subsystem can be obtained from
+attributes of particular node templates. In the current example,
+attributes of the web server and the hosting compute node will be
+exposed as subsystem attributes. All exposed attributes that are defined
+as attributes of the substitutable TransactionSubsystem node type are
+defined as outputs of the subsystem service template.
+
+An outline of the subsystem service template is shown in the listing
+below. Note that this service template could be used for stand-alone
+deployment of a transaction processing system as well, i.e. it is not
+restricted just for use in substitution scenarios. Only the presence of
+the substitution_mappings metadata section in the topology_template
+enables the service template for substitution use cases.
+
+Example 19 - Implementation of a TransactionSubsytem node type using
+substitution mappings
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>topology_template:</p>
+<p>description: Template of a database including its hosting stack.</p>
+<p>inputs:</p>
+<p>mq_service_ip:</p>
+<p>type: string</p>
+<p>description: IP address of the message queuing server to receive
+messages from</p>
+<p>receiver_port:</p>
+<p>type: string</p>
+<p>description: Port to be used for receiving messages</p>
+<p># other inputs omitted for brevity</p>
+<p>substitution_mappings:</p>
+<p>node_type: example.TransactionSubsystem</p>
+<p>capabilities:</p>
+<p>message_receiver: [ app, <mark>message_receiver</mark> ]</p>
+<p>requirements:</p>
+<p>database_endpoint: [ app, <mark>database</mark> ]</p>
+<p>node_templates:</p>
+<p>app:</p>
+<p>type: example.SomeApp</p>
+<p>properties:</p>
+<p># properties omitted for brevity</p>
+<p>capabilities:</p>
+<p><mark>message_receiver</mark>:</p>
+<p>properties:</p>
+<p>service_ip: { get_input: mq_service_ip }</p>
+<p># other properties omitted for brevity</p>
+<p>requirements:</p>
+<p>- <mark>database</mark>:</p>
+<p># details omitted for brevity</p>
+<p>- host: websrv</p>
+<p>websrv:</p>
+<p>type: tosca.nodes.WebServer</p>
+<p>properties:</p>
+<p># properties omitted for brevity</p>
+<p>capabilities:</p>
+<p>data_endpoint:</p>
+<p>properties:</p>
+<p>port_name: { get_input: receiver_port }</p>
+<p># other properties omitted for brevity</p>
+<p>requirements:</p>
+<p>- host: server</p>
+<p>server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># details omitted for brevity</p>
+<p>outputs:</p>
+<p>receiver_ip:</p>
+<p>description: private IP address of the message receiver
+application</p>
+<p>value: { get_attribute: [ server, private_address ] }</p>
+<p>receiver_port:</p>
+<p>description: Port of the message receiver endpoint</p>
+<p>value: { get_attribute: [ app, app_endpoint, port ] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Using node template substitution to provide product choice
+
+Some service templates might include abstract node templates that model
+specific functionality without fully specifying the exact product or
+technology that provides that functionality. The objective of such
+service templates is to allow the end-user of the service to decide *at
+service deployment time* which specific product component to use.
+
+### Defining a service template with vendor-independent component
+
+For example, let’s assume an abstract security service that includes a
+firewall component where the choice of firewall product is left to the
+end-user at service deployment time. The following template shows an
+example of such a service: it includes an abstract firewall node
+template that has a *vendor* property that represents the firewall
+vendor. The value of this property is obtained from a topology input
+variable that allows end-users to specify the desired firewall vendor at
+deployment time.
+
+Defining a security service with a vendor-independent firewall component
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Service template for an abstract security service</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>vendorInput:</p>
+<p>type: string</p>
+<p>rulesInput:</p>
+<p>type: list</p>
+<p>entry_schema: FirewallRules</p>
+<p>node_templates:</p>
+<p>firewall:</p>
+<p>type: abstract.Firewall</p>
+<p>directives:</p>
+<p>- substitute</p>
+<p>properties:</p>
+<p>vendor: { get_input: vendorInput }</p>
+<p>rules: { get_input: rulesInput }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The abstract firewall node type is defined in the following code
+snippet. The abstract firewall node type defines a *rules* property to
+hold the configured firewall rules. In addition, it also defines a
+property for capturing the name of the vendor of the firewall.
+
+Node type defining an abstract firewall component
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template defining an abstract firewall component</p>
+<p>node_types:</p>
+<p>abstract.Firewall:</p>
+<p>derived_from: tosca.nodes.Root</p>
+<p>properties:</p>
+<p>vendor:</p>
+<p>type: string</p>
+<p>rules:</p>
+<p>type: list</p>
+<p>entry_schema: FirewallRules</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Defining vendor-specific component options
+
+In the above example, the firewall node template is abstract, which
+means that it needs to be substituted with a substituting firewall
+template. Let’s assume we have two firewall vendors—ACME Firewalls and
+Simple Firewalls—who each provide implementations for the abstract
+firewall component. Their respective implementations are defined in
+vendor-specific service templates. ACME Firewall’s service template
+might look as follows:
+
+Service template for an ACME firewall
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Service template for an ACME firewall</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>rulesInput:</p>
+<p>type: list</p>
+<p>entry_schema: FirewallRules</p>
+<p>substitution_mappings:</p>
+<p>node_type: abstract.Firewall</p>
+<p>properties:</p>
+<p>rules: [ rulesInput ]</p>
+<p>node_templates:</p>
+<p>acme:</p>
+<p>type: ACMEFirewall</p>
+<p>properties:</p>
+<p>rules: { get_input: rulesInput }</p>
+<p>acmeConfig: # any ACME-specific properties go here.</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In this example the node type ACMEFirewall is an ACME-specific node type
+that models the internals of the ACME firewall product. The ACMEFirewall
+node type definition is omitted here for brevity since it is not
+relevant for the example.
+
+Similarly, Simple Firewall’s service template looks as follows:
+
+Service template for a Simple Firewall
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Service template for a Simple Corp. firewall</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>rulesInput:</p>
+<p>type: list</p>
+<p>entry_schema: FirewallRules</p>
+<p>substitution_mappings:</p>
+<p>node_type: abstract.Firewall</p>
+<p>properties:</p>
+<p>rules: [ rulesInput ]</p>
+<p>node_templates:</p>
+<p>acme:</p>
+<p>type: SimpleFirewall</p>
+<p>properties:</p>
+<p>rules: { get_input: rulesInput }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+As the substitution mappings section in the service templates show,
+either firewall service template can be used to implement the abstract
+firewall component defined above.
+
+### Substitution matching using substitution filters
+
+Since both the ACME Firewall and the Simple Firewall can substitute for
+abstract node templates of type abstract.Firewall, either firewall is a
+valid candidate to substitute the abstract firewall node template. When
+multiple matching templates are available, the orchestrator must provide
+mechanisms to allow the end-user to drive the decision about which
+matching template must be selected.
+
+TOSCA uses a **substitution_filter** in the substitution mappings
+section of a service template to further constrain the abstract nodes
+for which a service template can be a valid substitution. Using
+substitution filters, a service template is a valid candidate to
+substitute an abstract node template if the following two conditions are
+met:
+
+6.  The **type** advertised in the substitution_mappings section of the
+    service template matches the type of the abstract node template.
+
+7.  The property values of the abstract node template satisfy the
+    constraints defined in the **substitution_filtter** of the
+    substituting service template.
+
+In the security service example used in this section, the value of the
+*vendor* property of the abstract firewall node template is provide by
+the end-user using a topology input parameter. Substituting templates
+use a substitution_filter to match the appropriate vendor-specific
+service templates with the abstract firewall node template based on the
+value of the *vendor* property.
+
+The following code snippet shows an updated version of the ACME Firewall
+service template. This version includes a substitution_filter that
+specifies that this service template only matches abstract firewall
+nodes with a vendor property equal to ‘ACME’.
+
+Service template for an ACME firewall with a substitution filter
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Service template for an ACME firewall</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>rulesInput:</p>
+<p>type: list</p>
+<p>entry_schema: FirewallRules</p>
+<p>substitution_mappings:</p>
+<p>node_type: abstract.Firewall</p>
+<p>substitution_filter:</p>
+<p>properties:</p>
+<p>vendor: { equal: ACME }</p>
+<p>properties:</p>
+<p>rules: [ rulesInput ]</p>
+<p>node_templates:</p>
+<p>acme:</p>
+<p>type: ACMEFirewall</p>
+<p>properties:</p>
+<p>rules: { get_input: rulesInput }</p>
+<p>acmeConfig: # any ACME-specific properties go here.</p></td>
+</tr>
+</tbody>
+</table>
+
+Similarly, an updated service template for Simple Corp’s firewall looks
+as follows:
+
+Service template for a Simple firewall with a substitution filter
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Service template for a Simple Corp. firewall</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>rulesInput:</p>
+<p>type: list</p>
+<p>entry_schema: FirewallRules</p>
+<p>substitution_mappings:</p>
+<p>node_type: abstract.Firewall</p>
+<p>substitution_filter:</p>
+<p>properties:</p>
+<p>vendor: { equal: Simple }</p>
+<p>properties:</p>
+<p>rules: [ rulesInput ]</p>
+<p>node_templates:</p>
+<p>acme:</p>
+<p>type: SimpleFirewall</p>
+<p>properties:</p>
+<p>rules: { get_input: rulesInput }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+As specified in this example, only abstract firewall node templates that
+have the *vendor* property set to ‘Simple’ can be substituted by this
+service template.
+
+## Abstract nodes and target node filters matching
+
+This section details the matching or orchestrator’s node selection
+mechanisms that is mentioned and explained from user point of view in
+section 2.9 of the specification.
+
+When a user defines a service template, some of the nodes within the
+service templates are not implemented (abstract) and some requirements
+may define some node filters target rather than actual abstract node
+templates. In order to deploy such service templates, the orchestrator
+has to find a valid fulfillment and implementation available on the
+deployment target in order to be able to actually instantiate the
+various elements of the template.
+
+The goal of this **non-normative** chapter is to provide non-exclusive
+insight into possible orchestrator behavior to provide fulfillment of
+abstract nodes and dangling requirements within a TOSCA template.
+
+### Reminder on types
+
+TOSCA allows the definition of types that can later be used within
+templates. Types can be of two nature on regard of the matching process:
+
+- **Abstract types** that have no implementation specified and that can
+  be used within a Topology template in order to request the
+  orchestrator to find a valid implementation (for example an abstract
+  tosca.nodes.Compute type can be used to define a template to request a
+  VM from an orchestrator without any specific knowledge on the
+  implementation, allowing that way portability).
+
+- **Concrete types** that are implemented through TOSCA implementation
+  artifacts (shell scripts, python scripts etc.) or through the mean of
+  a Topology substitution.
+
+Both abstract and concrete types define properties (and capabilities
+properties) that can be used for two different means:
+
+- **Configuration** of the node and of its behavior (most likely used in
+  concrete types).
+
+- **Matching** purpose (most likely used for abstract types).
+
+This section will focus on the matching process while configuration
+properties is mostly related to types design.
+
+### Orchestrator catalogs
+
+Most of orchestrators are likely to have internal catalogs of TOSCA
+types, pre-defined templates, internal implementation of nodes (either
+through concrete types, substitution mechanisms, potentially supported
+by non-normative workflow definitions etc.) and maybe even running
+instances (services).
+
+Theses catalogs are not normative, and it is up to the TOSCA
+implementation to support some or all of them. During matching the TOSCA
+orchestrator may find a valid match for a template within any of it’s
+internal catalogs or through any other mean.
+
+This section will consider and provide examples based on the three
+following catalogs (they may or may not be used in actual
+implementations):
+
+- **Type catalog:** Basic internal catalog but not the most intuitive
+  candidate for node matching. It contains:
+
+- abstract node types
+
+- concrete node types implemented through implementation artifacts.
+
+- concrete node types implemented through topology substitution.
+
+- **Pre-defined node template catalog**: This is the catalog that is the
+  most likely to be used for matching, it may contain:
+
+- Orchestrator Provider pre-defined node templates offered to its user
+  eventually backed up with orchestrator specific implementations (that
+  may delegate to non-tosca internal components).
+
+- User defined node templates implemented through implementation
+  artifacts.
+
+- User defined node templates implemented through topology substitution.
+
+- **Running instance/Services catalog**: Catalog of already running
+  services available for matching that contains some definition of TOSCA
+  instances.
+
+### Abstract node template matching
+
+A TOSCA topology template as defined by a user will probably define some
+abstract node templates. A node template is considered abstract if it is
+based on an abstract type and does not provides implementation at the
+template level. As instantiating an abstract node cannot be done by an
+orchestrator, the orchestrator will have to perform internally the
+replacement of the defined abstract node template's types by a matching
+implementation of the type.
+
+**A type** is considered as a valid matching implementation if it
+fulfils all of the following conditions:
+
+- The matching node derives from the type specified in the template
+
+- Every property defined in the matching node is matching the constraint
+  specified on the node template's properties or capability properties
+  given the following rules:
+
+- A property that is defined in the node template (either through a
+  value at the template level or through a default property value at the
+  type level) should be match the constraint defined on the matching
+  node type property.
+
+- A property that is not defined in the node template may have no or any
+  value (matching the node type property definition constraints) in the
+  orchestrator matched node.
+
+**A pre-defined template** is considered as a valid matching
+implementation if it fulfils all of the following conditions:
+
+- The orchestrator pre-defined matching node derives from the type
+  specified in the topology template's node
+
+- Every property defined in the orchestrator pre-defined matching node
+  is matching the constraint specified on the node template's properties
+  or capability properties given the following rules:
+
+- A property that is defined in the node template (either through a
+  value at the template level or through a default property value at the
+  type level) should be matched by an equality constraint
+
+- A property that is not defined in the node template may have no or any
+  value (matching the node type property definition constraints) in the
+  orchestrator matched node.
+
+**A running instance (service)** is considered as a valid matching
+implementation if it fulfils all of the following conditions:
+
+- The node instance has a type that equals or derives from the type
+  specified in the topology template's node
+
+- Every attribute defined in the orchestrator instance node is matching
+  the constraint specified on the node template's properties or
+  capability properties given the following rules:
+
+- A property that is defined in the node template (either through a
+  value at the template level or through a default property value at the
+  type level) should be matched by an equality constraint against the
+  attribute value.
+
+- A property that is not defined in the node template may have no or any
+  value (matching the node type property definition constraints) in
+  instance node.
+
+Note that the node instance that defines the running instance/service
+can be actually a full topology that propose a node abstraction through
+the topology substitution mechanism.
+
+**Multiple valid matches:** If the orchestrator has more than one valid
+match in its catalog(s) he is responsible for either choosing
+automatically a node or providing a mean for users to specify the node
+they want to select.
+
+**No match:** If the orchestrator does not find any valid match, he
+could propose alternative that he consider valid but should not
+automatically deploy the topology without an explicit user approval.
+
+Note: These rules are the basic matching rules of TOSCA, however if an
+orchestrator has a UI and want to propose other matching nodes that does
+not fulfil all of these constraints he can still do that even if he
+should warn the user that the deployed template will not be the same
+template as defined. For example, an orchestrator could propose a node
+with greater than CPU rather than an equal match or propose an
+equivalent node (with different type) that has the same capabilities as
+the ones connected by the node in the topology.
+
+Note: Support of instances matching may impact the TOSCA workflow and
+lifecycle as their operations will not be included in the workflow
+(instances are already created).
+
+#### Examples
+
+Let's consider a few examples of abstract node templates and how they
+can be matched against an orchestrator catalog(s). Note that the type
+catalog is not the only catalog in which to find implementation. Most
+orchestrator will probably have an internal provider templates catalog
+that includes pre-defined templates. None of the catalog is required to
+be a valid TOSCA implementation and the following are just examples for
+orchestrator implementers but is not required to be implemented.
+
+##### Matching from a type catalog
+
+Let's consider the following node types in an orchestrator internal type
+catalog.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>node_types:</p>
+<p>tosca.samples.nodes.MyAbstractNode:</p>
+<p>derived_from: tosca.nodes.Root</p>
+<p>properties:</p>
+<p>str_prop:</p>
+<p>type: string</p>
+<p>nbr_prop:</p>
+<p>type: integer</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+MyAbstractNode is an abstract type as Root does not define any
+implementation and the defined node neither.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_types:</p>
+<p>tosca.samples.nodes.MyNodeImpl1:</p>
+<p>derived_from: tosca.samples.nodes.MyAbstractNode</p>
+<p>properties:</p>
+<p>nbr_prop :</p>
+<p>constraints:</p>
+<p>- greater_or_equal: 1</p>
+<p>interfaces:</p>
+<p>standard:</p>
+<p>create: test.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+MyNodeImpl1 is an implementation (through the test.sh script) of
+MyAbstractNode that requires the nbr_prop property to be higher than 1.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>node_types:</p>
+<p>tosca.samples.nodes.MyNodeImpl2:</p>
+<p>derived_from: tosca.samples.nodes.MyAbstractNode</p>
+<p>properties:</p>
+<p>nbr_prop :</p>
+<p>constraints:</p>
+<p>- greater_or_equal: 25</p>
+<p>interfaces:</p>
+<p>standard:</p>
+<p>create: test2.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+MyNodeImpl2 is an implementation (through the test2.sh script) of
+MyAbstractNode that requires the nbr_prop property to be higher than 25.
+
+Let's consider the following topology template that a user wants to
+deploy:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_node:</p>
+<p>type: tosca.samples.MyAbstractNode</p>
+<p>properties:</p>
+<p>str_prop: standard</p>
+<p>nbr_prop: 10</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The specified node template (my_node) is an abstract node template as
+its type is abstract and it does not add any implementation. Before
+being able to deploy this template, a TOSCA orchestrator will have to
+find a valid match for this node. In order to do so it will look into
+its catalog (in this example the type catalog) and try to find nodes
+that matches the definition.
+
+In this example while both MyNodeImpl1 and MyNodeImpl2 have a valid type
+as they derive from MyAbstractNode only MyNodeImpl1 is a valid match as
+the constraint defined on the nbr_prop property of the MyNodeImpl2 node
+type (greater_or_equal: 25) is not matching the property value defined
+in the requested node template (10).
+
+##### Matching from a pre-defined template catalog
+
+This example details how a tosca.nodes.Compute abstract node can be
+matched to a specific pre-defined template that an orchestrator may
+have. First of all, the orchestrator will probably define a concrete
+implementation of the Compute node. So, let's consider the following
+example type
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>node_types:</p>
+<p>tosca.samples.nodes.MyCloudCompute:</p>
+<p>derived_from: tosca.nodes.Compute</p>
+<p>properties:</p>
+<p>image_id:</p>
+<p>type: string</p>
+<p>required: true</p>
+<p>flavor_id:</p>
+<p>type: string</p>
+<p>required: true</p>
+<p>interfaces:</p>
+<p>standard:</p>
+<p>create: create.py</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+This type adds two properties to the Compute node so the orchestrator
+knows which image_id and flavor_id are used to instantiate the VM.
+Implementation is simplified here and just a single python script is
+enough.
+
+Note: an orchestrator provider can define internally some non-portable
+implementations of types that will be supported only by the latter. As
+the user defines an abstract node its template is portable even if the
+execution is specific to the orchestrator.
+
+Let's now consider that the orchestrator has defined some internal node
+template in its own pre-defined templates or provider catalog (note that
+this is orchestrator specific and this specification has no intent on
+defining how the orchestrator should manage, import or support its
+internal catalogs).
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>node_templates:</p>
+<p>small_ubuntu:</p>
+<p>type: tosca.samples.nodes.MyCloudCompute</p>
+<p>properties:</p>
+<p>image_id: ubuntu</p>
+<p>flavor_id: small</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>num_cpus: 1</p>
+<p>cpu_frequency: 1 GHz</p>
+<p>disk_size: 15 GiB</p>
+<p>mem_size: 2 GiB</p>
+<p>os:</p>
+<p>type: linux</p>
+<p>distribution: ubuntu</p>
+<p>large_ubuntu:</p>
+<p>type: tosca.samples.nodes.MyCloudCompute</p>
+<p>properties:</p>
+<p>image_id: ubuntu</p>
+<p>flavor_id: small</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>num_cpus: 4</p>
+<p>cpu_frequency: 2 GHz</p>
+<p>disk_size: 15 GiB</p>
+<p>mem_size: 8 GiB</p>
+<p>os:</p>
+<p>type: linux</p>
+<p>distribution: ubuntu</p>
+<p>large_windows:</p>
+<p>type: tosca.samples.nodes.MyCloudCompute</p>
+<p>properties:</p>
+<p>image_id: ubuntu</p>
+<p>flavor_id: small</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>num_cpus: 4</p>
+<p>cpu_frequency: 2 GHz</p>
+<p>disk_size: 15 GiB</p>
+<p>mem_size: 8 GiB</p>
+<p>os:</p>
+<p>type: windows</p>
+<p>distribution: server</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+If a user defines the following template:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_node:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>num_cpus: 1</p>
+<p>mem_size: 2 GiB</p>
+<p>os:</p>
+<p>distribution: Ubuntu</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The orchestrator will select the small_ubuntu pre-defined template as a
+valid match. The image_id and flavor_id properties are internal to the
+orchestrator.
+
+### Target node filter matching
+
+In addition to matching abstract nodes, an orchestrator also has to find
+matches for dangling requirements. Target node filter (also referred as
+dangling requirements) matching provides loose coupling as you may
+specify a request on any node that provides a capability rather than a
+specific node.
+
+A dangling requirement is defined on the requirement section of a node
+template, it instruct the orchestrator how to find a valid node template
+to add and connect in the topology. The node added by the orchestrator
+as a relationship target is matched based on the following rules.
+
+**A type** is considered as a valid matching implementation if it
+fulfils all of the following conditions:
+
+- The selected node must define a capability with the same type as
+  specified by the dangling requirement or with a type that derive from
+  the specified type.
+
+- If the *node* property is specified on the dangling requirement, then
+  the type of the matched node must derive from the requested type
+
+- The node filter constraints defined on the dangling requirement are
+  compatible with the candidate node type properties constraints and
+  default values.
+
+- **A pre-defined template** is considered as a valid matching
+  implementation if it fulfils all of the following conditions:
+
+- The orchestrator pre-defined node defines a capability with the same
+  type as specified by the dangling requirement or with a type that
+  derive from the specified type.
+
+- If the *node* property is specified on the dangling requirement, then
+  the type of the orchestrator pre-defined node must derive from the
+  requested type
+
+- The node filter constraints defined on the dangling requirement are
+  matched by the pre-defined template properties values.
+
+**A running instance (service)** is considered as a valid matching
+implementation if it fullfills all of the following conditions:
+
+- The orchestrator pre-defined node defines a capability with the same
+  type as specified by the dangling requirement or with a type that
+  derive from the specified type.
+
+- If the *node* property is specified on the dangling requirement, then
+  the type of the node instance must derive from the requested type
+
+- The node filter constraints defined on the dangling requirement are
+  matched by the node instance current attribute values
+
+A property that is not defined in the node template may have no or any
+value (matching the node type property definition constraints) in
+instance node.
+
+#### Examples
+
+##### Matching a node filter target against a type catalog
+
+Let’s consider the following nodes in a type catalog:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>capability_types:</p>
+<p>tosca.samples.capabilities.MyMessagingEndpoint :</p>
+<p>derived_from: tosca.capabilities.Endpoint</p>
+<p>properties:</p>
+<p>throughput :</p>
+<p>type: integer</p>
+<p>required: true</p>
+<p>tosca.samples.capabilities.MyLimitedMessagingEndpoint :</p>
+<p>derived_from: tosca.samples.capabilities.MyMessagingEndpoint</p>
+<p>properties:</p>
+<p>throughput :</p>
+<p>type: integer</p>
+<p>required: true</p>
+<p>constraints:</p>
+<p>- lower_than: 5</p>
+<p>node_types:</p>
+<p>tosca.samples.nodes.MyNode :</p>
+<p>derived_from: tosca.nodes.Root</p>
+<p>requirements: tosca.samples.capabilities.MyMessagingEndpoint</p>
+<p>interfaces:</p>
+<p>standard:</p>
+<p>create: install.sh</p>
+<p>tosca.samples.nodes.MyAbstractMessagingSystem:</p>
+<p>derived_from: tosca.nodes.Root</p>
+<p>properties:</p>
+<p>scaling:</p>
+<p>type: string</p>
+<p>required: true</p>
+<p>constraints:</p>
+<p>- valid_values: [ “auto”, ”manual”, “none” ]</p>
+<p>highly_available :</p>
+<p>type: boolean</p>
+<p>required: true</p>
+<p>capabilities:</p>
+<p>messaging: tosca.samples.capabilities.MyMessagingEndpoint</p>
+<p>tosca.samples.nodes.MyMessagingServiceSystem:</p>
+<p>derived_from: tosca.samples.nodes.MyAbstractMessagingSystem</p>
+<p>properties:</p>
+<p>scaling :</p>
+<p>type: string</p>
+<p>required: true</p>
+<p>constraints:</p>
+<p>- valid_values: [ “manual”]</p>
+<p>highly_available:</p>
+<p>constraints:</p>
+<p>- equal: true</p>
+<p>interfaces:</p>
+<p>standard:</p>
+<p>create: create.py</p>
+<p>tosca.samples.nodes.MyMessagingSystem:</p>
+<p>derived_from: tosca.samples.nodes.MyAbstractMessagingSystem</p>
+<p>properties:</p>
+<p>scaling :</p>
+<p>type: string</p>
+<p>required: true</p>
+<p>constraints:</p>
+<p>- valid_values: [ “none”]</p>
+<p>highly_available:</p>
+<p>constraints:</p>
+<p>- equal: false</p>
+<p>capabilities:</p>
+<p>messaging: tosca.samples.capabilities.MyLimitedMessagingEndpoint</p>
+<p>interfaces:</p>
+<p>standard:</p>
+<p>create: install.sh</p>
+<p>start: start.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+And the following user template to deploy:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_node:</p>
+<p>type: tosca.samples.nodes.MyNode</p>
+<p>requirements:</p>
+<p>- messaging:</p>
+<p>node: tosca.samples.nodes.MyAbstractMessagingSystem</p>
+<p>node_filter:</p>
+<p>properties:</p>
+<p>- scaling: { valid_values: [manual, auto] }</p>
+<p>- highly_available: { equal: true }</p>
+<p>capabilities:</p>
+<p>- tosca.samples.capabilities.MyMessagingEndpoint:</p>
+<p>properties:</p>
+<p>- throughput: { greater_than: 10 }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In order to fulfill the messaging endpoint target the orchestrator will
+have to add a node template from a type that derives from
+MyAbstractMessagingSystem (as specified within the node filter node
+property) and that defines constraints that are compatible with the ones
+specified on the node filter.
+
+In the defined type catalog, the only type that fulfill all constraints
+is the MyMessagingServiceSystem node.
+
+##### Matching a node filter target against a type catalog with substitution
+
+TOSCA allows the definition of a type implementation through a
+substitution template. In this case the specified topology templates
+becomes a type in the catalog. From this type an orchestrator may define
+some pre-defined templates or even running services if instanciated. In
+the following example we will consider the same user template as in the
+previous example as well as the same abstract types. However, the
+implemented type will be defined through the following topology
+template:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># Nodes in this topology can be configured to enable auto-scaling or
+not</p>
+<p>scaling_input :</p>
+<p>type: string</p>
+<p>required: true</p>
+<p>constraints:</p>
+<p>- valid_values: [ “auto”, “none” ]</p>
+<p> </p>
+<p>substitution_mappings:</p>
+<p>node_type: tosca.samples.nodes.MyAbstractMessagingSystem</p>
+<p>properties:</p>
+<p>scaling: [ scaling_input ]</p>
+<p>highly_available: true</p>
+<p>capabilities:</p>
+<p>messaging : [ my_load_balancer, load_balanced_messaging_endpoint]</p>
+<p>node_templates:</p>
+<p>my_load_balancer:</p>
+<p>type: tosca.samples.nodes.MyLoadBalancer</p>
+<p>capability:</p>
+<p>load_balanced_messaging_endpoint:
+tosca.samples.capabilities.MyMessagingEndpoint</p>
+<p>my_other_node_that_trigger_a_service_somewhere:</p>
+<p>type: org.custom.Type</p>
+<p>properties:</p>
+<p>my_scaling_info: get_input { scaling }</p>
+<p>my_other_node:</p>
+<p>type: org.something.Type:</p>
+<p>properties:</p>
+<p>my_other_scaled_prop: get_input { scaling }</p>
+<p>another_prop: value</p>
+<p>… other nodes templates</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+This template from a substitution boundaries point of view would be
+equivalent to the following node type:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>node_type:</p>
+<p>my_node_resulting_from_topology</p>
+<p># From topology_template -&gt; substitution_mappings -&gt;
+node_type</p>
+<p>derived_from: tosca.samples.nodes.MyAbstractMessagingSystem</p>
+<p>properties:</p>
+<p>scaling :</p>
+<p>constraints:</p>
+<p>- valid_values: [ “auto”, “none” ]</p>
+<p>highly_available:</p>
+<p>default: true</p>
+<p>constraints:</p>
+<p>- equal: true</p>
+<p># Equivalent:</p>
+<p># implementation: The topology specified above</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In this example the orchestrator can select the topology template
+specified above as a valid match for the requested target node filter.
+
+### Post matching properties
+
+It is possible that, even after matching, some properties have unset
+values, moreover some properties may be added by the type that is
+selected by the orchestrator and derives from the user requested type.
+In any case an orchestrator should not deploy a node that has some
+required properties undefined.
+
+Based on the orchestrator capabilities it could be possible to assign
+values to the properties (either required or not required) of the node
+after the matching, including properties added by the selected
+implementation node. Note that these capabilities are not mandatory and
+that as properties depends from the actual result of the matching it is
+not possible to ship them with the template. Therefore, there is no
+standard for defining theses additional properties and the mean of
+providing them will be specific to the orchestrator implementation.
+
+# TOSCA Policies
+
+This section is **non-normative** and describes the approach TOSCA plans
+to take for policy description with TOSCA Service Templates. In
+addition, it explores how existing TOSCA Policy Types and definitions
+might be applied in the future to express operational policy use cases.
+
+## Grouping node templates
+
+In designing applications composed of several interdependent software
+components (or nodes) it is often desirable to manage these components
+as a named group. This can provide an effective way of associating
+policies (e.g., scaling, placement, security or other) that
+orchestration tools can apply to all the components of group during
+deployment or during other lifecycle stages.
+
+In many realistic scenarios it is desirable to include scaling
+capabilities into an application to be able to react on load variations
+at runtime. The example below shows the definition of a scaling web
+server stack, where a variable number of servers with apache installed
+on them can exist, depending on the load on the servers.
+
+Example 20 - Grouping Node Templates for possible policy application
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template for a scaling web server.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>apache:</p>
+<p>type: tosca.nodes.WebServer.Apache</p>
+<p>properties:</p>
+<p># Details omitted for brevity</p>
+<p>requirements:</p>
+<p>- host: server</p>
+<p>server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p># details omitted for brevity</p>
+<p>groups:</p>
+<p>webserver_group:</p>
+<p>type: tosca.groups.Root</p>
+<p>members: [ apache, server ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+The example first of all uses the concept of grouping to express which
+components (node templates) need to be scaled as a unit – i.e. the
+compute nodes and the software on-top of each compute node. This is done
+by defining the webserver_group in the groups section of the template
+and by adding both the apache node template and the **server** node
+template as a member to the group.
+
+Furthermore, a scaling policy is defined for the group to express that
+the group as a whole (i.e. pairs of **server** node and the **apache**
+component installed on top) should scale up or down under certain
+conditions.
+
+In cases where no explicit binding between software components and their
+hosting compute resources is defined in a template, but only
+requirements are defined as has been shown in section 2.9, a provider
+could decide to place software components on the same host if their
+hosting requirements match, or to place them onto different hosts.
+
+It is often desired, though, to influence placement at deployment time
+to make sure components get collocation or anti-collocated. This can be
+expressed via grouping and policies as shown in the example below.
+
+Example 21 - Grouping nodes for anti-colocation policy application
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Template hosting requirements and placement policy.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p># omitted here for brevity</p>
+<p>node_templates:</p>
+<p>wordpress_server:</p>
+<p>type: tosca.nodes.WebServer</p>
+<p>properties:</p>
+<p># omitted here for brevity</p>
+<p>requirements:</p>
+<p>- host:</p>
+<p># Find a Compute node that fulfills these additional filter reqs.</p>
+<p>node_filter:</p>
+<p>capabilities:</p>
+<p>- host:</p>
+<p>properties:</p>
+<p>- mem_size: { greater_or_equal: 512 MB }</p>
+<p>- disk_size: { greater_or_equal: 2 GB }</p>
+<p>- os:</p>
+<p>properties:</p>
+<p>- architecture: x86_64</p>
+<p>- type: linux</p>
+<p>mysql:</p>
+<p>type: tosca.nodes.DBMS.MySQL</p>
+<p>properties:</p>
+<p># omitted here for brevity</p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>node: tosca.nodes.Compute</p>
+<p>node_filter:</p>
+<p>capabilities:</p>
+<p>- host:</p>
+<p>properties:</p>
+<p>- disk_size: { greater_or_equal: 1 GB }</p>
+<p>- os:</p>
+<p>properties:</p>
+<p>- architecture: x86_64</p>
+<p>- type: linux</p>
+<p>groups:</p>
+<p>my_co_location_group:</p>
+<p>type: tosca.groups.Root</p>
+<p>members: [ wordpress_server, mysql ]</p>
+<p>policies:</p>
+<p>- my_anti_collocation_policy:</p>
+<p>type: my.policies.anticolocateion</p>
+<p>targets: [ my_co_location_group ]</p>
+<p># For this example, specific policy definitions are considered</p>
+<p># domain specific and are not included here</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+In the example above, both software components **wordpress_server** and
+**mysql** have similar hosting requirements. Therefore, a provider could
+decide to put both on the same server as long as both their respective
+requirements can be fulfilled. By defining a group of the two components
+and attaching an anti-collocation policy to the group it can be made
+sure, though, that both components are put onto different hosts at
+deployment time.
+
+## A declarative approach
+
+TOSCA Policies are a type of requirement that govern use or access to
+resources which can be expressed independently from specific
+applications (or their resources) and whose fulfillment is not
+discretely expressed in the application’s topology (i.e., via TOSCA
+Capabilities).
+
+TOSCA deems it not desirable for a declarative model to encourage
+external intervention for resolving policy issues (i.e., via imperative
+mechanisms external to the Cloud). Instead, the Cloud provider is deemed
+to be in the best position to detect when policy conditions are
+triggered, analyze the affected resources and enforce the policy against
+the allowable actions declared within the policy itself.
+
+### Declarative considerations
+
+- Natural language rules are not realistic, too much to represent in our
+  specification; however, regular expressions can be used that include
+  simple operations and operands that include symbolic names for TOSCA
+  metamodel entities, properties and attributes.
+
+- Complex rules can actually be directed to an external policy engine
+  (to check for violation) returns true\|false then policy says what to
+  do (trigger or action).
+
+- Actions/Triggers could be:
+
+- Autonomic/Platform corrects against user-supplied criteria
+
+- External monitoring service could be utilized to monitor policy
+  rules/conditions against metrics, the monitoring service could
+  coordinate corrective actions with external services (perhaps Workflow
+  engines that can analyze the application and interact with the TOSCA
+  instance model).
+
+## Consideration of Event, Condition and Action 
+
+## Types of policies
+
+Policies typically address two major areas of concern for customer
+workloads:
+
+**Access Control** – assures user and service access to controlled
+resources are governed by rules which determine general access
+permission (i.e., allow or deny) and conditional access dependent on
+other considerations (e.g., organization role, time of day, geographic
+location, etc.).
+
+**Placement** – assures affinity (or anti-affinity) of deployed
+applications and their resources; that is, what is allowed to be placed
+where within a Cloud provider’s infrastructure.
+
+- **Quality-of-Service** (and continuity) - assures performance of
+  software components (perhaps captured as quantifiable, measure
+  components within an SLA) along with consideration for scaling and
+  failover.
+
+### Access control policies
+
+Although TOSCA Policy definitions could be used to express and convey
+access control policies, definitions of policies in this area are out of
+scope for this specification. At this time, TOSCA encourages
+organizations that already have standards that express policy for access
+control to provide their own guidance on how to use their standard with
+TOSCA.
+
+### Placement policies
+
+- There must be control mechanisms in place that can be part of these
+  patterns that accept governance policies that allow control
+  expressions of what is allowed when placing, scaling and managing the
+  applications that are enforceable and verifiable in Cloud.
+
+- 
+
+- These policies need to consider the following:
+
+- Regulated industries need applications to control placement
+  (deployment) of applications to different countries or regions (i.e.,
+  different logical geographical boundaries).
+
+#### Placement for governance concerns
+
+In general, companies and individuals have security concerns along with
+general “loss of control” issues when considering deploying and hosting
+their highly valued application and data to the Cloud. They want to
+control placement perhaps to ensure their applications are only placed
+in datacenter they trust or assure that their applications and data are
+not placed on shared resources (i.e., not co-tenanted).
+
+In addition, companies that are related to highly regulated industries
+where compliance with government, industry and corporate policies is
+paramount. In these cases, having the ability to control placement of
+applications is an especially significant consideration and a
+prerequisite for automated orchestration.
+
+#### Placement for failover
+
+Companies realize that their day-to-day business must continue on
+through unforeseen disasters that might disable instances of the
+applications and data at or on specific data centers, networks or
+servers. They need to be able to convey placement policies for their
+software applications and data that mitigate risk of disaster by
+assuring these cloud assets are deployed strategically in different
+physical locations. Such policies need to consider placement across
+geographic locations as wide as countries, regions, datacenters, as well
+as granular placement on a network, server or device within the same
+physical datacenter. Cloud providers must be able to not only enforce
+these policies but provide robust and seamless failover such that a
+disaster’s impact is never perceived by the end user.
+
+### Quality-of-Service (QoS) policies
+
+Quality-of-Service (apart from failover placement considerations)
+typically assures that software applications and data are available and
+performant to the end users. This is usually something that is
+measurable in terms of end-user responsiveness (or response time) and
+often qualified in SLAs established between the Cloud provider and
+customer. These QoS aspects can be taken from SLAs and legal agreements
+and further encoded as performance policies associated with the actual
+applications and data when they are deployed. It is assumed that Cloud
+provider is able to detect high utilization (or usage load) on these
+applications and data that deviate from these performance policies and
+is able to bring them back into compliance.
+
+## Policy relationship considerations
+
+- Performance policies can be related to scalability policies.
+  Scalability policies tell the Cloud provider exactly **how** to scale
+  applications and data when they detect an application’s performance
+  policy is (or about to be) violated (or triggered).
+
+- Scalability policies in turn are related to placement policies which
+  govern **where** the application and data can be scaled to.
+
+- There are general “tenant” considerations that restrict what resources
+  are available to applications and data based upon the contract a
+  customer has with the Cloud provider. This includes other constraints
+  imposed by legal agreements or SLAs that are not encoded
+  programmatically or associated directly with actual application or
+  data..
+
+## Use Cases
+
+This section includes some initial operation policy use cases that we
+wish to describe using the TOSCA metamodel. More policy work will be
+done in future versions of the TOSCA specification.
+
+### Placement
+
+#### Use Case 1: Simple placement for failover
+
+##### Description
+
+This use case shows a failover policy to keep at least 3 copies running
+in separate containers. In this simple case, the specific containers to
+use (or name is not important; the Cloud provider must assure placement
+separation (anti-affinity) in three physically separate containers.
+
+##### Features
+
+This use case introduces the following policy features:
+
+- Simple separation on different “compute” nodes (up to discretion of
+  provider).
+
+- Simple separation by region (a logical container type) using an
+  allowed list of region names relative to the provider.
+
+- Also, shows that set of allowed “regions” (containers) can be greater
+  than the number of containers requested.
+
+##### Logical Diagram
+
+Sample YAML: Compute separation
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>failover_policy_1:</p>
+<p>type: tosca.policy.placement.Antilocate</p>
+<p>description: My placement policy for Compute node separation</p>
+<p>properties:</p>
+<p># 3 diff target containers</p>
+<p>container_type: Compute</p>
+<p>container_number: 3</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### Notes
+
+- There may be availability (constraints) considerations especially if
+  these policies are applied to “clusters”.
+
+- There may be future considerations for controlling max \# of instances
+  per container.
+
+#### Use Case 2: Controlled placement by region
+
+##### Description
+
+This use case demonstrates the use of named “containers” which could
+represent the following:
+
+- Datacenter regions
+
+- Geographic regions (e.g., cities, municipalities, states, countries,
+  etc.)
+
+- Commercial regions (e.g., North America, Eastern Europe, Asia Pacific,
+  etc.)
+
+##### Features
+
+This use case introduces the following policy features:
+
+- Separation of resources (i.e., TOSCA nodes) by logical regions, or
+  zones.
+
+##### Sample YAML: Region separation amongst named set of regions
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>failover_policy_2:</p>
+<p>type: tosca.policy.placement</p>
+<p>description: My failover policy with allowed target regions (logical
+containers)</p>
+<p>properties:</p>
+<p>container_type: region</p>
+<p>container_number: 3</p>
+<p># If “containers” keyname is provided, they represent the allowed
+set</p>
+<p># of target containers to use for placement for .</p>
+<p>containers: [ region1, region2, region3, region4 ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Use Case 3: Co-locate based upon Compute affinity
+
+##### Description
+
+Nodes that need to be co-located to achieve optimal performance based
+upon access to similar Infrastructure (IaaS) resource types (i.e.,
+Compute, Network and/or Storage).
+
+This use case demonstrates the co-location based upon Compute resource
+affinity; however, the same approach could be taken for Network as or
+Storage affinity as well. :
+
+##### Features
+
+This use case introduces the following policy features:
+
+- Node placement based upon Compute resource affinity.
+
+#### Notes
+
+- The concept of placement based upon IaaS resource utilization is not
+  future-thinking, as Cloud should guarantee equivalent performance of
+  application performance regardless of placement. That is, all network
+  access between application nodes and underlying Compute or Storage
+  should have equivalent performance (e.g., network bandwidth, network
+  or storage access time, CPU speed, etc.).
+
+##### Sample YAML: Region separation amongst named set of regions
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>keep_together_policy:</p>
+<p>type: tosca.policy.placement.Colocate</p>
+<p>description: Keep associated nodes (groups of nodes) based upon
+Compute</p>
+<p>properties:</p>
+<p>affinity: Compute</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Scaling
+
+#### Use Case 1: Simple node autoscale
+
+##### Description
+
+Start with X nodes and scale up to Y nodes, capability to do this from a
+dashboard for example.
+
+##### Features
+
+This use case introduces the following policy features:
+
+- Basic autoscaling policy
+
+##### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>my_scaling_policy_1:</p>
+<p>type: tosca.policy.scaling</p>
+<p>description: Simple node autoscaling</p>
+<p>properties:</p>
+<p>min_instances: &lt;integer&gt;</p>
+<p>max_instances: &lt;integer&gt;</p>
+<p>default_instances: &lt;integer&gt;</p>
+<p>increment: &lt;integer&gt;</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### Notes
+
+- Assume horizontal scaling for this use case
+
+- Horizontal scaling, implies “stack-level” control using Compute nodes
+  to define a “stack” (i.e., The Compute node’s entire HostedOn
+  relationship dependency graph is considered part of its “stack”)
+
+- Assume Compute node has a SoftwareComponent that represents a VM
+  application.
+
+- Availability Zones (and Regions if not same) need to be considered in
+  further use cases.
+
+- If metrics are introduced, there is a control-loop (that monitors).
+  Autoscaling is a special concept that includes these considerations.
+
+- Mixed placement and scaling use cases need to be considered:
+
+- *Example*: Compute1 and Compute2 are 2 node templates. Compute1 has 10
+  instances, 5 in one region 5 in other region.
+
+# TOSCA normative type definitions
+
+Except for the examples, this section is **normative** and contains
+normative type definitions which must be supported for conformance to
+this specification.
+
+The declarative approach is heavily dependent of the definition of basic
+types that a declarative container must understand. The definition of
+these types must be very clear such that the operational semantics can
+be precisely followed by a declarative container to achieve the effects
+intended by the modeler of a topology in an interoperable manner.
+
+## Assumptions
+
+- Assumes alignment with/dependence on XML normative types proposal for
+  TOSCA v1.1
+
+- Assumes that the normative types will be versioned and the TOSCA TC
+  will preserve backwards compatibility.
+
+- Assumes that security and access control will be addressed in future
+  revisions or versions of this specification.
+
+## TOSCA normative type names
+
+Every normative type has three names declared:
+
+**Type URI** – This is the unique identifying name for the type.
+
+1.  These are reserved names within the TOSCA namespace.
+
+<!-- -->
+
+1.  **Shorthand Name** – This is the shorter (simpler) name that can be
+    used in place of its corresponding, full **Type URI** name.
+
+    1.  These are reserved names within TOSCA namespace that MAY be used
+        in place of the full Type URI.
+
+    2.  Profiles of the OASIS TOSCA specifcaition SHALL assure
+        non-collision of names for new types when they are introduced.
+
+    3.  TOSCA type designers SHOULD NOT create new types with names that
+        would collide with any TOSCA normative type Shorthand Name.
+
+2.  **Type Qualified Name** – This is a modified **Shorthand Name** that
+    includes the “***tosca*:**” namespace prefix which clearly qualifies
+    it as being part of the TOSCA namespace.
+
+    1.  This name MAY be used to assure there is no collision when types
+        are imported from other (non) TOSCA approved sources.
+
+### Additional requirements
+
+- **Case sensitivity** - TOSCA Type URI, Shorthand and Type Qualified
+  names SHALL be treated as case sensitive.
+
+<!-- -->
+
+- The case of each type name has been carefully selected by the TOSCA
+  working group and TOSCA orchestrators and processors SHALL strictly
+  recognize the name casing as specified in this specification or any of
+  its approved profiles.
+
+## Data Types
+
+### tosca.datatypes.Root
+
+This is the default (root) TOSCA Root Type definition that all complex
+TOSCA Data Types derive from.
+
+#### Definition
+
+The TOSCA Root type is defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.datatypes.Root:</p>
+<p>description: The TOSCA root Data Type all other TOSCA base Data Types
+derive from</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.datatypes.json
+
+The json type is a TOSCA data Type used to define a string that
+containst data in the JavaScript Object Notation (JSON) format.
+
+| Shorthand Name      | json                 |
+|---------------------|----------------------|
+| Type Qualified Name | tosca:json           |
+| Type URI            | tosca.datatypes.json |
+
+#### Definition
+
+The json type is defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>tosca.datatypes.json:<br />
+derived_from: string</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Examples
+
+##### Type declaration example
+
+Simple declaration of an ‘event_object’ property declared to be a ‘json’
+data type with its associated JSON Schema:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>properties:</p>
+<p>event_object:</p>
+<p>type: json</p>
+<p>constraints:</p>
+<p>schema: &gt;-</p>
+<p>'{</p>
+<p>"$schema": "http://json-schema.org/draft-04/schema#",</p>
+<p>"title": "Event",</p>
+<p>"description": "Example Event type schema",</p>
+<p>"type": "object",</p>
+<p>"properties": {</p>
+<p>"uuid": {</p>
+<p>"description": "The unique ID for the event.",</p>
+<p>"type": "string"</p>
+<p>},</p>
+<p>"code": {</p>
+<p>"type": "integer"</p>
+<p>},</p>
+<p>"message": {</p>
+<p>"type": "string"</p>
+<p>}</p>
+<p>},</p>
+<p>"required": ["uuid", "code"]</p>
+<p>}'</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### Template definition example
+
+This example shows a valid JSON datatype value for the ‘event_object’
+schema declare in the previous example.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p># properties snippet from a TOSCA template definition.</p>
+<p>properties:</p>
+<p>event_object: &gt;-</p>
+<p>'{</p>
+<p>"uuid": "cadf:1234-56-0000-abcd",</p>
+<p>"code": 9876</p>
+<p>}'</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Additional Requirements
+
+- The json datatype SHOULD only be assigned string values that contain
+  valid JSON syntax as defined by the “The JSON Data Interchange Format
+  Standard” (see reference \[[JSON-Spec](#REF_JSON_SPEC)\]).
+
+### tosca.datatypes.xml
+
+The xml type is a TOSCA data Type used to define a string that containst
+data in the Extensible Markup Language (XML) format.
+
+| Shorthand Name      | xml                 |
+|---------------------|---------------------|
+| Type Qualified Name | tosca:xml           |
+| Type URI            | tosca.datatypes.xml |
+
+#### Definition
+
+The xml type is defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>tosca.datatypes.xml:<br />
+derived_from: string</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Examples
+
+##### Type declaration example
+
+Simple declaration of an ‘event_object’ property declared to be an ‘xml’
+data type with its associated XML Schema:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>properties:</p>
+<p>event_object:</p>
+<p>type: xml</p>
+<p>constraints:</p>
+<p>schema: &gt;-</p>
+<p>&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"</p>
+<p>targetNamespace="http://cloudplatform.org/events.xsd"</p>
+<p>xmlns="http://tempuri.org/po.xsd"
+elementFormDefault="qualified"&gt;</p>
+<p>&lt;xs:annotation&gt;</p>
+<p>&lt;xs:documentation xml:lang="en"&gt;</p>
+<p>Event object.</p>
+<p>&lt;/xs:documentation&gt;</p>
+<p>&lt;/xs:annotation&gt;</p>
+<p>&lt;xs:element name="eventObject"&gt;</p>
+<p>&lt;xs:complexType&gt;</p>
+<p>&lt;xs:sequence&gt;</p>
+<p>&lt;xs:element name="uuid" type="xs:string"/&gt;</p>
+<p>&lt;xs:element name="code" type="xs:integer"/&gt;</p>
+<p>&lt;xs:element name="message" type="xs:string" minOccurs="0"/&gt;</p>
+<p>&lt;/xs:sequence&gt;</p>
+<p>&lt;/xs:complexType&gt;</p>
+<p>&lt;/xs:element&gt;</p>
+<p>&lt;/xs:schema&gt;</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### Template definition example
+
+This example shows a valid XML datatype value for the ‘event_object’
+schema declare in the previous example.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p># properties snippet from a TOSCA template definition.</p>
+<p>properties:</p>
+<p>event_object: &gt;-</p>
+<p>&lt;eventObject&gt;</p>
+<p>&lt;uuid&gt;cadf:1234-56-0000-abcd&lt;/uuid&gt;</p>
+<p>&lt;code&gt;9876&lt;/code&gt;</p>
+<p>&lt;/eventObject&gt;</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Additional Requirements
+
+The xml datatype SHOULD only be assigned string values that contain
+valid XML syntax as defined by the “Extensible Markup Language (XML)”
+specification” (see reference \[[**XMLSpec**](#REF_XML_SPEC)\]).
+
+### tosca.datatypes.Credential
+
+The Credential type is a complex TOSCA data Type used when describing
+authorization credentials used to access network accessible resources.
+
+| Shorthand Name      | Credential                 |
+|---------------------|----------------------------|
+| Type Qualified Name | tosca:Credential           |
+| Type URI            | tosca.datatypes.Credential |
+
+#### Properties
+
+| Name       | Required | Type                                                  | Constraints       | Description                                                                                  |
+|------------|----------|-------------------------------------------------------|-------------------|----------------------------------------------------------------------------------------------|
+| protocol   | no       | [string](#TYPE_YAML_STRING)                           | None              | The optional protocol name.                                                                  |
+| token_type | yes      | [string](#TYPE_YAML_STRING)                           | default: password | The required token type.                                                                     |
+| token      | yes      | [string](#TYPE_YAML_STRING)                           | None              | The required token used as a credential for authorization or access to a networked resource. |
+| keys       | no       | [map](#TYPE_TOSCA_MAP) of [string](#TYPE_YAML_STRING) | None              | The optional map of protocol-specific keys or assertions.                                    |
+| user       | no       | [string](#TYPE_YAML_STRING)                           | None              | The optional user (name or ID) used for non-token based credentials.                         |
+
+#### Definition
+
+The TOSCA Credential type is defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.datatypes.Credential:</p>
+<p>derived_from: tosca.datatypes.Root</p>
+<p>properties:</p>
+<p>protocol:</p>
+<p>type: string</p>
+<p>required: false</p>
+<p>token_type:</p>
+<p>type: string</p>
+<p>default: password</p>
+<p>token:</p>
+<p>type: string</p>
+<p>keys:</p>
+<p>type: map</p>
+<p>required: false</p>
+<p>entry_schema:</p>
+<p>type: string</p>
+<p>user:</p>
+<p>type: string</p>
+<p>required: false</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional requirements
+
+- TOSCA Orchestrators SHALL interpret and validate the value of the
+  token property based upon the value of the token_type property.
+
+#### Notes
+
+- Specific token types and encoding them using network protocols are not
+  defined or covered in this specification.
+
+- The use of transparent user names (IDs) or passwords are not
+  considered best practice.
+
+#### Examples
+
+##### Provide a simple user name and password without a protocol or standardized token format
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>&lt;some_tosca_entity&gt;:</p>
+<p>properties:</p>
+<p>my_credential:</p>
+<p>type: Credential</p>
+<p>properties:</p>
+<p>user: myusername</p>
+<p>token: mypassword</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### HTTP Basic access authentication credential
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>&lt;some_tosca_entity&gt;:</p>
+<p>properties:</p>
+<p>my_credential: # type: Credential</p>
+<p>protocol: http</p>
+<p>token_type: basic_auth</p>
+<p># Username and password are combined into a string</p>
+<p># Note: this would be base64 encoded before transmission by any
+impl.</p>
+<p>token: myusername:mypassword</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### X-Auth-Token credential
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>&lt;some_tosca_entity&gt;:</p>
+<p>properties:</p>
+<p>my_credential: # type: Credential</p>
+<p>protocol: xauth</p>
+<p>token_type: X-Auth-Token</p>
+<p># token encoded in Base64</p>
+<p>token: 604bbe45ac7143a79e14f3158df67091</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### OAuth bearer token credential
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>&lt;some_tosca_entity&gt;:</p>
+<p>properties:</p>
+<p>my_credential: # type: Credential</p>
+<p>protocol: oauth2</p>
+<p>token_type: bearer</p>
+<p># token encoded in Base64</p>
+<p>token: 8ao9nE2DEjr1zCsicWMpBC</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### OpenStack SSH Keypair 
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>&lt;some_tosca_entity&gt;:</p>
+<p>properties:</p>
+<p>my_ssh_keypair: # type: Credential</p>
+<p>protocol: ssh</p>
+<p>token_type: identifier</p>
+<p># token is a reference (ID) to an existing keypair (already
+installed)</p>
+<p>token: &lt;keypair_id&gt;</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.datatypes.TimeInterval
+
+The TimeInterval type is a complex TOSCA data Type used when describing
+a period of time using the YAML ISO 8601 format to declare the start and
+end times.
+
+| Shorthand Name      | TimeInterval                 |
+|---------------------|------------------------------|
+| Type Qualified Name | tosca:TimeInterval           |
+| Type URI            | tosca.datatypes.TimeInterval |
+
+#### Properties
+
+| Name       | Required | Type      | Constraints | Description                                         |
+|------------|----------|-----------|-------------|-----------------------------------------------------|
+| start_time | yes      | timestamp | None        | The **inclusive** start time for the time interval. |
+| end_time   | yes      | timestamp | None        | The **inclusive** end time for the time interval.   |
+
+#### Definition
+
+The TOSCA TimeInterval type is defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.datatypes.TimeInterval:</p>
+<p>derived_from: tosca.datatypes.Root</p>
+<p>properties:</p>
+<p>start_time:</p>
+<p>type: timestamp</p>
+<p>required: true</p>
+<p>end_time:</p>
+<p>type: timestamp</p>
+<p>required: true</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Examples
+
+##### Multi-day evaluation time period
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>properties:</p>
+<p>evaluation_period:</p>
+<p>type: TimeInterval</p>
+<p>description: Evaluate a service for a 5-day period across time
+zones</p>
+<p>properties:</p>
+<p>start_time: 2016-04-04-15T00:00:00Z</p>
+<p>end_time: 2016-04-08T21:59:43.10-06:00</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.datatypes.network.NetworkInfo
+
+The Network type is a complex TOSCA data type used to describe logical
+network information.
+
+| Shorthand Name      | NetworkInfo                         |
+|---------------------|-------------------------------------|
+| Type Qualified Name | tosca:NetworkInfo                   |
+| Type URI            | tosca.datatypes.network.NetworkInfo |
+
+#### Properties
+
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 14%" />
+<col style="width: 16%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>network_name</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>The name of the logical network.</p>
+<p>e.g., “public”, “private”, “admin”. etc.</p></td>
+</tr>
+<tr class="even">
+<td>network_id</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>The unique ID of for the network generated by the network
+provider.</td>
+</tr>
+<tr class="odd">
+<td>addresses</td>
+<td><a href="#TYPE_YAML_STRING">string</a> []</td>
+<td>None</td>
+<td>The list of IP addresses assigned from the underlying network.</td>
+</tr>
+</tbody>
+</table>
+
+#### Definition
+
+The TOSCA NetworkInfo data type is defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.datatypes.network.NetworkInfo:</p>
+<p>derived_from: tosca.datatypes.Root</p>
+<p>properties:</p>
+<p>network_name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>network_id:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>addresses:</p>
+<p>type: <a href="#TYPE_TOSCA_LIST">list</a></p>
+<p>entry_schema:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Examples
+
+Example usage of the NetworkInfo data type:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>&lt;some_tosca_entity&gt;:</p>
+<p>properties:</p>
+<p>private_network:</p>
+<p>network_name: private</p>
+<p>network_id: 3e54214f-5c09-1bc9-9999-44100326da1b</p>
+<p>addresses: [ 10.111.128.10 ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- It is expected that TOSCA orchestrators MUST be able to map the
+  network_name from the TOSCA model to underlying network model of the
+  provider.
+
+- The properties (or attributes) of NetworkInfo may or may not be
+  required depending on usage context.
+
+### tosca.datatypes.network.PortInfo
+
+The PortInfo type is a complex TOSCA data type used to describe network
+port information.
+
+| Shorthand Name      | PortInfo                         |
+|---------------------|----------------------------------|
+| Type Qualified Name | tosca:PortInfo                   |
+| Type URI            | tosca.datatypes.network.PortInfo |
+
+#### Properties
+
+| Name        | Type                             | Constraints | Description                                                                     |
+|-------------|----------------------------------|-------------|---------------------------------------------------------------------------------|
+| port_name   | [string](#TYPE_YAML_STRING)      | None        | The logical network port name.                                                  |
+| port_id     | [string](#TYPE_YAML_STRING)      | None        | The unique ID for the network port generated by the network provider.           |
+| network_id  | [string](#TYPE_YAML_STRING)      | None        | The unique ID for the network.                                                  |
+| mac_address | [string](#TYPE_YAML_STRING)      | None        | The unique media access control address (**MAC address**) assigned to the port. |
+| addresses   | [string](#TYPE_YAML_STRING) \[\] | None        | The list of IP address(es) assigned to the port.                                |
+
+#### Definition
+
+The TOSCA PortInfo type is defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.datatypes.network.PortInfo:</p>
+<p>derived_from: tosca.datatypes.Root</p>
+<p>properties:</p>
+<p>port_name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>port_id:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>network_id:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>mac_address:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>addresses:</p>
+<p>type: <a href="#TYPE_TOSCA_LIST">list</a></p>
+<p>entry_schema:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Examples
+
+Example usage of the PortInfo data type:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>&lt;some_tosca_entity&gt;:</p>
+<p>properties:</p>
+<p>ethernet_port:</p>
+<p>port_name: port1</p>
+<p>port_id: 2c0c7a37-691a-23a6-7709-2d10ad041467</p>
+<p>network_id: 3e54214f-5c09-1bc9-9999-44100326da1b</p>
+<p>mac_address: f1:18:3b:41:92:1e</p>
+<p>addresses: [ 172.24.9.102 ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- It is expected that TOSCA orchestrators MUST be able to map the
+  port_name from the TOSCA model to underlying network model of the
+  provider.
+
+- The properties (or attributes) of PortInfo may or may not be required
+  depending on usage context.
+
+### tosca.datatypes.network.PortDef
+
+The PortDef type is a TOSCA data Type used to define a network port.
+
+| Shorthand Name      | PortDef                         |
+|---------------------|---------------------------------|
+| Type Qualified Name | tosca:PortDef                   |
+| Type URI            | tosca.datatypes.network.PortDef |
+
+#### Definition
+
+The TOSCA PortDef type is defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.datatypes.network.PortDef:<br />
+derived_from: integer</p>
+<p>constraints:</p>
+<p>- in_range: [ 1, 65535 ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Examples
+
+Simple usage of a PortDef property type:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>properties:</p>
+<p>listen_port: 9090</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+Example declaration of a property for a custom type based upon PortDef:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>properties:</p>
+<p>listen_port:</p>
+<p>type: PortDef</p>
+<p>default: 9000</p>
+<p>constraints:</p>
+<p>- in_range: [ 9000, 9090 ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.datatypes.network.PortSpec
+
+The PortSpec type is a complex TOSCA data Type used when describing port
+specifications for a network connection.
+
+| Shorthand Name      | PortSpec                         |
+|---------------------|----------------------------------|
+| Type Qualified Name | tosca:PortSpec                   |
+| Type URI            | tosca.datatypes.network.PortSpec |
+
+#### Properties
+
+| Name         | Required | Type                                        | Constraints              | Description                             |
+|--------------|----------|---------------------------------------------|--------------------------|-----------------------------------------|
+| protocol     | yes      | [string](#TYPE_YAML_STRING)                 | default: tcp             | The required protocol used on the port. |
+| source       | no       | [PortDef](#tosca.datatypes.network.portdef) | See PortDef              | The optional source port.               |
+| source_range | no       | [range](#TYPE_TOSCA_RANGE)                  | in_range: \[ 1, 65536 \] | The optional range for source port.     |
+| target       | no       | [PortDef](#tosca.datatypes.network.portdef) | See PortDef              | The optional target port.               |
+| target_range | no       | [range](#TYPE_TOSCA_RANGE)                  | in_range: \[ 1, 65536 \] | The optional range for target port.     |
+
+#### Definition
+
+The TOSCA PortSpec type is defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.datatypes.network.PortSpec:</p>
+<p>derived_from: tosca.datatypes.Root</p>
+<p>properties:</p>
+<p>protocol:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: true</p>
+<p>default: tcp</p>
+<p>constraints:</p>
+<p>- valid_values: [ udp, tcp, igmp ]</p>
+<p>target:</p>
+<p>type: <a href="#TYPE_TOSCA_PROP_PORTDEF">PortDef</a></p>
+<p>required: false</p>
+<p>target_range:</p>
+<p>type: range</p>
+<p>required: false</p>
+<p>constraints:</p>
+<p>- in_range: [ 1, 65535 ]</p>
+<p>source:</p>
+<p>type: <a href="#TYPE_TOSCA_PROP_PORTDEF">PortDef</a></p>
+<p>required: false</p>
+<p>source_range:</p>
+<p>type: range</p>
+<p>required: false</p>
+<p>constraints:</p>
+<p>- in_range: [ 1, 65535 ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional requirements
+
+- A valid PortSpec MUST have at least one of the following properties:
+  target, target_range, source or source_range.
+
+- A valid PortSpec MUST have a value for the source property that is
+  within the numeric range specified by the property source_range when
+  source_range is specified.
+
+- A valid PortSpec MUST have a value for the target property that is
+  within the numeric range specified by the property target_range when
+  target_range is specified.
+
+#### Examples
+
+Example usage of the PortSpec data type:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p># example properties in a node template</p>
+<p>some_endpoint:</p>
+<p>properties:</p>
+<p>ports:</p>
+<p>user_port:</p>
+<p>protocol: tcp</p>
+<p>target: 50000</p>
+<p>target_range: [ 20000, 60000 ]</p>
+<p>source: 9000</p>
+<p>source_range: [ 1000, 10000 ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Artifact Types
+
+TOSCA Artifacts Types represent the types of packages and files used by
+the orchestrator when deploying TOSCA Node or Relationship Types or
+invoking their interfaces. Currently, artifacts are logically divided
+into three categories:
+
+- **Deployment Types**: includes those artifacts that are used during
+  deployment (e.g., referenced on create and install operations) and
+  include packaging files such as RPMs, ZIPs, or TAR files.
+
+- **Implementation Types**: includes those artifacts that represent
+  imperative logic and are used to implement TOSCA Interface operations.
+  These typically include scripting languages such as Bash (.sh), Chef
+  \[[Chef](#REF_CHEF)\] and Puppet \[[Puppet](#REF_PUPPET)\].
+
+- **Runtime Types**: includes those artifacts that are used during
+  runtime by a service or component of the application. This could
+  include a library or language runtime that is needed by an application
+  such as a PHP or Java library.
+
+- **Template Types**: includes those artifacts that are executed by
+  template engines which play the role of artifact processors.
+  Typically, template artifact types are static files. At runtime, the
+  template engine processes the artifact by replacing variables in a
+  template file with actual values. Some examples of template files are
+  Twig \[Twig\] and Jinja2 \[Jinja2\].
+
+**Note**: Additional TOSCA Artifact Types will be developed in future
+drafts of this specification.
+
+### tosca.artifacts.Root
+
+This is the default (root) TOSCA [Artifact
+Type](#DEFN_ENTITY_ARTIFACT_TYPE) definition that all other TOSCA base
+Artifact Types derive from.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Root:</p>
+<p>description: The TOSCA Artifact Type all other TOSCA Artifact Types
+derive from</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.artifacts.File
+
+This artifact type is used when an artifact definition needs to have its
+associated file simply treated as a file and no special
+handling/handlers are invoked (i.e., it is not treated as either an
+implementation or deployment artifact type).
+
+| Shorthand Name      | File                 |
+|---------------------|----------------------|
+| Type Qualified Name | tosca:File           |
+| Type URI            | tosca.artifacts.File |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.File:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.root">tosca.artifacts.Root</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Deployment Types
+
+#### tosca.artifacts.Deployment
+
+This artifact type represents the parent type for all deployment
+artifacts in TOSCA. This class of artifacts typically represents a
+binary packaging of an application or service that is used to
+install/create or deploy it as part of a node’s lifecycle.
+
+##### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><table>
+<colgroup>
+<col style="width: 96%" />
+<col style="width: 1%" />
+<col style="width: 1%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Deployment:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.root">tosca.artifacts.Root</a></p>
+<p>description: TOSCA base type for deployment artifacts</p></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- TOSCA Orchestrators MAY throw an error if it encounters a
+  non-normative deployment artifact type that it is not able to process.
+
+#### tosca.artifacts.Deployment.Image
+
+This artifact type represents a parent type for any “image” which is an
+opaque packaging of a TOSCA Node’s deployment (whether real or virtual)
+whose contents are typically already installed and pre-configured (i.e.,
+“stateful”) and prepared to be run on a known target container.
+
+| Shorthand Name      | Deployment.Image                 |
+|---------------------|----------------------------------|
+| Type Qualified Name | tosca:Deployment.Image           |
+| Type URI            | tosca.artifacts.Deployment.Image |
+
+##### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Deployment.Image:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.deployment">tosca.artifacts.Deployment</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### tosca.artifacts.Deployment.Image.VM
+
+This artifact represents the parent type for all Virtual Machine (VM)
+image and container formatted deployment artifacts. These images contain
+a stateful capture of a machine (e.g., server) including operating
+system and installed software along with any configurations and can be
+run on another machine using a hypervisor which virtualizes typical
+server (i.e., hardware) resources**.**
+
+##### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Deployment.Image.VM:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.deployment.image">tosca.artifacts.Deployment.Image</a></p>
+<p>description: Virtual Machine (VM) Image</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### Notes
+
+- Future drafts of this specification may include popular standard VM
+  disk image (e.g., ISO, VMI, VMDX, QCOW2, etc.) and container (e.g.,
+  OVF, bare, etc.) formats. These would include consideration of disk
+  formats such as:
+
+### Implementation Types
+
+#### tosca.artifacts.Implementation
+
+This artifact type represents the parent type for all implementation
+artifacts in TOSCA. These artifacts are used to implement operations of
+TOSCA interfaces either directly (e.g., scripts) or indirectly (e.g.,
+config. files).
+
+##### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><table>
+<colgroup>
+<col style="width: 97%" />
+<col style="width: 1%" />
+<col style="width: 1%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Implementation:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.root">tosca.artifacts.Root</a></p>
+<p>description: TOSCA base type for implementation artifacts</p></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- TOSCA Orchestrators **MAY** throw an error if it encounters a
+  non-normative implementation artifact type that it is not able to
+  process.
+
+#### tosca.artifacts.Implementation.Bash
+
+This artifact type represents a Bash script type that contains Bash
+commands that can be executed on the Unix Bash shell.
+
+| Shorthand Name      | Bash                                |
+|---------------------|-------------------------------------|
+| Type Qualified Name | tosca:Bash                          |
+| Type URI            | tosca.artifacts.Implementation.Bash |
+
+##### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Implementation.Bash:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.implementation">tosca.artifacts.Implementation</a></p>
+<p>description: Script artifact for the Unix Bash shell</p>
+<p>mime_type: application/x-sh</p>
+<p>file_ext: [ sh ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### tosca.artifacts.Implementation.Python
+
+This artifact type represents a Python file that contains Python
+language constructs that can be executed within a Python interpreter.
+
+| Shorthand Name      | Python                                |
+|---------------------|---------------------------------------|
+| Type Qualified Name | tosca:Python                          |
+| Type URI            | tosca.artifacts.Implementation.Python |
+
+##### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Implementation.Python:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.implementation">tosca.artifacts.Implementation</a></p>
+<p>description: Artifact for the interpreted Python language</p>
+<p>mime_type: application/x-python</p>
+<p>file_ext: [ py ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Template Types
+
+#### tosca.artifacts.template
+
+This artifact type represents the parent type for all template type
+artifacts in TOSCA. This class of artifacts typically represent template
+files that are dependent artifacts for implementation of an interface or
+deployment of a node.
+
+Like the case of other dependent artifacts, the TOSCA orchestrator
+copies the dependent artifacts to the same location as the primary
+artifact for its access during execution. However, the template artifact
+processor need not be deployed in the environment where the primary
+artifact executes. At run time, the Orchestrator can invoke the artifact
+processor (i.e. template engine) to fill in run time values and provide
+the “filled template” to the primary artifact processor for further
+processing.
+
+This reduces the requirements on the primary artifact target environment
+and the processing time of template artifacts.
+
+##### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><table>
+<colgroup>
+<col style="width: 97%" />
+<col style="width: 1%" />
+<col style="width: 1%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.template:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.root">tosca.artifacts.Root</a></p>
+<p>description: TOSCA base type for template type artifacts</p></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Capabilities Types
+
+### tosca.capabilities.Root
+
+This is the default (root) TOSCA Capability Type definition that all
+other TOSCA Capability Types derive from.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Root:</p>
+<p>description: The TOSCA root Capability Type all other TOSCA
+Capability Types derive from</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.capabilities.Node
+
+The Node capability indicates the base capabilities of a TOSCA Node
+Type.
+
+| Shorthand Name      | Node                    |
+|---------------------|-------------------------|
+| Type Qualified Name | tosca:Node              |
+| Type URI            | tosca.capabilities.Node |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Node:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.root">tosca.capabilities.Root</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.capabilities.Compute
+
+The Compute capability, when included on a Node Type or Template
+definition, indicates that the node can provide hosting on a named
+compute resource.
+
+| Shorthand Name      | Compute                    |
+|---------------------|----------------------------|
+| Type Qualified Name | tosca:Compute              |
+| Type URI            | tosca.capabilities.Compute |
+
+#### Properties
+
+| Name          | Required | Type                                                       | Constraints               | Description                                                                                                                                            |
+|---------------|----------|------------------------------------------------------------|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name          | no       | [string](#TYPE_YAML_STRING)                                | None                      | The otional name (or identifier) of a specific compute resource for hosting.                                                                           |
+| num_cpus      | no       | [integer](#TYPE_YAML_INTEGER)                              | greater_or_equal: 1       | Number of (actual or virtual) CPUs associated with the Compute node.                                                                                   |
+| cpu_frequency | no       | [scalar-unit.frequency](#TYPE_TOSCA_SCALAR_UNIT_FREQUENCY) | greater_or_equal: 0.1 GHz | Specifies the operating frequency of CPU's core. This property expresses the expected frequency of one (1) CPU as provided by the property “num_cpus”. |
+| disk_size     | no       | [scalar-unit.size](#TYPE_TOSCA_SCALAR_UNIT_SIZE)           | greater_or_equal: 0 MB    | Size of the local disk available to applications running on the Compute node (default unit is MB).                                                     |
+| mem_size      | no       | [scalar-unit.size](#TYPE_TOSCA_SCALAR_UNIT_SIZE)           | greater_or_equal: 0 MB    | Size of memory available to applications running on the Compute node (default unit is MB).                                                             |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Compute:</p>
+<p>derived_from: tosca.capabilities.Container</p>
+<p>properties:</p>
+<p>name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>num_cpus:</p>
+<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
+<p>required: false</p>
+<p>constraints:</p>
+<p>- greater_or_equal: 1</p>
+<p>cpu_frequency:</p>
+<p>type: <a
+href="#TYPE_TOSCA_SCALAR_UNIT_FREQUENCY">scalar-unit.frequency</a></p>
+<p>required: false</p>
+<p>constraints:</p>
+<p>- greater_or_equal: 0.1 GHz</p>
+<p>disk_size:</p>
+<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
+<p>required: false</p>
+<p>constraints:</p>
+<p>- greater_or_equal: 0 MB</p>
+<p>mem_size:</p>
+<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
+<p>required: false</p>
+<p>constraints:</p>
+<p>- greater_or_equal: 0 MB</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.capabilities.Network
+
+The Storage capability, when included on a Node Type or Template
+definition, indicates that the node can provide addressiblity for the
+resource a named network with the specified ports.
+
+| Shorthand Name      | Network                    |
+|---------------------|----------------------------|
+| Type Qualified Name | tosca:Network              |
+| Type URI            | tosca.capabilities.Network |
+
+#### Properties
+
+| Name | Required | Type   | Constraints | Description                                                      |
+|------|----------|--------|-------------|------------------------------------------------------------------|
+| name | no       | string | None        | The otional name (or identifier) of a specific network resource. |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Network:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.root">tosca.capabilities.Root</a></p>
+<p>properties:</p>
+<p>name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.capabilities.Storage
+
+The Storage capability, when included on a Node Type or Template
+definition, indicates that the node can provide a named storage location
+with specified size range.
+
+| Shorthand Name      | Storage                    |
+|---------------------|----------------------------|
+| Type Qualified Name | tosca:Storage              |
+| Type URI            | tosca.capabilities.Storage |
+
+#### Properties
+
+| Name | Required | Type   | Constraints | Description                                                      |
+|------|----------|--------|-------------|------------------------------------------------------------------|
+| name | no       | string | None        | The otional name (or identifier) of a specific storage resource. |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Storage:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.root">tosca.capabilities.Root</a></p>
+<p>properties:</p>
+<p>name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.capabilities.Container
+
+The Container capability, when included on a Node Type or Template
+definition, indicates that the node can act as a container for (or a
+host for) one or more other declared Node Types.
+
+| Shorthand Name      | Container                    |
+|---------------------|------------------------------|
+| Type Qualified Name | tosca:Container              |
+| Type URI            | tosca.capabilities.Container |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Container:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.root">tosca.capabilities.Root</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.capabilities.Endpoint
+
+This is the default TOSCA type that should be used or extended to define
+a network endpoint capability. This includes the information to express
+a basic endpoint with a single port or a complex endpoint with multiple
+ports. By default the Endpoint is assumed to represent an address on a
+private network unless otherwise specified.
+
+| Shorthand Name      | Endpoint                    |
+|---------------------|-----------------------------|
+| Type Qualified Name | tosca:Endpoint              |
+| Type URI            | tosca.capabilities.Endpoint |
+
+#### Properties
+
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 11%" />
+<col style="width: 9%" />
+<col style="width: 17%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>protocol</td>
+<td>yes</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>default: tcp</td>
+<td><p>The name of the protocol (i.e., the protocol prefix) that the
+endpoint accepts (any OSI Layer 4-7 protocols)</p>
+<p>Examples: http, https, ftp, tcp, udp, etc.</p></td>
+</tr>
+<tr class="even">
+<td><mark>port</mark></td>
+<td><mark>no</mark></td>
+<td><a
+href="#tosca.datatypes.network.portdef"><mark>PortDef</mark></a></td>
+<td><p><mark>greater_or_equal: 1</mark></p>
+<p><mark>less_or_equal: 65535</mark></p></td>
+<td><mark>The optional port of the endpoint.</mark></td>
+</tr>
+<tr class="odd">
+<td>secure</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_BOOLEAN">boolean</a></td>
+<td>default: false</td>
+<td>Requests for the endpoint to be secure and use credentials supplied
+on the ConnectsTo relationship.</td>
+</tr>
+<tr class="even">
+<td>url_path</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>The optional URL path of the endpoint’s address if applicable for
+the protocol.</td>
+</tr>
+<tr class="odd">
+<td><mark>port_name</mark></td>
+<td><mark>no</mark></td>
+<td><a href="#TYPE_YAML_STRING"><mark>string</mark></a></td>
+<td><mark>None</mark></td>
+<td><mark>The optional name (or ID) of the network port this endpoint
+should be bound to.</mark></td>
+</tr>
+<tr class="even">
+<td>network_name</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>default: PRIVATE</td>
+<td><p>The optional name (or ID) of the network this endpoint should be
+bound to.</p>
+<p>network_name: PRIVATE | PUBLIC |&lt;network_name&gt; |
+&lt;network_id&gt;</p></td>
+</tr>
+<tr class="odd">
+<td>initiator</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td><p>one of:</p>
+<ul>
+<li><p>source</p></li>
+<li><p>target</p></li>
+<li><p>peer</p></li>
+</ul>
+<p>default: source</p></td>
+<td>The optional indicator of the direction of the connection.</td>
+</tr>
+<tr class="even">
+<td><mark>ports</mark></td>
+<td><mark>no</mark></td>
+<td><mark><a href="#TYPE_TOSCA_MAP">map</a> of <a
+href="#tosca.datatypes.network.portspec">PortSpec</a></mark></td>
+<td><mark>None</mark></td>
+<td><mark>The optional map of ports the Endpoint supports (if more than
+one)</mark></td>
+</tr>
+</tbody>
+</table>
+
+#### Attributes
+
+| Name       | Required | Type                        | Constraints | Description                                                                                      |
+|------------|----------|-----------------------------|-------------|--------------------------------------------------------------------------------------------------|
+| ip_address | yes      | [string](#TYPE_YAML_STRING) | None        | Note: This is the IP address as propagated up by the associated node’s host (Compute) container. |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Endpoint:</p>
+<p>derived_from: tosca.capabilities.Root</p>
+<p>properties:</p>
+<p>protocol:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: true</p>
+<p>default: tcp</p>
+<p>port:</p>
+<p>type: <a href="#tosca.datatypes.network.portdef">PortDef</a></p>
+<p>required: false</p>
+<p>secure:</p>
+<p>type: <a href="#TYPE_YAML_BOOLEAN">boolean</a></p>
+<p>required: false</p>
+<p>default: false</p>
+<p>url_path:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>port_name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>network_name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>default: PRIVATE</p>
+<p>initiator:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>default: source</p>
+<p>constraints:</p>
+<p>- valid_values: [ source, target, peer ]</p>
+<p>ports:</p>
+<p>type: <a href="#TYPE_TOSCA_MAP">map</a></p>
+<p>required: false</p>
+<p>constraints:</p>
+<p>- min_length: 1</p>
+<p>entry_schema:</p>
+<p>type: <a href="#tosca.datatypes.network.portspec">PortSpec</a></p>
+<p>attributes:</p>
+<p>ip_address:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional requirements
+
+- Although both the port and ports properties are not required, one of
+  port or ports must be provided in a valid
+  [Endpoint](#tosca.capabilities.endpoint).
+
+### tosca.capabilities.Endpoint.Public
+
+This capability represents a public endpoint which is accessible to the
+general internet (and its public IP address ranges).
+
+This public endpoint capability also can be used to create a floating
+(IP) address that the underlying network assigns from a pool allocated
+from the application’s underlying public network. This floating address
+is managed by the underlying network such that can be routed an
+application’s private address and remains reliable to internet clients.
+
+| Shorthand Name      | Endpoint.Public                    |
+|---------------------|------------------------------------|
+| Type Qualified Name | tosca:Endpoint.Public              |
+| Type URI            | tosca.capabilities.Endpoint.Public |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Endpoint.Public:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a></p>
+<p>properties:</p>
+<p># Change the default network_name to use the first public network
+found</p>
+<p>network_name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>default: PUBLIC</p>
+<p>constraints:</p>
+<p>- equal: PUBLIC</p>
+<p>floating:</p>
+<p>description: &gt;</p>
+<p>indicates that the public address should be allocated from a pool of
+floating IPs that are associated with the network.</p>
+<p>type: <a href="#TYPE_YAML_BOOLEAN">boolean</a></p>
+<p>default: false</p>
+<p>status: experimental</p>
+<p>dns_name:</p>
+<p>description: The optional name to register with DNS</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>status: experimental</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional requirements
+
+- If the network_name is set to the reserved value PRIVATE or if the
+  value is set to the name of network (or subnetwork) that is not public
+  (i.e., has non-public IP address ranges assigned to it) then TOSCA
+  Orchestrators **SHALL** treat this as an error.
+
+- If a dns_name is set, TOSCA Orchestrators SHALL attempt to register
+  the name in the (local) DNS registry for the Cloud provider.
+
+### tosca.capabilities.Endpoint.Admin
+
+This is the default TOSCA type that should be used or extended to define
+a specialized administrator endpoint capability.
+
+| Shorthand Name      | Endpoint.Admin                    |
+|---------------------|-----------------------------------|
+| Type Qualified Name | tosca:Endpoint.Admin              |
+| Type URI            | tosca.capabilities.Endpoint.Admin |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| None | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Endpoint.Admin:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a></p>
+<p># Change Endpoint secure indicator to true from its default of
+false</p>
+<p>properties:</p>
+<p>secure:</p>
+<p>type: boolean</p>
+<p>default: true</p>
+<p>constraints:</p>
+<p>- equal: true</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional requirements
+
+- TOSCA Orchestrator implementations of Endpoint.Admin (and connections
+  to it) **SHALL** assure that network-level security is enforced if
+  possible.
+
+### tosca.capabilities.Endpoint.Database
+
+This is the default TOSCA type that should be used or extended to define
+a specialized database endpoint capability.
+
+| Shorthand Name      | Endpoint.Database                    |
+|---------------------|--------------------------------------|
+| Type Qualified Name | tosca:Endpoint.Database              |
+| Type URI            | tosca.capabilities.Endpoint.Database |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| None | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Endpoint.Database:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.capabilities.Attachment
+
+This is the default TOSCA type that should be used or extended to define
+an attachment capability of a (logical) infrastructure device node
+(e.g., [BlockStorage](#tosca.nodes.storage.blockstorage) node).
+
+| Shorthand Name      | Attachment                    |
+|---------------------|-------------------------------|
+| Type Qualified Name | tosca:Attachment              |
+| Type URI            | tosca.capabilities.Attachment |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Attachment:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.root">tosca.capabilities.Root</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.capabilities.OperatingSystem
+
+This is the default TOSCA type that should be used to express an
+Operating System capability for a node.
+
+| Shorthand Name      | OperatingSystem                    |
+|---------------------|------------------------------------|
+| Type Qualified Name | tosca:OperatingSystem              |
+| Type URI            | tosca.capabilities.OperatingSystem |
+
+#### Properties
+
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>architecture</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>The Operating System (OS) architecture.</p>
+<p>Examples of valid values include:</p>
+<p>x86_32, x86_64, etc.</p></td>
+</tr>
+<tr class="even">
+<td>type</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>The Operating System (OS) type.</p>
+<p>Examples of valid values include:</p>
+<p>linux, aix, mac, windows, etc.</p></td>
+</tr>
+<tr class="odd">
+<td>distribution</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>The Operating System (OS) distribution.</p>
+<p>Examples of valid values for an “type” of “Linux” would include:
+debian, fedora, rhel and ubuntu.</p></td>
+</tr>
+<tr class="even">
+<td>version</td>
+<td>no</td>
+<td><a href="#TYPE_TOSCA_VERSION">version</a></td>
+<td>None</td>
+<td>The Operating System version.</td>
+</tr>
+</tbody>
+</table>
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.OperatingSystem:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.root">tosca.capabilities.Root</a></p>
+<p>properties:</p>
+<p>architecture:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>type:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>distribution:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>version:</p>
+<p>type: <a href="#TYPE_TOSCA_VERSION">version</a></p>
+<p>required: false</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- Please note that the string values for the properties architecture,
+  type and distribution SHALL be normalized to lowercase by processors
+  of the service template for matching purposes. For example, if a
+  “type” value is set to either “Linux”, “LINUX” or “linux” in a service
+  template, the processor would normalize all three values to “linux”
+  for matching purposes.
+
+### tosca.capabilities.Scalable
+
+This is the default TOSCA type that should be used to express a
+scalability capability for a node.
+
+| Shorthand Name      | Scalable                    |
+|---------------------|-----------------------------|
+| Type Qualified Name | tosca:Scalable              |
+| Type URI            | tosca.capabilities.Scalable |
+
+#### Properties
+
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 8%" />
+<col style="width: 16%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>min_instances</td>
+<td>yes</td>
+<td><a href="#TYPE_YAML_INTEGER">integer</a></td>
+<td>default: 1</td>
+<td>This property is used to indicate the minimum number of instances
+that should be created for the associated TOSCA Node Template by a TOSCA
+orchestrator.</td>
+</tr>
+<tr class="even">
+<td>max_instances</td>
+<td>yes</td>
+<td><a href="#TYPE_YAML_INTEGER">integer</a></td>
+<td>default: 1</td>
+<td>This property is used to indicate the maximum number of instances
+that should be created for the associated TOSCA Node Template by a TOSCA
+orchestrator.</td>
+</tr>
+<tr class="odd">
+<td>default_instances</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_INTEGER">integer</a></td>
+<td>N/A</td>
+<td><p>An optional property that indicates the requested default number
+of instances that should be the starting number of instances a TOSCA
+orchestrator should attempt to allocate.</p>
+<p><strong>Note</strong>: The value for this property MUST be in the
+range between the values set for ‘min_instances’ and ‘max_instances’
+properties.</p></td>
+</tr>
+</tbody>
+</table>
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Scalable:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.root">tosca.capabilities.Root</a></p>
+<p>properties:</p>
+<p>min_instances:</p>
+<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
+<p>default: 1</p>
+<p>max_instances:</p>
+<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
+<p>default: 1</p>
+<p>default_instances:</p>
+<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notes
+
+- The actual number of instances for a node may be governed by a
+  separate scaling policy which conceptually would be associated to
+  either a scaling-capable node or a group of nodes in which it is
+  defined to be a part of. This is a planned future feature of TOSCA and
+  not currently described.
+
+### tosca.capabilities.network.Bindable
+
+A node type that includes the Bindable capability indicates that it can
+be bound to a logical network association via a network port.
+
+| Shorthand Name      | network.Bindable                    |
+|---------------------|-------------------------------------|
+| Type Qualified Name | tosca:network.Bindable              |
+| Type URI            | tosca.capabilities.network.Bindable |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.network.Bindable:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.node">tosca.capabilities.Node</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Requirement Types 
+
+There are no normative Requirement Types currently defined in this
+working draft. Typically, Requirements are described against a known
+Capability Type
+
+## Relationship Types
+
+### tosca.relationships.Root
+
+This is the default (root) TOSCA Relationship Type definition that all
+other TOSCA Relationship Types derive from.
+
+#### Attributes
+
+| Name       | Required | Type                        | Constraints      | Description                                                                                                                                                                                                                                                                                                                        |
+|------------|----------|-----------------------------|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| tosca_id   | yes      | [string](#TYPE_YAML_STRING) | None             | A unique identifier of the realized instance of a Relationship Template that derives from any TOSCA normative type.                                                                                                                                                                                                                |
+| tosca_name | yes      | [string](#TYPE_YAML_STRING) | None             | This attribute reflects the name of the Relationship Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment. |
+| state      | yes      | [string](#TYPE_YAML_STRING) | default: initial | The state of the relationship instance. See section “[Relationship States](#DEFN_TOSCA_VALUES_RELATIONSHIP_STATES)” for allowed values.                                                                                                                                                                                            |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.relationships.Root:</p>
+<p>description: The TOSCA root Relationship Type all other TOSCA base
+Relationship Types derive from</p>
+<p>attributes:</p>
+<p>tosca_id:</p>
+<p>type: string</p>
+<p>tosca_name:</p>
+<p>type: string</p>
+<p>interfaces:</p>
+<p>Configure:</p>
+<p>type: <a
+href="#tosca.interfaces.relationship.configure">tosca.interfaces.relationship.Configure</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.relationships.DependsOn
+
+This type represents a general dependency relationship between two
+nodes.
+
+| Shorthand Name      | DependsOn                     |
+|---------------------|-------------------------------|
+| Type Qualified Name | tosca:DependsOn               |
+| Type URI            | tosca.relationships.DependsOn |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.relationships.DependsOn:</p>
+<p>derived_from: <a
+href="#tosca.relationships.root">tosca.relationships.Root</a></p>
+<p>valid_target_types: [ <a
+href="#tosca.capabilities.node">tosca.capabilities.Node</a> ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.relationships.HostedOn
+
+This type represents a hosting relationship between two nodes.
+
+| Shorthand Name      | HostedOn                     |
+|---------------------|------------------------------|
+| Type Qualified Name | tosca:HostedOn               |
+| Type URI            | tosca.relationships.HostedOn |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.relationships.HostedOn:</p>
+<p>derived_from: <a
+href="#tosca.relationships.root">tosca.relationships.Root</a></p>
+<p>valid_target_types: [ <a
+href="#tosca.capabilities.container">tosca.capabilities.Container</a>
+]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.relationships.ConnectsTo
+
+This type represents a network connection relationship between two
+nodes.
+
+| Shorthand Name      | ConnectsTo                     |
+|---------------------|--------------------------------|
+| Type Qualified Name | tosca:ConnectsTo               |
+| Type URI            | tosca.relationships.ConnectsTo |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.relationships.ConnectsTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.root">tosca.relationships.Root</a></p>
+<p>valid_target_types: [ <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a>
+]</p>
+<p>properties:</p>
+<p>credential:</p>
+<p>type: <a
+href="#tosca.datatypes.json">tosca.datatypes.Credential</a></p>
+<p>required: false</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Properties
+
+| Name       | Required | Type                                | Constraints | Description                                                                                                              |
+|------------|----------|-------------------------------------|-------------|--------------------------------------------------------------------------------------------------------------------------|
+| credential | no       | [Credential](#tosca.datatypes.json) | None        | The security credential to use to present to the target endpoint to for either authentication or authorization purposes. |
+
+### tosca.relationships.AttachesTo
+
+This type represents an attachment relationship between two nodes. For
+example, an AttachesTo relationship type would be used for attaching a
+storage node to a Compute node.
+
+| Shorthand Name      | AttachesTo                     |
+|---------------------|--------------------------------|
+| Type Qualified Name | tosca:AttachesTo               |
+| Type URI            | tosca.relationships.AttachesTo |
+
+#### Properties
+
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>location</td>
+<td>yes</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>min_length: 1</td>
+<td><p>The relative location (e.g., path on the file system), which
+provides the root location to address an attached node.</p>
+<p>e.g., a mount point / path such as ‘/usr/data’</p>
+<p>Note: The user must provide it and it cannot be “root”.</p></td>
+</tr>
+<tr class="even">
+<td>device</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>The logical device name which for the attached device (which is
+represented by the target node in the model).</p>
+<p>e.g., ‘/dev/hda1’</p></td>
+</tr>
+</tbody>
+</table>
+
+#### Attributes
+
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>device</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>The logical name of the device as exposed to the instance.</p>
+<p>Note: A runtime property that gets set when the model gets
+instantiated by the orchestrator.</p></td>
+</tr>
+</tbody>
+</table>
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.relationships.AttachesTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.root">tosca.relationships.Root</a></p>
+<p>valid_target_types: [ <a
+href="#tosca.capabilities.attachment">tosca.capabilities.Attachment</a>
+]</p>
+<p>properties:</p>
+<p>location:</p>
+<p>type: string</p>
+<p>constraints:</p>
+<p>- min_length: 1</p>
+<p>device:</p>
+<p>type: string</p>
+<p>required: false</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.relationships.RoutesTo
+
+This type represents an intentional network routing between two
+Endpoints in different networks.
+
+| Shorthand Name      | RoutesTo                     |
+|---------------------|------------------------------|
+| Type Qualified Name | tosca:RoutesTo               |
+| Type URI            | tosca.relationships.RoutesTo |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.relationships.RoutesTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.connectsto-1">tosca.relationships.ConnectsTo</a></p>
+<p>valid_target_types: [ <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a>
+]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Interface Types
+
+Interfaces are reusable entities that define a set of operations that
+that can be included as part of a Node type or Relationship Type
+definition. Each named operations may have code or scripts associated
+with them that orchestrators can execute for when transitioning an
+application to a given state.
+
+### Additional Requirements
+
+- Designers of Node or Relationship types are not required to actually
+  provide/associate code or scripts with every operation for a given
+  interface it supports. In these cases, orchestrators SHALL consider
+  that a “No Operation” or “no-op”.
+
+- The default behavior when providing scripts for an operation in a
+  sub-type (sub-class) or a template of an existing type which already
+  has a script provided for that operation SHALL be override. Meaning
+  that the subclasses’ script is used in place of the parent type’s
+  script.
+
+### Best Practices
+
+- When TOSCA Orchestrators substitute an implementation for an abstract
+  node in a deployed service template it SHOULD be able to present a
+  confirmation to the submitter to confirm the implementation chosen
+  would be acceptable.
+
+### tosca.interfaces.Root
+
+This is the default (root) TOSCA Interface Type definition that all
+other TOSCA Interface Types derive from.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.interfaces.Root:</p>
+<p>derived_from: tosca.entity.Root</p>
+<p>description: &gt;-</p>
+<p>The TOSCA root Interface Type all other TOSCA Interface Types derive
+from</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.interfaces.node.lifecycle.Standard
+
+This lifecycle interface defines the essential, normative operations
+that TOSCA nodes may support.
+
+| Shorthand Name      | Standard                                 |
+|---------------------|------------------------------------------|
+| Type Qualified Name | tosca: Standard                          |
+| Type URI            | tosca.interfaces.node.lifecycle.Standard |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.interfaces.node.lifecycle.Standard:</p>
+<p>derived_from: <a
+href="#tosca.interfaces.root">tosca.interfaces.Root</a></p>
+<p>operations:</p>
+<p>create:</p>
+<p>description: Standard lifecycle create operation.</p>
+<p>configure:</p>
+<p>description: Standard lifecycle configure operation.</p>
+<p>start:</p>
+<p>description: Standard lifecycle start operation.</p>
+<p>stop:</p>
+<p>description: Standard lifecycle stop operation.</p>
+<p>delete:</p>
+<p>description: Standard lifecycle delete operation.</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Create operation
+
+The create operation is generally used to create the resource or service
+the node represents in the topology. TOSCA orchestrators expect node
+templates to provide either a deployment artifact or an implementation
+artifact of a defined artifact type that it is able to process. This
+specification defines normative deployment and implementation artifact
+types all TOSCA Orchestrators are expected to be able to process to
+support application portability.
+
+#### TOSCA Orchestrator processing of Deployment artifacts
+
+TOSCA Orchestrators, when encountering a deployment artifact on the
+create operation; will automatically attempt to deploy the artifact
+based upon its artifact type. This means that no implementation
+artifacts (e.g., scripts) are needed on the create operation to provide
+commands that deploy or install the software.
+
+For example, if a TOSCA Orchestrator is processing an application with a
+node of type SoftwareComponent and finds that the node’s template has a
+create operation that provides a filename (or references to an artifact
+which describes a file) of a known TOSCA deployment artifact type such
+as an Open Virtualization Format (OVF) image it will automatically
+deploy that image into the SoftwareComponent’s host Compute node.
+
+#### Operation sequencing and node state
+
+The following diagrams show how TOSCA orchestrators sequence the
+operations of the Standard lifecycle in normal node startup and shutdown
+procedures.
+
+<img src="media/image19.png" style="width:2.38333in;height:1.07222in" />The
+following key should be used to interpret the diagrams:
+
+##### Normal node startup sequence diagram
+
+<img src="media/image20.png" style="width:3.19444in;height:3.55833in" />The
+following diagram shows how the TOSCA orchestrator would invoke
+operations on the Standard lifecycle to startup a node.
+
+##### Normal node shutdown sequence diagram
+
+The following diagram shows how the TOSCA orchestrator would invoke
+operations on the Standard lifecycle to shut down a node.
+
+<img src="media/image21.png" style="width:2.96667in;height:2.52639in" />
+
+### tosca.interfaces.relationship.Configure
+
+The lifecycle interfaces define the essential, normative operations that
+each TOSCA Relationship Types may support.
+
+| Shorthand Name      | Configure                               |
+|---------------------|-----------------------------------------|
+| Type Qualified Name | tosca:Configure                         |
+| Type URI            | tosca.interfaces.relationship.Configure |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.interfaces.relationship.Configure:</p>
+<p>description: &gt;-</p>
+<p>The Configure lifecycle interface defines the essential</p>
+<p>normative operations that TOSCA relationships may support.</p>
+<p>derived_from: tosca.interfaces.Root</p>
+<p>short_name: Configure</p>
+<p>operations:</p>
+<p>pre_configure_source:</p>
+<p>description: &gt;-</p>
+<p>Operation to pre-configure the source endpoint.</p>
+<p>pre_configure_target:</p>
+<p>description: &gt;-</p>
+<p>Operation to pre-configure the target endpoint.</p>
+<p>post_configure_source:</p>
+<p>description: &gt;-</p>
+<p>Operation to post-configure the source endpoint.</p>
+<p>post_configure_target:</p>
+<p>description: &gt;-</p>
+<p>Operation to post-configure the target endpoint.</p>
+<p>add_target:</p>
+<p>description: &gt;-</p>
+<p>Operation to notify the source node of a target node being</p>
+<p>added via a relationship.</p>
+<p>add_source:</p>
+<p>description: &gt;-</p>
+<p>Operation to notify the target node of a source node which</p>
+<p>is now available via a relationship.</p>
+<p>target_changed:</p>
+<p>description: &gt;-</p>
+<p>Operation to notify the source node that some property or</p>
+<p>attribute of the target node changed.</p>
+<p>remove_target:</p>
+<p>description: &gt;-</p>
+<p>Operation to remove a target node.</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### <img src="media/image22.png" style="width:4.77986in;height:2.88542in" />Invocation Conventions 
+
+TOSCA relationships are directional connecting a source node to a target
+node. When TOSCA Orchestrator connects a source and target node together
+using a relationship that supports the Configure interface it will
+“interleave” the operations invocations of the Configure interface with
+those of the node’s own Standard lifecycle interface. This concept is
+illustrated below:
+
+#### Normal node start sequence with Configure relationship operations
+
+<img src="media/image23.png" style="width:3.37153in;height:4.04167in" />The
+following diagram shows how the TOSCA orchestrator would invoke
+Configure lifecycle operations in conjunction with Standard lifecycle
+operations during a typical startup sequence on a node.
+
+#### Node-Relationship configuration sequence
+
+Depending on which side (i.e., source or target) of a relationship a
+node is on, the orchestrator will:
+
+- Invoke either the pre_configure_source or pre_configure_target
+  operation as supplied by the relationship on the node.
+
+- Invoke the node’s configure operation.
+
+- Invoke either the post_configure_source or post_configure_target as
+  supplied by the relationship on the node.
+
+Note that the pre_configure_xxx and post_configure_xxx are invoked only
+once per node instance.
+
+##### Node-Relationship add, remove and changed sequence
+
+Since a topology template contains nodes that can dynamically be added
+(and scaled), removed or changed as part of an application instance, the
+Configure lifecycle includes operations that are invoked on node
+instances that to notify and address these dynamic changes.
+
+For example, a source node, of a relationship that uses the Configure
+lifecycle, will have the relationship operations add_target, or
+remove_target invoked on it whenever a target node instance is added or
+removed to the running application instance. In addition, whenever the
+node state of its target node changes, the target_changed operation is
+invoked on it to address this change. Conversely, the add_source and
+remove_source operations are invoked on the source node of the
+relationship.
+
+#### Notes
+
+- The target (provider) MUST be active and running (i.e., all its
+  dependency stack MUST be fulfilled) prior to invoking add_target
+
+<!-- -->
+
+- In other words, all Requirements MUST be satisfied before it
+  advertises its capabilities (i.e., the attributes of the matched
+  Capabilities are available).
+
+- In other words, it cannot be “consumed” by any dependent node.
+
+- Conversely, since the source (consumer) needs information (attributes)
+  about any targets (and their attributes) being removed before it
+  actually goes away.
+
+<!-- -->
+
+- The remove_target operation should only be executed if the target has
+  had add_target executed. BUT in truth we’re first informed about a
+  target in pre_configure_source, so if we execute that the source node
+  should see remove_target called to cleanup.
+
+- **Error handling**: If any node operation of the topology fails
+  processing should stop on that node template and the failing operation
+  (script) should return an error (failure) code when possible.
+
+## Node Types
+
+### tosca.nodes.Root
+
+The TOSCA Root Node Type is the default type that all other TOSCA base
+Node Types derive from. This allows for all TOSCA nodes to have a
+consistent set of features for modeling and management (e.g., consistent
+definitions for requirements, capabilities and lifecycle interfaces).
+
+| Shorthand Name      | Root             |
+|---------------------|------------------|
+| Type Qualified Name | tosca:Root       |
+| Type URI            | tosca.nodes.Root |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description                                           |
+|------|----------|------|-------------|-------------------------------------------------------|
+| N/A  | N/A      | N/A  | N/A         | The TOSCA Root Node type has no specified properties. |
+
+#### Attributes
+
+| Name       | Required | Type                        | Constraints      | Description                                                                                                                                                                                                                                                                                                                |
+|------------|----------|-----------------------------|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| tosca_id   | yes      | [string](#TYPE_YAML_STRING) | None             | A unique identifier of the realized instance of a Node Template that derives from any TOSCA normative type.                                                                                                                                                                                                                |
+| tosca_name | yes      | [string](#TYPE_YAML_STRING) | None             | This attribute reflects the name of the Node Template as defined in the TOSCA service template. This name is not unique to the realized instance model of corresponding deployed application as each template in the model can result in one or more instances (e.g., scaled) when orchestrated to a provider environment. |
+| state      | yes      | [string](#TYPE_YAML_STRING) | default: initial | The state of the node instance. See section “[Node States](#DEFN_TOSCA_VALUES_STATE)” for allowed values.                                                                                                                                                                                                                  |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Root:</p>
+<p>derived_from: tosca.entity.Root</p>
+<p>description: The TOSCA Node Type all other TOSCA base Node Types
+derive from</p>
+<p>attributes:</p>
+<p>tosca_id:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>tosca_name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>state:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>capabilities:</p>
+<p>feature:</p>
+<p>type: <a
+href="#tosca.capabilities.node">tosca.capabilities.Node</a></p>
+<p>requirements:</p>
+<p>- dependency:</p>
+<p>capability: <a
+href="#tosca.capabilities.node">tosca.capabilities.Node</a></p>
+<p>node: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>relationship: <a
+href="#tosca.relationships.dependson-1">tosca.relationships.DependsOn</a></p>
+<p>occurrences: [ 0, UNBOUNDED ]</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>type: <a
+href="#tosca.interfaces.node.lifecycle.standard">tosca.interfaces.node.lifecycle.Standard</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- All Node Type definitions that wish to adhere to TOSCA **SHOULD**
+  extend from the TOSCA Root Node Type to be assured of compatibility
+  and portability across implementations.
+
+### tosca.nodes.Abstract.Compute
+
+The TOSCA **Abstract.**Compute node represents an abstract compute
+resource without any requirements on storage or network resources.
+
+| Shorthand Name      | Abstract.Compute             |
+|---------------------|------------------------------|
+| Type Qualified Name | tosca:Abstract.Compute       |
+| Type URI            | tosca.nodes.Abstract.Compute |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Attributes
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Abstract.Compute:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>type: tosca.capabilities.Compute</p>
+<p>valid_source_types: []</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.Compute
+
+The TOSCA Compute node represents one or more real or virtual processors
+of software applications or services along with other essential local
+resources. Collectively, the resources the compute node represents can
+logically be viewed as a (real or virtual) “server”.
+
+| Shorthand Name      | Compute             |
+|---------------------|---------------------|
+| Type Qualified Name | tosca:Compute       |
+| Type URI            | tosca.nodes.Compute |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Attributes
+
+| Name            | Required | Type                                                                          | Constraints | Description                                                                                                         |
+|-----------------|----------|-------------------------------------------------------------------------------|-------------|---------------------------------------------------------------------------------------------------------------------|
+| private_address | no       | [string](#TYPE_YAML_STRING)                                                   | None        | The primary private IP address assigned by the cloud provider that applications may use to access the Compute node. |
+| public_address  | no       | [string](#TYPE_YAML_STRING)                                                   | None        | The primary public IP address assigned by the cloud provider that applications may use to access the Compute node.  |
+| networks        | no       | [map](#TYPE_TOSCA_MAP) of [NetworkInfo](#tosca.datatypes.network.networkinfo) | None        | The map of logical networks assigned to the compute host instance and information about them.                       |
+| ports           | no       | [map](#TYPE_TOSCA_MAP) of [PortInfo](#tosca.datatypes.network.portinfo)       | None        | The map of logical ports assigned to the compute host instance and information about them.                          |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Compute:</p>
+<p>derived_from: <a
+href="#tosca.nodes.abstract.compute">tosca.nodes.Abstract.Compute</a></p>
+<p>attributes:</p>
+<p>private_address:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>public_address:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>networks:</p>
+<p>type: map</p>
+<p>entry_schema:</p>
+<p>type: <a
+href="#tosca.datatypes.network.networkinfo">tosca.datatypes.network.NetworkInfo</a></p>
+<p>ports:</p>
+<p>type: map</p>
+<p>entry_schema:</p>
+<p>type: <a
+href="#tosca.datatypes.network.portinfo">tosca.datatypes.network.PortInfo</a></p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>capability: <a
+href="#tosca.capabilities.attachment">tosca.capabilities.Attachment</a></p>
+<p>node: <a
+href="#tosca.nodes.storage.blockstorage">tosca.nodes.Storage.BlockStorage</a></p>
+<p>relationship: <a
+href="#tosca.relationships.attachesto">tosca.relationships.AttachesTo</a></p>
+<p>occurrences: [0, UNBOUNDED]</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>type: <a
+href="#tosca.capabilities.container">tosca.capabilities.Compute</a></p>
+<p>valid_source_types: [<a
+href="#tosca.nodes.softwarecomponent">tosca.nodes.SoftwareComponent</a>]</p>
+<p>endpoint:</p>
+<p>type: <a
+href="#tosca.capabilities.endpoint.admin">tosca.capabilities.Endpoint.Admin</a></p>
+<p>os:</p>
+<p>type: <a
+href="#tosca.capabilities.operatingsystem">tosca.capabilities.OperatingSystem</a></p>
+<p>scalable:</p>
+<p>type: <a
+href="#tosca.capabilities.scalable">tosca.capabilities.Scalable</a></p>
+<p>binding:</p>
+<p>type: <a
+href="#tosca.capabilities.network.bindable">tosca.capabilities.network.Bindable</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- The underlying implementation of the Compute node SHOULD have the
+  ability to instantiate guest operating systems (either actual or
+  virtualized) based upon the OperatingSystem capability properties if
+  they are supplied in the a node template derived from the Compute node
+  type.
+
+### tosca.nodes.SoftwareComponent
+
+The TOSCA SoftwareComponent node represents a generic software component
+that can be managed and run by a TOSCA Compute Node Type.
+
+| Shorthand Name      | SoftwareComponent             |
+|---------------------|-------------------------------|
+| Type Qualified Name | tosca:SoftwareComponent       |
+| Type URI            | tosca.nodes.SoftwareComponent |
+
+#### Properties
+
+| Name              | Required | Type                           | Constraints | Description                                                                         |
+|-------------------|----------|--------------------------------|-------------|-------------------------------------------------------------------------------------|
+| component_version | no       | [version](#TYPE_TOSCA_VERSION) | None        | The optional software component’s version.                                          |
+| admin_credential  | no       | Credential                     | None        | The optional credential that can be used to authenticate to the software component. |
+
+#### Attributes
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.SoftwareComponent:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>properties:</p>
+<p># domain-specific software component version</p>
+<p>component_version:</p>
+<p>type: <a href="#TYPE_TOSCA_VERSION">version</a></p>
+<p>required: false</p>
+<p>admin_credential:</p>
+<p>type: <a
+href="#tosca.datatypes.json">tosca.datatypes.Credential</a></p>
+<p>required: false</p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>capability: tosca.capabilities.Compute</p>
+<p>node: <a
+href="#tosca.nodes.abstract.compute">tosca.nodes.Compute</a></p>
+<p>relationship: <a
+href="#tosca.relationships.hostedon-1">tosca.relationships.HostedOn</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- Nodes that can directly be managed and run by a TOSCA Compute Node
+  Type **SHOULD** extend from this type.
+
+### tosca.nodes.WebServer
+
+This TOSA WebServer Node Type represents an abstract software component
+or service that is capable of hosting and providing management
+operations for one or more WebApplication nodes.
+
+| Shorthand Name      | WebServer             |
+|---------------------|-----------------------|
+| Type Qualified Name | tosca:WebServer       |
+| Type URI            | tosca.nodes.WebServer |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| None | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.WebServer:</p>
+<p>derived_from: <a
+href="#tosca.nodes.softwarecomponent">tosca.nodes.SoftwareComponent</a></p>
+<p>capabilities:</p>
+<p># Private, layer 4 endpoints</p>
+<p>data_endpoint: <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a></p>
+<p>admin_endpoint: <a
+href="#tosca.capabilities.endpoint.admin">tosca.capabilities.Endpoint</a>.Admin</p>
+<p>host:</p>
+<p>type: <a
+href="#tosca.capabilities.container">tosca.capabilities.Compute</a></p>
+<p>valid_source_types: [ <a
+href="#tosca.nodes.webapplication">tosca.nodes.WebApplication</a>
+]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- This node **SHALL** export both a secure endpoint capability (i.e.,
+  admin_endpoint), typically for administration, as well as a regular
+  endpoint (i.e., data_endpoint) for serving data.
+
+### tosca.nodes.WebApplication
+
+The TOSCA WebApplication node represents a software application that can
+be managed and run by a TOSCA WebServer node. Specific types of web
+applications such as Java, etc. could be derived from this type.
+
+| Shorthand Name      | WebApplication             |
+|---------------------|----------------------------|
+| Type Qualified Name | tosca: WebApplication      |
+| Type URI            | tosca.nodes.WebApplication |
+
+#### Properties
+
+| Name         | Required | Type                        | Constraints | Description                                                                                                           |
+|--------------|----------|-----------------------------|-------------|-----------------------------------------------------------------------------------------------------------------------|
+| context_root | no       | [string](#TYPE_YAML_STRING) | None        | The web application’s context root which designates the application’s URL path within the web server it is hosted on. |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.WebApplication:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>properties:</p>
+<p>context_root:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>capabilities:</p>
+<p>app_endpoint:</p>
+<p>type: <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a></p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>capability: tosca.capabilities.Compute</p>
+<p>node: <a href="#tosca.nodes.webserver">tosca.nodes.WebServer</a></p>
+<p>relationship: <a
+href="#tosca.relationships.hostedon-1">tosca.relationships.HostedOn</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.DBMS
+
+The TOSCA DBMS node represents a typical relational, SQL Database
+Management System software component or service.
+
+#### Properties
+
+| Name          | Required | Type                          | Constraints | Description                                     |
+|---------------|----------|-------------------------------|-------------|-------------------------------------------------|
+| root_password | no       | [string](#TYPE_YAML_STRING)   | None        | The optional root password for the DBMS server. |
+| port          | no       | [integer](#TYPE_YAML_INTEGER) | None        | The DBMS server’s port.                         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.DBMS:</p>
+<p>derived_from: <a
+href="#tosca.nodes.softwarecomponent">tosca.nodes.SoftwareComponent</a></p>
+<p>properties:</p>
+<p>root_password:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>description: the optional root password for the DBMS service</p>
+<p>port:</p>
+<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
+<p>required: false</p>
+<p>description: the port the DBMS service will listen to for data and
+requests</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>type: tosca.capabilities.Compute</p>
+<p>valid_source_types: [ <a
+href="#tosca.nodes.database">tosca.nodes.Database</a> ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.Database
+
+The TOSCA Database node represents a logical database that can be
+managed and hosted by a TOSCA DBMS node.
+
+| Shorthand Name      | Database             |
+|---------------------|----------------------|
+| Type Qualified Name | tosca:Database       |
+| Type URI            | tosca.nodes.Database |
+
+#### Properties
+
+| Name     | Required | Type                          | Constraints | Description                                                                      |
+|----------|----------|-------------------------------|-------------|----------------------------------------------------------------------------------|
+| name     | yes      | [string](#TYPE_YAML_STRING)   | None        | The logical database Name                                                        |
+| port     | no       | [integer](#TYPE_YAML_INTEGER) | None        | The port the database service will use to listen for incoming data and requests. |
+| user     | no       | [string](#TYPE_YAML_STRING)   | None        | The special user account used for database administration.                       |
+| password | no       | [string](#TYPE_YAML_STRING)   | None        | The password associated with the user account provided in the ‘user’ property.   |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Database:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>properties:</p>
+<p>name:</p>
+<p>type: string</p>
+<p>description: the logical name of the database</p>
+<p>port:</p>
+<p>type: integer</p>
+<p>description: the port the underlying database service will listen to
+for data</p>
+<p>user:</p>
+<p>type: string</p>
+<p>description: the optional user account name for DB administration</p>
+<p>required: false</p>
+<p>password:</p>
+<p>type: string</p>
+<p>description: the optional password for the DB user account</p>
+<p>required: false</p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>capability: <a
+href="#tosca.capabilities.container">tosca.capabilities.Compute</a></p>
+<p>node: <a href="#tosca.nodes.dbms">tosca.nodes.DBMS</a></p>
+<p>relationship: <a
+href="#tosca.relationships.hostedon-1">tosca.relationships.HostedOn</a></p>
+<p>capabilities:</p>
+<p>database_endpoint:</p>
+<p>type: <a
+href="#tosca.capabilities.endpoint.database">tosca.capabilities.Endpoint.Database</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.Abstract.Storage
+
+The TOSCA Abstract.Storage node represents an abstract storage resource
+without any requirements on compute or network resources.
+
+| Shorthand Name      | AbstractStorage              |
+|---------------------|------------------------------|
+| Type Qualified Name | tosca:Abstract.Storage       |
+| Type URI            | tosca.nodes.Abstract.Storage |
+
+#### Properties
+
+| Name | Required | Type                                             | Constraints            | Description                                                        |
+|------|----------|--------------------------------------------------|------------------------|--------------------------------------------------------------------|
+| name | yes      | [string](#TYPE_YAML_STRING)                      | None                   | The logical name (or ID) of the storage resource.                  |
+| size | no       | [scalar-unit.size](#TYPE_TOSCA_SCALAR_UNIT_SIZE) | greater_or_equal: 0 MB | The requested initial storage size (default unit is in Gigabytes). |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Abstract.Storage:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>properties:</p>
+<p>name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>size:</p>
+<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
+<p>default: 0 MB</p>
+<p>constraints:</p>
+<p>- greater_or_equal: 0 MB</p>
+<p>capabilities:</p>
+<p># TBD</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.Storage.ObjectStorage
+
+The TOSCA ObjectStorage node represents storage that provides the
+ability to store data as objects (or BLOBs of data) without
+consideration for the underlying filesystem or devices.
+
+| Shorthand Name      | ObjectStorage                     |
+|---------------------|-----------------------------------|
+| Type Qualified Name | tosca:ObjectStorage               |
+| Type URI            | tosca.nodes.Storage.ObjectStorage |
+
+#### Properties
+
+| Name    | Required | Type                                             | Constraints            | Description                                                        |
+|---------|----------|--------------------------------------------------|------------------------|--------------------------------------------------------------------|
+| maxsize | no       | [scalar-unit.size](#TYPE_TOSCA_SCALAR_UNIT_SIZE) | greater_or_equal: 1 GB | The requested maximum storage size (default unit is in Gigabytes). |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Storage.ObjectStorage:</p>
+<p>derived_from: <a
+href="#tosca.nodes.abstract.storage">tosca.nodes.Abstract.Storage</a></p>
+<p>properties:</p>
+<p>maxsize:</p>
+<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
+<p>constraints:</p>
+<p>- greater_or_equal: 0 GB</p>
+<p>capabilities:</p>
+<p>storage_endpoint:</p>
+<p>type: <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notes:
+
+- Subclasses of the tosca.nodes.Storage.ObjectStorage node type may
+  impose further constraints on properties. For example, a subclass may
+  constrain the (minimum or maximum) length of the ‘name’ property or
+  include a regular expression to constrain allowed characters used in
+  the ‘name’ property.
+
+### tosca.nodes.Storage.BlockStorage
+
+The TOSCA BlockStorage node currently represents a server-local block
+storage device (i.e., not shared) offering evenly sized blocks of data
+from which raw storage volumes can be created.
+
+**Note**: In this draft of the TOSCA , distributed or Network Attached
+Storage (NAS) are not yet considered (nor are clustered file systems),
+but the TC plans to do so in future drafts.
+
+| Shorthand Name      | BlockStorage                     |
+|---------------------|----------------------------------|
+| Type Qualified Name | tosca:BlockStorage               |
+| Type URI            | tosca.nodes.Storage.BlockStorage |
+
+#### Properties
+
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 19%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>size</td>
+<td>yes *</td>
+<td><a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></td>
+<td>greater_or_equal: 1 MB</td>
+<td><p>The requested storage size (default unit is MB).</p>
+<p>* <strong>Note</strong>:</p>
+<ul>
+<li><p><strong>Required</strong> when an existing volume (i.e.,
+volume_id) is not available.</p></li>
+<li><p>If volume_id is provided, size is ignored. Resize of existing
+volumes is not considered at this time.</p></li>
+</ul></td>
+</tr>
+<tr class="even">
+<td>volume_id</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>ID of an existing volume (that is in the accessible scope of the
+requesting application).</td>
+</tr>
+<tr class="odd">
+<td>snapshot_id</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>Some identifier that represents an existing snapshot that should be
+used when creating the block storage (volume).</td>
+</tr>
+</tbody>
+</table>
+
+#### Attributes
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Storage.BlockStorage:</p>
+<p>derived_from: <a
+href="#tosca.nodes.abstract.storage">tosca.nodes.Abstract.Storage</a></p>
+<p>properties:</p>
+<p>volume_id:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>snapshot_id:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>capabilities:</p>
+<p>attachment:</p>
+<p>type: <a
+href="#tosca.capabilities.attachment">tosca.capabilities.Attachment</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Additional Requirements
+
+- The size property is required when an existing volume (i.e.,
+  volume_id) is not available. However, if the property volume_id is
+  provided, the size property is ignored.
+
+#### Notes
+
+- Resize is of existing volumes is not considered at this time.
+
+- It is assumed that the volume contains a single filesystem that the
+  operating system (that is hosting an associate application) can
+  recognize and mount without additional information (i.e., it is
+  operating system independent).
+
+- Currently, this version of the does not consider regions (or
+  availability zones) when modeling storage.
+
+### tosca.nodes.Container.Runtime
+
+The TOSCA Container Runtime node represents operating system-level
+virtualization technology used to run multiple application services on a
+single Compute host.
+
+| Shorthand Name      | Container.Runtime             |
+|---------------------|-------------------------------|
+| Type Qualified Name | tosca:Container.Runtime       |
+| Type URI            | tosca.nodes.Container.Runtime |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Container.Runtime:</p>
+<p>derived_from: <a
+href="#tosca.nodes.softwarecomponent">tosca.nodes.SoftwareComponent</a></p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>type: tosca.capabilities.Compute</p>
+<p>valid_source_types: [tosca.nodes.Container.Application]</p>
+<p>scalable:</p>
+<p>type: <a
+href="#tosca.capabilities.scalable">tosca.capabilities.Scalable</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.Container.Application
+
+The TOSCA Container Application node represents an application that
+requires Container-level virtualization technology.
+
+| Shorthand Name      | Container.Application             |
+|---------------------|-----------------------------------|
+| Type Qualified Name | tosca:Container.Application       |
+| Type URI            | tosca.nodes.Container.Application |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Container.Application:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>capability: tosca.capabilities.Compute</p>
+<p>node: <a
+href="#tosca.nodes.container.runtime">tosca.nodes.Container.Runtime</a></p>
+<p>relationship: <a
+href="#tosca.relationships.hostedon-1">tosca.relationships.HostedOn</a></p>
+<p>- storage:</p>
+<p>capability: <a
+href="#tosca.capabilities.storage">tosca.capabilities.Storage</a></p>
+<p>- network:</p>
+<p>capability: <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.LoadBalancer
+
+The TOSCA Load Balancer node represents logical function that be used in
+conjunction with a Floating Address to distribute an application’s
+traffic (load) across a number of instances of the application (e.g.,
+for a clustered or scaled application).
+
+| Shorthand Name      | LoadBalancer             |
+|---------------------|--------------------------|
+| Type Qualified Name | tosca:LoadBalancer       |
+| Type URI            | tosca.nodes.LoadBalancer |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.LoadBalancer:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>properties:</p>
+<p>algorithm:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>status: experimental</p>
+<p>capabilities:</p>
+<p>client:</p>
+<p>type: <a
+href="#tosca.capabilities.endpoint.public">tosca.capabilities.Endpoint.Public</a></p>
+<p>occurrences: [0, UNBOUNDED]</p>
+<p>description: the Floating (IP) client’s on the public network can
+connect to</p>
+<p>requirements:</p>
+<p>- application:</p>
+<p>capability: <a
+href="#tosca.capabilities.container">tosca.capabilities.Endpoint</a></p>
+<p>relationship: <a
+href="#tosca.relationships.hostedon-1">tosca.relationships.RoutesTo</a></p>
+<p>occurrences: [0, UNBOUNDED]</p>
+<p>description: Connection to one or more load balanced
+applications</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notes:
+
+- A LoadBalancer node can still be instantiated and managed
+  independently of any applications it would serve; therefore, the load
+  balancer’s application requirement allows for zero occurrences.
+
+## Group Types
+
+TOSCA Group Types represent logical groupings of TOSCA nodes that have
+an implied membership relationship and may need to be orchestrated or
+managed together to achieve some result. Some use cases being developed
+by the TOSCA TC use groups to apply TOSCA policies for software
+placement and scaling while other use cases show groups can be used to
+describe cluster relationships.
+
+**Note**: Additional normative TOSCA Group Types and use cases for them
+will be developed in future drafts of this specification.
+
+### tosca.groups.Root
+
+This is the default (root) TOSCA [Group
+Type](#DEFN_ENTITY_ARTIFACT_TYPE) definition that all other TOSCA base
+Group Types derive from.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.groups.Root:</p>
+<p>description: The TOSCA Group Type all other TOSCA Group Types derive
+from</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notes:
+
+- Group operations are not necessarily tied directly to member nodes
+  that are part of a group.
+
+- Future versions of this specification will create sub types of the
+  tosca.groups.Root type that will describe how Group Type operations
+  are to be orchestrated.
+
+## Policy Types
+
+TOSCA Policy Types represent logical grouping of TOSCA nodes that have
+an implied relationship and need to be orchestrated or managed together
+to achieve some result. Some use cases being developed by the TOSCA TC
+use groups to apply TOSCA policies for software placement and scaling
+while other use cases show groups can be used to describe cluster
+relationships.
+
+### tosca.policies.Root
+
+This is the default (root) TOSCA Policy Type definition that all other
+TOSCA base Policy Types derive from.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.policies.Root:</p>
+<p>description: The TOSCA Policy Type all other TOSCA Policy Types
+derive from</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.policies.Placement
+
+This is the default (root) TOSCA Policy Type definition that is used to
+govern placement of TOSCA nodes or groups of nodes.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.policies.Placement:</p>
+<p>derived_from: <a
+href="#tosca.policies.root">tosca.policies.Root</a></p>
+<p>description: The TOSCA Policy Type definition that is used to govern
+placement of TOSCA nodes or groups of nodes.</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.policies.Scaling
+
+This is the default (root) TOSCA Policy Type definition that is used to
+govern scaling of TOSCA nodes or groups of nodes.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.policies.Scaling:</p>
+<p>derived_from: <a
+href="#tosca.policies.root">tosca.policies.Root</a></p>
+<p>description: The TOSCA Policy Type definition that is used to govern
+scaling of TOSCA nodes or groups of nodes.</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.policies.Update
+
+This is the default (root) TOSCA Policy Type definition that is used to
+govern update of TOSCA nodes or groups of nodes.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.policies.Update:</p>
+<p>derived_from: <a
+href="#tosca.policies.root">tosca.policies.Root</a></p>
+<p>description: The TOSCA Policy Type definition that is used to govern
+update of TOSCA nodes or groups of nodes.</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.policies.Performance
+
+This is the default (root) TOSCA Policy Type definition that is used to
+declare performance requirements for TOSCA nodes or groups of nodes.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.policies.Performance:</p>
+<p>derived_from: <a
+href="#tosca.policies.root">tosca.policies.Root</a></p>
+<p>description: The TOSCA Policy Type definition that is used to declare
+performance requirements for TOSCA nodes or groups of nodes.</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+# Non-normative type definitions
+
+This section defines **non-normative** types which are used only in
+examples and use cases in this specification and are included only for
+completeness for the reader. Implementations of this specification are
+not required to support these types for conformance.
+
+## Artifact Types
+
+This section contains are non-normative Artifact Types used in use cases
+and examples.
+
+### tosca.artifacts.Deployment.Image.Container.Docker
+
+This artifact represents a Docker “image” (a TOSCA deployment artifact
+type) which is a binary comprised of one or more (a union of read-only
+and read-write) layers created from snapshots within the underlying
+Docker **Union File System.**
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Deployment.Image.Container.Docker:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.deployment.image">tosca.artifacts.Deployment.Image</a></p>
+<p>description: Docker Container Image</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.artifacts.Deployment.Image.VM.ISO
+
+A Virtual Machine (VM) formatted as an ISO standard disk image.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Deployment.Image.VM.ISO:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.deployment.image.vm">tosca.artifacts.Deployment.Image.VM</a></p>
+<p>description: Virtual Machine (VM) image in ISO disk format</p>
+<p>mime_type: application/octet-stream</p>
+<p>file_ext: [ iso ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.artifacts.Deployment.Image.VM.QCOW2
+
+A Virtual Machine (VM) formatted as a QEMU emulator version 2 standard
+disk image.
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.Deployment.Image.VM.QCOW2:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.deployment.image.vm">tosca.artifacts.Deployment.Image.VM</a></p>
+<p>description: Virtual Machine (VM) image in QCOW v2 standard disk
+format</p>
+<p>mime_type: application/octet-stream</p>
+<p>file_ext: [ qcow2 ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.artifacts.template.Jinja2
+
+This artifact type represents a template file written in Jinja2
+templating language \[Jinja2\].
+
+| Shorthand Name      | Template.Jinja2                 |
+|---------------------|---------------------------------|
+| Type Qualified Name | tosca:template.jinja2           |
+| Type URI            | tosca.artifacts.template.Jinja2 |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.template.Jinja2:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.deployment">tosca.artifacts.template</a></p>
+<p>description: Jinja2 template file</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Example
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>dbServer:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>properties:</p>
+<p>name:</p>
+<p>description:</p>
+<p>artifacts:</p>
+<p>configuration:</p>
+<p>type: tosca.artifacts.Implementation.Ansible</p>
+<p>file: implementation/configuration/Ansible/configure.yml</p>
+<p>template_configuration:</p>
+<p>type: tosca.artifacts.template.Jinja2</p>
+<p>file:
+implementation/configuration/templates/template_configuration.jinja2</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>configure:</p>
+<p>inputs:</p>
+<p>input1: . . .</p>
+<p>implementation:</p>
+<p>primary: configuration</p>
+<p>dependencies: [ template_configuration ]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.artifacts.template.Twig
+
+This artifact type represents a template file written in Twig templating
+language \[Twig\].
+
+| Shorthand Name      | Template.Twig                 |
+|---------------------|-------------------------------|
+| Type Qualified Name | tosca:template.Twig           |
+| Type URI            | tosca.artifacts.template.Twig |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.artifacts.template.Twig:</p>
+<p>derived_from: <a
+href="#tosca.artifacts.deployment">tosca.artifacts.template</a></p>
+<p>description: Twig template file</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Capability Types
+
+This section contains are non-normative Capability Types used in use
+cases and examples.
+
+### tosca.capabilities.Container.Docker
+
+The type indicates capabilities of a Docker runtime environment
+(client).
+
+| Shorthand Name      | Container.Docker                    |
+|---------------------|-------------------------------------|
+| Type Qualified Name | tosca:Container.Docker              |
+| Type URI            | tosca.capabilities.Container.Docker |
+
+#### Properties
+
+| Name          | Required | Type                                                  | Constraints    | Description                                                                                                                       |
+|---------------|----------|-------------------------------------------------------|----------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| version       | no       | [version](#TYPE_TOSCA_VERSION)\[\]                    | None           | The Docker version capability (i.e., the versions supported by the capability).                                                   |
+| publish_all   | no       | [boolean](#TYPE_YAML_BOOLEAN)                         | default: false | Indicates that all ports (ranges) listed in the *dockerfile* using the EXPOSE keyword be published.                               |
+| publish_ports | no       | list of [PortSpec](#tosca.datatypes.network.portspec) | None           | List of ports mappings from source (Docker container) to target (host) ports to publish.                                          |
+| expose_ports  | no       | list of [PortSpec](#tosca.datatypes.network.portspec) | None           | List of ports mappings from source (Docker container) to expose to other Docker containers (not accessible outside host).         |
+| volumes       | no       | list of [string](#TYPE_YAML_STRING)                   | None           | The *dockerfile* VOLUME command which is used to enable access from the Docker container to a directory on the host machine.      |
+| host_id       | no       | [string](#TYPE_YAML_STRING)                           | None           | The optional identifier of an existing host resource that should be used to run this container on.                                |
+| volume_id     | no       | [string](#TYPE_YAML_STRING)                           | None           | The optional identifier of an existing storage volume (resource) that should be used to create the container’s mount point(s) on. |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.Container.Docker:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.container">tosca.capabilities.Container</a></p>
+<p>properties:</p>
+<p>version:</p>
+<p>type: list</p>
+<p>required: false</p>
+<p>entry_schema: <a href="#TYPE_TOSCA_VERSION">version</a></p>
+<p>publish_all:</p>
+<p>type: <a href="#TYPE_YAML_BOOLEAN">boolean</a></p>
+<p>default: false</p>
+<p>required: false</p>
+<p>publish_ports:</p>
+<p>type: list</p>
+<p>entry_schema: <a
+href="#tosca.datatypes.network.portspec">PortSpec</a></p>
+<p>required: false</p>
+<p>expose_ports:</p>
+<p>type: list</p>
+<p>entry_schema: <a
+href="#tosca.datatypes.network.portspec">PortSpec</a></p>
+<p>required: false</p>
+<p>volumes:</p>
+<p>type: list</p>
+<p>entry_schema: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notes
+
+- When the expose_ports property is used, only the source and
+  source_range properties of
+  [PortSpec](#tosca.datatypes.network.portspec) would be valid for
+  supplying port numbers or ranges, the target and target_range
+  properties would be ignored.
+
+## Node Types
+
+This section contains non-normative node types referenced in use cases
+and examples. All additional Attributes, Properties, Requirements and
+Capabilities shown in their definitions (and are not inherited from
+ancestor normative types) are also considered to be non-normative.
+
+### tosca.nodes.Database.MySQL
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Database.MySQL:</p>
+<p>derived_from: <a
+href="#tosca.nodes.database">tosca.nodes.Database</a></p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>node: <a
+href="#tosca.nodes.dbms.mysql">tosca.nodes.DBMS.MySQL</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.DBMS.MySQL
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.DBMS.MySQL:</p>
+<p>derived_from: <a href="#tosca.nodes.dbms">tosca.nodes.DBMS</a></p>
+<p>properties:</p>
+<p>port:</p>
+<p>description: reflect the default MySQL server port</p>
+<p>default: 3306</p>
+<p>root_password:</p>
+<p># MySQL requires a root_password for configuration</p>
+<p># Override parent DBMS definition to make this property required</p>
+<p>required: true</p>
+<p>capabilities:</p>
+<p># Further constrain the ‘host’ capability to only allow MySQL
+databases</p>
+<p>host:</p>
+<p>valid_source_types: [ <a
+href="#tosca.nodes.database.mysql">tosca.nodes.Database.MySQL</a>
+]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.WebServer.Apache
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.WebServer.Apache:</p>
+<p>derived_from: <a
+href="#tosca.nodes.webserver">tosca.nodes.WebServer</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.WebApplication.WordPress
+
+This section defines a non-normative Node type for the WordPress
+\[[WordPress](#REF_WORDPRESS)\] application.
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.WebApplication.WordPress:</p>
+<p>derived_from: <a
+href="#tosca.nodes.webapplication">tosca.nodes.WebApplication</a></p>
+<p>properties:</p>
+<p>admin_user:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>admin_password:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>db_host:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>requirements:</p>
+<p>- database_endpoint:</p>
+<p>capability: <a
+href="#tosca.capabilities.endpoint.database">tosca.capabilities.Endpoint.Database</a></p>
+<p>node: <a href="#tosca.nodes.database">tosca.nodes.Database</a></p>
+<p>relationship: <a
+href="#tosca.relationships.connectsto-1">tosca.relationships.ConnectsTo</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.WebServer.Nodejs
+
+This non-normative node type represents a Node.js
+\[[NodeJS](#REF_NODEJS)\] web application server.
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.WebServer.Nodejs:</p>
+<p>derived_from: <a
+href="#tosca.nodes.webserver">tosca.nodes.WebServer</a></p>
+<p>properties:</p>
+<p># Property to supply the desired implementation in the Github
+repository</p>
+<p>github_url:</p>
+<p>required: no</p>
+<p>type: string</p>
+<p>description: location of the application on the github.</p>
+<p>default: https://github.com/mmm/testnode.git</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>inputs:</p>
+<p>github_url:</p>
+<p>type: string</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.Container.Application.Docker
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.Container.Application.Docker:</p>
+<p>derived_from: <a
+href="#tosca.nodes.container.application">tosca.nodes.Containertosca.nodes.Container</a>.Application</p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>capability: tosca.capabilities.Container.Docker</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+# Component Modeling Use Cases
+
+This section is **non-normative** and includes use cases that explore
+how to model components and their relationships using TOSCA.
+
+### Use Case: Exploring the HostedOn relationship using WebApplication and WebServer
+
+This use case examines the ways TOSCA YAML can be used to express a
+simple hosting relationship (i.e., HostedOn) using the normative TOSCA
+WebServer and WebApplication node types defined in this specification.
+
+#### WebServer declares its “host” capability
+
+For convenience, relevant parts of the normative TOSCA Node Type for
+WebServer are shown below:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.WebServer</p>
+<p>derived_from: <a
+href="#tosca.nodes.softwarecomponent">SoftwareComponent</a></p>
+<p>capabilities:</p>
+<p>...</p>
+<p>host:</p>
+<p>type: <a
+href="#tosca.capabilities.container">tosca.capabilities.Container</a></p>
+<p>valid_source_types: [ <a
+href="#tosca.nodes.webapplication">tosca.nodes.WebApplication</a>
+]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+As can be seen, the WebServer Node Type declares its capability to
+“contain” (i.e., host) other nodes using the symbolic name “host” and
+providing the Capability Type tosca.capabilities.Container. It should be
+noted that the symbolic name of “host” is not a reserved word, but one
+assigned by the type designer that implies at or betokens the associated
+capability. The Container capability definition also includes a required
+list of valid Node Types that can be contained by this, the WebServer,
+Node Type. This list is declared using the keyname of valid_source_types
+and in this case it includes only allowed type WebApplication.
+
+#### WebApplication declares its “host” requirement
+
+The WebApplication node type needs to be able to describe the type of
+capability a target node would have to provide in order to “host” it.
+The normative TOSCA capability type tosca.capabilities.Container is used
+to describe all normative TOSCA hosting (i.e., container-containee
+pattern) relationships. As can be seen below, the WebApplication
+accomplishes this by declaring a requirement with the symbolic name
+“host” with the **capability** keyname set to
+tosca.capabilities.Container.
+
+Again, for convenience, the relevant parts of the normative
+WebApplication Node Type are shown below:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.WebApplication:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>capability: <a
+href="#tosca.capabilities.container">tosca.capabilities.Container</a></p>
+<p>node: <a href="#tosca.nodes.webserver">tosca.nodes.WebServer</a></p>
+<p>relationship: <a
+href="#tosca.relationships.hostedon-1">tosca.relationships.HostedOn</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### Notes
+
+- The symbolic name “host” is not a keyword and was selected for
+  consistent use in TOSCA normative node types to give the reader an
+  indication of the type of requirement being referenced. A valid
+  HostedOn relationship could still be established between WebApplicaton
+  and WebServer in a TOSCA Service Template regardless of the symbolic
+  name assigned to either the requirement or capability declaration.
+
+### Use Case: Establishing a ConnectsTo relationship to WebServer
+
+This use case examines the ways TOSCA YAML can be used to express a
+simple connection relationship (i.e.,
+[ConnectsTo](#tosca.relationships.connectsto-1)) between some service
+derived from the [SoftwareComponent](#tosca.nodes.softwarecomponent)
+Node Type, to the normative [WebServer](#tosca.nodes.webserver) node
+type defined in this specification.
+
+The service template that would establish a
+[ConnectsTo](#tosca.relationships.connectsto-1) relationship as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_types:</p>
+<p>MyServiceType:</p>
+<p>derived_from: <a
+href="#tosca.nodes.softwarecomponent">SoftwareComponent</a></p>
+<p>requirements:</p>
+<p># This type of service requires a connection to a WebServer’s
+data_endpoint</p>
+<p>- connection1:</p>
+<p>node: <a href="#tosca.nodes.webserver">WebServer</a></p>
+<p>relationship: <a
+href="#tosca.relationships.connectsto-1">ConnectsTo</a></p>
+<p>capability: <a href="#tosca.capabilities.endpoint">Endpoint</a></p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_web_service:</p>
+<p>type: MyServiceType</p>
+<p>...</p>
+<p>requirements:</p>
+<p>- connection1:</p>
+<p>node: my_web_server</p>
+<p>my_web_server:</p>
+<p># Note, the normative WebServer node type declares the
+“data_endpoint”</p>
+<p># capability of type <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a>.</p>
+<p>type: <a href="#tosca.nodes.webserver">WebServer</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+Since the normative WebServer Node Type only declares one capability of
+type tosca.capabilties.Endpoint (or Endpoint, its shortname alias in
+TOSCA) using the symbolic name data_endpoint, the my_web_service node
+template does not need to declare that symbolic name on its requirement
+declaration. If however, the my_web_server node was based upon some
+other node type that declared more than one capability of type Endpoint,
+then the capability keyname could be used to supply the desired symbolic
+name if necessary.
+
+#### Best practice
+
+It should be noted that the best practice for designing Node Types in
+TOSCA should not export two capabilities of the same type if they truly
+offer different functionality (i.e., different capabilities) which
+should be distinguished using different Capability Type definitions.
+
+### Use Case: Attaching (local) BlockStorage to a Compute node 
+
+This use case examines the ways TOSCA YAML can be used to express a
+simple AttachesTo relationship between a Compute node and a locally
+attached BlockStorage node.
+
+The service template that would establish an
+[AttachesTo](#tosca.relationships.attachesto) relationship follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>my_server:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>...</p>
+<p>requirements:</p>
+<p># contextually this can only be a relationship type</p>
+<p>- local_storage:</p>
+<p># capability is provided by Compute Node Type</p>
+<p>node: my_block_storage</p>
+<p>relationship:</p>
+<p>type: <a href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>properties:</p>
+<p>location: /path1/path2</p>
+<p># This maps the local requirement name ‘local_storage’ to the</p>
+<p># target node’s capability name ‘attachment’</p>
+<p>my_block_storage:</p>
+<p>type: <a
+href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
+<p>properties:</p>
+<p>size: 10 GB</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Use Case: Reusing a BlockStorage Relationship using Relationship Type or Relationship Template
+
+This builds upon the previous use case (10.1.3) to examine how a
+template author could attach multiple Compute nodes (templates) to the
+same BlockStorage node (template), but with slightly different property
+values for the AttachesTo relationship.
+
+Specifically, several notation options are shown (in this use case) that
+achieve the same desired result.
+
+####  Rationale
+
+Referencing an explicitly declared Relationship Template is a
+convenience of the that allows template authors an entity to set,
+constrain or override the properties and operations as defined in its
+declared (Relationship) Type much as allowed now for Node Templates. It
+is especially useful when a complex Relationship Type (with many
+configurable properties or operations) has several logical occurrences
+in the same Service (Topology) Template; allowing the author to avoid
+configuring these same properties and operations in multiple Node
+Templates.
+
+#### Notation Style \#1: Augment AttachesTo Relationship Type directly in each Node Template
+
+This notation extends the methodology used for establishing a HostedOn
+relationship, but allowing template author to supply (dynamic)
+configuration and/or override of properties and operations.
+
+**Note:** This option will remain valid for regardless of other notation
+(copy or aliasing) options being discussed or adopted for future
+versions.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>my_block_storage:</p>
+<p>type: <a
+href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
+<p>properties:</p>
+<p>size: 10</p>
+<p>my_web_app_tier_1:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_block_storage</p>
+<p>relationship: MyAttachesTo</p>
+<p># use default property settings in the Relationship Type
+definition</p>
+<p>my_web_app_tier_2:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_block_storage</p>
+<p>relationship:</p>
+<p>type: MyAttachesTo</p>
+<p># Override default property setting for just the ‘location’
+property</p>
+<p>properties:</p>
+<p>location: /some_other_data_location</p>
+<p>relationship_types:</p>
+<p>MyAttachesTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>properties:</p>
+<p>location: /default_location</p>
+<p>interfaces:</p>
+<p>Configure:</p>
+<p>post_configure_target:</p>
+<p>implementation: default_script.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notation Style \#2: Use the ‘template’ keyword on the Node Templates to specify which named Relationship Template to use
+
+This option shows how to explicitly declare different named Relationship
+Templates within the Service Template as part of a
+relationship_templates section (which have different property values)
+and can be referenced by different Compute typed Node Templates.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>my_block_storage:</p>
+<p>type: BlockStorage</p>
+<p>properties:</p>
+<p>size: 10</p>
+<p>my_web_app_tier_1:</p>
+<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_block_storage</p>
+<p>relationship: storage_attachesto_1</p>
+<p>my_web_app_tier_2:</p>
+<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_block_storage</p>
+<p>relationship: storage_attachesto_2</p>
+<p>relationship_templates:</p>
+<p>storage_attachesto_1:</p>
+<p>type: MyAttachesTo</p>
+<p>properties:</p>
+<p>location: /my_data_location</p>
+<p>storage_attachesto_2:</p>
+<p>type: MyAttachesTo</p>
+<p>properties:</p>
+<p>location: /some_other_data_location</p>
+<p>relationship_types:</p>
+<p>MyAttachesTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>interfaces:</p>
+<p>some_interface_name:</p>
+<p>some_operation:</p>
+<p>implementation: default_script.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notation Style \#3: Using the “copy” keyname to define a similar Relationship Template
+
+How does TOSCA make it easier to create a new relationship template that
+is mostly the same as one that exists without manually copying all the
+same information? TOSCA provides the copy keyname as a convenient way to
+copy an existing template definition into a new template definition as a
+starting point or basis for describing a new definition and avoid manual
+copy. The end results are cleaner TOSCA Service Templates that allows
+the description of only the changes (or deltas) between similar
+templates.
+
+The example below shows that the Relationship Template named
+storage_attachesto_1 provides some overrides (conceptually a large set
+of overrides) on its Type which the Relationship Template named
+storage_attachesto_2 wants to “copy” before perhaps providing a smaller
+number of overrides.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>my_block_storage:</p>
+<p>type: <a
+href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
+<p>properties:</p>
+<p>size: 10</p>
+<p>my_web_app_tier_1:</p>
+<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- attachment:</p>
+<p>node: my_block_storage</p>
+<p>relationship: storage_attachesto_1</p>
+<p>my_web_app_tier_2:</p>
+<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- attachment:</p>
+<p>node: my_block_storage</p>
+<p>relationship: storage_attachesto_2</p>
+<p>relationship_templates:</p>
+<p>storage_attachesto_1:</p>
+<p>type: MyAttachesTo</p>
+<p>properties:</p>
+<p>location: /my_data_location</p>
+<p>interfaces:</p>
+<p>some_interface_name:</p>
+<p>some_operation_name_1: my_script_1.sh</p>
+<p>some_operation_name_2: my_script_2.sh</p>
+<p>some_operation_name_3: my_script_3.sh</p>
+<p>storage_attachesto_2:</p>
+<p># Copy the contents of the “storage_attachesto_1” template into this
+new one</p>
+<p>copy: storage_attachesto_1</p>
+<p># Then change just the value of the location property</p>
+<p>properties:</p>
+<p>location: /some_other_data_location</p>
+<p>relationship_types:</p>
+<p>MyAttachesTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>interfaces:</p>
+<p>some_interface_name:</p>
+<p>some_operation:</p>
+<p>implementation: default_script.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+# Application Modeling Use Cases
+
+This section is **non-normative** and includes use cases that show how
+to model Infrastructure-as-a-Service (IaaS), Platform-as-a-Service
+(PaaS) and complete application uses cases using TOSCA.
+
+## Use cases
+
+Many of the use cases listed below can be found under the following
+link:
+
+<https://github.com/openstack/heat-translator/tree/master/translator/tests/data>
+
+### Overview
+
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#USE_CASE_COMPUTE_1"><strong>Compute</strong></a>: Create a
+single Compute instance with a host Operating System</td>
+<td>Introduces a TOSCA Compute node type which is used to stand up a
+single compute instance with a host Operating System Virtual Machine
+(VM) image selected by the platform provider using the Compute node’s
+properties.</td>
+</tr>
+<tr class="even">
+<td><a href="#USE_CASE_SW_COMP_1"><strong>Software Component
+1</strong></a>: Automatic deployment of a Virtual Machine (VM) image
+artifact</td>
+<td>Introduces the SoftwareComponent node type which declares software
+that is hosted on a Compute instance. In this case, the
+SoftwareComponent declares a VM image as a deployment artifact which
+includes its own pre-packaged operating system and software. The TOSCA
+Orchestrator detects this known deployment artifact type on the
+SoftwareComponent node template and automatically deploys it to the
+Compute node.</td>
+</tr>
+<tr class="odd">
+<td><a
+href="#USE_CASE_BLOCKSTORAGE_1"><strong>BlockStorage-1</strong></a>:
+Attaching Block Storage to a single Compute instance</td>
+<td>Demonstrates how to attach a TOSCA BlockStorage node to a Compute
+node using the normative AttachesTo relationship.</td>
+</tr>
+<tr class="even">
+<td><a
+href="#USE_CASE_BLOCKSTORAGE_2"><strong>BlockStorage-2</strong></a>:
+Attaching Block Storage using a custom Relationship Type</td>
+<td>Demonstrates how to attach a TOSCA BlockStorage node to a Compute
+node using a custom RelationshipType that derives from the normative
+AttachesTo relationship.</td>
+</tr>
+<tr class="odd">
+<td><a
+href="#USE_CASE_BLOCKSTORAGE_3"><strong>BlockStorage-3</strong></a>:
+Using a Relationship Template of type AttachesTo</td>
+<td>Demonstrates how to attach a TOSCA BlockStorage node to a Compute
+node using a TOSCA Relationship Template that is based upon the
+normative AttachesTo Relationship Type.</td>
+</tr>
+<tr class="even">
+<td><a
+href="#USE_CASE_BLOCKSTORAGE_4"><strong>BlockStorage-4</strong></a>:
+Single Block Storage shared by 2-Tier Application with custom AttachesTo
+Type and implied relationships</td>
+<td>This use case shows 2 Compute instances (2 tiers) with one
+BlockStorage node, and also uses a custom AttachesTo Relationship that
+provides a default mount point (i.e., location) which the 1<sup>st</sup>
+tier uses, but the 2<sup>nd</sup> tier provides a different mount
+point.</td>
+</tr>
+<tr class="odd">
+<td><a
+href="#USE_CASE_BLOCKSTORAGE_5"><strong>BlockStorage-5</strong></a>:
+Single Block Storage shared by 2-Tier Application with custom AttachesTo
+Type and explicit Relationship Templates</td>
+<td>This use case is like the previous <a
+href="#USE_CASE_BLOCKSTORAGE_4">BlockStorage-4</a> use case, but also
+creates two relationship templates (one for each tier) each of which
+provide a different mount point (i.e., location) which overrides the
+default location defined in the custom Relationship Type.</td>
+</tr>
+<tr class="even">
+<td><a
+href="#USE_CASE_BLOCKSTORAGE_6"><strong>BlockStorage-6</strong></a>:
+Multiple Block Storage attached to different Servers</td>
+<td>This use case demonstrates how two different TOSCA BlockStorage
+nodes can be attached to two different Compute nodes (i.e., servers)
+each using the normative AttachesTo relationship.</td>
+</tr>
+<tr class="odd">
+<td><a href="#USE_CASE_OBJECTSTORAGE_1"><strong>Object Storage
+1</strong></a>: Creating an Object Storage service</td>
+<td>Introduces the TOSCA ObjectStorage node type and shows how it can be
+instantiated.</td>
+</tr>
+<tr class="even">
+<td><a href="#USE_CASE_NETWORK_1"><strong>Network-1</strong></a>: Server
+bound to a new network</td>
+<td>Introduces the TOSCA Network and Port nodes used for modeling
+logical networks using the LinksTo and BindsTo Relationship Types. In
+this use case, the template is invoked without an existing network_name
+as an input property so a new network is created using the properties
+declared in the Network node.</td>
+</tr>
+<tr class="odd">
+<td><a href="#USE_CASE_NETWORK_2"><strong>Network-2</strong></a>: Server
+bound to an existing network</td>
+<td>Shows how to use a network_name as an input parameter to the
+template to allow a server to be associated with (i.e. bound to) an
+existing Network.</td>
+</tr>
+<tr class="even">
+<td><a href="#USE_CASE_NETWORK_3"><strong>Network-3</strong></a>: Two
+servers bound to a single network</td>
+<td>This use case shows how two servers (Compute nodes) can be
+associated with the same Network node using two logical network
+Ports.</td>
+</tr>
+<tr class="odd">
+<td><a href="#USE_CASE_NETWORK_4"><strong>Network-4</strong></a>: Server
+bound to three networks</td>
+<td>This use case shows how three logical networks (Network nodes), each
+with its own IP address range, can be associated with the same server
+(Compute node).</td>
+</tr>
+<tr class="even">
+<td><a
+href="#USE_CASE_WEBSERVER_DBMS_1"><strong>WebServer-DBMS-1</strong></a>:
+WordPress [<a href="#REF_WORDPRESS">WordPress</a>] + MySQL, single
+instance</td>
+<td>Shows how to host a TOSCA WebServer with a TOSCA WebApplication,
+DBMS and Database Node Types along with their dependent HostedOn and
+ConnectsTo relationships.</td>
+</tr>
+<tr class="odd">
+<td><a
+href="#USE_CASE_WEBSERVER_DBMS_2"><strong>WebServer-DBMS-2</strong></a>:
+Nodejs with PayPal Sample App and MongoDB on separate instances</td>
+<td>Instantiates a 2-tier application with Nodejs and its (PayPal
+sample) WebApplication on one tier which connects a MongoDB database
+(which stores its application data) using a ConnectsTo
+relationship.</td>
+</tr>
+<tr class="even">
+<td><a href="#USE_CASE_MULTI_TIER_1"><strong>Multi-Tier-1</strong></a>:
+Elasticsearch, Logstash, Kibana (ELK)</td>
+<td><p>Shows Elasticsearch, Logstash and Kibana (ELK) being used in a
+typical manner to collect, search and monitor/visualize data from a
+running application.</p>
+<p>This use case builds upon the previous Nodejs/MongoDB 2-tier
+application as the one being monitored. The collectd and rsyslog
+components are added to both the WebServer and Database tiers which work
+to collect data for Logstash.</p>
+<p>In addition to the application tiers, a 3<sup>rd</sup> tier is
+introduced with Logstash to collect data from the application tiers.
+Finally a 4<sup>th</sup> tier is added to search the Logstash data with
+Elasticsearch and visualize it using Kibana.</p>
+<p><strong><u>Note</u></strong>: This use case also shows the
+convenience of using a single YAML macro (declared in the
+dsl_definitions section of the TOSCA Service Template) on multiple
+Compute nodes.</p></td>
+</tr>
+<tr class="odd">
+<td><a href="#USE_CASE_CONTAINERS_1"><strong>Container-1</strong></a>:
+Containers using Docker single Compute instance (Containers only)</td>
+<td><p>Minimalist TOSCA Service Template description of 2 Docker
+containers linked to each other. Specifically, one container runs
+<strong>wordpress</strong> and connects to second <strong>mysql</strong>
+database container both on a single server (i.e., Compute instance). The
+use case also demonstrates how TOSCA declares and references Docker
+images from the Docker Hub repository.</p>
+<p><strong><u>Variation 1</u></strong>: Docker Container nodes (only)
+providing their Docker Requirements allowing platform (orchestrator) to
+select/provide the underlying Docker implementation
+(Capability).</p></td>
+</tr>
+<tr class="even">
+<td>Artifacts: Compute Node with multiple artifacts</td>
+<td>Illustrates how multiple artifacts for different lifecycle
+operations (create, terminate, configure, etc.) can be associated with a
+node.</td>
+</tr>
+</tbody>
+</table>
+
+### Compute: Create a single Compute instance with a host Operating System
+
+#### Description
+
+This use case demonstrates how the TOSCA specification can be used to
+stand up a single Compute instance with a guest Operating System using a
+normative TOSCA Compute node. The TOSCA Compute node is declarative in
+that the service template describes both the processor and host
+operating system platform characteristics (i.e., properties declared on
+the capability named “os” sometimes called a “flavor”) that are desired
+by the template author. The cloud provider would attempt to fulfill
+these properties (to the best of its abilities) during orchestration.
+
+#### Features
+
+This use case introduces the following TOSCA features:
+
+- A node template that uses the normative TOSCA Compute Node Type along
+  with showing an exemplary set of its properties being configured.
+
+- Use of the TOSCA Service Template inputs section to declare a
+  configurable value the template user may supply at runtime. In this
+  case, the “host” property named “num_cpus” (of type integer) is
+  declared.
+
+  - Use of a property constraint to limit the allowed integer values for
+    the “num_cpus” property to a specific list supplied in the property
+    declaration.
+
+- Use of the TOSCA Service Template outputs section to declare a value
+  the template user may request at runtime. In this case, the property
+  named “instance_ip” is declared
+
+  - The “instance_ip” output property is programmatically retrieved from
+    the Compute node’s “public_address” attribute using the TOSCA
+    Service Template-level get_attribute function.
+
+#### Logical Diagram
+
+<img src="media/image24.png" style="width:1.97513in;height:2.8in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA that just defines a single compute instance and selects a
+(guest) host Operating System from the Compute node’s properties. Note,
+this example does not include default values on inputs properties.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 1 GB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: ubuntu</p>
+<p>version: 12.04</p>
+<p>outputs:</p>
+<p>private_ip:</p>
+<p>description: The private IP address of the deployed server
+instance.</p>
+<p>value: { get_attribute: [my_server, private_address] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notes
+
+- This use case uses a versioned, Linux Ubuntu distribution on the
+  Compute node.
+
+### Software Component 1: Automatic deployment of a Virtual Machine (VM) image artifact
+
+#### Description
+
+This use case demonstrates how the TOSCA SoftwareComponent node type can
+be used to declare software that is packaged in a standard Virtual
+Machine (VM) image file format (i.e., in this case QCOW2) and is hosted
+on a TOSCA Compute node (instance). In this variation, the
+SoftwareComponent declares a VM image as a deployment artifact that
+includes its own pre-packaged operating system and software. The TOSCA
+Orchestrator detects this known deployment artifact type on the
+SoftwareComponent node template and automatically deploys it to the
+Compute node.
+
+#### Features
+
+This use case introduces the following TOSCA features:
+
+- A node template that uses the normative TOSCA SoftwareComponent Node
+  Type along with showing an exemplary set of its properties being
+  configured.
+
+- Use of the TOSCA Service Template artifacts section to declare a
+  Virtual Machine (VM) image artifact type which is referenced by the
+  SoftwareComponent node template.
+
+- The VM file format, in this case QCOW2, includes its own guest
+  Operating System (OS) and therefore does **<u>not</u>** “require” a
+  TOSCA OperatingSystem capability from the TOSCA Compute node.
+
+#### Assumptions
+
+This use case assumes the following:
+
+- That the TOSCA Orchestrator (working with the Cloud provider’s
+  underlying management services) is able to instantiate a Compute node
+  that has a hypervisor that supports the Virtual Machine (VM) image
+  format, in this case QCOW2, which should be compatible with many
+  standard hypervisors such as XEN and KVM.
+
+- This is not a “bare metal” use case and assumes the existence of a
+  hypervisor on the machine that is allocated to “host” the Compute
+  instance supports (e.g. has drivers, etc.) the VM image format in this
+  example.
+
+#### Logical Diagram
+
+<img src="media/image25.png" style="width:4.22137in;height:4.00833in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with a SoftwareComponent node with a declared Virtual machine
+(VM) deployment artifact that automatically deploys to its host Compute
+node.</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_virtual_machine:</p>
+<p>type: <a
+href="#tosca.nodes.softwarecomponent">SoftwareComponent</a></p>
+<p>artifacts:</p>
+<p>my_vm_image:</p>
+<p>file: images/fedora-18-x86_64.qcow2</p>
+<p>type: tosca.artifacts.Deployment.Image.VM.QCOW2</p>
+<p>topology: my_VMs_topology.yaml</p>
+<p>requirements:</p>
+<p>- host: my_server</p>
+<p># Automatically deploy the VM image referenced on the create
+operation</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create: my_vm_image</p>
+<p># Compute instance with no Operating System guest host</p>
+<p>my_server:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>capabilities:</p>
+<p># Note: no guest OperatingSystem requirements as these are in the
+image.</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4 GB</p>
+<p>outputs:</p>
+<p>private_ip:</p>
+<p>description: The private IP address of the deployed server
+instance.</p>
+<p>value: { get_attribute: [my_server, private_address] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notes
+
+- The use of the type keyname on the artifact definition (within the
+  my_virtual_machine node template) to declare the ISO image deployment
+  artifact type (i.e., tosca.artifacts.Deployment.Image.VM.ISO) is
+  redundant since the file extension is “.iso” which associated with
+  this known, declared artifact type.
+
+- This use case references a filename on the my_vm_image artifact, which
+  indicates a Linux, Fedora 18, x86 VM image, only as one possible
+  example.
+
+### Block Storage 1: Using the normative AttachesTo Relationship Type
+
+#### Description
+
+This use case demonstrates how to attach a TOSCA BlockStorage node to a
+Compute node using the normative AttachesTo relationship.
+
+#### Logical Diagram
+
+<img src="media/image26.png" style="width:5.21144in;height:3.02413in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with server and attached block storage using the normative
+AttachesTo Relationship Type.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>storage_size:</p>
+<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
+<p>description: Size of the storage to be created.</p>
+<p>default: 1 GB</p>
+<p>storage_snapshot_id:</p>
+<p>type: string</p>
+<p>description: &gt;</p>
+<p>Optional identifier for an existing snapshot to use when creating
+storage.</p>
+<p>storage_location:</p>
+<p>type: string</p>
+<p>description: Block storage mount point (filesystem path).</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 1 GB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: linux</p>
+<p>distribution: fedora</p>
+<p>version: 18.0</p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_storage</p>
+<p>relationship:</p>
+<p>type: <a href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>properties:</p>
+<p>location: { get_input: storage_location }</p>
+<p>my_storage:</p>
+<p>type: <a
+href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
+<p>properties:</p>
+<p>size: { get_input: storage_size }</p>
+<p>snapshot_id: { get_input: storage_snapshot_id }</p>
+<p>outputs:</p>
+<p>private_ip:</p>
+<p>description: The private IP address of the newly created compute
+instance.</p>
+<p>value: { get_attribute: [my_server, private_address] }</p>
+<p>volume_id:</p>
+<p>description: The volume id of the block storage instance.</p>
+<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Block Storage 2: Using a custom AttachesTo Relationship Type
+
+#### Description
+
+This use case demonstrates how to attach a TOSCA BlockStorage node to a
+Compute node using a custom RelationshipType that derives from the
+normative AttachesTo relationship.
+
+#### Logical Diagram
+
+<img src="media/image27.png" style="width:5.37419in;height:2.8841in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with server and attached block storage using a custom
+AttachesTo Relationship Type.</p>
+<p>relationship_types:</p>
+<p>MyCustomAttachesTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>storage_size:</p>
+<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
+<p>description: Size of the storage to be created.</p>
+<p>default: 1 GB</p>
+<p>storage_snapshot_id:</p>
+<p>type: string</p>
+<p>description: &gt;</p>
+<p>Optional identifier for an existing snapshot to use when creating
+storage.</p>
+<p>storage_location:</p>
+<p>type: string</p>
+<p>description: Block storage mount point (filesystem path).</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4 GB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Fedora</p>
+<p>version: 18.0</p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_storage</p>
+<p># Declare custom AttachesTo type using the ‘relationship’ keyword</p>
+<p>relationship:</p>
+<p>type: MyCustomAttachesTo</p>
+<p>properties:</p>
+<p>location: { get_input: storage_location }</p>
+<p>my_storage:</p>
+<p>type: <a
+href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
+<p>properties:</p>
+<p>size: { get_input: storage_size }</p>
+<p>snapshot_id: { get_input: storage_snapshot_id }</p>
+<p>outputs:</p>
+<p>private_ip:</p>
+<p>description: The private IP address of the newly created compute
+instance.</p>
+<p>value: { get_attribute: [my_server, private_address] }</p>
+<p>volume_id:</p>
+<p>description: The volume id of the block storage instance.</p>
+<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Block Storage 3: Using a Relationship Template of type AttachesTo
+
+#### Description
+
+This use case demonstrates how to attach a TOSCA BlockStorage node to a
+Compute node using a TOSCA Relationship Template that is based upon the
+normative AttachesTo Relationship Type.
+
+#### Logical Diagram
+
+<img src="media/image28.png" style="width:5.15551in;height:2.70946in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with server and attached block storage using a named
+Relationship Template for the storage attachment.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>storage_size:</p>
+<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
+<p>description: Size of the storage to be created.</p>
+<p>default: 1 GB</p>
+<p>storage_location:</p>
+<p>type: string</p>
+<p>description: Block storage mount point (filesystem path).</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4 GB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Fedora</p>
+<p>version: 18.0</p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_storage</p>
+<p># Declare template to use with ‘relationship’ keyword</p>
+<p>relationship: storage_attachment</p>
+<p>my_storage:</p>
+<p>type: <a
+href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
+<p>properties:</p>
+<p>size: { get_input: storage_size }</p>
+<p>relationship_templates:</p>
+<p>storage_attachment:</p>
+<p>type: <a href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>properties:</p>
+<p>location: { get_input: storage_location }</p>
+<p>outputs:</p>
+<p>private_ip:</p>
+<p>description: The private IP address of the newly created compute
+instance.</p>
+<p>value: { get_attribute: [my_server, private_address] }</p>
+<p>volume_id:</p>
+<p>description: The volume id of the block storage instance.</p>
+<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Block Storage 4: Single Block Storage shared by 2-Tier Application with custom AttachesTo Type and implied relationships
+
+#### Description
+
+This use case shows 2 compute instances (2 tiers) with one BlockStorage
+node, and also uses a custom AttachesTo Relationship that provides a
+default mount point (i.e., location) which the 1<sup>st</sup> tier uses,
+but the 2<sup>nd</sup> tier provides a different mount point.
+
+Please note that this use case assumes both Compute nodes are accessing
+different directories within the shared, block storage node to avoid
+collisions.
+
+#### Logical Diagram
+
+<img src="media/image29.png" style="width:5.9474in;height:4.23704in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with a Single Block Storage node shared by 2-Tier Application
+with custom AttachesTo Type and implied relationships.</p>
+<p>relationship_types:</p>
+<p>MyAttachesTo:</p>
+<p>derived_from: tosca.relationships.AttachesTo</p>
+<p>properties:</p>
+<p>location:</p>
+<p>type: string</p>
+<p>default: /default_location</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>storage_size:</p>
+<p>type: scalar-unit.size</p>
+<p>default: 1 GB</p>
+<p>description: Size of the storage to be created.</p>
+<p>storage_snapshot_id:</p>
+<p>type: string</p>
+<p>description: &gt;</p>
+<p>Optional identifier for an existing snapshot to use when creating
+storage.</p>
+<p>node_templates:</p>
+<p>my_web_app_tier_1:</p>
+<p>type: <a
+href="#tosca.nodes.abstract.compute">tosca.nodes.Compute</a></p>
+<p>capabilities:<br />
+host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Fedora</p>
+<p>version: 18.0</p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_storage</p>
+<p>relationship: MyAttachesTo</p>
+<p>my_web_app_tier_2:</p>
+<p>type: <a
+href="#tosca.nodes.abstract.compute">tosca.nodes.Compute</a></p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Fedora</p>
+<p>version: 18.0</p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_storage</p>
+<p>relationship:</p>
+<p>type: MyAttachesTo</p>
+<p>properties:</p>
+<p>location: /some_other_data_location</p>
+<p>my_storage:</p>
+<p>type:
+tosca.nodes.Storage.BlockStoragetosca.nodes.Storage.BlockStorage</p>
+<p>properties:</p>
+<p>size: { get_input: storage_size }</p>
+<p>snapshot_id: { get_input: storage_snapshot_id }</p>
+<p>outputs:</p>
+<p>private_ip_1:</p>
+<p>description: The private IP address of the application’s first
+tier.</p>
+<p>value: { get_attribute: [my_web_app_tier_1, private_address] }</p>
+<p>private_ip_2:</p>
+<p>description: The private IP address of the application’s second
+tier.</p>
+<p>value: { get_attribute: [my_web_app_tier_2, private_address] }</p>
+<p>volume_id:</p>
+<p>description: The volume id of the block storage instance.</p>
+<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Block Storage 5: Single Block Storage shared by 2-Tier Application with custom AttachesTo Type and explicit Relationship Templates
+
+#### Description
+
+This use case is like the Notation1 use case, but also creates two
+relationship templates (one for each tier) each of which provide a
+different mount point (i.e., location) which overrides the default
+location defined in the custom Relationship Type.
+
+Please note that this use case assumes both Compute nodes are accessing
+different directories within the shared, block storage node to avoid
+collisions.
+
+#### Logical Diagram
+
+<img src="media/image30.png" style="width:5.19659in;height:3.73611in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with a single Block Storage node shared by 2-Tier Application
+with custom AttachesTo Type and explicit Relationship Templates.</p>
+<p>relationship_types:</p>
+<p>MyAttachesTo:</p>
+<p>derived_from: tosca.relationships.AttachesTo</p>
+<p>properties:</p>
+<p>location:</p>
+<p>type: string</p>
+<p>default: /default_location</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>storage_size:</p>
+<p>type: scalar-unit.size</p>
+<p>default: 1 GB</p>
+<p>description: Size of the storage to be created.</p>
+<p>storage_snapshot_id:</p>
+<p>type: string</p>
+<p>description: &gt;</p>
+<p>Optional identifier for an existing snapshot to use when creating
+storage.</p>
+<p>storage_location:</p>
+<p>type: string</p>
+<p>description: &gt;</p>
+<p>Block storage mount point (filesystem path).</p>
+<p>node_templates:</p>
+<p>my_web_app_tier_1:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Fedora</p>
+<p>version: 18.0</p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_storage</p>
+<p>relationship: storage_attachesto_1</p>
+<p>my_web_app_tier_2:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Fedora</p>
+<p>version: 18.0</p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_storage</p>
+<p>relationship: storage_attachesto_2</p>
+<p>my_storage:</p>
+<p>type: tosca.nodes.Storage.BlockStorage</p>
+<p>properties:</p>
+<p>size: { get_input: storage_size }</p>
+<p>snapshot_id: { get_input: storage_snapshot_id }</p>
+<p>relationship_templates:</p>
+<p>storage_attachesto_1:</p>
+<p>type: MyAttachesTo</p>
+<p>properties:</p>
+<p>location: /my_data_location</p>
+<p>storage_attachesto_2:</p>
+<p>type: MyAttachesTo</p>
+<p>properties:</p>
+<p>location: /some_other_data_location</p>
+<p>outputs:</p>
+<p>private_ip_1:</p>
+<p>description: The private IP address of the application’s first
+tier.</p>
+<p>value: { get_attribute: [my_web_app_tier_1, private_address] }</p>
+<p>private_ip_2:</p>
+<p>description: The private IP address of the application’s second
+tier.</p>
+<p>value: { get_attribute: [my_web_app_tier_2, private_address] }</p>
+<p>volume_id:</p>
+<p>description: The volume id of the block storage instance.</p>
+<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Block Storage 6: Multiple Block Storage attached to different Servers
+
+#### Description
+
+This use case demonstrates how two different TOSCA BlockStorage nodes
+can be attached to two different Compute nodes (i.e., servers) each
+using the normative AttachesTo relationship.
+
+#### Logical Diagram
+
+<img src="media/image31.png" style="width:4.93864in;height:3.84195in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with 2 servers each with different attached block storage.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>storage_size:</p>
+<p>type: scalar-unit.size</p>
+<p>default: 1 GB</p>
+<p>description: Size of the storage to be created.</p>
+<p>storage_snapshot_id:</p>
+<p>type: string</p>
+<p>description: &gt;</p>
+<p>Optional identifier for an existing snapshot to use when creating
+storage.</p>
+<p>storage_location:</p>
+<p>type: string</p>
+<p>description: &gt;</p>
+<p>Block storage mount point (filesystem path).</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Fedora</p>
+<p>version: 18.0</p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_storage</p>
+<p>relationship:</p>
+<p>type: AttachesTo</p>
+<p>properties:</p>
+<p>location: { get_input: storage_location }</p>
+<p>my_storage:</p>
+<p>type: tosca.nodes.Storage.BlockStorage</p>
+<p>properties:</p>
+<p>size: { get_input: storage_size }</p>
+<p>snapshot_id: { get_input: storage_snapshot_id }</p>
+<p>my_server2:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Fedora</p>
+<p>version: 18.0</p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_storage2</p>
+<p>relationship:</p>
+<p>type: AttachesTo</p>
+<p>properties:</p>
+<p>location: { get_input: storage_location }</p>
+<p>my_storage2:</p>
+<p>type: tosca.nodes.Storage.BlockStorage</p>
+<p>properties:</p>
+<p>size: { get_input: storage_size }</p>
+<p>snapshot_id: { get_input: storage_snapshot_id }</p>
+<p>outputs:</p>
+<p>server_ip_1:</p>
+<p>description: The private IP address of the application’s first
+server.</p>
+<p>value: { get_attribute: [my_server, private_address] }</p>
+<p>server_ip_2:</p>
+<p>description: The private IP address of the application’s second
+server.</p>
+<p>value: { get_attribute: [my_server2, private_address] }</p>
+<p>volume_id_1:</p>
+<p>description: The volume id of the first block storage instance.</p>
+<p>value: { get_attribute: [my_storage, volume_id] }</p>
+<p>volume_id_2:</p>
+<p>description: The volume id of the second block storage instance.</p>
+<p>value: { get_attribute: [my_storage2, volume_id] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Object Storage 1: Creating an Object Storage service
+
+#### Description
+
+#### Logical Diagram
+
+<img src="media/image32.png" style="width:2.23276in;height:1.85in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>Tosca template for creating an object storage service.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>objectstore_name:</p>
+<p>type: string</p>
+<p>node_templates:</p>
+<p>obj_store_server:</p>
+<p>type: tosca.nodes.Storage.ObjectStorage</p>
+<p>properties:</p>
+<p>name: { get_input: objectstore_name }</p>
+<p>size: 4096 MB</p>
+<p>maxsize: 20 GB</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Network 1: Server bound to a new network
+
+#### Description
+
+Introduces the TOSCA Network and Port nodes used for modeling logical
+networks using the LinksTo and BindsTo Relationship Types. In this use
+case, the template is invoked without an existing network_name as an
+input property so a new network is created using the properties declared
+in the Network node.
+
+#### Logical Diagram
+
+<img src="media/image33.png" style="width:5.35417in;height:2.97985in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with 1 server bound to a new network</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>network_name:</p>
+<p>type: string</p>
+<p>description: Network name</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: 1</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: CirrOS</p>
+<p>version: 0.3.2</p>
+<p>my_network:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties:</p>
+<p>network_name: { get_input: network_name }</p>
+<p>ip_version: 4</p>
+<p>cidr: '192.168.0.0/24'</p>
+<p>start_ip: '192.168.0.50'</p>
+<p>end_ip: '192.168.0.200'</p>
+<p>gateway_ip: '192.168.0.1'</p>
+<p>my_port:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>requirements:</p>
+<p>- binding: my_server</p>
+<p>- link: my_network</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Network 2: Server bound to an existing network
+
+#### Description
+
+This use case shows how to use a network_name as an input parameter to
+the template to allow a server to be associated with an existing
+network.
+
+#### Logical Diagram
+
+<img src="media/image34.png" style="width:5.30538in;height:2.61111in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with 1 server bound to an existing network</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>network_name:</p>
+<p>type: string</p>
+<p>description: Network name</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: 1</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: CirrOS</p>
+<p>version: 0.3.2</p>
+<p>my_network:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties:</p>
+<p>network_name: { get_input: network_name }</p>
+<p>my_port:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>requirements:</p>
+<p>- binding:</p>
+<p>node: my_server</p>
+<p>- link:</p>
+<p>node: my_network</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Network 3: Two servers bound to a single network
+
+#### Description
+
+This use case shows how two servers (Compute nodes) can be bound to the
+same Network (node) using two logical network Ports.
+
+#### Logical Diagram
+
+<img src="media/image35.png" style="width:5.90278in;height:3.46613in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with 2 servers bound to the 1 network</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>network_name:</p>
+<p>type: string</p>
+<p>description: Network name</p>
+<p>network_cidr:</p>
+<p>type: string</p>
+<p>default: 10.0.0.0/24</p>
+<p>description: CIDR for the network</p>
+<p>network_start_ip:</p>
+<p>type: string</p>
+<p>default: 10.0.0.100</p>
+<p>description: Start IP for the allocation pool</p>
+<p>network_end_ip:</p>
+<p>type: string</p>
+<p>default: 10.0.0.150</p>
+<p>description: End IP for the allocation pool</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: 1</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: CirrOS</p>
+<p>version: 0.3.2</p>
+<p>my_server2:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: 1</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: CirrOS</p>
+<p>version: 0.3.2</p>
+<p>my_network:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties:</p>
+<p>ip_version: 4</p>
+<p>cidr: { get_input: network_cidr }</p>
+<p>network_name: { get_input: network_name }</p>
+<p>start_ip: { get_input: network_start_ip }</p>
+<p>end_ip: { get_input: network_end_ip }</p>
+<p>my_port:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>requirements:</p>
+<p>- binding: my_server</p>
+<p>- link: my_network</p>
+<p>my_port2:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>requirements:</p>
+<p>- binding: my_server2</p>
+<p>- link: my_network</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Network 4: Server bound to three networks
+
+#### Description
+
+This use case shows how three logical networks (Network), each with its
+own IP address range, can be bound to with the same server (Compute
+node).
+
+#### Logical Diagram
+
+<img src="media/image36.png" style="width:5.83333in;height:4.00579in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with 1 server bound to 3 networks</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: 1</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: CirrOS</p>
+<p>version: 0.3.2</p>
+<p>my_network1:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties:</p>
+<p>cidr: '192.168.1.0/24'</p>
+<p>network_name: net1</p>
+<p>my_network2:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties:</p>
+<p>cidr: '192.168.2.0/24'</p>
+<p>network_name: net2</p>
+<p>my_network3:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties:</p>
+<p>cidr: '192.168.3.0/24'</p>
+<p>network_name: net3</p>
+<p>my_port1:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>properties:</p>
+<p>order: 0</p>
+<p>requirements:</p>
+<p>- binding: my_server</p>
+<p>- link: my_network1</p>
+<p>my_port2:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>properties:</p>
+<p>order: 1</p>
+<p>requirements:</p>
+<p>- binding: my_server</p>
+<p>- link: my_network2</p>
+<p>my_port3:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>properties:</p>
+<p>order: 2</p>
+<p>requirements:</p>
+<p>- binding: my_server</p>
+<p>- link: my_network3</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### WebServer-DBMS 1: WordPress + MySQL, single instance
+
+#### Description
+
+TOSCA service showing the WordPress web application with a MySQL
+database hosted on a single server (instance).
+
+#### Logical Diagram
+
+<img src="media/image37.png" style="width:4.5242in;height:4.64525in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with WordPress, a web server, a MySQL DBMS hosting the
+application’s database content on the same server. Does not have input
+defaults or constraints.</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>db_name:</p>
+<p>type: string</p>
+<p>description: The name of the database.</p>
+<p>db_user:</p>
+<p>type: string</p>
+<p>description: The username of the DB user.</p>
+<p>db_pwd:</p>
+<p>type: string</p>
+<p>description: The WordPress database admin account password.</p>
+<p>db_root_pwd:</p>
+<p>type: string</p>
+<p>description: Root password for MySQL.</p>
+<p>db_port:</p>
+<p>type: <a href="#tosca.datatypes.network.portdef">PortDef</a></p>
+<p>description: Port for the MySQL database</p>
+<p>node_templates:</p>
+<p>wordpress:</p>
+<p>type: tosca.nodes.WebApplication.WordPress</p>
+<p>properties:</p>
+<p>context_root: { get_input: context_root }</p>
+<p>requirements:</p>
+<p>- host: webserver</p>
+<p>- database_endpoint: mysql_database</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create: <a
+href="#UC_2_WORDPRESS_INSTALL_SH">wordpress_install.sh</a></p>
+<p>configure:</p>
+<p>implementation: <a
+href="#UC_2_WORDPRESS_CONFIGURE_SH">wordpress_configure.sh</a></p>
+<p>inputs:</p>
+<p>wp_db_name: { get_property: [ mysql_database, name ] }</p>
+<p>wp_db_user: { get_property: [ mysql_database, user ] }</p>
+<p>wp_db_password: { get_property: [ mysql_database, password ] }</p>
+<p># In my own template, find requirement/capability, find port
+property</p>
+<p>wp_db_port: { get_property: [ SELF, database_endpoint, port ] }</p>
+<p>mysql_database:</p>
+<p>type: <a href="#tosca.nodes.database">Database</a></p>
+<p>properties:</p>
+<p>name: { get_input: db_name }</p>
+<p>user: { get_input: db_user }</p>
+<p>password: { get_input: db_pwd }</p>
+<p>port: { get_input: db_port }</p>
+<p>capabilities:</p>
+<p>database_endpoint:</p>
+<p>properties:</p>
+<p>port: { get_input: db_port }</p>
+<p>requirements:</p>
+<p>- host: mysql_dbms</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>configure: <a
+href="#UC_2_MYSQL_DATABASE_CONFIGURE_SH">mysql_database_configure.sh</a></p>
+<p>mysql_dbms:</p>
+<p>type: <a href="#tosca.nodes.dbms">DBMS</a></p>
+<p>properties:</p>
+<p>root_password: { get_input: db_root_pwd }</p>
+<p>port: { get_input: db_port }</p>
+<p>requirements:</p>
+<p>- host: server</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>inputs:</p>
+<p>db_root_password: { get_property: [ mysql_dbms, root_password ] }</p>
+<p>create: <a
+href="#UC_2_MYSQL_DBMS_INSTALL_SH">mysql_dbms_install.sh</a></p>
+<p>start: <a
+href="#UC_2_MYSQL_DBMS_START_SH">mysql_dbms_start.sh</a></p>
+<p>configure: <a
+href="#UC_2_MYSQL_DBMS_CONFIGURE_SH">mysql_dbms_configure</a>.sh</p>
+<p>webserver:</p>
+<p>type: <a href="#tosca.nodes.webserver">WebServer</a></p>
+<p>requirements:</p>
+<p>- host: server</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create: <a
+href="#UC_2_WEBSERVER_INSTALL_SH">webserver_install.sh</a></p>
+<p>start: <a href="#UC_2_WEBSERVER_START_SH">webserver_start.sh</a></p>
+<p>server:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties:</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: cpus }</p>
+<p>mem_size: 4096 MB</p>
+<p>os:</p>
+<p>properties:</p>
+<p>architecture: x86_64</p>
+<p>type: linux</p>
+<p>distribution: fedora</p>
+<p>version: 17.0</p>
+<p>outputs:</p>
+<p>website_url:</p>
+<p>description: URL for Wordpress wiki.</p>
+<p>value: { get_attribute: [server, public_address] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Sample scripts
+
+Where the referenced implementation scripts in the example above would
+have the following contents
+
+##### wordpress_install.sh
+
+| yum -y install wordpress |
+|--------------------------|
+
+##### wordpress_configure.sh
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>sed -i "/Deny from All/d" /etc/httpd/conf.d/wordpress.conf</p>
+<p>sed -i "s/Require local/Require all granted/"
+/etc/httpd/conf.d/wordpress.conf</p>
+<p>sed -i s/database_name_here/name/ /etc/wordpress/wp-config.php</p>
+<p>sed -i s/username_here/user/ /etc/wordpress/wp-config.php</p>
+<p>sed -i s/password_here/password/ /etc/wordpress/wp-config.php</p>
+<p>systemctl restart httpd.service</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### mysql_database_configure.sh
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p># Setup MySQL root password and create user</p>
+<p>cat &lt;&lt; EOF | mysql -u root --password=db_root_password</p>
+<p>CREATE DATABASE name;</p>
+<p>GRANT ALL PRIVILEGES ON name.* TO "user"@"localhost"</p>
+<p>IDENTIFIED BY "password";</p>
+<p>FLUSH PRIVILEGES;</p>
+<p>EXIT</p>
+<p>EOF</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### mysql_dbms_install.sh
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>yum -y install mysql mysql-server</p>
+<p># Use systemd to start MySQL server at system boot time</p>
+<p>systemctl enable mysqld.service</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### mysql_dbms_start.sh
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p># Start the MySQL service (NOTE: may already be started at image
+boot time)</p>
+<p>systemctl start mysqld.service</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### mysql_dbms_configure
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p># Set the MySQL server root password</p>
+<p>mysqladmin -u root password db_root_password</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### webserver_install.sh
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>yum -y install httpd</p>
+<p>systemctl enable httpd.service</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### webserver_start.sh
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p># Start the httpd service (NOTE: may already be started at image
+boot time)</p>
+<p>systemctl start httpd.service</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### WebServer-DBMS 2: Nodejs with PayPal Sample App and MongoDB on separate instances 
+
+#### Description
+
+This use case Instantiates a 2-tier application with Nodejs and its
+(PayPal sample) WebApplication on one tier which connects a MongoDB
+database (which stores its application data) using a ConnectsTo
+relationship.
+
+#### Logical Diagram
+
+<img src="media/image38.png" style="width:5.54167in;height:4.46357in" />
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with a nodejs web server hosting a PayPal sample application
+which connects to a mongodb database.</p>
+<p>imports:</p>
+<p>- custom_types/paypalpizzastore_nodejs_app.yaml</p>
+<p>dsl_definitions:</p>
+<p>ubuntu_node: &amp;ubuntu_node</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: my_cpus }</p>
+<p>mem_size: 4096 MB</p>
+<p>os_capabilities: &amp;os_capabilities</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Ubuntu</p>
+<p>version: 14.04</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>my_cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>default: 1</p>
+<p>github_url:</p>
+<p>type: string</p>
+<p>description: The URL to download nodejs.</p>
+<p>default: https://github.com/sample.git</p>
+<p>node_templates:</p>
+<p>paypal_pizzastore:</p>
+<p>type: tosca.nodes.WebApplication.PayPalPizzaStore</p>
+<p>properties:</p>
+<p>github_url: { get_input: github_url }</p>
+<p>requirements:</p>
+<p>- host:nodejs</p>
+<p>- database_connection: mongo_db</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>configure:</p>
+<p>implementation: scripts/nodejs/configure.sh</p>
+<p>inputs:</p>
+<p>github_url: { get_property: [ SELF, github_url ] }</p>
+<p>mongodb_ip: { get_attribute: [mongo_server, private_address] }</p>
+<p>start: scriptsscripts/nodejs/start.sh</p>
+<p>nodejs:</p>
+<p>type: tosca.nodes.WebServer.Nodejs</p>
+<p>requirements:</p>
+<p>- host: app_server</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create: scripts/nodejs/create.sh</p>
+<p>mongo_db:</p>
+<p>type: tosca.nodes.Database</p>
+<p>requirements:</p>
+<p>- host: mongo_dbms</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create: create_database.sh</p>
+<p>mongo_dbms:</p>
+<p>type: tosca.nodes.DBMS</p>
+<p>requirements:</p>
+<p>- host: mongo_server</p>
+<p>properties:</p>
+<p>port: 27017</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.node.lifecycle.Standard:</p>
+<p>create: mongodb/create.sh</p>
+<p>configure:</p>
+<p>implementation: mongodb/config.sh</p>
+<p>inputs:</p>
+<p>mongodb_ip: { get_attribute: [mongo_server, private_address] }</p>
+<p>start: mongodb/start.sh</p>
+<p>mongo_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>os:</p>
+<p>properties: *os_capabilities</p>
+<p>host:</p>
+<p>properties: *ubuntu_node</p>
+<p>app_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>os:</p>
+<p>properties: *os_capabilities</p>
+<p>host:</p>
+<p>properties: *ubuntu_node</p>
+<p>outputs:</p>
+<p>nodejs_url:</p>
+<p>description: URL for the nodejs server, http://&lt;IP&gt;:3000</p>
+<p>value: { get_attribute: [app_server, private_address] }</p>
+<p>mongodb_url:</p>
+<p>description: URL for the mongodb server.</p>
+<p>value: { get_attribute: [ mongo_server, private_address ] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notes:
+
+- Scripts referenced in this example are assumed to be placed by the
+  TOSCA orchestrator in the relative directory declared in TOSCA.meta of
+  the TOSCA CSAR file.
+
+### Multi-Tier-1: Elasticsearch, Logstash, Kibana (ELK) use case with multiple instances
+
+#### Description
+
+TOSCA service showing the Nodejs, MongoDB, Elasticsearch, Logstash,
+Kibana, rsyslog and collectd installed on a different server (instance).
+
+This use case also demonstrates:
+
+- Use of TOSCA macros or dsl_definitions
+
+- Multiple SoftwareComponents hosted on same Compute node
+
+- Multiple tiers communicating to each other over ConnectsTo using
+  Configure interface.
+
+#### Logical Diagram
+
+<img src="media/image39.png" style="width:6.5in;height:3.50417in" />
+
+#### Sample YAML
+
+##### Master Service Template application (Entry-Definitions)
+
+TheThe following YAML is the primary template (i.e., the
+Entry-Definition) for the overall use case. The imported YAML for the
+various subcomponents are not shown here for brevity.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>This TOSCA deploys nodejs, mongodb, elasticsearch, logstash and
+kibana each on a separate server with monitoring enabled for nodejs
+server where a sample nodejs application is running. The syslog and
+collectd are installed on a nodejs server.</p>
+<p>imports:</p>
+<p>- paypalpizzastore_nodejs_app.yaml</p>
+<p>- elasticsearch.yaml</p>
+<p>- logstash.yaml</p>
+<p>- kibana.yaml</p>
+<p>- collectd.yaml</p>
+<p>- rsyslog.yaml</p>
+<p>dsl_definitions:</p>
+<p>host_capabilities: &amp;host_capabilities</p>
+<p># container properties (flavor)</p>
+<p>disk_size: 10 GB</p>
+<p>num_cpus: { get_input: my_cpus }</p>
+<p>mem_size: 4096 MB</p>
+<p>os_capabilities: &amp;os_capabilities</p>
+<p>architecture: x86_64</p>
+<p>type: Linux</p>
+<p>distribution: Ubuntu</p>
+<p>version: 14.04</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>my_cpus:</p>
+<p>type: integer</p>
+<p>description: Number of CPUs for the server.</p>
+<p>constraints:</p>
+<p>- valid_values: [ 1, 2, 4, 8 ]</p>
+<p>github_url:</p>
+<p>type: string</p>
+<p>description: The URL to download nodejs.</p>
+<p>default: https://github.com/sample.git</p>
+<p>node_templates:</p>
+<p>paypal_pizzastore:</p>
+<p>type: tosca.nodes.WebApplication.PayPalPizzaStore</p>
+<p>properties:</p>
+<p>github_url: { get_input: github_url }</p>
+<p>requirements:</p>
+<p>- host: nodejs</p>
+<p>- database_connection: mongo_db</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>configure:</p>
+<p>implementation: scripts/nodejs/configure.sh</p>
+<p>inputs:</p>
+<p>github_url: { get_property: [ SELF, github_url ] }</p>
+<p>mongodb_ip: { get_attribute: [mongo_server, private_address] }</p>
+<p>start: scripts/nodejs/start.sh</p>
+<p>nodejs:</p>
+<p>type: tosca.nodes.WebServer.Nodejs</p>
+<p>requirements:</p>
+<p>- host: app_server</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create: scripts/nodejs/create.sh</p>
+<p>mongo_db:</p>
+<p>type: tosca.nodes.Database</p>
+<p>requirements:</p>
+<p>- host: mongo_dbms</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create: create_database.sh</p>
+<p>mongo_dbms:</p>
+<p>type: tosca.nodes.DBMS</p>
+<p>requirements:</p>
+<p>- host: mongo_server</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.node.lifecycle.Standard:</p>
+<p>create: scripts/mongodb/create.sh</p>
+<p>configure:</p>
+<p>implementation: scripts/mongodb/config.sh</p>
+<p>inputs:</p>
+<p>mongodb_ip: { get_attribute: [mongo_server, ip_address] }</p>
+<p>start: scripts/mongodb/start.sh</p>
+<p>elasticsearch:</p>
+<p>type: tosca.nodes.SoftwareComponent.Elasticsearch</p>
+<p>requirements:</p>
+<p>- host: elasticsearch_server</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.node.lifecycle.Standard:</p>
+<p>create: scripts/elasticsearch/create.sh</p>
+<p>start: scripts/elasticsearch/start.sh</p>
+<p>logstash:</p>
+<p>type: tosca.nodes.SoftwareComponent.Logstash</p>
+<p>requirements:</p>
+<p>- host: logstash_server</p>
+<p>- search_endpoint: elasticsearch</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.relationship.Configure:</p>
+<p>pre_configure_source:</p>
+<p>implementation: python/logstash/configure_elasticsearch.py</p>
+<p>input:</p>
+<p>elasticsearch_ip: { get_attribute: [elasticsearch_server, ip_address]
+}</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.node.lifecycle.Standard:</p>
+<p>create: scripts/lostash/create.sh</p>
+<p>configure: scripts/logstash/config.sh</p>
+<p>start: scripts/logstash/start.sh</p>
+<p>kibana:</p>
+<p>type: tosca.nodes.SoftwareComponent.Kibana</p>
+<p>requirements:</p>
+<p>- host: kibana_server</p>
+<p>- search_endpoint: elasticsearch</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.node.lifecycle.Standard:</p>
+<p>create: scripts/kibana/create.sh</p>
+<p>configure:</p>
+<p>implementation: scripts/kibana/config.sh</p>
+<p>input:</p>
+<p>elasticsearch_ip: { get_attribute: [elasticsearch_server, ip_address]
+}</p>
+<p>kibana_ip: { get_attribute: [kibana_server, ip_address] }</p>
+<p>start: scripts/kibana/start.sh</p>
+<p>app_collectd:</p>
+<p>type: tosca.nodes.SoftwareComponent.Collectd</p>
+<p>requirements:</p>
+<p>- host: app_server</p>
+<p>- collectd_endpoint: logstash</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.relationship.Configure:</p>
+<p>pre_configure_target:</p>
+<p>implementation: python/logstash/configure_collectd.py</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.node.lifecycle.Standard:</p>
+<p>create: scripts/collectd/create.sh</p>
+<p>configure:</p>
+<p>implementation: python/collectd/config.py</p>
+<p>input:</p>
+<p>logstash_ip: { get_attribute: [logstash_server, ip_address] }</p>
+<p>start: scripts/collectd/start.sh</p>
+<p>app_rsyslog:</p>
+<p>type: tosca.nodes.SoftwareComponent.Rsyslog</p>
+<p>requirements:</p>
+<p>- host: app_server</p>
+<p>- rsyslog_endpoint: logstash</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.relationship.Configure:</p>
+<p>pre_configure_target:</p>
+<p>implementation: python/logstash/configure_rsyslog.py</p>
+<p>interfaces:</p>
+<p>tosca.interfaces.node.lifecycle.Standard:</p>
+<p>create: scripts/rsyslog/create.sh</p>
+<p>configure:</p>
+<p>implementation: scripts/rsyslog/config.sh</p>
+<p>input:</p>
+<p>logstash_ip: { get_attribute: [logstash_server, ip_address] }</p>
+<p>start: scripts/rsyslog/start.sh</p>
+<p>app_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties: *host_capabilities</p>
+<p>os:</p>
+<p>properties: *os_capabilities</p>
+<p>mongo_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties: *host_capabilities</p>
+<p>os:</p>
+<p>properties: *os_capabilities</p>
+<p>elasticsearch_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties: *host_capabilities</p>
+<p>os:</p>
+<p>properties: *os_capabilities</p>
+<p>logstash_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties: *host_capabilities</p>
+<p>os:</p>
+<p>properties: *os_capabilities</p>
+<p>kibana_server:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>host:</p>
+<p>properties: *host_capabilities</p>
+<p>os:</p>
+<p>properties: *os_capabilities</p>
+<p>outputs:</p>
+<p>nodejs_url:</p>
+<p>description: URL for the nodejs server.</p>
+<p>value: { get_attribute: [ app_server, private_address ] }</p>
+<p>mongodb_url:</p>
+<p>description: URL for the mongodb server.</p>
+<p>value: { get_attribute: [ mongo_server, private_address ] }</p>
+<p>elasticsearch_url:</p>
+<p>description: URL for the elasticsearch server.</p>
+<p>value: { get_attribute: [ elasticsearch_server, private_address ]
+}</p>
+<p>logstash_url:</p>
+<p>description: URL for the logstash server.</p>
+<p>value: { get_attribute: [ logstash_server, private_address ] }</p>
+<p>kibana_url:</p>
+<p>description: URL for the kibana server.</p>
+<p>value: { get_attribute: [ kibana_server, private_address ] }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Sample scripts
+
+Where the referenced implementation scripts in the example above would
+have the following contents
+
+### Container-1: Containers using Docker single Compute instance (Containers only)
+
+#### Description
+
+This use case shows a minimal description of two Container nodes (only)
+providing their Docker Requirements allowing platform (orchestrator) to
+select/provide the underlying Docker implementation (Capability).
+Specifically, wordpress and mysql Docker images are referenced from
+Docker Hub.
+
+This use case also demonstrates:
+
+- Abstract description of Requirements (i.e., Container and Docker)
+  allowing platform to dynamically select the appropriate runtime
+  Capabilities that match.
+
+- Use of external repository (Docker Hub) to reference image artifact.
+
+#### Logical Diagram
+
+<img src="media/image40.png" style="width:5.38958in;height:3.18958in" />
+
+#### Sample YAML
+
+#####  Two Docker “Container” nodes (Only) with Docker Requirements 
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: &gt;</p>
+<p>TOSCA with wordpress, web server and mysql on the same server.</p>
+<p># Repositories to retrieve code artifacts from</p>
+<p>repositories:</p>
+<p>docker_hub: https://registry.hub.docker.com/</p>
+<p>topology_template:</p>
+<p>inputs:</p>
+<p>wp_host_port:</p>
+<p>type: integer</p>
+<p>description: The host port that maps to port 80 of the WordPress
+container.</p>
+<p>db_root_pwd:</p>
+<p>type: string</p>
+<p>description: Root password for MySQL.</p>
+<p>node_templates:</p>
+<p># The MYSQL container based on official MySQL image in Docker hub</p>
+<p>mysql_container:</p>
+<p>type: tosca.nodes.Container.Application.Docker</p>
+<p>capabilities:</p>
+<p># This is a capability that would mimic the Docker –link feature</p>
+<p>database_link: tosca.capabilities.Docker.Link</p>
+<p>artifacts:</p>
+<p>my_image:</p>
+<p>file: mysql</p>
+<p>type: tosca.artifacts.Deployment.Image.Container.Docker</p>
+<p>repository: docker_hub</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create:</p>
+<p>implementation: my_image</p>
+<p>inputs:</p>
+<p>db_root_password: { get_input: db_root_pwd }</p>
+<p># The WordPress container based on official WordPress image in Docker
+hub</p>
+<p>wordpress_container:</p>
+<p>type: tosca.nodes.Container.Application.Docker</p>
+<p>requirements:</p>
+<p>- database_link: mysql_container</p>
+<p>artifacts:</p>
+<p>my_image:</p>
+<p>file: wordpress</p>
+<p>type: tosca.artifacts.Deployment.Image.Container.Docker</p>
+<p>repository: docker_hub</p>
+<p>&lt;metadata-link&gt; : &lt;topology_artifact_name&gt; # defined
+outside and linked to from here</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create:</p>
+<p>implementation: my_image</p>
+<p>inputs:</p>
+<p>host_port: { get_input: wp_host_port }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Artifacts: Compute Node with Multiple Artifacts
+
+#### Description
+
+This use case illustrates how multiple artifacts can be associated with
+a node for different lifecycle operations of a node (create, terminate,
+configure, etc.)
+
+#### Sample YAML
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Sample tosca archive to illustrate use of a node with
+multiple artifacts for different life cycle operations of the node</p>
+<p>topology_template :</p>
+<p>node_templates :</p>
+<p>dbServer:</p>
+<p>   type: tosca.nodes.Compute</p>
+<p>   properties:</p>
+<p>     name: dbServer</p>
+<p>     description: </p>
+<p>     artifacts:</p>
+<p>       - sw_image:</p>
+<p>          type: tosca.artifacts.Deployment.SwImage</p>
+<p>file: <a
+href="http://1.1.1.1/images/ubuntu-14.04.qcow2">http://1.1.1.1/images/ubuntu-14.04.qcow2</a></p>
+<p>           name: ubuntu-14.04</p>
+<p>version: 14.04</p>
+<p>          checksum: e5c1e205f62f3</p>
+<p>      - configuration:</p>
+<p>         type: tosca.artifacts.Implementation.Ansible</p>
+<p>          file:
+implementation/configuration/Ansible/configure.yml</p>
+<p>         version: 2.0</p>
+<p>     - terminate:</p>
+<p>        type: tosca.artifacts.Implementation.scripts</p>
+<p>         file: implementation/configuration/scripts/terminate.sh</p>
+<p>        version: 6.2</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+# TOSCA networking use cases
+
+Except for the examples, this section is **normative** and describes how
+to express and control the application centric network semantics
+available in TOSCA.
+
+## Networking and Service Template Portability
+
+TOSCA Service Templates are application centric in the sense that they
+focus on describing application components in terms of their
+requirements and interrelationships. In order to provide cloud
+portability, it is important that a TOSCA Service Template avoid cloud
+specific requirements and details. However, at the same time, TOSCA must
+provide the expressiveness to control the mapping of software component
+connectivity to the network constructs of the hosting cloud.
+
+TOSCA Networking takes the following approach.
+
+1.  The application component connectivity semantics and expressed in
+    terms of Requirements and Capabilities and the relationships between
+    these. Service Template authors are able to express the
+    interconnectivity requirements of their software components in an
+    abstract, declarative, and thus highly portable manner.
+
+2.  The information provided in TOSCA is complete enough for a TOSCA
+    implementation to fulfill the application component network
+    requirements declaratively (i.e., it contains information such as
+    communication initiation and layer 4 port specifications) so that
+    the required network semantics can be realized on arbitrary network
+    infrastructures.
+
+3.  TOSCA Networking provides full control of the mapping of software
+    component interconnectivity to the networking constructs of the
+    hosting cloud network independently of the Service Template,
+    providing the required separation between application and network
+    semantics to preserve Service Template portability.
+
+4.  Service Template authors have the choice of specifying application
+    component networking requirements in the Service Template or
+    completely separating the application component to network mapping
+    into a separate document. This allows application components with
+    explicit network requirements to express them while allowing users
+    to control the complete mapping for all software components which
+    may not have specific requirements. Usage of these two approaches is
+    possible simultaneously and required to avoid having to re-write
+    components network semantics as arbitrary sets of components are
+    assembled into Service Templates.
+
+5.  Defining a set of network semantics which are expressive enough to
+    address the most common application connectivity requirements while
+    avoiding dependencies on specific network technologies and
+    constructs. Service Template authors and cloud providers are able to
+    express unique/non-portable semantics by defining their own
+    specialized network Requirements and Capabilities.
+
+## Connectivity semantics
+
+TOSCA’s application centric approach includes the modeling of network
+connectivity semantics from an application component connectivity
+perspective. The basic premise is that applications contain components
+which need to communicate with other components using one or more
+endpoints over a network stack such as TCP/IP, where connectivity
+between two components is expressed as a \<source component, source
+address, source port, target component, target address, target port\>
+tuple. Note that source and target components are added to the
+traditional 4 tuple to provide the application centric information,
+mapping the network to the source or target component involved in the
+connectivity.
+
+Software components are expressed as Node Types in TOSCA which can
+express virtually any kind of concept in a TOSCA model. Node Types
+offering network based functions can model their connectivity using a
+special Endpoint Capability,
+[tosca.capabilities.Endpoint](#tosca.capabilities.endpoint), designed
+for this purpose. Node Types which require an Endpoint can specify this
+as a TOSCA requirement. A special Relationship Type,
+tosca.relationships.ConnectsTo, is used to implicitly or explicitly
+relate the source Node Type’s endpoint to the required endpoint in the
+target node type. Since tosca.capabilities.Endpoint and
+tosca.relationships.ConnectsTo are TOSCA types, they can be used in
+templates and extended by subclassing in the usual ways, thus allowing
+the expression of additional semantics as needed.
+
+<img src="media/image41.png" style="width:6.06944in;height:2.60833in" />The
+following diagram shows how the TOSCA node, capability and relationship
+types enable modeling the application layer decoupled from the network
+model intersecting at the Compute node using the
+[Bindable](#tosca.capabilities.network.bindable) capability type.
+
+As you can see, the Port node type effectively acts a broker node
+between the Network node description and a host Compute node of an
+application.
+
+## Expressing connectivity semantics
+
+This section describes how TOSCA supports the typical client/server and
+group communication semantics found in application architectures.
+
+### Connection initiation semantics
+
+The tosca.relationships.ConnectsTo expresses that requirement that a
+source application component needs to be able to communicate with a
+target software component to consume the services of the target.
+ConnectTo is a component interdependency semantic in the most general
+sense and does not try imply how the communication between the source
+and target components is physically realized.
+
+Application component intercommunication typically has conventions
+regarding which component(s) initiate the communication. Connection
+initiation semantics are specified in
+[tosca.capabilities.Endpoint](#tosca.capabilities.endpoint). Endpoints
+at each end of the
+[tosca.relationships.ConnectsTo](#tosca.relationships.connectsto-1) must
+indicate identical connection initiation semantics.
+
+The following sections describe the normative connection initiation
+semantics for the tosca.relationships.ConnectsTo Relationship Type.
+
+#### Source to Target
+
+The Source to Target communication initiation semantic is the most
+common case where the source component initiates communication with the
+target component in order to fulfill an instance of the
+tosca.relationships.ConnectsTo relationship. The typical case is a
+“client” component connecting to a “server” component where the client
+initiates a stream oriented connection to a pre-defined transport
+specific port or set of ports.
+
+It is the responsibility of the TOSCA implementation to ensure the
+source component has a suitable network path to the target component and
+that the ports specified in the respective
+[tosca.capabilities.Endpoint](#tosca.capabilities.endpoint) are not
+blocked. The TOSCA implementation may only represent state of the
+tosca.relationships.ConnectsTo relationship as fulfilled after the
+actual network communication is enabled and the source and target
+components are in their operational states.
+
+Note that the connection initiation semantic only impacts the
+fulfillment of the actual connectivity and does not impact the node
+traversal order implied by the tosca.relationships.ConnectsTo
+Relationship Type.
+
+#### Target to Source
+
+The Target to Source communication initiation semantic is a less common
+case where the target component initiates communication with the source
+comment in order to fulfill an instance of the
+tosca.relationships.ConnectsTo relationship. This “reverse” connection
+initiation direction is typically required due to some technical
+requirements of the components or protocols involved, such as the
+requirement that SSH mush only be initiated from target component in
+order to fulfill the services required by the source component.
+
+It is the responsibility of the TOSCA implementation to ensure the
+source component has a suitable network path to the target component and
+that the ports specified in the respective tosca.capabilities.Endpoint
+are not blocked. The TOSCA implementation may only represent state of
+the tosca.relationships.ConnectsTo relationship as fulfilled after the
+actual network communication is enabled and the source and target
+components are in their operational states.
+
+Note that the connection initiation semantic only impacts the
+fulfillment of the actual connectivity and does not impact the node
+traversal order implied by the tosca.relationships.ConnectsTo
+Relationship Type.
+
+#### Peer-to-Peer
+
+The Peer-to-Peer communication initiation semantic allows any member of
+a group to initiate communication with any other member of the same
+group at any time. This semantic typically appears in clustering and
+distributed services where there is redundancy of components or
+services.
+
+It is the responsibility of the TOSCA implementation to ensure the
+source component has a suitable network path between all the member
+component instances and that the ports specified in the respective
+tosca.capabilities.Endpoint are not blocked, and the appropriate
+multicast communication, if necessary, enabled. The TOSCA implementation
+may only represent state of the tosca.relationships.ConnectsTo
+relationship as fulfilled after the actual network communication is
+enabled such that at least one-member component of the group may reach
+any other member component of the group.
+
+Endpoints specifying the Peer-to-Peer initiation semantic need not be
+related with a tosca.relationships.ConnectsTo relationship for the
+common case where the same set of component instances must communicate
+with each other.
+
+Note that the connection initiation semantic only impacts the
+fulfillment of the actual connectivity and does not impact the node
+traversal order implied by the tosca.relationships.ConnectsTo
+Relationship Type.
+
+### Specifying layer 4 ports
+
+TOSCA Service Templates must express enough details about application
+component intercommunication to enable TOSCA implementations to fulfill
+these communication semantics in the network infrastructure. TOSCA
+currently focuses on TCP/IP as this is the most pervasive in today’s
+cloud infrastructures. The layer 4 ports required for application
+component intercommunication are specified in
+tosca.capabilities.Endpoint. The union of the port specifications of
+both the source and target tosca.capabilities.Endpoint which are part of
+the tosca.relationships.ConnectsTo Relationship Template are interpreted
+as the effective set of ports which must be allowed in the network
+communication.
+
+The meaning of Source and Target port(s) corresponds to the direction of
+the respective tosca.relationships.ConnectsTo.
+
+## Network provisioning
+
+### Declarative network provisioning
+
+TOSCA orchestrators are responsible for the provisioning of the network
+connectivity for declarative TOSCA Service Templates (Declarative TOSCA
+Service Templates don’t contain explicit plans). This means that the
+TOSCA orchestrator must be able to infer a suitable logical connectivity
+model from the Service Template and then decide how to provision the
+logical connectivity, referred to as “fulfillment”, on the available
+underlying infrastructure. In order to enable fulfillment, sufficient
+technical details still must be specified, such as the required
+protocols, ports and QOS information. TOSCA connectivity types, such as
+tosca.capabilities.Endpoint, provide well defined means to express these
+details.
+
+### Implicit network fulfillment
+
+TOSCA Service Templates are by default network agnostic. TOSCA’s
+application centric approach only requires that a TOSCA Service Template
+contain enough information for a TOSCA orchestrator to infer suitable
+network connectivity to meet the needs of the application components.
+Thus Service Template designers are not required to be aware of or
+provide specific requirements for underlying networks. This approach
+yields the most portable Service Templates, allowing them to be deployed
+into any infrastructure which can provide the necessary component
+interconnectivity.
+
+### Controlling network fulfillment
+
+TOSCA provides mechanisms for providing control over network
+fulfillment.
+
+This mechanism allows the application network designer to express in
+service template or network template how the networks should be
+provisioned.
+
+For the use cases described below let’s assume we have a typical 3-tier
+application which is consisting of FE (frontend), BE (backend) and DB
+(database) tiers. The simple application topology diagram can be shown
+below:
+
+<img src="media/image42.emf" style="width:1.92569in;height:3.39792in" />
+
+<img src="media/image42.emf" style="width:1.92569in;height:3.39792in" />
+
+Figure‑5: Typical 3-Tier Network
+
+#### Use case: OAM Network
+
+When deploying an application in service provider’s on-premise cloud,
+it’s very common that one or more of the application’s services should
+be accessible from an ad-hoc OAM (Operations, Administration and
+Management) network which exists in the service provider backbone.
+
+As an application network designer, I’d like to express in my TOSCA
+network template (which corresponds to my TOSCA service template) the
+network CIDR block, start ip, end ip and segmentation ID (e.g. VLAN id).
+
+The diagram below depicts a typical 3-tiers application with specific
+networking requirements for its FE tier server cluster:
+
+<img src="media/image43.emf" style="width:4.44444in;height:4.98125in" />
+
+#### Use case: Data Traffic network
+
+The diagram below defines a set of networking requirements for the
+backend and DB tiers of the 3-tier app mentioned above.
+
+<img src="media/image44.emf" style="width:4.97222in;height:4.13889in" />
+
+#### Use case: Bring my own DHCP
+
+The same 3-tier app requires for its admin traffic network to manage the
+IP allocation by its own DHCP which runs autonomously as part of
+application domain.
+
+For this purpose, the app network designer would like to express in
+TOSCA that the underlying provisioned network will be set with
+DHCP_ENABLED=false. See this illustrated in the figure below:
+
+<img src="media/image45.emf" style="width:5.86111in;height:4.88889in" />
+
+## Network Types
+
+### tosca.nodes.network.Network
+
+The TOSCA Network node represents a simple, logical network service.
+
+| Shorthand Name      | Network                     |
+|---------------------|-----------------------------|
+| Type Qualified Name | tosca:Network               |
+| Type URI            | tosca.nodes.network.Network |
+
+#### Properties
+
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 9%" />
+<col style="width: 15%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ip_version</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_INTEGER">integer</a></td>
+<td><p>valid_values: [4, 6]</p>
+<p>default: 4</p></td>
+<td>The IP version of the requested network</td>
+</tr>
+<tr class="even">
+<td>cidr</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>The cidr block of the requested network</td>
+</tr>
+<tr class="odd">
+<td>start_ip</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>The IP address to be used as the 1<sup>st</sup> one in a pool of
+addresses derived from the cidr block full IP range</td>
+</tr>
+<tr class="even">
+<td>end_ip</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>The IP address to be used as the last one in a pool of addresses
+derived from the cidr block full IP range</td>
+</tr>
+<tr class="odd">
+<td>gateway_ip</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>The gateway IP address.</td>
+</tr>
+<tr class="even">
+<td>network_name</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>An Identifier that represents an existing Network instance in the
+underlying cloud infrastructure – OR – be used as the name of the new
+created network.</p>
+<ul>
+<li><p>If network_name is provided along with network_id they will be
+used to uniquely identify an existing network and not creating a new
+one, means all other possible properties are not allowed.</p></li>
+<li><p>network_name should be more convenient for using. But in case
+that network name uniqueness is not guaranteed then one should provide a
+network_id as well.</p></li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td>network_id</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>An Identifier that represents an existing Network instance in the
+underlying cloud infrastructure.</p>
+<p>This property is mutually exclusive with all other properties except
+network_name.</p>
+<ul>
+<li><p>Appearance of network_id in network template instructs the Tosca
+container to use an existing network instead of creating a new
+one.</p></li>
+<li><p>network_name should be more convenient for using. But in case
+that network name uniqueness is not guaranteed then one should add a
+network_id as well.</p></li>
+<li><p>network_name and network_id can be still used together to achieve
+both uniqueness and convenient.</p></li>
+</ul></td>
+</tr>
+<tr class="even">
+<td>segmentation_id</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>A segmentation identifier in the underlying cloud infrastructure
+(e.g., VLAN id, GRE tunnel id). If the segmentation_id is specified, the
+network_type or physical_network properties should be provided as
+well.</td>
+</tr>
+<tr class="odd">
+<td>network_type</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>Optionally, specifies the nature of the physical network in the
+underlying cloud infrastructure. Examples are flat, vlan, gre or vxlan.
+For flat and vlan types, physical_network should be provided too.</td>
+</tr>
+<tr class="even">
+<td>physical_network</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td>Optionally, identifies the physical network on top of which the
+network is implemented, e.g. physnet1. This property is required if
+network_type is flat or vlan.</td>
+</tr>
+<tr class="odd">
+<td>dhcp_enabled</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_BOOLEAN">boolean</a></td>
+<td>default: true</td>
+<td>Indicates the TOSCA container to create a virtual network instance
+with or without a DHCP service.</td>
+</tr>
+</tbody>
+</table>
+
+#### Attributes
+
+| Name            | Required | Type                        | Constraints | Description                                                                                               |
+|-----------------|----------|-----------------------------|-------------|-----------------------------------------------------------------------------------------------------------|
+| segmentation_id | no       | [string](#TYPE_YAML_STRING) | None        | The actual *segmentation_id* that is been assigned to the network by the underlying cloud infrastructure. |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.network.Network:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>properties:</p>
+<p>ip_version:</p>
+<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
+<p>required: false</p>
+<p>default: 4</p>
+<p>constraints:</p>
+<p>- valid_values: [ 4, 6 ]</p>
+<p>cidr:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>start_ip:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>end_ip:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>gateway_ip:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>network_name:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>network_id:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>segmentation_id:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>network_type:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>physical_network:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>capabilities:</p>
+<p>link:</p>
+<p>type: <a
+href="#DEFN_TYPE_CAPABILITIES_NETWORK_LINKABLE">tosca.capabilities.network.Linkable</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.nodes.network.Port
+
+The TOSCA Port node represents a logical entity that associates between
+Compute and Network normative types.
+
+The Port node type effectively represents a single virtual NIC on the
+Compute node instance.
+
+| Shorthand Name      | Port                     |
+|---------------------|--------------------------|
+| Type Qualified Name | tosca:Port               |
+| Type URI            | tosca.nodes.network.Port |
+
+#### Properties
+
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 11%" />
+<col style="width: 10%" />
+<col style="width: 16%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ip_address</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_INTEGER">string</a></td>
+<td>None</td>
+<td><p>Allow the user to set a fixed IP address.</p>
+<p>Note that this address is a request to the provider which they will
+attempt to fulfill but may not be able to dependent on the network the
+port is associated with.</p></td>
+</tr>
+<tr class="even">
+<td>order</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_INTEGER">integer</a></td>
+<td><p>greater_or_equal: 0</p>
+<p>default: 0</p></td>
+<td><p>The order of the NIC on the compute instance (e.g. eth2).</p>
+<p><strong>Note</strong>: when binding more than one port to a single
+compute (aka multi vNICs) and ordering is desired, it is *mandatory*
+that all ports will be set with an order value and. The <em>order</em>
+values must represent a positive, arithmetic progression that starts
+with 0 (e.g. 0, 1, 2, …, n).</p></td>
+</tr>
+<tr class="odd">
+<td>is_default</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_BOOLEAN">boolean</a></td>
+<td>default: false</td>
+<td><p>Set is_default=true to apply a default gateway route on the
+running compute instance to the associated network gateway.</p>
+<p>Only one port that is associated to single compute node can set as
+default=true.</p></td>
+</tr>
+<tr class="even">
+<td>ip_range_start</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>Defines the starting IP of a range to be allocated for the
+compute instances that are associated by this Port.</p>
+<p>Without setting this property the IP allocation is done from the
+entire CIDR block of the network.</p></td>
+</tr>
+<tr class="odd">
+<td>ip_range_end</td>
+<td>no</td>
+<td><a href="#TYPE_YAML_STRING">string</a></td>
+<td>None</td>
+<td><p>Defines the ending IP of a range to be allocated for the compute
+instances that are associated by this Port.</p>
+<p>Without setting this property the IP allocation is done from the
+entire CIDR block of the network.</p></td>
+</tr>
+</tbody>
+</table>
+
+#### Attributes
+
+| Name       | Required | Type                        | Constraints | Description                                                          |
+|------------|----------|-----------------------------|-------------|----------------------------------------------------------------------|
+| ip_address | no       | [string](#TYPE_YAML_STRING) | None        | The IP address would be assigned to the associated compute instance. |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.network.Port:</p>
+<p>derived_from: tosca.nodes.Root</p>
+<p>properties:</p>
+<p>ip_address:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>order:</p>
+<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
+<p>required: true</p>
+<p>default: 0</p>
+<p>constraints:</p>
+<p>- greater_or_equal: 0</p>
+<p>is_default:</p>
+<p>type: <a href="#TYPE_YAML_BOOLEAN">boolean</a></p>
+<p>required: false</p>
+<p>default: false</p>
+<p>ip_range_start:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>ip_range_end:</p>
+<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
+<p>required: false</p>
+<p>requirements:</p>
+<p>- link:</p>
+<p>capability: <a
+href="#DEFN_TYPE_CAPABILITIES_NETWORK_LINKABLE">tosca.capabilities.network.Linkable</a></p>
+<p>relationship: <a
+href="#DEFN_TYPE_RELATIONSHIPS_NETWORK_LINKSTO">tosca.relationships.network.LinksTo</a></p>
+<p>- binding:</p>
+<p>capability: <a
+href="#tosca.capabilities.network.bindable">tosca.capabilities.network.Bindable</a></p>
+<p>relationship: <a
+href="#DEFN_TYPE_RELATIONSHIPS_NETWORK_BINDTO">tosca.relationships.network.BindsTo</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.capabilities.network.Linkable
+
+A node type that includes the Linkable capability indicates that it can
+be pointed to by a
+[tosca.relationships.network.LinksTo](#DEFN_TYPE_RELATIONSHIPS_NETWORK_CONNECTS)
+relationship type.
+
+| Shorthand Name      | Linkable                            |
+|---------------------|-------------------------------------|
+| Type Qualified Name | tosca:.Linkable                     |
+| Type URI            | tosca.capabilities.network.Linkable |
+
+#### Properties
+
+| Name | Required | Type | Constraints | Description |
+|------|----------|------|-------------|-------------|
+| N/A  | N/A      | N/A  | N/A         | N/A         |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.capabilities.network.Linkable:</p>
+<p>derived_from: <a
+href="#tosca.capabilities.node">tosca.capabilities.Node</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.relationships.network.LinksTo
+
+This relationship type represents an association relationship between
+Port and Network node types.
+
+| Shorthand Name      | LinksTo                             |
+|---------------------|-------------------------------------|
+| Type Qualified Name | tosca:LinksTo                       |
+| Type URI            | tosca.relationships.network.LinksTo |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.relationships.network.LinksTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.dependson-1">tosca.relationships.DependsOn</a></p>
+<p>valid_target_types: [ <a
+href="#DEFN_TYPE_CAPABILITIES_NETWORK_LINKABLE">tosca.capabilities.network.Linkable</a>
+]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### tosca.relationships.network.BindsTo
+
+This type represents a network association relationship between Port and
+Compute node types.
+
+| Shorthand Name      | network.BindsTo                     |
+|---------------------|-------------------------------------|
+| Type Qualified Name | tosca:BindsTo                       |
+| Type URI            | tosca.relationships.network.BindsTo |
+
+#### Definition
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.relationships.network.BindsTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.dependson-1">tosca.relationships.DependsOn</a></p>
+<p>valid_target_types: [ <a
+href="#tosca.capabilities.network.bindable">tosca.capabilities.network.Bindable</a>
+]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+## Network modeling approaches
+
+### Option 1: Specifying a network outside the application’s Service Template
+
+This approach allows someone who understands the application’s
+networking requirements, mapping the details of the underlying network
+to the appropriate node templates in the application.
+
+The motivation for this approach is providing the application network
+designer a fine-grained control on how networks are provisioned and
+stitched to its application by the TOSCA orchestrator and underlying
+cloud infrastructure while still preserving the portability of his
+service template. Preserving the portability means here not doing any
+modification in service template but just “plug-in” the desired network
+modeling. The network modeling can reside in the same service template
+file but the best practice should be placing it in a separated
+self-contained network template file.
+
+This “pluggable” network template approach introduces a new normative
+node type called Port, capability called
+[tosca.capabilities.network.Linkable](#DEFN_TYPE_CAPABILITIES_NETWORK_LINKABLE)
+and relationship type called
+[tosca.relationships.network.LinksTo](#DEFN_TYPE_RELATIONSHIPS_NETWORK_LINKSTO).
+
+The idea of the Port is to elegantly associate the desired compute nodes
+with the desired network nodes while not “touching” the compute itself.
+
+The following diagram series demonstrate the plug-ability strength of
+this approach.
+
+Let’s assume an application designer has modeled a service template as
+shown in Figure 1 that describes the application topology nodes
+(compute, storage, software components, etc.) with their relationships.
+The designer ideally wants to preserve this service template and use it
+in any cloud provider environment without any change.
+
+Figure‑6: Generic Service Template
+
+When the application designer comes to consider its application
+networking requirement they typically call the network
+architect/designer from their company (who has the correct expertise).
+
+The network designer, after understanding the application connectivity
+requirements and optionally the target cloud provider environment, is
+able to model the network template and plug it to the service template
+as shown in Figure 2:
+
+Figure‑7: Service template with network template A
+
+When there’s a new target cloud environment to run the application on,
+the network designer is simply creates a new network template B that
+corresponds to the new environmental conditions and provide it to the
+application designer which packs it into the application CSAR.
+
+Figure‑8: Service template with network template B
+
+The node templates for these three networks would be defined as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>frontend:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>properties: # omitted for brevity</p>
+<p>backend:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>properties: # omitted for brevity</p>
+<p>database:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>properties: # omitted for brevity</p>
+<p>oam_network:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties: # omitted for brevity</p>
+<p>admin_network:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties: # omitted for brevity</p>
+<p>data_network:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties: # omitted for brevity</p>
+<p># ports definition</p>
+<p>fe_oam_net_port:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>properties:</p>
+<p>is_default: true</p>
+<p>ip_range_start: { get_input: fe_oam_net_ip_range_start }</p>
+<p>ip_range_end: { get_input: fe_oam_net_ip_range_end }</p>
+<p>requirements:</p>
+<p>- link: oam_network</p>
+<p>- binding: frontend</p>
+<p>fe_admin_net_port:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>requirements:</p>
+<p>- link: admin_network</p>
+<p>- binding: frontend</p>
+<p>be_admin_net_port:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>properties:</p>
+<p>order: 0</p>
+<p>requirements:</p>
+<p>- link: admin_network</p>
+<p>- binding: backend</p>
+<p>be_data_net_port:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>properties:</p>
+<p>order: 1</p>
+<p>requirements:</p>
+<p>- link: data_network</p>
+<p>- binding: backend</p>
+<p>db_data_net_port:</p>
+<p>type: tosca.nodes.network.Port</p>
+<p>requirements:</p>
+<p>- link: data_network</p>
+<p>- binding: database</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Option 2: Specifying network requirements within the application’s Service Template
+
+This approach allows the Service Template designer to map an endpoint to
+a logical network.
+
+The use case shown below examines a way to express in the TOSCA YAML
+service template a typical 3-tier application with their required
+networking modeling:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>frontend:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>properties: # omitted for brevity</p>
+<p>requirements:</p>
+<p>- network_oam: oam_network</p>
+<p>- network_admin: admin_network</p>
+<p>backend:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>properties: # omitted for brevity</p>
+<p>requirements:</p>
+<p>- network_admin: admin_network</p>
+<p>- network_data: data_network</p>
+<p>database:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>properties: # omitted for brevity</p>
+<p>requirements:</p>
+<p>- network_data: data_network</p>
+<p>oam_network:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties:</p>
+<p>ip_version: { get_input: oam_network_ip_version }</p>
+<p>cidr: { get_input: oam_network_cidr }</p>
+<p>start_ip: { get_input: oam_network_start_ip }</p>
+<p>end_ip: { get_input: oam_network_end_ip }</p>
+<p>admin_network:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties:</p>
+<p>ip_version: { get_input: admin_network_ip_version }</p>
+<p>dhcp_enabled: { get_input: admin_network_dhcp_enabled }</p>
+<p>data_network:</p>
+<p>type: tosca.nodes.network.Network</p>
+<p>properties:</p>
+<p>ip_version: { get_input: data_network_ip_version }</p>
+<p>cidr: { get_input: data_network_cidr }</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+# TOSCA Orchestrators
+
+Discuss the following:
+
+- Orchestrator components
+
+- Service template catalog
+
+- Inventory
+
+<!-- -->
+
+- o Available (for “onboarded resources”)
+
+- o Active (for “instance model”)
+
+<!-- -->
+
+- Workflow engine
+
+- Policy engine
+
+- Artifact processors
+
+- Onboarding service templates
+
+- Orchestration steps
+
+- Portable artifact processing
+
+- Orchestrator APIs/Interfaces
+
+- Which workflows to invoke?
+
+## Artifact Processing and creating Portable Service Templates
+
+TOSCA’s declarative modelling includes features that allow service
+designers to model abstract components without having to specify
+concrete implementations for these components. Declarative modeling is
+made possible through the use of standardized TOSCA types. Any
+TOSCA-compliant orchestrator is expected to know how to deploy these
+standard types. Declarative modeling ensures optimal portability of
+service templates, since any cloud-specific or technology specific
+implementation logic is provided by the TOSCA orchestrator, not by the
+service template.
+
+The examples in the previous chapter also demonstrate how TOSCA allows
+service designers to extend built-in orchestrator behavior in a number
+of ways:
+
+- Service designers can override or extend behavior of built-in types by
+  supplying service-specific implementations of lifecycle interface
+  operations in their node templates.
+
+- Service designers can create entirely new types that define custom
+  implementations of standard lifecycle interfaces.
+
+Implementations of Interface operations are provided through artifacts.
+The examples in the previous chapter showed shell script artifacts, but
+many other types of artifacts can be used as well. The use of artifacts
+in TOSCA service templates breaks pure declarative behavior since
+artifacts effectively contain “imperative logic” that is opaque to the
+orchestrator. This introduces the risk of non-portable templates. Since
+some artifacts may have dependencies on specific technologies or
+infrastructure component, the use of artifacts could result in service
+templates that cannot be used on all cloud infrastructures.
+
+The goal of this **non-normative** chapter is to ensure portable and
+interoperable use of artifacts by providing a detailed description of
+how TOSCA orchestrators process artifacts, by illustrating how a number
+of standard TOSCA artifact types are expected to be processed, and by
+describing TOSCA language features that allow artifact to provide
+metadata containing artifact-specific processing instructions. These
+metadata around the artifact allow the orchestrator to make descisions
+on the correct Artifact Processor and runtime(s) needed to execute. The
+sole purpose of this chapter is to show TOSCA template designers how to
+best leverage built-in TOSCA capabilities. It is not intended to
+recommend specific orchestrator implementations.
+
+### CSAR Onboarding 
+
+This section is **non-normative** and outlines various options to
+distribute artifacts to artifact processors as a part of CSAR
+on-boarding.
+
+CSAR On-boarding refers to the process of
+
+- Creating a CSAR and its contents
+
+- Submitting the CSAR to the Orchestrator to be included in the
+  catalogue
+
+- Uploading CSAR to Orchestrator
+
+- Processing of CSAR by the Orchestrator
+
+#### How is on-boarding done
+
+<img src="media/image58.png" style="width:6.5in;height:2.33472in" />
+
+CSAR on-boarding is achieved through the following steps:
+
+8.  Request for uploading a CSAR is received by the Orchestrator
+
+9.  Orchestrator verifies integrity of package
+
+10. Orchestrator re-directs request with CSAR to Catalogue
+
+11. Catalogue receives CSAR and reads the Package content
+
+12. Catalogue validates the CSAR
+
+The orchestrator distributes artifacts to artifact processors from
+Catalogue
+
+#### Artifact Distribution
+
+Artifacts can be distributed to artifact processors through the
+following mechanisms:
+
+1.  *Synchronous on-*boarding: During onboarding, Orchestrator
+    forcefully pushes artifacts to artifacts processor and waits for
+    success response, marks onboarding operation as successful only
+    after a success response is received from artifact processor.
+
+<!-- -->
+
+13. *Asynchronous on-boarding*: Orchestrator notifies artifact
+    processors and lets artifact processors pull artifacts
+
+14. Do not distribute artifacts during onboarding, let artifact
+    processors pull them from CSAR catalogue when they are called to
+    execute the artifact
+
+***Note***: Disabling artifact validation during onboarding opens up
+possibilities of failures during deployment of CSAR in to the cloud
+
+#### Why is on-boarding needed
+
+On-boarding eases deployment and reduces the first time instantiation of
+cloud applications. It helps validation and detection of errors early,
+prior to deployment.
+
+### Artifacts Processing
+
+Artifacts represent the content needed to realize a deployment or
+implement a specific management action.
+
+Artifacts can be of many different types. Artifacts could be executables
+(such as scripts or executable program files) or pieces of data required
+by those executables (e.g. configuration files, software libraries,
+license keys, etc). Implementations for some operations may require the
+use of multiple artifacts.
+
+Different types of artifacts may require different mechanisms for
+processing the artifact. However, the sequence of steps taken by an
+orchestrator to process an artifcat is generally the same for all types
+of artifacts:
+
+#### Identify Artifact Processor
+
+The first step is to identify an appropriate processor for the specified
+artifact. A processor is any executable that knows how to process the
+artifact in order to achieve the intended management operation. This
+processor could be an interpreter for executable shell scripts or
+scripts written in Python. It could be a tool such as Ansible, Puppet,
+or Chef for playbook, manifest, or recipe artifacts, or it could be a
+container management or cloud management system for image artifacts such
+as container images or virtual machine images.
+
+TOSCA includes a number of standard artifact types. Standard-compliant
+TOSCA orchestrators are expected to include processors for each of these
+types. For each type, there is a correspondent Artifact Processor that
+is responsible for processing artifacts of that type.
+
+Note that aside from selecting the proper artifact processor, it may
+also be important to use the proper version of the processor. For
+example, some python scripts may require Python 2.7 whereas other
+scripts may require Python 3.4. TOSCA provides metadata to describe
+service template-specific parameters for the Artifact Processor. In
+addition to specifying specific versions, those metadata could also
+identify repositories from which to retrieve the artifact processor.
+
+Some templates may require the use of custom Artifact Processors, for
+example to process non-standard artifacts or to provide a custom
+Artifact Processor for standard artifact types. For such cases, TOSCA
+allows service template designers to define Application Processors in
+service templates as a top-level entity. Alternatively, service template
+designers can also provide their own artifact processor by providing
+wrapper artifacts of a supported type. These wrapper artifacts could be
+shell scripts, python scripts, or artifacts of any other standard type
+that know how process or invoke the custom artifact.
+
+#### Establish an Execution Environment
+
+The second step is to identify or create a proper execution environment
+within which to run the artifact processor. There are generally three
+options for where to run artifact processors :
+
+1.  One option is to execute the artifact processor in the topology that
+    is being orchestrated, for example on a Compute node created by the
+    orchestrator.
+
+- A second option is to process the artifact in the same environment in
+  which the orchestrator is running (although for security reasons,
+  orchestrators may create sandboxes that shield the orchestrator from
+  faulty or malicious artifacts).
+
+- The third option is to process the script in a management environment
+  that is external to both the orchestrator and the topology being
+  orchestrated. This might be the preferred option for scenarios where
+  the environment already exists, but it is also possible for
+  orchestrators to create external execution environments.
+
+It is often possible for the orchestrator to determine the intended
+execution environment based on the type of the artifact as well as on
+the topology context in which the the artifact was specified. For
+example, shell script artifacts associated with software components
+typically contain the install script that needs to be executed on the
+software component’s host node in order to install that software
+component. However, other scripts may not need to be run inside the
+topology being orchestrated. For example, a script that creates a
+database on a database management system could run on the compute node
+that hosts the database management system, or it could run in the
+orchestrator environment and communicate with the DBMS across a
+management network connection.
+
+Similarly, there may be multiple options for other types of artifacts as
+well. For example, puppet artifacts could get processed locally by a
+puppet agent running on a compute node in the topology, or they could
+get passed to a puppet master that is external to both the orchestrator
+and the topology.
+
+Different orchestrators could make different decisions about the
+execution environments for various combinations of node types and
+artifact types. However, service template designers must have the
+ability to specify explicitly where artifacts are intended to be
+processed in those scneario where correct operation depends on using a
+specific execution environment.
+
+Need discussion on how this is done.
+
+#### Configure Artifact Processor User Account
+
+An artifact processor may need to run using a specific user account in
+the execution environment to ensure that the processor has the proper
+permissions to execute the required actions. Depending on the artifact,
+existing user accounts might get used, or the orchestrator might have to
+create a new user account specifically for the artifact processor. If
+new user accounts are needed, the orchestrator may also have to create a
+home directory for those users.
+
+Depending on the security mechanisms used in the execution environment,
+it may also be necessary to add user accounts to specific groups, or to
+assign specific roles to the user account.
+
+#### Deploy Artifact Processor
+
+Once the orchestrator has identified the artifact processor as well as
+the execution environment, it must make sure that the artifact processor
+is deployed in the execution environment:
+
+If the orchestrator’s own environment acts as the execution environment
+for the artifact processor, orchestrator implementors can make sure that
+a standard set of artifact processors is pre-installed in that
+environment, and nothing further may need to be done.
+
+When a Compute node in the orchestrated topology is selected as the
+execution environment, typically only the most basic processors (such as
+bash shells) are pre-installed on that compute node. All other execution
+processors need to be installed on that compute node by the
+orchestrator.
+
+When an external execution environment is specified, the orchestrator
+must at the very least be able to verify that the proper artifact
+processor is present in the external execution environment and generate
+an error if it isn’t. Ideally, the orchestrator should be able to
+install the processor if necessary.
+
+The orchestrator may also take the necessary steps to make sure the
+processor is run as a specific user in the execution environment.
+
+#### Deploy Dependencies
+
+The imperative logic contained in artifacts may in turn install or
+configure software components that are not part of the service topology,
+and as a result are opaque to the orchestrator. This means that the
+orchestrator cannot reflect these components in an instance model, which
+also means they cannot be managed by the orchestrator.
+
+It is best practice to avoid this situation by explicitly modeling any
+dependent components that are required by an artifact processor. When
+deploying the artifact processor, the orchestrator can then deploy or
+configure these dependencies in the execution environment and reflect
+them in an instance model as appropriate.
+
+For artifacts that require dependencies to to be installed, TOSCA
+provides a generic way in which to describe those dependencies, which
+will avoid the use of monolithic scripts.
+
+Examples of dependent components include the following :
+
+Some executables may have dependencies on software libraries. For tools
+like Python, required libraries might be specified in a requirements.txt
+file and deployed into a virtual environment.
+
+Environment variables may need to be set.
+
+Configuration files may need to be created with proper settings for the
+artifact processor. For example, configuration settings could include
+DNS names (or IP addresses) for contacting a Puppet Master or Chef
+Server.
+
+Artifact processors may require valid software licenses in order to run.
+
+Other artifacts specified in the template may need to be deposited into
+the execution environment.
+
+#### Identify Target
+
+Orchestrators must pass information to the artifact processor that
+properly identifies the target for each artifact being processed.
+
+In many cases, the target is the Compute node that acts as the host for
+the node being created or configured. If that Compute node also acts as
+the execution environment for the artifact processor, the target for the
+artifacts being processed is the Compute node itself. If that scenario,
+there is no need for the orchestrator to pass additional target
+information aside from specifying that all actions are intended to be
+applied locally.
+
+When artifact processors run externally to the topology being deployed,
+they must establish a connection across a management network to the
+target. In TOSCA, such targets are identified using Endpoint
+capabilities that contain the necessary addressing information. This
+addressing information must be passed to the artifact processor
+
+Note that in addition to endpoint information about the target,
+orchestrators may also need to pass information about the protocol that
+must be used to connect to the target. For example, some networking
+devices only accept CLI commands across a SSH connection, but others
+could also accept REST API calls. Different python scripts could be used
+to configure such devices: one that uses the CLI, and one that executes
+REST calls. The artifact must include metadata about which connection
+mechanism is intended to be used, and orchestrators must pass on this
+information to the artifact processor.
+
+Finally, artifact processor may need proper credentials to connect to
+target endpoints. Orchestrators must pass those credentials to the
+artifact processor before the artifact can be processed.
+
+#### Pass Inputs and Retrieve Results or Errors
+
+Orchestrators must pass any required inputs to the artifact processor.
+Some processors could take inputs through environment variables, but
+others may prefer command line arguments. Named or positional command
+line arguments could be used. TOSCA must be very specific about the
+mechanism for passing input data to processors for each type of
+artifact.
+
+Similarly, artifact processors must also pass results from operations
+back to orchestrators so that results values can be reflected as
+appropriate in node properties and attributes. If the operation fails,
+error codes may need to be returned as well. TOSCA must be very specific
+about the mechanism for returning results and error codes for each type
+of artifact.
+
+#### Cleanup
+
+After the artifact has been processed by the artifact processor, the
+orchestrator could perform optional cleanup:
+
+If an artifact processor was deployed within the topology that is being
+orchestrated, the orchestrator could decide to remove the artifact
+processor (and all its deployed dependencies) from the topology with the
+goal of not leaving behind any components that are not explicitly
+modeled in the service template.
+
+Alternatively, the orchestrator MAY be able to reflect the additional
+components/resources associated with the Artifact Processor as part of
+the instance model (post deployment).
+
+Artifact Processors that do not use the service template topology as
+their execution environment do not impact the deployed topology. It is
+up to each orchestrator implementation to decide if these artifact
+processors need to be removed.
+
+### Dynamic Artifacts
+
+Detailed Artifacts may be generated on-the-fly as orchestration happens.
+May be propagated to other nodes in the topology. How do we describe
+those?
+
+### Discussion of Examples
+
+This section shows how orchestrators might execute the steps listed
+above for a few common artifact types, in particular:
+
+1.  Shell scripts
+
+- Python scripts
+
+- Package artifacts
+
+- VM images
+
+- Container images
+
+- API artifacts
+
+- Non-standard artifacts
+
+By illustrating how different types of artifacts are intended to be
+processed, we identify the information needed by artifact processors to
+properly process the artifacts, and we will also identify the components
+in the topology from which this information is intended to be obtained.
+
+#### Shell Scripts
+
+Many artifacts are simple bash scripts that provide implementations for
+operations in a Node’s Lifecycle Interfaces. Bash scripts are typically
+intended to be executed on Compute nodes that host the node with which
+these scripts are associated.
+
+We use the following example to illustrate the steps taken by TOSCA
+orchestrators to process shell script artifacts.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca_definitions_version: tosca_2_0</p>
+<p>description: Sample tosca archive to illustrate simple shell script
+usage.</p>
+<p>template_name: tosca-samples-shell</p>
+<p>template_version: 1.0.0-SNAPSHOT</p>
+<p>template_author: TOSCA TC</p>
+<p>node_types:</p>
+<p>tosca.nodes.samples.LogIp:</p>
+<p>derived_from: tosca.nodes.SoftwareComponent</p>
+<p>description: Simple linux cross platform create script.</p>
+<p>attributes:</p>
+<p>log_attr: { get_operation_output: [SELF, Standard, create, LOG_OUT]
+}</p>
+<p>interfaces:</p>
+<p>Standard:</p>
+<p>create:</p>
+<p>inputs:</p>
+<p>SELF_IP: { get_attribute: [HOST, ip_address] }</p>
+<p>implementation: scripts/create.sh</p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>log_ip:</p>
+<p>type: tosca.nodes.samples.LogIp</p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>node: compute</p>
+<p>capability: tosca.capabilities.Container</p>
+<p>relationship: tosca.relationships.HostedOn</p>
+<p># Any linux compute.</p>
+<p>compute:</p>
+<p>type: tosca.nodes.Compute</p>
+<p>capabilities:</p>
+<p>os:</p>
+<p>properties:</p>
+<p>type: linux</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+This example uses the following script to install the LogIP software :
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>#!/bin/bash</p>
+<p># This is exported so available to fetch as output using the
+get_operation_output function</p>
+<p>export LOG_OUT="Create script : $SELF_IP"</p>
+<p># Just a simple example of create operation, of course software
+installation is better</p>
+<p>echo "$LOG_OUT" &gt;&gt; /tmp/tosca_create.log</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+For this simple example, the artifact processing steps outlined above
+are as follows:
+
+1.  ***Identify Artifact Processor***: The artifact processor for bash
+    shell scripts is the “bash” program.
+
+2.  ***Establish Execution Environment***: The typical execution
+    environment for bash scripts is the Compute node respresenting the
+    Host of the node containing the artifact.
+
+3.  ***Configure User Account***: The bash user account is the default
+    user account created when instantiating the Compute node. It is
+    assumed that this account has been configured with sudo privileges.
+
+4.  ***Deploy Artifact Processor***: TOSCA orchestrators can assume that
+    bash is pre-installed on all Compute nodes they orchestrate, and
+    nothing further needs to be done.
+
+5.  ***Deploy Dependencies***: Orchestrators should copy all provided
+    artifacts using a directory structure that mimics the directory
+    structure in the original CSAR file containing the artifacts. Since
+    no dependencies are specified in the example above, nothing further
+    needs to be done.
+
+6.  ***Identify Target***: The target for bash is the Compute node
+    itself.
+
+7.  ***Pass Inputs and Retrieve Outputs***: Inputs are passed to bash as
+    environment variables. In the example above, there is a single input
+    declared for the create operation called SELF_IP. Before processing
+    the script, the Orchestrator creates a corresponding environment
+    variable in the execution environment. Similarly, the script creates
+    a single output that is passed back to the orchestrator as an
+    environment variable. This environment variable can be accessed
+    elsewhere in the service template using the get_operation_output
+    function.
+
+##### Progression of Examples
+
+The following examples show a number of potential use case variations
+(not exhaustive) :
+
+###### Simple install script that can run on all flavors for Unix.
+
+For example, a Bash script called “create.sh” that is used to install
+some software for a TOSCA Node; that this introduces imperative logic
+points (all scripts perhaps) which MAY lead to the creation of “opaque
+software” or topologies within the node
+
+####### Notes
+
+- Initial examples used would be independent of the specific flavor of
+  Linux.
+
+- The “create” operation, as part of the normative Standard node
+  lifecycle, has special meaning in TOSCA in relation to a corresponding
+  deployment artifact; that is, the node is not longer “abstract” if it
+  either has an impl. Artifact on the create operation or a deployment
+  artifact (provided on the node).
+
+“create.sh” prepares/configures environment/host/container for other
+software (see below for VM image use case variants).
+
+####### Variants
+
+1.  “create.sh” followed by a “configure.sh” (or “stop.sh”, “start.sh”
+    or a similar variant).
+
+2.  in Compute node (i.e., within a widely-used, normative, abstract
+    Node Type).
+
+3.  In non-compute node like WebServer (is this the hello world)?
+
+    - Container vs. Containee “hello worlds”; create is “special”;
+      speaks to where (target) the script is run at! i.e., Compute node
+      does not have a host.
+
+    - What is BEST PRACTICE for compute? Should “create.sh” even be
+      allowed?
+
+    - Luc: customer wanted to use an non-AWS cloud, used shell scripts
+      to cloud API.
+
+      1.  Should have specific Node type subclass for Compute for that
+          other Cloud (OR) a capability that represents that specific
+          target Cloud.
+
+###### Script that needs to be run as specific user
+
+For example, a Postgres user
+
+###### Simple script with dependencies
+
+For example, using example from the meeting where script depends on AWS
+CLI being installed.
+
+- How do you decide whether to install an RPM or python package for the
+  AWS dependency?
+
+- How do we decide whether to install python packages in virtualenv vs.
+  system-wide?
+
+###### Different scripts for different Linux flavors
+
+For example. run apt-get vs. yum
+
+- The same operation can be implemented by different artifacts depending
+  on the flavor of Linux on which the script needs to be run. We need
+  the ability to specify which artifacts to use based on the target.
+
+- How do we extend the “operation” grammar to allow for the selection of
+  one specific artifact out of a number of options?
+
+- How do we annotate the artifacts to indicate that they require a
+  specific flavor and/or version of Linux?
+
+####### Variants
+
+- A variant would be to use different subclasses of abstract nodes, one
+  for each flavor of Linux on which the node is supposed to be deployed.
+  This would eliminate the need for different artifacts in the same
+  node. Of course, this significantly reduces the amount of
+  “abstraction” in service templates.
+
+###### Scripts with environment variables
+
+- Environment variables that may not correspond to input parameters
+
+- For example, OpenStack-specific environment variables
+
+- How do we specify that these environment variables need to be set?
+
+###### Scripts that require certain configuration files
+
+For example, containing AWS credentials
+
+- This configuration file may need to be created dynamically (rather
+  than statically inside a CSAR file). How do we specify that these
+  files may need to be created?
+
+- Or does this require template files (e.g. Jinja2)?
+
+#### Python Scripts
+
+A second important class of artifacts are Python scripts. Unlike Bash
+script artifacts, Python scripts are more commonly executed within the
+context of the Orchestrator, but service template designers must also be
+able to provide Python scripts artifacts that are intened to be
+excecuted within the topology being orchestrated,
+
+##### Python Scripts Executed in Orchestrator
+
+Need a simple example of a Python script executed in the Orchestrator
+context.
+
+##### Python Scripts Executed in Topology
+
+Need a simple example of a Python script executed in the topology being
+orchestrated.
+
+The following grammar is provided to allow service providers to specify
+the execution environment within which the artifact is intended to be
+processed :
+
+Need to decide on grammar. Likely an additional keyword to the
+“operation” section of lifecycle interface definitions.
+
+##### Specifying Python Version
+
+Some python scripts conform to Python version 2, whereas others may
+require version 3. Artifact designers use the following grammar to
+specify the required version of Python:
+
+TODO
+
+####### Assumptions/Questions
+
+- Need to decide on grammar. Is artifact processer version associated
+  with the processor, with the artifact, the artifact type, or the
+  operation implementation?
+
+##### Deploying Dependencies
+
+Most Python scripts rely on external packages that must be installed in
+the execution environment. Typically, python packages are installed
+using the ‘pip’ command. To provide isolation between different
+environments, is is considered best practice to create virtual
+environments. A virtual environment is a tool to keep the dependencies
+required by different python scripts or projects in separate places, by
+creating virtual Python environments for each of them.
+
+The following example shows a Python script that has dependencies on a
+number of external packages:
+
+TODO
+
+####### Assumptions/Questions
+
+- Python scripts often have dependencies on a number of external
+  packages (that are referenced by some package artifcat). How would
+  these be handled?
+
+- How do we account for the fact that most python packages are available
+  as Linux packages as well as pip packages?
+
+- Does the template designer need to specify the use of virtual
+  environments, or is this up to the orchestrator implementation? Must
+  names be provided for virtual environments?
+
+####### Notes
+
+- Typically, dependent artifacts must be processed in a specific order.
+  TOSCA grammar must provide a way to define orders and groups (perhaps
+  by extending groups grammar by allowing indented sub-lists).
+
+#### Package Artifacts
+
+Most software components are distributed as software packages that
+include an archive of files and information about the software, such as
+its name, the specific version and a description. These packages are
+processed by a package management system (PMS), such as rpm or YUM, that
+automates the software installation process.
+
+Linux packages are maintained in Software Repositories, databases of
+available application installation packages and upgrade packages for a
+number of Linux distributions. Linux installations come pre-configured
+with a default Repository from which additional software components can
+be installed.
+
+While it is possible to install software packages using Bash script
+artifacts that invoke the appropriate package installation commands
+(e.g. using apt or yum), TOSCA provides improved portability by allowing
+template designers to specify software package artifacts and leaving it
+up to the orchestrator to invoke the appropriate package management
+system.
+
+##### RPM Packages
+
+The following example shows a software component with an RPM package
+artifact.
+
+Need a simple example
+
+#### Debian Packages 
+
+The following example shows a software component with Debian package
+artifact.
+
+Need a simple example
+
+####### Notes
+
+- In this scenario, the host on which the software component is deployed
+  must support RPM packages. This must be reflected in the software
+  component’s host requirement for a target container.
+
+- In this scenario, the host on which the software component is deployed
+  must support Debian packages. This must be reflected in the software
+  component’s host requirement for a target container.
+
+##### Distro-Independent Service Templates
+
+Some template designers may want to specify a generic application
+software topology that can be deployed on a variety of Linux
+distributions. Such templates may include software components that
+include multiple package artifacts, one for each of the supported types
+of container platforms. It is up to the orchestrator to pick the
+appropriate package depending on the type of container chosed at
+deployment time.
+
+Supporting this use case requires the following:
+
+- Allow multiple artifacts to be expressed for a given lifecycle
+  operation.
+
+- Associate the required target platform for which each of those
+  artfiacts was meant.
+
+####### Assumptions/Questions
+
+How do we specify multiple artifacts for the same operation?
+
+How we we specify which platforms are support for each artifact? In the
+artifact itself? In the artifact type?
+
+#### VM Images
+
+####### Premises
+
+- VM Images is a popular opaque deployment artifact that may deploy an
+  entire topology that is not declared itself within the service
+  template.
+
+####### Notes
+
+- The “create” operation, as part of the normative Standard node
+  lifecycle, has special meaning in TOSCA in relation to a corresponding
+  deployment artifact; that is, the node is not longer “abstract” if it
+  either has an impl. Artifact on the create operation or a deployment
+  artifact (provided on the node).
+
+####### Assumptions/Questions
+
+- In the future, the image itself could contain TOSCA topological
+  information either in its metadata or externally as an associated
+  file.
+
+- Can these embedded or external descriptions be brought into the TOSCA
+  Service Template or be reflected in an instance model for management
+  purposes?
+
+- Consider create.sh in conjunction with a VM image deployment artifact
+
+- VM image only (see below)
+
+- Create.sh and VM image, both. (Need to address argument that they
+  belong in different nodes).
+
+- Configure.sh with a VM image.? (see below)
+
+- Create.sh only (no VM image)
+
+- Implementation Artifact (on TOSCA Operations):
+
+- Operations that have an artifact (implementation).
+
+- Deployment Artifacts:
+
+- Today: it must appear in the node under “artifacts” key (grammar)
+
+- In the Future, should it:
+
+<!-- -->
+
+- Appear directly in “create” operation, distinguish by “type” (which
+  indicates processor)?
+
+- \<or\> by artifact name (by reference) to artifact declared in service
+  template.
+
+- What happens if on create and in node (same artifact=ok?
+  Different=what happens? Error?)
+
+- What is best practice? And why? Which way is clearer (to user?)?
+
+- Processing order (use case variant) if config file and VM image appear
+  on same node?
+
+##### Image Onboarding – Uploading image to image repository
+
+In the case of onboarding of images, the cloud management platform plays
+the role of artifact processor. Different cloud management platforms
+have different image characteristics.
+
+For example :.
+
+- **Openstack (Glance) -** disk_format, container_format, min_disk,
+  min_ram etc.
+
+- **Vmware** - vmware_disktype, vmware_ostype etc.
+
+- **OpenshiftContainer** - name, namespace, selfLink ,resourceVersion
+  etc.
+
+These are described as artifact properties. They are not processed by
+the Orchestrator, but passed on to the cloud management platform for
+further processing.
+
+#### Container Images
+
+#### API Artifacts
+
+Some implementations may need to be implemented by invoking an API on a
+remote endpoint. While such implementations could be provided by shell
+or python scripts that invoke API client software or use
+language-specific bindings for the API, it might be preferred to use
+generic API artifacts that leave decisions about the tools and/or
+language bindings to invoke the API to the orchestrator.
+
+To support generic API artifacts, the following is required:
+
+- A format in which to express the target endpoint and the required
+  parameters for the API call
+
+- A mechanism for binding input parameters in the operation to the
+  appropriate parameters in the API call.
+
+- A mechanism for specifying the results and/or errors that will be
+  returned by the API call
+
+Moreover, some operations may need to be implemented by making more than
+one API call. Flexible API support requires a mechanism for expressing
+the control logic that runs those API calls.
+
+It should be possible to use a generic interface to describe these
+various API attributes without being forced into using specific software
+packages or API tooling. Of course, in order to “invoke” the API an
+orchestrator must launch an API client (e.g. a python script, a Java
+program, etc.) that uses the appropriate API language bindings. However,
+using generic API Artifact types, the decision about which API clients
+and language bindings to use can be left to the orchestrator. It is up
+to the API Artifact Processor provided by the Orchestrator to create an
+execution environment within which to deploy API language bindings and
+associated API clients based on Orchestrator preferences. The API
+Artifact Processor then uses these API clients to “process” the API
+artifact.
+
+##### Examples
+
+- REST
+
+- SOAP
+
+- OpenAPI
+
+- IoT
+
+- Serverless
+
+#### Non-Standard Artifacts with Execution Wrappers
+
+TODO
+
+### Artifact Types and Metadata
+
+To unambiguously describe how artifacts need to be processed, TOSCA
+provides:
+
+1.  Artifact types that define standard ways to process artifacts.
+
+<!-- -->
+
+15. Keywords such as checksum, version etc. that enable identification
+    of suitable artifact processor and transfer of artifact to artifact
+    processor.
+
+16. Artifact Properties that enable the artifact processor to process
+    the artifact
+
+17. Descriptive metadata that provide additional information needed to
+    properly process the artifact.
+
+# Acknowledgments
+
+The following individuals have participated in the creation of this
+specification and are gratefully acknowledged:
+
+Participants:
+
+Alex Vul (<alex.vul@intel.com>), Intel
+
+Anatoly Katzman (<anatoly.katzman@att.com>), AT&T
+
+Arturo Martin De Nicolas (<arturo.martin-de-nicolas@ericsson.com>),
+Ericsson
+
+Avi Vachnis (<avi.vachnis@alcatel-lucent.com>), Alcatel-Lucent
+
+Calin Curescu (<calin.curescu@ericsson.com>), Ericsson
+
+Chris Lauwers (<lauwers@ubicity.com)>
+
+Claude Noshpitz (<claude.noshpitz@att.com>), AT&T
+
+Derek Palma (<dpalma@vnomic.com>), Vnomic
+
+Dmytro Gassanov (<dmytro.gassanov@netcracker.com>), NetCracker
+
+Frank Leymann
+([Frank.Leymann@informatik.uni-stuttgart.de](file:///C:\Users\IBM_ADMIN\Documents\IBM\SWG\Standards\SDOs\OASIS\TOSCA\Interop%20SC\YAML\Frank.Leymann@informatik.uni-stuttgart.de)),
+Univ. of Stuttgart
+
+Gábor Marton (<gabor.marton@nokia.com>), Nokia
+
+Gerd Breiter (<gbreiter@de.ibm.com>), IBM
+
+Hemal Surti (<hsurti@cisco.com>), Cisco
+
+Ifat Afek (<ifat.afek@alcatel-lucent.com>), Alcatel-Lucent
+
+Idan Moyal, (<idan@gigaspaces.com>), Gigaspaces
+
+Jacques Durand (<jdurand@us.fujitsu.com>), Fujitsu
+
+Jin Qin, (<chin.qinjin@huawei.com>), Huawei
+
+Jeremy Hess, (<jeremy@gigaspaces.com>) , Gigaspaces
+
+John Crandall,
+([mailto:jcrandal@brocade.com](mailto:jcrandal@brocade.com)), Brocade
+
+Juergen Meynert (<juergen.meynert@ts.fujitsu.com>), Fujitsu
+
+Kapil Thangavelu
+([kapil.thangavelu@canonical.com](file:///C:\Users\IBM_ADMIN\Documents\IBM\SWG\Standards\SDOs\OASIS\TOSCA\Interop%20SC\YAML\kapil.thangavelu@canonical.com)),
+Canonical
+
+Karsten Beins (<karsten.beins@ts.fujitsu.com>), Fujitsu
+
+Kevin Wilson (<kevin.l.wilson@hp.com>), HP
+
+Krishna Raman
+([kraman@redhat.com](file:///C:\Users\IBM_ADMIN\Documents\IBM\SWG\Standards\SDOs\OASIS\TOSCA\Interop%20SC\YAML\kraman@redhat.com)),
+Red Hat
+
+Luc Boutier (<luc.boutier@fastconnect.fr>), FastConnect
+
+Luca Gioppo, (<luca.gioppo@csi.it>), CSI-Piemonte
+
+Matej Artač, (<matej.artac@xlab.si>), XLAB
+
+Matt Rutkowski (<mrutkows@us.ibm.com>), IBM
+
+Moshe Elisha (<moshe.elisha@alcatel-lucent.com>), Alcatel-Lucent
+
+Nate Finch (<nate.finch@canonical.com>), Canonical
+
+Nikunj Nemani
+([nnemani@vmware.com](file:///C:\Users\IBM_ADMIN\Documents\IBM\SWG\Standards\SDOs\OASIS\TOSCA\Interop%20SC\YAML\nnemani@vmware.com)),
+Wmware
+
+Priya TG (<priya.g@netcracker.com)> NetCracker
+
+Richard Probst
+([richard.probst@sap.com](file:///C:\Users\IBM_ADMIN\Documents\IBM\SWG\Standards\SDOs\OASIS\TOSCA\Interop%20SC\YAML\richard.probst@sap.com)),
+SAP AG
+
+Sahdev Zala (<spzala@us.ibm.com>), IBM
+
+Shitao li (<lishitao@huawei.com>), Huawei
+
+Simeon Monov (<sdmonov@us.ibm.com>), IBM
+
+Sivan Barzily, (<sivan@gigaspaces.com>), Gigaspaces
+
+Sridhar Ramaswamy (<sramasw@brocade.com>), Brocade
+
+Stephane Maes (<stephane.maes@hp.com>), HP
+
+Steve Baillargeon (<steve.baillargeon@ericsson.com>), Ericsson
+
+Thinh Nguyenphu (<thinh.nguyenphu@nokia.com>), Nokia
+
+Thomas Spatzier (<thomas.spatzier@de.ibm.com>), IBM
+
+Ton Ngo (<ton@us.ibm.com>), IBM
+
+Travis Tripp (<travis.tripp@hp.com>), HP
+
+Vahid Hashemian (<vahidhashemian@us.ibm.com>), IBM
+
+Wayne Witzel (<wayne.witzel@canonical.com>), Canonical
+
+Yaron Parasol (<yaronpa@gigaspaces.com>), Gigaspaces
+
+# Some Section
+
+Text.
+
+## Subsidiary Appendix Section
+
+Text.
+
+### Sub-subsidiary Appendix Section
+
+text.
+
+# Revision History
+
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 15%" />
+<col style="width: 22%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Revision</strong></th>
+<th><strong>Date</strong></th>
+<th><strong>Editor</strong></th>
+<th><strong>Changes Made</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>WD01, Rev01</td>
+<td>2019-04-22</td>
+<td>Chris Lauwers</td>
+<td>Initial WD01, Revision 01. Split off from <em>TOSCA Version 2.0</em>
+document.</td>
+</tr>
+<tr class="even">
+<td>WD01, Rev02</td>
+<td>2019-04-23</td>
+<td>Calin Curescu</td>
+<td><p>Revision 02 changes to the “TOSCA Cloud Service Archive (CSAR)
+format” chapter:</p>
+<ul>
+<li><p>The CSAR and TOSCA.meta structure specification is self-contained
+and is not defined anymore as a modification of the definitions of XML
+TOSCA 1.0 specification</p></li>
+<li><p>The TOSCA.meta file may be placed in the root of the CSAR
+archive, in addition to its historic location in TOSCA-Metadata
+directory (thus, existing CSAR structures where the TOSCA.meta is
+located in the TOSCA-Metadata directory are still valid). This
+eliminates any kind of necessary directory structure in the
+CSAR.</p></li>
+<li><p>We have deprecated the usage of TOSCA-Meta-File-Version keyname.
+Previously (up to v1.3) we had two keynames for more or less the same
+thing. The CSAR-Version starting with “2.0” covers both the CSAR
+structure and the TOSCA metafile structure (overriding any value of
+TOSCA-Meta-File-Version in this context)</p></li>
+<li><p>We have deprecated the meaning of any block beyond block_0 in the
+TOSCA.meta file (as defined in XML TOSCA 1.0 specification and
+optionally used up to the v1.3 of the TOSCA specification). Additional
+blocks (to block_0) can be used to define custom keynames that have
+meanings outside of the TOSCA specification.</p></li>
+<li><p>We have deprecated the required use of the metadata section
+(where template_name and template_version metadata are also required) in
+the service definition yaml file for the case where where we have no
+TOSCA.meta file (and the yaml file in the root of the CSAR is the
+service definition file). Moreover, the previous specification (up to
+v1.3) of using the template-version to denote the CSAR-version is
+inconsistent with the definition of template-version. In the current
+specification, for the case with no TOSCA.meta file we infer the
+CSAR-Version from the tosca_definitions_version keyword in the
+Entry-Definitions file.</p></li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td>WD01, Rev03</td>
+<td>2019-05-13</td>
+<td>Chris Lauwers</td>
+<td>Fix formatting</td>
+</tr>
+<tr class="even">
+<td>WD01, Rev04</td>
+<td>2019-08-30</td>
+<td>Chris Lauwers</td>
+<td>Minor template changes</td>
+</tr>
+<tr class="odd">
+<td>WD01, Rev05</td>
+<td>2020-02-20</td>
+<td>Chris Lauwers</td>
+<td><ul>
+<li><p>Move normative type definitions from the “TOSCA v2.0
+Specification” into this document</p></li>
+<li><p>Move non-normative type definitions from the “TOSCA v2.0
+Specification” into this document</p></li>
+<li><p>Move CSAR specification into “TOSCA v2.0 Specification”
+document.</p></li>
+</ul></td>
+</tr>
+</tbody>
+</table>
