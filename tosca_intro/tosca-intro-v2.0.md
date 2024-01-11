@@ -122,41 +122,32 @@ type, a very basic “Hello World” TOSCA template for deploying just a
 single server would look as follows:
 
 Example 1 - TOSCA Simple "Hello World"
+```
+tosca_definitions_version: tosca_2_0
+		
+description: >-
+  Template for deploying a single server with predefined properties.
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;-</p>
-<p>Template for deploying a single server with predefined
-properties.</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>db_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p># Host container properties</p>
-<p>host:</p>
-<p>properties:</p>
-<p>num_cpus: 1</p>
-<p>disk_size: 10 GB</p>
-<p>mem_size: 4096 MB</p>
-<p># Guest Operating System properties</p>
-<p>os:</p>
-<p>properties:</p>
-<p># host Operating System image properties</p>
-<p>architecture: x86_64</p>
-<p>type: linux</p>
-<p>distribution: rhel</p>
-<p>version: 6.5</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+topology_template:
+  node_templates:
+    db_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        # Host container properties
+        host:
+         properties:
+           num_cpus: 1 
+           disk_size: 10 GB
+           mem_size: 4096 MB
+        # Guest Operating System properties
+        os:
+          properties:
+            # host Operating System image properties
+            architecture: x86_64 
+            type: linux  
+            distribution: rhel  
+            version: 6.5  
+```
 
 The template above contains a very simple topology template” with only a
 single ‘Compute’ node template named “db_server that declares some basic
@@ -213,47 +204,40 @@ A refined service template with corresponding inputs and outputs
 sections is shown below.
 
 Example 2 - Template with input and output parameter sections
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying a single server with predefined
-properties.</p>
-<p>topology_template:</p>
-<p><strong>inputs</strong>:</p>
-<p>db_server_num_cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>node_templates:</p>
-<p>db_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p># Host container properties</p>
-<p>host:</p>
-<p>properties:</p>
-<p># Compute properties</p>
-<p>num_cpus: { get_input: db_server_num_cpus }</p>
-<p>mem_size: 2048 MB</p>
-<p>disk_size: 10 GB</p>
-<p>mem_size: 4096 MB</p>
-<p># Guest Operating System properties</p>
-<p>os:</p>
-<p># omitted for brevity</p>
-<p><strong>outputs</strong>:</p>
-<p>server_ip:</p>
-<p>description: The private IP address of the provisioned server.</p>
-<p>value: { get_attribute: [ db_server, private_address ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying a single server with predefined properties.
+
+topology_template:
+  inputs:
+     db_server_num_cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+
+  node_templates:
+    db_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        # Host container properties
+        host:
+          properties:
+            # Compute properties
+            num_cpus: { get_input: db_server_num_cpus }
+            mem_size: 2048  MB
+            disk_size: 10 GB
+            mem_size: 4096 MB
+        # Guest Operating System properties
+        os:
+          # omitted for brevity 
+
+  outputs:
+    server_ip:
+      description: The private IP address of the provisioned server.
+      value: { get_attribute: [ db_server, private_address ] }
+```
 
 The inputs and outputs sections are contained in the topology_template
 element of the TOSCA template, meaning that they are scoped to node
@@ -278,41 +262,35 @@ can just use those node types for writing service templates as shown
 below.
 
 Example 3 - Simple (MySQL) software installation on a TOSCA Compute node
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying a single server with MySQL
-software on top.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>mysql_rootpw:</p>
-<p>type: string</p>
-<p>mysql_port:</p>
-<p>type: integer</p>
-<p># rest omitted here for brevity</p>
-<p>node_templates:</p>
-<p>db_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># rest omitted here for brevity</p>
-<p><strong>mysql:</strong></p>
-<p><strong>type: tosca.nodes.DBMS.MySQL</strong></p>
-<p><strong>properties:</strong></p>
-<p><strong>root_password: { get_input: mysql_rootpw }</strong></p>
-<p><strong>port: { get_input: mysql_port }</strong></p>
-<p><strong>requirements:</strong></p>
-<p><strong>- host: db_server</strong></p>
-<p>outputs:</p>
-<p># omitted here for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying a single server with MySQL software on top.
+
+topology_template:
+  inputs:
+    mysql_rootpw:
+      type: string
+    mysql_port:
+      type: integer
+    # rest omitted here for brevity
+
+  node_templates:
+    db_server:
+      type: tosca.nodes.Compute
+      # rest omitted here for brevity
+
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      properties:
+        root_password: { get_input: mysql_rootpw }
+        port: { get_input: mysql_port }
+      requirements:
+        - host: db_server
+
+  outputs:
+    # omitted here for brevity
+```
 
 The example above makes use of a node type tosca.nodes.DBMS.MySQL for
 the mysql node template to install MySQL on a server. This node type
@@ -378,40 +356,34 @@ Compute node templates where these properties may need to be reused. For
 example:
 
 Example 22 - Using YAML anchors in TOSCA templates
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA template that just defines a YAML macro for commonly reused
-Compute</p>
-<p>properties.</p>
-<p>dsl_definitions:</p>
-<p><mark>my_compute_node_props</mark>: &amp;my_compute_node_props</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: 1</p>
-<p>mem_size: 2 GB</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties: *<mark>my_compute_node_props</mark></p>
-<p>my_database:</p>
-<p>type: Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties: *<mark>my_compute_node_props</mark></p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA template that just defines a YAML macro for commonly reused Compute
+  properties.
+
+dsl_definitions:
+  my_compute_node_props: &my_compute_node_props
+    disk_size: 10 GB
+    num_cpus: 1
+    mem_size: 2 GB
+
+topology_template:
+  node_templates:
+    my_server:
+      type: Compute
+      capabilities:
+        host:
+          properties: *my_compute_node_props
+
+    my_database:
+      type: Compute
+      capabilities:
+        host:
+          properties: *my_compute_node_props
+```
+
 
 # 3 TOSCA Base Profile
 
@@ -446,41 +418,35 @@ provides their own configure script:
 
 Example 4 - Node Template overriding its Node Type's "configure"
 interface
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying a single server with MySQL
-software on top.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>db_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># rest omitted here for brevity</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>properties:</p>
-<p>root_password: { get_input: mysql_rootpw }</p>
-<p>port: { get_input: mysql_port }</p>
-<p>requirements:</p>
-<p>- host: db_server</p>
-<p><strong>interfaces:</strong></p>
-<p><strong>Standard:</strong></p>
-<p><mark>configure</mark><strong>:
-<mark>scripts/my_own_configure.sh</mark></strong></p>
-<p>outputs:</p>
-<p># omitted here for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying a single server with MySQL software on top.
+
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    db_server:
+      type: tosca.nodes.Compute
+      # rest omitted here for brevity
+
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      properties:
+        root_password: { get_input: mysql_rootpw }
+        port: { get_input: mysql_port }
+      requirements:
+        - host: db_server
+      interfaces:
+        Standard:
+          configure: scripts/my_own_configure.sh
+
+  outputs:
+    # omitted here for brevity
+```
+
 
 In the example above, the my_own_configure.sh script is provided for the
 configure operation of the MySQL node type’s Standard lifecycle
@@ -504,60 +470,53 @@ definition of custom database content on-top of the MySQL DBMS software.
 
 Example 5 - Template for deploying database content on-top of MySQL DBMS
 middleware
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying a single server with predefined
-properties.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>wordpress_db_name:</p>
-<p>type: string</p>
-<p>wordpress_db_user:</p>
-<p>type: string</p>
-<p>wordpress_db_password:</p>
-<p>type: string</p>
-<p># rest omitted here for brevity</p>
-<p>node_templates:</p>
-<p>db_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># rest omitted here for brevity</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p># rest omitted here for brevity</p>
-<p><strong>wordpress_db:</strong></p>
-<p><strong>type: tosca.nodes.Database.MySQL</strong></p>
-<p><strong>properties:</strong></p>
-<p><strong>name: { get_input: wordpress_db_name }</strong></p>
-<p><strong>user: { get_input: wordpress_db_user }</strong></p>
-<p><strong>password: { get_input: wordpress_db_password }</strong></p>
-<p><strong>artifacts:</strong></p>
-<p>db_content<strong>:</strong></p>
-<p><strong>file:
-<mark>files/wordpress_db_content.txt</mark></strong></p>
-<p><strong>type: tosca.artifacts.File</strong></p>
-<p><strong>requirements:</strong></p>
-<p><strong>- host: mysql</strong></p>
-<p><strong>interfaces:</strong></p>
-<p><strong>Standard:</strong></p>
-<p><strong>create:</strong></p>
-<p><strong>implementation: db_create.sh</strong></p>
-<p><strong>inputs:</strong></p>
-<p><strong># Copy DB file artifact to server’s staging area</strong></p>
-<p><strong>db_data: {</strong> get_artifact<strong>: [ SELF,</strong>
-db_content <strong>] }</strong></p>
-<p>outputs:</p>
-<p># omitted here for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying a single server with predefined properties. 
+
+topology_template:
+  inputs:
+    wordpress_db_name:
+      type: string
+    wordpress_db_user:
+      type: string
+    wordpress_db_password:
+      type: string
+    # rest omitted here for brevity
+
+  node_templates:
+    db_server:
+      type: tosca.nodes.Compute
+      # rest omitted here for brevity
+
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      # rest omitted here for brevity
+
+    wordpress_db:
+      type: tosca.nodes.Database.MySQL
+      properties:
+        name: { get_input: wordpress_db_name }
+        user: { get_input: wordpress_db_user }
+        password: { get_input: wordpress_db_password }
+      artifacts:
+        db_content:
+          file: files/wordpress_db_content.txt
+          type: tosca.artifacts.File 
+      requirements:
+        - host: mysql
+      interfaces:
+        Standard:
+          create:
+            implementation: db_create.sh 
+            inputs:
+              # Copy DB file artifact to server’s staging area
+              db_data: { get_artifact: [ SELF, db_content ] }
+
+  outputs:
+    # omitted here for brevity
+```
 
 In the example above, the wordpress_db node template of type
 tosca.nodes.Database.MySQL represents an actual MySQL database instance
@@ -611,77 +570,72 @@ hosted on the **db_server** compute resource.
 
 Example 6 - Basic two-tier application (web application and database
 server tiers)
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying a two-tier application servers on
-2 servers.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># Admin user name and password to use with the WordPress
-application</p>
-<p>wp_admin_username:</p>
-<p>type: string</p>
-<p>wp_admin_password:</p>
-<p>type: string</p>
-<p>mysql_root_password:</p>
-<p>type: string</p>
-<p>context_root:</p>
-<p>type: string</p>
-<p># rest omitted here for brevity</p>
-<p>node_templates:</p>
-<p>db_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># rest omitted here for brevity</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p># rest omitted here for brevity</p>
-<p>wordpress_db:</p>
-<p>type: tosca.nodes.Database.MySQL</p>
-<p># rest omitted here for brevity</p>
-<p><strong>web_server:</strong></p>
-<p><strong>type: tosca.nodes.Compute</strong></p>
-<p><strong># rest omitted here for brevity</strong></p>
-<p><strong>apache:</strong></p>
-<p><strong>type: tosca.nodes.WebServer.Apache</strong></p>
-<p><strong>requirements:</strong></p>
-<p><strong>- host: web_server</strong></p>
-<p><strong># rest omitted here for brevity</strong></p>
-<p><strong>wordpress:</strong></p>
-<p><strong>type: tosca.nodes.WebApplication.WordPress</strong></p>
-<p><strong>properties:</strong></p>
-<p><strong>context_root: { get_input: context_root }</strong></p>
-<p><strong>admin_user: { get_input: wp_admin_username }</strong></p>
-<p><strong>admin_password: { get_input: wp_admin_password }</strong></p>
-<p>db_host<strong>: { get_attribute: [ db_server, private_address ]
-}</strong></p>
-<p><strong>requirements:</strong></p>
-<p><strong>- host: apache</strong></p>
-<p><strong>- database_endpoint: wordpress_db</strong></p>
-<p><strong>interfaces:</strong></p>
-<p><strong>Standard:</strong></p>
-<p><strong>inputs:</strong></p>
-<p><strong>db_host: { get_attribute: [ db_server, private_address ]
-}</strong></p>
-<p><strong>db_port: { get_property: [ mysql, port ] }</strong></p>
-<p><strong>db_name: { get_property: [ wordpress_db, name ]
-}</strong></p>
-<p><strong>db_user: { get_property: [ wordpress_db, user ]
-}</strong></p>
-<p><strong>db_password: { get_property: [ wordpress_db, password ]
-}</strong></p>
-<p>outputs:</p>
-<p># omitted here for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying a two-tier application servers on 2 servers.
+
+topology_template:
+  inputs:
+    # Admin user name and password to use with the WordPress application
+    wp_admin_username:
+      type: string
+    wp_admin_password:
+      type: string
+    mysql_root_password:
+      type: string
+    context_root:
+      type: string
+    # rest omitted here for brevity
+
+
+  node_templates:
+    db_server:
+      type: tosca.nodes.Compute
+      # rest omitted here for brevity
+
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      # rest omitted here for brevity
+
+    wordpress_db:
+      type: tosca.nodes.Database.MySQL
+      # rest omitted here for brevity
+
+    web_server:
+      type: tosca.nodes.Compute
+      # rest omitted here for brevity
+
+    apache:
+      type: tosca.nodes.WebServer.Apache
+      requirements:
+        - host: web_server
+      # rest omitted here for brevity
+
+    wordpress:
+      type: tosca.nodes.WebApplication.WordPress
+      properties:
+        context_root: { get_input: context_root }
+        admin_user: { get_input: wp_admin_username }
+        admin_password: { get_input: wp_admin_password }
+        db_host: { get_attribute: [ db_server, private_address ] }
+      requirements:
+        - host: apache
+        - database_endpoint: wordpress_db
+      interfaces:
+        Standard:
+          inputs:
+            db_host: { get_attribute: [ db_server, private_address ] }
+            db_port: { get_property: [ mysql, port ] }
+            db_name: { get_property: [ wordpress_db, name ] }
+            db_user: { get_property: [ wordpress_db, user ] }
+            db_password: { get_property: [ wordpress_db, password ] }
+
+  outputs:
+    # omitted here for brevity
+```
+
+
 
 The web application stack consists of the **wordpress**
 \[[WordPress](#REF_WORDPRESS)\], the **apache**
@@ -735,66 +689,66 @@ be executed at runtime as shown in the following example.
 
 Example 7 - Providing a custom relationship script to establish a
 connection
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying a two-tier application on two
-servers.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>db_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># rest omitted here for brevity</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p># rest omitted here for brevity</p>
-<p>wordpress_db:</p>
-<p>type: tosca.nodes.Database.MySQL</p>
-<p># rest omitted here for brevity</p>
-<p>web_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># rest omitted here for brevity</p>
-<p>apache:</p>
-<p>type: tosca.nodes.WebServer.Apache</p>
-<p>requirements:</p>
-<p>- host: web_server</p>
-<p># rest omitted here for brevity</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- host: apache</p>
-<p><strong>- database_endpoint:</strong></p>
-<p><strong>node: wordpress_db</strong></p>
-<p>relationship: <strong><mark>wp_db_connection</mark></strong></p>
-<p># rest omitted here for brevity</p>
-<p>wordpress_db:</p>
-<p>type: tosca.nodes.Database.MySQL</p>
-<p>properties:</p>
-<p># omitted here for the brevity</p>
-<p>requirements:</p>
-<p>- host: mysql</p>
-<p><strong>relationship_templates:</strong></p>
-<p><strong><mark>wp_db_connection</mark>:</strong></p>
-<p><strong>type: ConnectsTo</strong></p>
-<p><strong>interfaces:</strong></p>
-<p><strong>Configure:</strong></p>
-<p><strong>pre_configure_source:</strong> scripts/wp_db_configure.sh</p>
-<p>outputs:</p>
-<p># omitted here for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying a two-tier application on two servers.
+
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    db_server:
+      type: tosca.nodes.Compute
+      # rest omitted here for brevity
+
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      # rest omitted here for brevity
+
+    wordpress_db:
+      type: tosca.nodes.Database.MySQL
+      # rest omitted here for brevity
+
+    web_server:
+      type: tosca.nodes.Compute
+      # rest omitted here for brevity
+
+    apache:
+      type: tosca.nodes.WebServer.Apache
+      requirements:
+        - host: web_server
+      # rest omitted here for brevity
+
+    wordpress:
+      type: tosca.nodes.WebApplication.WordPress
+      properties:
+        # omitted here for brevity
+      requirements:
+        - host: apache
+        - database_endpoint: 
+            node: wordpress_db
+            relationship: wp_db_connection
+      # rest omitted here for brevity
+
+    wordpress_db:
+      type: tosca.nodes.Database.MySQL
+      properties:
+        # omitted here for the brevity
+      requirements:
+        - host: mysql
+
+  relationship_templates:
+    wp_db_connection:
+      type: ConnectsTo
+      interfaces:
+        Configure:
+          pre_configure_source: scripts/wp_db_configure.sh
+
+  outputs:
+    # omitted here for brevity
+```
 
 The node type definition for the wordpress node template is WordPress
 which declares the complete **database_endpoint** requirement
@@ -833,41 +787,35 @@ in the following example.
 
 Example 8 - A web application Node Template requiring a custom database
 connection type
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying a two-tier application on two
-servers.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- host: apache</p>
-<p>- database_endpoint:</p>
-<p>node: wordpress_db<br />
-relationship: <mark>my.types.WordpressDbConnection</mark></p>
-<p>wordpress_db:</p>
-<p>type: tosca.nodes.Database.MySQL</p>
-<p>properties:</p>
-<p># omitted here for the brevity</p>
-<p>requirements:</p>
-<p>- host: mysql</p>
-<p># other resources not shown here ...</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying a two-tier application on two servers.
+
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    wordpress:
+      type: tosca.nodes.WebApplication.WordPress
+      properties:
+        # omitted here for brevity
+      requirements:
+        - host: apache
+        - database_endpoint: 
+            node: wordpress_db
+            relationship: my.types.WordpressDbConnection
+
+    wordpress_db:
+      type: tosca.nodes.Database.MySQL
+      properties:
+        # omitted here for the brevity
+      requirements:
+        - host: mysql
+
+   # other resources not shown here ...
+```
 
 In the example above, a special relationship type
 **my.types.WordpressDbConnection** is specified for establishing the
@@ -891,27 +839,18 @@ service template, perhaps provided in some application packaging format
 (e.g., the TOSCA Cloud Service Archive (CSAR) format).
 
 Example 9 - Defining a custom relationship type
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Definition of custom WordpressDbConnection relationship
-type</p>
-<p>relationship_types:</p>
-<p><mark>my.types.WordpressDbConnection</mark>:</p>
-<p>derived_from: tosca.relationships.ConnectsTo</p>
-<p>interfaces:</p>
-<p>Configure:</p>
-<p>pre_configure_source: scripts/wp_db_configure.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Definition of custom WordpressDbConnection relationship type
+
+relationship_types:
+  my.types.WordpressDbConnection:
+    derived_from: tosca.relationships.ConnectsTo
+    interfaces:
+      Configure:
+        pre_configure_source: scripts/wp_db_configure.sh
+```
 
 ## Defining generic dependencies between nodes in a template
 
@@ -924,35 +863,29 @@ thus gets inherited by all other node types in TOSCA (see section
 5.9.1).
 
 Example 10 - Simple dependency relationship between two nodes
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template with a generic dependency between two
-nodes.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>my_app:</p>
-<p>type: my.types.MyApplication</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- dependency: <mark>some_service</mark></p>
-<p><mark>some_service</mark>:</p>
-<p>type: some.nodetype.SomeService</p>
-<p>properties:</p>
-<p># omitted here for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template with a generic dependency between two nodes.
+
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    my_app:
+      type: my.types.MyApplication
+      properties:
+        # omitted here for brevity
+      requirements:
+        - dependency: some_service
+
+    some_service:
+      type: some.nodetype.SomeService
+      properties:
+        # omitted here for brevity
+```
+
+
 
 As in previous examples, the relation that one node depends on another
 node is expressed in the requirements section using the built-in
@@ -978,57 +911,38 @@ within the execution environments in which the scripts associated with
 lifecycle operations are run.
 
 ### Example: declaring input variables for all operations on a single interface
+```
+node_templates:  
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    requirements:
+      ...
+      - database_endpoint: mysql_database
+    interfaces:
+      Standard:
+        inputs:
+          wp_db_port: { get_property: [ SELF, database_endpoint, port ] }
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>requirements:</p>
-<p>...</p>
-<p>- database_endpoint: mysql_database</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>inputs:</p>
-<p>wp_db_port: { get_property: [ SELF, database_endpoint, port ]
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+
 
 ### Example: declaring input variables for a single operation
+```
+node_templates:  
+  wordpress:
+    type: tosca.nodes.WebApplication.WordPress
+    requirements:
+      ...
+      - database_endpoint: mysql_database
+    interfaces:
+      Standard:
+        create: wordpress_install.sh
+        configure: 
+          implementation: wordpress_configure.sh            
+          inputs:
+            wp_db_port: { get_property: [ SELF, database_endpoint, port ] }
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>requirements:</p>
-<p>...</p>
-<p>- database_endpoint: mysql_database</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: wordpress_install.sh</p>
-<p>configure:</p>
-<p>implementation: wordpress_configure.sh</p>
-<p>inputs:</p>
-<p>wp_db_port: { get_property: [ SELF, database_endpoint, port ]
-}</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
 
 In the case where an input variable name is defined at more than one
 scope within the same interfaces section of a node or template
@@ -1283,39 +1197,31 @@ following rules:
 
 The following example defines multiple steps and the on_success
 relationship between them.
+```
+topology_template:
+  workflows:
+    deploy:
+      description: Workflow to deploy the application
+      steps:
+        A:
+          on_success:
+            - B
+            - C
+        B:
+          on_success:
+            - D
+        C:
+          on_success:
+            - D
+        D:
+        E: 
+          on_success:
+            - C
+            - F
+        F: 
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>workflows:</p>
-<p>deploy:</p>
-<p>description: Workflow to deploy the application</p>
-<p>steps:</p>
-<p>A:</p>
-<p>on_success:</p>
-<p>- B</p>
-<p>- C</p>
-<p>B:</p>
-<p>on_success:</p>
-<p>- D</p>
-<p>C:</p>
-<p>on_success:</p>
-<p>- D</p>
-<p>D:</p>
-<p>E:</p>
-<p>on_success:</p>
-<p>- C</p>
-<p>- F</p>
-<p>F:</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+
 
 The following schema is the visualization of the above definition in
 term of sequencing of the steps.
@@ -1327,61 +1233,41 @@ alt="../Capture%20d’écran%202016-05-03%20à%2013.29.54.png" />
 
 The step definition of a TOSCA imperative workflow allows multiple
 activities to be defined :
+```
+  workflows:
+    my_workflow:
+      steps:
+        create_my_node:
+          target: my_node
+          activities: 
+            - set_state: creating
+            - call_operation: tosca.interfaces.node.lifecycle.Standard.create
+            - set_state: created
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>workflows:</p>
-<p>my_workflow:</p>
-<p>steps:</p>
-<p>create_my_node:</p>
-<p>target: my_node</p>
-<p>activities:</p>
-<p>- set_state: creating</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
-<p>- set_state: created</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
 
 The sequence defined here defines three different activities that will
 be performed in a sequential way. This is just equivalent to writing
 multiple steps chained by an on_success together :
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>workflows:</p>
-<p>my_workflow:</p>
-<p>steps:</p>
-<p>creating_my_node:</p>
-<p>target: my_node</p>
-<p>activities:</p>
-<p>- set_state: creating</p>
-<p>on_success: create_my_node</p>
-<p>create_my_node:</p>
-<p>target: my_node</p>
-<p>activities:</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
-<p>on_success: created_my_node</p>
-<p>created_my_node:</p>
-<p>target: my_node</p>
-<p>activities:</p>
-<p>- set_state: created</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  workflows:
+    my_workflow:
+      steps:
+        creating_my_node:
+          target: my_node
+          activities: 
+            - set_state: creating
+          on_success: create_my_node
+        create_my_node:
+          target: my_node
+          activities: 
+            - call_operation: tosca.interfaces.node.lifecycle.Standard.create
+          on_success: created_my_node
+        created_my_node:
+          target: my_node
+          activities: 
+            - set_state: created
+```
 In both situations the resulting workflow is a sequence of activities:
 
 <img src="media/image9.png" style="width:1.11128in;height:1.60926in"
@@ -1402,39 +1288,28 @@ specifying the workflow and the steps that compose it.
 
 This sample topology add a very simple custom workflow to trigger the
 mysql backup operation.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>requirements:</p>
-<p>- host: my_server</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.nodes.custom.Backup:</p>
-<p>operations:</p>
-<p>backup: backup.sh</p>
-<p>workflows:</p>
-<p>backup:</p>
-<p>description: Performs a snapshot of the MySQL data.</p>
-<p>steps:</p>
-<p>my_step:</p>
-<p>target: mysql</p>
-<p>activities:</p>
-<p>- call_operation:
-tosca.interfaces.nodes.custom.Backup.backup</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+topology_template:
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      requirements:
+        - host: my_server
+      interfaces:
+        tosca.interfaces.nodes.custom.Backup:
+          operations:
+            backup: backup.sh
+  workflows:
+    backup:
+      description: Performs a snapshot of the MySQL data.
+      steps:
+        my_step:
+          target: mysql
+          activities:
+            - call_operation: tosca.interfaces.nodes.custom.Backup.backup
+```
 
 In such topology the TOSCA container will still use declarative workflow
 to generate the deploy and undeploy workflows as they are not specified
@@ -1463,67 +1338,56 @@ started even if no relationship is defined between the components:
 alt="../Capture%20d’écran%202016-05-10%20à%2016.26.30.png" />
 
 To achieve such workflow, the following topology will be defined:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>requirements:</p>
-<p>- host: my_server</p>
-<p>tomcat:</p>
-<p>type: tosca.nodes.WebServer.Tomcat</p>
-<p>requirements:</p>
-<p>- host: my_server</p>
-<p>workflows:</p>
-<p>deploy:</p>
-<p>description: Override the TOSCA declarative workflow with the
-following.</p>
-<p>steps:</p>
-<p>compute_install</p>
-<p>target: my_server</p>
-<p>activities:</p>
-<p>- delegate: deploy</p>
-<p>on_success:</p>
-<p>- mysql_install</p>
-<p>- tomcat_install</p>
-<p>tomcat_install:</p>
-<p>target: tomcat</p>
-<p>activities:</p>
-<p>- set_state: creating</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
-<p>- set_state: created</p>
-<p>on_success:</p>
-<p>- tomcat_starting</p>
-<p>mysql_install:</p>
-<p>target: mysql</p>
-<p>activities:</p>
-<p>- set_state: creating</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
-<p>- set_state: created</p>
-<p>- set_state: starting</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
-<p>- set_state: started</p>
-<p>on_success:</p>
-<p>- tomcat_starting</p>
-<p>tomcat_starting:</p>
-<p>target: tomcat</p>
-<p>activities:</p>
-<p>- set_state: starting</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
-<p>- set_state: started</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+topology_template:
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      requirements:
+        - host: my_server
+    tomcat:
+      type: tosca.nodes.WebServer.Tomcat
+      requirements:
+        - host: my_server
+  workflows:
+    deploy:
+      description: Override the TOSCA declarative workflow with the following.
+      steps:
+        compute_install
+          target: my_server
+          activities:
+            - delegate: deploy
+          on_success:
+            - mysql_install
+            - tomcat_install
+        tomcat_install:
+          target: tomcat
+          activities:
+            - set_state: creating
+            - call_operation: tosca.interfaces.node.lifecycle.Standard.create
+            - set_state: created
+          on_success:
+            - tomcat_starting
+        mysql_install:
+          target: mysql
+          activities:
+            - set_state: creating
+            - call_operation: tosca.interfaces.node.lifecycle.Standard.create
+            - set_state: created
+            - set_state: starting
+            - call_operation: tosca.interfaces.node.lifecycle.Standard.start
+            - set_state: started
+          on_success:
+            - tomcat_starting
+        tomcat_starting:
+          target: tomcat
+          activities:
+            - set_state: starting
+            - call_operation: tosca.interfaces.node.lifecycle.Standard.start
+            - set_state: started
+```
 
 ### Specifying preconditions to a workflow
 
@@ -1535,49 +1399,38 @@ topology’s node. Preconditions must be added to the initial workflow.
 
 In this example we will use precondition so that we make sure that the
 mysql node is in the correct state for a backup.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>requirements:</p>
-<p>- host: my_server</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.nodes.custom.Backup:</p>
-<p>operations:</p>
-<p>backup: backup.sh</p>
-<p>workflows:</p>
-<p>backup:</p>
-<p>description: Performs a snapshot of the MySQL data.</p>
-<p>preconditions:</p>
-<p>- target: my_server</p>
-<p>condition:</p>
-<p>- assert:</p>
-<p>- state: [{equal: available}]</p>
-<p>- target: mysql</p>
-<p>condition:</p>
-<p>- assert:</p>
-<p>- state: [{valid_values: [started, available]}]</p>
-<p>- my_attribute: [{equal: ready }]</p>
-<p>steps:</p>
-<p>my_step:</p>
-<p>target: mysql</p>
-<p>activities:</p>
-<p>- call_operation:
-tosca.interfaces.nodes.custom.Backup.backup</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+topology_template:
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      requirements:
+        - host: my_server
+      interfaces:
+        tosca.interfaces.nodes.custom.Backup:
+          operations:
+            backup: backup.sh
+  workflows:
+    backup:
+      description: Performs a snapshot of the MySQL data.
+      preconditions:
+        - target: my_server
+          condition:
+            - assert:
+              - state: [{equal: available}]
+        - target: mysql
+          condition:
+            - assert:
+              - state: [{valid_values: [started, available]}]
+              - my_attribute: [{equal: ready }]
+      steps:
+        my_step:
+          target: mysql
+          activities:
+            - call_operation: tosca.interfaces.nodes.custom.Backup.backup
+```
 
 When the backup workflow will be triggered (by user or policy) the TOSCA
 engine will first check that preconditions are fulfilled. In this
@@ -1594,71 +1447,63 @@ concepts can be achieved thanks to the inline activity.
 
 The following example show how a workflow can inline an existing
 workflow and reuse it.
+```
+topology_template:
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      requirements:
+        - host: my_server
+      interfaces:
+        tosca.interfaces.nodes.custom.Backup:
+          operations:
+            backup: backup.sh
+  workflows:
+   start_mysql:
+      steps:
+        start_mysql:
+          target: mysql
+          activities :
+            - set_state: starting
+            - call_operation: tosca.interfaces.node.lifecycle.Standard.start
+            - set_state: started
+    stop_mysql:
+      steps:
+        stop_mysql:
+          target: mysql
+          activities:
+            - set_state: stopping
+            - call_operation: tosca.interfaces.node.lifecycle.Standard.stop
+            - set_state: stopped
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>requirements:</p>
-<p>- host: my_server</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.nodes.custom.Backup:</p>
-<p>operations:</p>
-<p>backup: backup.sh</p>
-<p>workflows:</p>
-<p>start_mysql:</p>
-<p>steps:</p>
-<p>start_mysql:</p>
-<p>target: mysql</p>
-<p>activities :</p>
-<p>- set_state: starting</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
-<p>- set_state: started</p>
-<p>stop_mysql:</p>
-<p>steps:</p>
-<p>stop_mysql:</p>
-<p>target: mysql</p>
-<p>activities:</p>
-<p>- set_state: stopping</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.stop</p>
-<p>- set_state: stopped</p>
-<p>backup:</p>
-<p>description: Performs a snapshot of the MySQL data.</p>
-<p>preconditions:</p>
-<p>- target: my_server</p>
-<p>condition:</p>
-<p>- assert:</p>
-<p>- state: [{equal: available}]</p>
-<p>- target: mysql</p>
-<p>condition:</p>
-<p>- assert:</p>
-<p>- state: [{valid_values: [started, available]}]</p>
-<p>- my_attribute: [{equal: ready }]</p>
-<p>steps:</p>
-<p>backup_step:</p>
-<p>activities:</p>
-<p>- inline: stop</p>
-<p>- call_operation: tosca.interfaces.nodes.custom.Backup.backup</p>
-<p>- inline: start</p>
-<p>restart:</p>
-<p>steps:</p>
-<p>backup_step:</p>
-<p>activities:</p>
-<p>- inline: stop</p>
-<p>- inline: start</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+    backup: 
+      description: Performs a snapshot of the MySQL data.
+      preconditions: 
+        - target: my_server
+          condition:
+            - assert:
+              - state: [{equal: available}]
+        - target: mysql
+          condition:
+            - assert:
+              - state: [{valid_values: [started, available]}]
+              - my_attribute: [{equal: ready }]
+      steps:
+        backup_step:
+          activities:
+            - inline: stop
+            - call_operation: tosca.interfaces.nodes.custom.Backup.backup
+            - inline: start
+    restart: 
+      steps:
+        backup_step:
+          activities:
+            - inline: stop
+            - inline: start      
+```
+
 
 The example above defines three workflows and show how the start_mysql
 and stop_mysql workflows are reused in the backup and restart workflows.
@@ -1674,64 +1519,55 @@ alt="../Capture%20d’écran%202016-05-17%20à%2009.45.23.png" />
 It is possible of course to inline more complex workflows. The following
 example defines an inlined workflows with multiple steps including
 concurrent steps:
+```
+topology_template:
+  workflows:
+   inlined_wf:
+      steps: 
+        A: 
+          target: node_a
+          activities:
+            - call_operation: a
+          on_success:
+            - B
+            - C
+        B: 
+          target: node_a
+          activities:
+            - call_operation: b
+          on_success:
+            - D
+        C: 
+          target: node_a
+          activities:
+            - call_operation: c
+          on_success:
+            - D
+        D: 
+          target: node_a
+          activities:
+            - call_operation: d
+        E: 
+          target: node_a
+          activities:
+            - call_operation: e
+          on_success:
+            - C
+            - F
+        F: 
+          target: node_a
+          activities:
+            - call_operation: f
+    main_workflow:
+      steps:
+        G: 
+          target: node_a
+          activities:
+            - set_state: initial
+            - inline: inlined_wf
+            - set_state: available
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>workflows:</p>
-<p>inlined_wf:</p>
-<p>steps:</p>
-<p>A:</p>
-<p>target: node_a</p>
-<p>activities:</p>
-<p>- call_operation: a</p>
-<p>on_success:</p>
-<p>- B</p>
-<p>- C</p>
-<p>B:</p>
-<p>target: node_a</p>
-<p>activities:</p>
-<p>- call_operation: b</p>
-<p>on_success:</p>
-<p>- D</p>
-<p>C:</p>
-<p>target: node_a</p>
-<p>activities:</p>
-<p>- call_operation: c</p>
-<p>on_success:</p>
-<p>- D</p>
-<p>D:</p>
-<p>target: node_a</p>
-<p>activities:</p>
-<p>- call_operation: d</p>
-<p>E:</p>
-<p>target: node_a</p>
-<p>activities:</p>
-<p>- call_operation: e</p>
-<p>on_success:</p>
-<p>- C</p>
-<p>- F</p>
-<p>F:</p>
-<p>target: node_a</p>
-<p>activities:</p>
-<p>- call_operation: f</p>
-<p>main_workflow:</p>
-<p>steps:</p>
-<p>G:</p>
-<p>target: node_a</p>
-<p>activities:</p>
-<p>- set_state: initial</p>
-<p>- inline: inlined_wf</p>
-<p>- set_state: available</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
 
 To describe the following workflow:
 
@@ -1748,56 +1584,45 @@ defined instance.
 
 This construct can be used to filter some steps on a specific instance
 or under some specific circumstances or topology state.
+```
+topology_template:
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+    cluster:
+      type: tosca.nodes.DBMS.Cluster
+      requirements:
+        - host: my_server
+      interfaces:
+        tosca.interfaces.nodes.custom.Backup:
+          operations:
+            backup: backup.sh
+  workflows:
+    backup: 
+      description: Performs a snapshot of the MySQL data.
+      preconditions: 
+        - target: my_server
+          condition:
+            - assert:
+              - state: [{equal: available}]
+        - target: mysql
+          condition:
+            - assert:
+              - state: [{valid_values: [started, available]}]
+              - my_attribute: [{equal: ready }]
+      steps:
+        backup_step:
+          target: cluster
+          filter: # filter is a list of clauses. Matching between clauses is and.
+            - or: # only one of sub-clauses must be true.
+              - assert:
+                - foo: [{equals: true}]
+              - assert:
+                - bar: [{greater_than: 2}, {less_than: 20}]
+          activities:
+            - call_operation: tosca.interfaces.nodes.custom.Backup.backup
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>cluster:</p>
-<p>type: tosca.nodes.DBMS.Cluster</p>
-<p>requirements:</p>
-<p>- host: my_server</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.nodes.custom.Backup:</p>
-<p>operations:</p>
-<p>backup: backup.sh</p>
-<p>workflows:</p>
-<p>backup:</p>
-<p>description: Performs a snapshot of the MySQL data.</p>
-<p>preconditions:</p>
-<p>- target: my_server</p>
-<p>condition:</p>
-<p>- assert:</p>
-<p>- state: [{equal: available}]</p>
-<p>- target: mysql</p>
-<p>condition:</p>
-<p>- assert:</p>
-<p>- state: [{valid_values: [started, available]}]</p>
-<p>- my_attribute: [{equal: ready }]</p>
-<p>steps:</p>
-<p>backup_step:</p>
-<p>target: cluster</p>
-<p>filter: # filter is a list of clauses. Matching between clauses is
-and.</p>
-<p>- or: # only one of sub-clauses must be true.</p>
-<p>- assert:</p>
-<p>- foo: [{equals: true}]</p>
-<p>- assert:</p>
-<p>- bar: [{greater_than: 2}, {less_than: 20}]</p>
-<p>activities:</p>
-<p>- call_operation:
-tosca.interfaces.nodes.custom.Backup.backup</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
 
 ### Define inputs for a workflow
 
@@ -1807,52 +1632,41 @@ function on one of its parameter the input will be retrieved from the
 workflow input, and if not found from the topology inputs.
 
 #### Example
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>requirements:</p>
-<p>- host: my_server</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.nodes.custom.Backup:</p>
-<p>operations:</p>
-<p>backup:</p>
-<p>implementation: backup.sh</p>
-<p>inputs:</p>
-<p>storage_url: { get_input: storage_url }</p>
-<p>workflows:</p>
-<p>backup:</p>
-<p>description: Performs a snapshot of the MySQL data.</p>
-<p>preconditions:</p>
-<p>- target: my_server</p>
-<p>valid_states: [available]</p>
-<p>- target: mysql</p>
-<p>valid_states: [started, available]</p>
-<p>attributes:</p>
-<p>my_attribute: [ready]</p>
-<p>inputs:</p>
-<p>storage_url:</p>
-<p>type: string</p>
-<p>steps:</p>
-<p>my_step:</p>
-<p>target: mysql</p>
-<p>activities:</p>
-<p>- call_operation:
-tosca.interfaces.nodes.custom.Backup.backup</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+topology_template:
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      requirements:
+        - host: my_server
+      interfaces:
+        tosca.interfaces.nodes.custom.Backup:
+          operations:
+            backup:
+              implementation: backup.sh
+              inputs:
+                storage_url: { get_input: storage_url }
+  workflows:
+    backup:
+      description: Performs a snapshot of the MySQL data.
+      preconditions:
+        - target: my_server
+          valid_states: [available]
+        - target: mysql
+          valid_states: [started, available]
+          attributes:
+            my_attribute: [ready]
+      inputs:
+        storage_url:
+          type: string
+      steps:
+        my_step:
+          target: mysql
+          activities:
+            - call_operation: tosca.interfaces.nodes.custom.Backup.backup
+```
 
 To trigger such a workflow, the TOSCA engine must allow user to provide
 inputs that match the given definitions.
@@ -1874,51 +1688,40 @@ construct allows to execute rollback operations and reset the state of
 the affected entities back to an orchestrator known state.
 
 #### Example
+```
+topology_template:
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      requirements:
+        - host: my_server
+      interfaces:
+        tosca.interfaces.nodes.custom.Backup:
+          operations:
+            backup:
+              implementation: backup.sh
+              inputs:
+                storage_url: { get_input: storage_url }
+  workflows:
+    backup:
+      steps:
+        backup_step:
+          target: mysql
+          activities:
+            - set_state: backing_up # this state is not a TOSCA known state
+            - call_operation: tosca.interfaces.nodes.custom.Backup.backup
+            - set_state: available # this state is known by TOSCA orchestrator
+          on_failure:
+            - rollback_step
+        rollback_step:
+          target: mysql
+          activities:
+            - call_operation: tosca.interfaces.nodes.custom.Backup.backup
+            - set_state: available # this state is known by TOSCA orchestrator
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>requirements:</p>
-<p>- host: my_server</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.nodes.custom.Backup:</p>
-<p>operations:</p>
-<p>backup:</p>
-<p>implementation: backup.sh</p>
-<p>inputs:</p>
-<p>storage_url: { get_input: storage_url }</p>
-<p>workflows:</p>
-<p>backup:</p>
-<p>steps:</p>
-<p>backup_step:</p>
-<p>target: mysql</p>
-<p>activities:</p>
-<p>- set_state: backing_up # this state is not a TOSCA known state</p>
-<p>- call_operation: tosca.interfaces.nodes.custom.Backup.backup</p>
-<p>- set_state: available # this state is known by TOSCA
-orchestrator</p>
-<p>on_failure:</p>
-<p>- rollback_step</p>
-<p>rollback_step:</p>
-<p>target: mysql</p>
-<p>activities:</p>
-<p>- call_operation: tosca.interfaces.nodes.custom.Backup.backup</p>
-<p>- set_state: available # this state is known by TOSCA
-orchestrator</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
 
 <img src="media/image14.png" style="width:4.91181in;height:2.55759in"
 alt="../Capture%20d’écran%202016-05-17%20à%2015.40.04.png" />
@@ -1930,47 +1733,27 @@ TOSCA orchestrators may support additional workflow languages beyond the
 one which has been described in this specification.
 
 ***7.3.8.1 Example***
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>workflows:</p>
-<p>my_workflow:</p>
-<p>implementation: my_workflow.bpmn.xml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+topology_template:
+  workflows:
+    my_workflow:
+      implementation: my_workflow.bpmn.xml
+```
 
 The **implementation** refers to the artifact **my_workflow.bpmn.xml**
 containing the workflow definition written in BPMN (Business Process
 Modeling Notation).
 
 ***7.3.8.2 Example***
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>topology_template:</p>
-<p>workflows:</p>
-<p>my_workflow:</p>
-<p>implementation:</p>
-<p>description: workflow implemented in Mistral</p>
-<p>type: mycompany.artifacts.Implementation.Mistral</p>
-<p>file: my_workflow.workbook.mistral.yaml</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+topology_template:
+  workflows:
+    my_workflow:
+      implementation: 
+        description: workflow implemented in Mistral
+        type: mycompany.artifacts.Implementation.Mistral
+        file: my_workflow.workbook.mistral.yaml
+```
 
 The **implementation** refers to the artifact **my_workflow_script**
 which is in fact a Mistral workbook written in the Mistral workflow
@@ -2024,46 +1807,33 @@ The tosca.nodes.Root type defines workflow steps for both the install
 workflow (used to instantiate or deploy a topology) and the uninstall
 workflow (used to destroy or undeploy a topology). The workflow is
 defined as follows:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>tosca.nodes.Root:</p>
-<p>workflows:</p>
-<p>install:</p>
-<p>steps:</p>
-<p>install_sequence:</p>
-<p>activities:</p>
-<p>- set_state: creating</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.create</p>
-<p>- set_state: created</p>
-<p>- set_state: configuring</p>
-<p>- call_operation:
-tosca.interfaces.node.lifecycle.Standard.configure</p>
-<p>- set_state: configured</p>
-<p>- set_state: starting</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.start</p>
-<p>- set_state: started</p>
-<p>uninstall:</p>
-<p>steps:</p>
-<p>uninstall_sequence:</p>
-<p>activities:</p>
-<p>- set_state: stopping</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.stop</p>
-<p>- set_state: stopped</p>
-<p>- set_state: deleting</p>
-<p>- call_operation: tosca.interfaces.node.lifecycle.Standard.delete</p>
-<p>- set_state: deleted</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+  tosca.nodes.Root:
+    workflows:
+      install:
+        steps:
+          install_sequence:
+            activities:
+              - set_state: creating
+              - call_operation: tosca.interfaces.node.lifecycle.Standard.create
+              - set_state: created
+              - set_state: configuring
+              - call_operation: tosca.interfaces.node.lifecycle.Standard.configure
+              - set_state: configured
+              - set_state: starting
+              - call_operation: tosca.interfaces.node.lifecycle.Standard.start
+              - set_state: started
+      uninstall:
+        steps:
+          uninstall_sequence:
+            activities:
+              - set_state: stopping
+              - call_operation: tosca.interfaces.node.lifecycle.Standard.stop
+              - set_state: stopped
+              - set_state: deleting
+              - call_operation: tosca.interfaces.node.lifecycle.Standard.delete
+              - set_state: deleted
+```
 #### Relationship lifecycle and weaving
 
 While the workflow of a single node is quite simple the TOSCA weaving
@@ -2076,53 +1846,30 @@ groups defined in a topology.
 
 This section describes the relationship weaving and how the description
 at a template level can be translated on an instance level.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>relationship_types:</p>
-<p>tosca.relationships.ConnectsTo:</p>
-<p>workflow:</p>
-<p>install: # name of the workflow for wich the weaving has to be taken
-in account</p>
-<p>source_weaving: # Instruct how to weave some tasks on the source
-workflow (executed on SOURCE instance)</p>
-<p>- after: configuring # instruct that this operation should be weaved
-after the target reach configuring state</p>
-<p>wait_target: created # add a join from a state of the target</p>
-<p>activity:
-tosca.interfaces.relationships.Configure.pre_configure_source</p>
-<p>- before: configured # instruct that this operation should be weaved
-before the target reach configured state</p>
-<p>activity:
-tosca.interfaces.relationships.Configure.post_configure_source</p>
-<p>- before: starting</p>
-<p>wait_target: started # add a join from a state of the target</p>
-<p>- after: started</p>
-<p>activity: tosca.interfaces.relationships.Configure.add_target</p>
-<p>target_weaving: # Instruct how to weave some tasks on the target
-workflow (executed on TARGET instance)</p>
-<p>- after: configuring # instruct that this operation should be weaved
-after the target reach configuring state</p>
-<p>after_source: created # add a join from a state of the source</p>
-<p>activity:
-tosca.interfaces.relationships.Configure.pre_configure_target</p>
-<p>- before: configured # instruct that this operation should be weaved
-before the target reach configured state</p>
-<p>activity:
-tosca.interfaces.relationships.Configure.post_configure_target</p>
-<p>- after: started</p>
-<p>activity:
-tosca.interfaces.relationships.Configure.add_source</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+relationship_types:
+  tosca.relationships.ConnectsTo:
+    workflow:
+      install: # name of the workflow for wich the weaving has to be taken in account
+        source_weaving: # Instruct how to weave some tasks on the source workflow (executed on SOURCE instance)
+          - after: configuring # instruct that this operation should be weaved after the target reach configuring state
+            wait_target: created # add a join from a state of the target
+            activity: tosca.interfaces.relationships.Configure.pre_configure_source
+          - before: configured # instruct that this operation should be weaved before the target reach configured state
+            activity: tosca.interfaces.relationships.Configure.post_configure_source
+          - before: starting
+            wait_target: started # add a join from a state of the target
+          - after: started
+            activity: tosca.interfaces.relationships.Configure.add_target
+        target_weaving: # Instruct how to weave some tasks on the target workflow (executed on TARGET instance)
+          - after: configuring # instruct that this operation should be weaved after the target reach configuring state
+            after_source: created # add a join from a state of the source
+            activity: tosca.interfaces.relationships.Configure.pre_configure_target
+          - before: configured # instruct that this operation should be weaved before the target reach configured state
+            activity: tosca.interfaces.relationships.Configure.post_configure_target
+          - after: started
+            activity: tosca.interfaces.relationships.Configure.add_source
+```
 # 6 Instance Model
 
 ## Topology Template Model versus Instance Model
@@ -2169,61 +1916,55 @@ an attribute in the my_server node (also with the name
 notification_port) when its node template is instantiated.
 
 Example 23 - Properties reflected as attributes
+```
+tosca_definitions_version: tosca_2_0
+	
+description: >
+  TOSCA template that shows how the (notification_port) property is reflected as an attribute and can be referenced elsewhere.
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA template that shows how the (notification_port) property is
-reflected as an attribute and can be referenced elsewhere.</p>
-<p>node_types:</p>
-<p>ServerNode:</p>
-<p>derived_from: SoftwareComponent</p>
-<p>properties:</p>
-<p><strong>notification_port</strong>:</p>
-<p>type: integer</p>
-<p>capabilities:</p>
-<p># omitted here for brevity</p>
-<p>ClientNode:</p>
-<p>derived_from: SoftwareComponent</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- server:</p>
-<p>capability: Endpoint</p>
-<p>node: ServerNode</p>
-<p>relationship: ConnectsTo</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: ServerNode</p>
-<p>properties:</p>
-<p>notification_port: 8000</p>
-<p>my_client:</p>
-<p>type: ClientNode</p>
-<p>requirements:</p>
-<p>- server:</p>
-<p>node: my_server</p>
-<p>relationship: my_connection</p>
-<p>relationship_templates:</p>
-<p>my_connection:</p>
-<p>type: ConnectsTo</p>
-<p>interfaces:</p>
-<p>Configure:</p>
-<p>inputs:</p>
-<p>targ_notify_port: { get_attribute: [ TARGET,
-<strong>notification_port</strong> ] }</p>
-<p># other operation definitions omitted here for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+node_types:
+  ServerNode:
+    derived_from: SoftwareComponent
+    properties:
+      notification_port:
+        type: integer
+    capabilities:
+      # omitted here for brevity 
 
+  ClientNode:
+    derived_from: SoftwareComponent
+    properties:
+      # omitted here for brevity
+    requirements:
+      - server: 
+          capability: Endpoint
+          node: ServerNode  
+          relationship: ConnectsTo
+
+topology_template:           
+  node_templates:
+
+    my_server:
+      type: ServerNode  
+      properties:
+        notification_port: 8000
+
+    my_client:
+      type: ClientNode
+      requirements: 
+        - server: 
+            node: my_server
+            relationship: my_connection
+
+  relationship_templates:
+    my_connection:
+      type: ConnectsTo
+      interfaces:
+        Configure:
+          inputs: 
+            targ_notify_port: { get_attribute: [ TARGET, notification_port ] }
+            # other operation definitions omitted here for brevity
+```
 Specifically, the above example shows that the ClientNode type needs the
 notification_port value anytime a node of ServerType is connected to it
 using the ConnectsTo relationship in order to make it available to its
@@ -2252,31 +1993,24 @@ used to create a compute node. The config operation of the Standard
 lifecycle returns both the private and the public IP addresses of the
 config node. The *attribute mappings grammar* is used to reflect these
 addresses into the appropriate Compute node attributes:
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for creating compute node</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>node:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>outputs:</p>
-<p>ip1: [ SELF, private_address ]</p>
-<p>ip2: [ SELF, public_address ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for creating compute node 
 
+topology_template:
+
+  node_templates:
+
+    node:
+      type: tosca.nodes.Compute
+      interfaces:
+        Standard:
+          configure:
+            outputs:
+              ip1: [ SELF, private_address ]
+              ip2: [ SELF, public_address ]
+```
 ### Example: setting output values to a capability attribute
 
 Some operation outputs may need to be reflected into attributes of
@@ -2284,30 +2018,24 @@ capabilities of nodes, rather than in attributes of the nodes
 themselves. The following example shows how an IP address returned by a
 config operation is stored in the *ip_address* attribute of the
 *endpoint* capability of a *Compute* node:
+```
+tosca_definitions_version: tosca_simple_yaml_1_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_simple_yaml_1_2_0</p>
-<p>description: Template for creating compute node</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>compute:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>config:</p>
-<p>outputs:</p>
-<p>ip1: <mark>[ SELF, endpoint, ip_address ]</mark></p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for creating compute node
 
+topology_template:
+
+  node_templates:
+
+    compute:
+      type: tosca.nodes.Compute
+      interfaces:
+        Standard:
+          config:
+            outputs:
+              ip1: [ SELF, endpoint, ip_address ]
+
+```
 ## Receiving asynchronous notifications
 
 As shown in the previous section, TOSCA allows service template
@@ -2334,36 +2062,28 @@ The following example shows how a health monitoring interface is used to
 allow the orchestrator to monitor the health of a database node by
 listening for heartbeats as well as by waiting for asynchronous failure
 alerts:
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template showing a health monitoring interface</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>db_1:</p>
-<p>type: org.ego.nodes.Database</p>
-<p>interfaces:</p>
-<p>HealthMonitor:</p>
-<p>notifications:</p>
-<p>heartbeat:</p>
-<p>outputs:</p>
-<p>tick: [ SELF, still_alive ]</p>
-<p>failure_report:</p>
-<p>outputs:</p>
-<p>level: [SELF, failure_level]</p>
-<p>time: [SELF, failure_time]</p>
-<p>environment: [SELF, failure_context]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template showing a health monitoring interface
 
+topology_template:
+  node_templates:
+    db_1:
+      type: org.ego.nodes.Database
+      interfaces:
+        HealthMonitor:
+          notifications:
+            heartbeat:
+              outputs:
+                tick: [ SELF, still_alive ]
+            failure_report:
+              outputs:
+                level: [SELF, failure_level]
+                time: [SELF, failure_time]
+                environment: [SELF, failure_context]    
+
+```
 ## Creating Multiple Node Instances from the Same Node Template
 
 TOSCA service templates specify a set of nodes that need to be
@@ -2396,50 +2116,42 @@ The following code snippet shows a TOSCA service template from which
 this service could have been deployed:
 
 Example 24 – TOSCA SD-WAN Service Template
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying SD-WAN with three sites.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>location1:</p>
-<p>type: Location</p>
-<p>location2:</p>
-<p>type: Location</p>
-<p>location3:</p>
-<p>type: Location</p>
-<p>node_templates:</p>
-<p>sdwan:</p>
-<p>type: VPN</p>
-<p>site1:</p>
-<p>type: VPNSite</p>
-<p>properties:</p>
-<p>location: { get_input: location1 }</p>
-<p>requirements:</p>
-<p>- vpn: sdwan</p>
-<p>site2:</p>
-<p>type: VPNSite</p>
-<p>properties:</p>
-<p>location: { get_input: location2 }</p>
-<p>requirements:</p>
-<p>- vpn: sdwan</p>
-<p>site3:</p>
-<p>type: VPNSite</p>
-<p>properties:</p>
-<p>location: { get_input: location3 }</p>
-<p>requirements:</p>
-<p>- vpn: sdwan</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying SD-WAN with three sites.
 
+topology_template:
+  inputs:
+    location1:
+      type: Location
+    location2:
+      type: Location
+    location3:
+      type: Location
+  node_templates:
+    sdwan:
+      type: VPN
+    site1:
+      type: VPNSite
+      properties:
+        location: { get_input: location1 }
+      requirements:
+        - vpn: sdwan
+    site2:
+      type: VPNSite
+      properties:
+        location: { get_input: location2 }
+      requirements:
+        - vpn: sdwan
+    site3:
+      type: VPNSite
+      properties:
+        location: { get_input: location3 }
+      requirements:
+        - vpn: sdwan
+ 
+```
 Unfortunately, this template can only be used to deploy an SD-WAN with
 three sites. To deploy a different number of sites, additional service
 templates would have t be created, one for each number of possible
@@ -2474,35 +2186,26 @@ a simplified SD-WAN service template that contains only one single VPN
 Site node as shown in the following code snippet:
 
 Example 25 – TOSCA SD-WAN Service Template
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying SD-WAN with a variable number of
-sites.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>numberOfSites:</p>
-<p>type: integer</p>
-<p>node_templates:</p>
-<p>sdwan:</p>
-<p>type: VPN</p>
-<p>site:</p>
-<p>type: VPNSite</p>
-<p>occurrences: [1, UNBOUNDED]</p>
-<p>instance_count: { get_input: numberOfSites }</p>
-<p>requirements:</p>
-<p>- vpn: sdwan</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying SD-WAN with a variable number of sites.
 
+topology_template:
+  inputs:
+    numberOfSites:
+      type: integer
+  
+  node_templates:
+    sdwan:
+      type: VPN
+    site:
+      type: VPNSite
+      occurrences: [1, UNBOUNDED]
+      instance_count: { get_input: numberOfSites }
+      requirements:
+        - vpn: sdwan
+```
 ### Specifying Inputs
 
 The service template in the previous section conveniently ignores the
@@ -2522,40 +2225,31 @@ retrieve specific values from a list of input values in a service
 template:
 
 Example 26 – TOSCA SD-WAN Service Template
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for deploying SD-WAN with a variable number of
-sites.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>numberOfSites:</p>
-<p>type: integer</p>
-<p>locations:</p>
-<p>type: list</p>
-<p>entry_schema: Location</p>
-<p>node_templates:</p>
-<p>sdwan:</p>
-<p>type: VPN</p>
-<p>site:</p>
-<p>type: VPNSite</p>
-<p>occurrences: [1, UNBOUNDED]</p>
-<p>instance_count: { get_input: numberOfSites }</p>
-<p>properties:</p>
-<p>location: { get_input: [ locations, INDEX ] }</p>
-<p>requirements:</p>
-<p>- vpn: sdwan</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for deploying SD-WAN with a variable number of sites.
 
+topology_template:
+  inputs:
+    numberOfSites:
+      type: integer
+    locations:
+      type: list
+      entry_schema: Location
+  
+  node_templates:
+    sdwan:
+      type: VPN
+    site:
+      type: VPNSite
+      occurrences: [1, UNBOUNDED]
+      instance_count: { get_input: numberOfSites }
+      properties:
+        location: { get_input: [ locations, INDEX ] }
+      requirements:
+        - vpn: sdwan
+```
 # Describing abstract requirements for nodes and capabilities in a TOSCA template
 
 In TOSCA templates, nodes are either:
@@ -2618,45 +2312,35 @@ and provider will use to select or allocate an appropriate host Compute
 node by using matching criteria provided on a node_filter.
 
 Example 11 - An abstract "host" requirement using a node filter
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template with requirements against hosting
-infrastructure.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node_filter:</p>
-<p>capabilities:</p>
-<p># Constraints for selecting “host” (Container Capability)</p>
-<p>- host:</p>
-<p>properties:</p>
-<p>- num_cpus: { in_range: [ 1, 4 ] }</p>
-<p>- mem_size: { greater_or_equal: 2 GB }</p>
-<p># Constraints for selecting “os” (OperatingSystem Capability)</p>
-<p>- os:</p>
-<p>properties:</p>
-<p>- architecture: { equal: x86_64 }</p>
-<p>- type: linux</p>
-<p>- distribution: ubuntu</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template with requirements against hosting infrastructure.
 
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      properties:
+        # omitted here for brevity
+      requirements:
+        - host: 
+            node_filter:
+              capabilities:
+                # Constraints for selecting “host” (Container Capability)
+                - host:
+                    properties:
+                      - num_cpus: { in_range: [ 1, 4 ] }
+                      - mem_size: { greater_or_equal: 2 GB }
+                # Constraints for selecting “os” (OperatingSystem Capability)
+                - os:
+                    properties:
+                      - architecture: { equal: x86_64 }
+                      - type: linux
+                      - distribution: ubuntu
+```
 In the example above, the **mysql** component contains a host
 requirement for a node of type **Compute** which it inherits from its
 parent DBMS node type definition; however, there is no declaration or
@@ -2688,47 +2372,39 @@ alternative to the above approach is to create an abstract node template
 that represents the Compute node in the topology as follows:
 
 Example 12 - An abstract Compute node template with a node filter
+```
+tosca_definitions_version: tosca_2_0
+	
+description: Template with requirements against hosting infrastructure.
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template with requirements against hosting
-infrastructure.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>mysql:</p>
-<p>type: <a
-href="#tosca.nodes.dbms.mysql">tosca.nodes.DBMS.MySQL</a></p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- host: <mark>mysql_compute</mark></p>
-<p># Abstract node template (placeholder) to be selected by provider</p>
-<p><mark>mysql_compute:</mark></p>
-<p>type: Compute</p>
-<p>directives: [ select ]</p>
-<p>node_filter:</p>
-<p>capabilities:</p>
-<p>- host:</p>
-<p>properties:</p>
-<p>num_cpus: { equal: 2 }</p>
-<p>mem_size: { greater_or_equal: 2 GB }</p>
-<p>- os:</p>
-<p>properties:</p>
-<p>architecture: { equal: x86_64 }</p>
-<p>type: linux</p>
-<p>distribution: ubuntu</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      properties:
+        # omitted here for brevity
+      requirements:
+        - host: mysql_compute
+
+    # Abstract node template (placeholder) to be selected by provider
+    mysql_compute:
+      type: Compute
+      directives: [ select ]
+      node_filter:
+        capabilities:
+          - host:
+              properties:
+                num_cpus: { equal: 2 }
+                mem_size: { greater_or_equal: 2 GB }
+          - os:
+              properties:
+                architecture: { equal: x86_64 }
+                type: linux
+                distribution: ubuntu
+```
 
 In this node template, the **msql_compute** node template is marked as
 abstract using the **select** directive. As you can see the resulting
@@ -2757,39 +2433,29 @@ then allocate a database by any means, (e.g. using a
 database-as-a-service solution).
 
 Example 13 - An abstract database requirement using a node filter
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template with a TOSCA Orchestrator selectable database
-requirement using a node_filter.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>my_app:</p>
-<p>type: my.types.MyApplication</p>
-<p>properties:</p>
-<p>admin_user: { get_input: admin_username }</p>
-<p>admin_password: { get_input: admin_password }</p>
-<p>db_endpoint_url: { get_property: [SELF,
-<mark>database_endpoint</mark>, url_path ] }</p>
-<p>requirements:</p>
-<p>- <mark>database_endpoint</mark>:</p>
-<p>node: my.types.nodes.MyDatabase</p>
-<p>node_filter:</p>
-<p>properties:</p>
-<p>- db_version: { greater_or_equal: 5.5 }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template with a TOSCA Orchestrator selectable database requirement using a node_filter.
 
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    my_app:
+      type: my.types.MyApplication
+      properties:
+        admin_user: { get_input: admin_username }
+        admin_password: { get_input: admin_password }
+        db_endpoint_url: { get_property: [SELF, database_endpoint, url_path ] }         
+      requirements:
+        - database_endpoint:
+            node: my.types.nodes.MyDatabase
+            node_filter:
+              properties:
+                - db_version: { greater_or_equal: 5.5 }
+```
 In the example above, the application my_app requires a database node of
 type MyDatabase which has a db_version property value of
 greater_or_equal to the value 5.5.
@@ -2811,39 +2477,30 @@ topology for database that is still selectable by the TOSCA orchestrator
 for the above example, is as follows:
 
 Example 14 - An abstract database node template
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template with a TOSCA Orchestrator selectable database
-using node template.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>my_app:</p>
-<p>type: my.types.MyApplication</p>
-<p>properties:</p>
-<p>admin_user: { get_input: admin_username }</p>
-<p>admin_password: { get_input: admin_password }</p>
-<p>db_endpoint_url: { get_property: [SELF,
-<mark>database_endpoint</mark>, url_path ] }</p>
-<p>requirements:</p>
-<p>- <mark>database_endpoint</mark>: my_abstract_database</p>
-<p>my_abstract_database:</p>
-<p>type: my.types.nodes.MyDatabase</p>
-<p>properties:</p>
-<p>- db_version: { greater_or_equal: 5.5 }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template with a TOSCA Orchestrator selectable database using node template.
 
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    my_app:
+      type: my.types.MyApplication
+      properties:
+        admin_user: { get_input: admin_username }
+        admin_password: { get_input: admin_password }
+        db_endpoint_url: { get_property: [SELF, database_endpoint, url_path ] }         
+      requirements:
+        - database_endpoint: my_abstract_database
+
+    my_abstract_database:
+      type: my.types.nodes.MyDatabase
+      properties:
+        - db_version: { greater_or_equal: 5.5 }
+```
 # 7 Substitution Mapping
 
 ## Using node template substitution for model composition
@@ -2929,47 +2586,40 @@ would not be possible in requirements sections of disjoint node
 templates.
 
 Example 15 - Referencing an abstract database node template
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>topology_template:</p>
-<p>description: Template of an application connecting to a database.</p>
-<p>node_templates:</p>
-<p>web_app:</p>
-<p>type: tosca.nodes.WebApplication.MyWebApp</p>
-<p>requirements:</p>
-<p>- host: web_server</p>
-<p>- database_endpoint: <mark>db</mark></p>
-<p>web_server:</p>
-<p>type: tosca.nodes.WebServer</p>
-<p>requirements:</p>
-<p>- host: server</p>
-<p>server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># details omitted for brevity</p>
-<p><mark>db</mark>:</p>
-<p># This node is abstract as specified by the substitute directive</p>
-<p># and must be substituted with a topology provided by another
-template</p>
-<p># that exports a Database type’s capabilities.</p>
-<p>type: tosca.nodes.Database</p>
-<p><strong>directives:</strong></p>
-<p><strong>- substitute</strong></p>
-<p>properties:</p>
-<p>user: my_db_user</p>
-<p>password: secret</p>
-<p>name: my_db_name</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+topology_template:
+  description: Template of an application connecting to a database.
 
+  node_templates:
+    web_app:
+      type: tosca.nodes.WebApplication.MyWebApp
+      requirements:
+        - host: web_server
+        - database_endpoint: db
+
+    web_server:
+      type: tosca.nodes.WebServer
+      requirements:
+        - host: server
+
+    server:
+      type: tosca.nodes.Compute
+      # details omitted for brevity
+
+    db:
+      # This node is abstract as specified by the substitute directive
+      # and must be substituted with a topology provided by another template
+      # that exports a Database type’s capabilities.
+      type: tosca.nodes.Database
+      directives:
+        - substitute
+      properties:
+        user: my_db_user
+        password: secret
+        name: my_db_name 
+```
 ### Definition of the database stack in a service template
 
 The following sample defines a template for a database including its
@@ -3021,46 +2671,41 @@ topology template.
 
 Example 16 - Using substitution mappings to export a database
 implementation
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>topology_template:</p>
-<p>description: Template of a database including its hosting stack.</p>
-<p>inputs:</p>
-<p>db_user:</p>
-<p>type: string</p>
-<p>db_password:</p>
-<p>type: string</p>
-<p># other inputs omitted for brevity</p>
-<p>substitution_mappings:</p>
-<p>node_type: tosca.nodes.Database</p>
-<p>capabilities:</p>
-<p>database_endpoint: [ database, database_endpoint ]</p>
-<p>node_templates:</p>
-<p>database:</p>
-<p>type: tosca.nodes.Database</p>
-<p>properties:</p>
-<p>user: { get_input: db_user }</p>
-<p># other properties omitted for brevity</p>
-<p>requirements:</p>
-<p>- host: dbms</p>
-<p>dbms:</p>
-<p>type: tosca.nodes.DBMS</p>
-<p># details omitted for brevity</p>
-<p>server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># details omitted for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+topology_template:
+  description: Template of a database including its hosting stack.
 
+  inputs:
+    db_user:
+      type: string
+    db_password:
+      type: string
+    # other inputs omitted for brevity
+
+  substitution_mappings:
+    node_type: tosca.nodes.Database
+    capabilities:
+      database_endpoint: [ database, database_endpoint ]
+
+  node_templates:
+    database:
+      type: tosca.nodes.Database
+      properties:
+        user: { get_input: db_user }
+        # other properties omitted for brevity
+      requirements:
+        - host: dbms
+
+    dbms:
+      type: tosca.nodes.DBMS
+      # details omitted for brevity
+
+    server:
+      type: tosca.nodes.Compute
+      # details omitted for brevity
+```
 Note that the substitution_mappings section does not define any mappings
 for requirements of the Database node type, since all requirements are
 fulfilled by other nodes templates in the current topology template. In
@@ -3122,68 +2767,62 @@ is given in the following listing.
 
 Example 17 - Declaring a transaction subsystem as a chain of
 substitutable node templates
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>topology_template:</p>
-<p>description: Template of online transaction processing service.</p>
-<p>node_templates:</p>
-<p>mq:</p>
-<p>type: example.QueuingSubsystem</p>
-<p>directives:</p>
-<p>- substitute</p>
-<p>properties:</p>
-<p># properties omitted for brevity</p>
-<p>capabilities:</p>
-<p>message_queue_endpoint:</p>
-<p># details omitted for brevity</p>
-<p>requirements:</p>
-<p>- receiver: trans1</p>
-<p>- receiver: trans2</p>
-<p>trans1:</p>
-<p>type: example.TransactionSubsystem</p>
-<p>directives:</p>
-<p>- substitute</p>
-<p>properties:</p>
-<p>mq_service_ip: { get_attribute: [ mq, service_ip ] }</p>
-<p>receiver_port: 8080</p>
-<p>capabilities:</p>
-<p>message_receiver:</p>
-<p># details omitted for brevity</p>
-<p>requirements:</p>
-<p>- database_endpoint: dbsys</p>
-<p>trans2:</p>
-<p>type: example.TransactionSubsystem</p>
-<p>directives:</p>
-<p>- substitute</p>
-<p>properties:</p>
-<p>mq_service_ip: { get_attribute: [ mq, service_ip ] }</p>
-<p>receiver_port: 8080</p>
-<p>capabilities:</p>
-<p>message_receiver:</p>
-<p># details omitted for brevity</p>
-<p>requirements:</p>
-<p>- database_endpoint: dbsys</p>
-<p>dbsys:</p>
-<p>type: example.DatabaseSubsystem</p>
-<p>directives:</p>
-<p>- substitute</p>
-<p>properties:</p>
-<p># properties omitted for brevity</p>
-<p>capabilities:</p>
-<p>database_endpoint:</p>
-<p># details omitted for brevity</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+topology_template:
+  description: Template of online transaction processing service.
 
+  node_templates:
+    mq:
+      type: example.QueuingSubsystem
+      directives:
+        - substitute
+      properties:
+        # properties omitted for brevity
+      capabilities:
+        message_queue_endpoint:
+          # details omitted for brevity
+      requirements:
+        - receiver: trans1
+        - receiver: trans2
+
+    trans1:
+      type: example.TransactionSubsystem
+      directives:
+        - substitute
+      properties:
+        mq_service_ip: { get_attribute: [ mq, service_ip ] }
+        receiver_port: 8080
+      capabilities:
+        message_receiver:
+          # details omitted for brevity
+      requirements:
+        - database_endpoint: dbsys
+
+    trans2:
+      type: example.TransactionSubsystem
+      directives:
+        - substitute
+      properties:
+        mq_service_ip: { get_attribute: [ mq, service_ip ] }
+        receiver_port: 8080
+      capabilities:
+        message_receiver:
+          # details omitted for brevity
+      requirements:
+        - database_endpoint: dbsys
+
+    dbsys:
+      type: example.DatabaseSubsystem
+      directives:
+        - substitute
+      properties:
+        # properties omitted for brevity
+      capabilities:
+        database_endpoint:
+          # details omitted for brevity
+```
 As can be seen in the example above, the subsystems are chained to each
 other by binding requirements of one subsystem node template to other
 subsystem node templates that provide the respective capabilities. For
@@ -3213,36 +2852,26 @@ The realization of the defined node type will be given in the form of a
 whole separate service template as outlined in the following section.
 
 Example 18 - Defining a TransactionSubsystem node type
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>node_types:</p>
-<p>example.TransactionSubsystem:</p>
-<p>properties:</p>
-<p>mq_service_ip:</p>
-<p>type: string</p>
-<p>receiver_port:</p>
-<p>type: integer</p>
-<p>attributes:</p>
-<p>receiver_ip:</p>
-<p>type: string</p>
-<p>receiver_port:</p>
-<p>type: integer</p>
-<p>capabilities:</p>
-<p>message_receiver: tosca.capabilities.Endpoint</p>
-<p>requirements:</p>
-<p>- database_endpoint: tosca.capabilities.Endpoint.Database</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+node_types:
+  example.TransactionSubsystem:
+    properties:
+      mq_service_ip:
+        type: string
+      receiver_port:
+        type: integer
+    attributes:
+      receiver_ip:
+        type: string
+      receiver_port:
+        type: integer
+    capabilities:
+      message_receiver: tosca.capabilities.Endpoint
+    requirements:
+      - database_endpoint: tosca.capabilities.Endpoint.Database
+```
 Configuration parameters that would be allowed for customizing the
 instantiation of any subsystem are defined as properties of the node
 type. In the current example, those are the properties mq_service_ip and
@@ -3306,73 +2935,67 @@ enables the service template for substitution use cases.
 
 Example 19 - Implementation of a TransactionSubsytem node type using
 substitution mappings
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>topology_template:</p>
-<p>description: Template of a database including its hosting stack.</p>
-<p>inputs:</p>
-<p>mq_service_ip:</p>
-<p>type: string</p>
-<p>description: IP address of the message queuing server to receive
-messages from</p>
-<p>receiver_port:</p>
-<p>type: string</p>
-<p>description: Port to be used for receiving messages</p>
-<p># other inputs omitted for brevity</p>
-<p>substitution_mappings:</p>
-<p>node_type: example.TransactionSubsystem</p>
-<p>capabilities:</p>
-<p>message_receiver: [ app, <mark>message_receiver</mark> ]</p>
-<p>requirements:</p>
-<p>database_endpoint: [ app, <mark>database</mark> ]</p>
-<p>node_templates:</p>
-<p>app:</p>
-<p>type: example.SomeApp</p>
-<p>properties:</p>
-<p># properties omitted for brevity</p>
-<p>capabilities:</p>
-<p><mark>message_receiver</mark>:</p>
-<p>properties:</p>
-<p>service_ip: { get_input: mq_service_ip }</p>
-<p># other properties omitted for brevity</p>
-<p>requirements:</p>
-<p>- <mark>database</mark>:</p>
-<p># details omitted for brevity</p>
-<p>- host: websrv</p>
-<p>websrv:</p>
-<p>type: tosca.nodes.WebServer</p>
-<p>properties:</p>
-<p># properties omitted for brevity</p>
-<p>capabilities:</p>
-<p>data_endpoint:</p>
-<p>properties:</p>
-<p>port_name: { get_input: receiver_port }</p>
-<p># other properties omitted for brevity</p>
-<p>requirements:</p>
-<p>- host: server</p>
-<p>server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># details omitted for brevity</p>
-<p>outputs:</p>
-<p>receiver_ip:</p>
-<p>description: private IP address of the message receiver
-application</p>
-<p>value: { get_attribute: [ server, private_address ] }</p>
-<p>receiver_port:</p>
-<p>description: Port of the message receiver endpoint</p>
-<p>value: { get_attribute: [ app, app_endpoint, port ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+topology_template:
+  description: Template of a database including its hosting stack.
 
+  inputs:
+    mq_service_ip:
+      type: string
+      description: IP address of the message queuing server to receive messages from
+    receiver_port:
+      type: string
+      description: Port to be used for receiving messages
+    # other inputs omitted for brevity
+
+  substitution_mappings:
+    node_type: example.TransactionSubsystem
+    capabilities:
+      message_receiver: [ app, message_receiver ]
+    requirements:
+      database_endpoint: [ app, database ]
+
+  node_templates:
+    app:
+      type: example.SomeApp
+      properties:
+        # properties omitted for brevity
+      capabilities:
+        message_receiver:
+          properties:
+            service_ip: { get_input: mq_service_ip }
+            # other properties omitted for brevity
+      requirements:
+        - database:
+            # details omitted for brevity
+        - host: websrv
+
+    websrv:
+      type: tosca.nodes.WebServer
+      properties:
+        # properties omitted for brevity
+      capabilities:
+        data_endpoint:
+          properties:
+            port_name: { get_input: receiver_port }
+            # other properties omitted for brevity
+      requirements:
+        - host: server
+
+    server:
+      type: tosca.nodes.Compute
+      # details omitted for brevity
+
+  outputs:
+    receiver_ip:
+      description: private IP address of the message receiver application
+      value: { get_attribute: [ server, private_address ] }
+    receiver_port:
+      description: Port of the message receiver endpoint
+      value: { get_attribute: [ app, app_endpoint, port ] }
+```
 ## Using node template substitution to provide product choice
 
 Some service templates might include abstract node templates that model
@@ -3393,66 +3016,50 @@ variable that allows end-users to specify the desired firewall vendor at
 deployment time.
 
 Defining a security service with a vendor-independent firewall component
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Service template for an abstract security service</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>vendorInput:</p>
-<p>type: string</p>
-<p>rulesInput:</p>
-<p>type: list</p>
-<p>entry_schema: FirewallRules</p>
-<p>node_templates:</p>
-<p>firewall:</p>
-<p>type: abstract.Firewall</p>
-<p>directives:</p>
-<p>- substitute</p>
-<p>properties:</p>
-<p>vendor: { get_input: vendorInput }</p>
-<p>rules: { get_input: rulesInput }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Service template for an abstract security service
 
+topology_template:
+
+  inputs:
+    vendorInput:
+      type: string
+    rulesInput:
+      type: list
+      entry_schema: FirewallRules
+    
+  node_templates:
+    firewall:
+      type: abstract.Firewall
+      directives:
+        - substitute
+      properties:
+        vendor: { get_input: vendorInput }
+        rules: { get_input: rulesInput }
+```
 The abstract firewall node type is defined in the following code
 snippet. The abstract firewall node type defines a *rules* property to
 hold the configured firewall rules. In addition, it also defines a
 property for capturing the name of the vendor of the firewall.
 
 Node type defining an abstract firewall component
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template defining an abstract firewall component</p>
-<p>node_types:</p>
-<p>abstract.Firewall:</p>
-<p>derived_from: tosca.nodes.Root</p>
-<p>properties:</p>
-<p>vendor:</p>
-<p>type: string</p>
-<p>rules:</p>
-<p>type: list</p>
-<p>entry_schema: FirewallRules</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template defining an abstract firewall component
 
+node_types:
+  abstract.Firewall:
+    derived_from: tosca.nodes.Root
+    properties:
+      vendor:
+        type: string
+      rules:
+        type: list
+        entry_schema: FirewallRules
+```
 ### Defining vendor-specific component options
 
 In the above example, the firewall node template is abstract, which
@@ -3464,35 +3071,31 @@ vendor-specific service templates. ACME Firewall’s service template
 might look as follows:
 
 Service template for an ACME firewall
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Service template for an ACME firewall</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>rulesInput:</p>
-<p>type: list</p>
-<p>entry_schema: FirewallRules</p>
-<p>substitution_mappings:</p>
-<p>node_type: abstract.Firewall</p>
-<p>properties:</p>
-<p>rules: [ rulesInput ]</p>
-<p>node_templates:</p>
-<p>acme:</p>
-<p>type: ACMEFirewall</p>
-<p>properties:</p>
-<p>rules: { get_input: rulesInput }</p>
-<p>acmeConfig: # any ACME-specific properties go here.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Service template for an ACME firewall
+
+topology_template:
+
+  inputs:
+    rulesInput:
+      type: list
+      entry_schema: FirewallRules
+    
+  substitution_mappings:
+    node_type: abstract.Firewall
+    properties:
+      rules: [ rulesInput ]
+
+  node_templates:
+    acme:
+      type: ACMEFirewall
+      properties:
+        rules: { get_input: rulesInput }
+        acmeConfig: # any ACME-specific properties go here.
+```
+
 
 In this example the node type ACMEFirewall is an ACME-specific node type
 that models the internals of the ACME firewall product. The ACMEFirewall
@@ -3502,35 +3105,29 @@ relevant for the example.
 Similarly, Simple Firewall’s service template looks as follows:
 
 Service template for a Simple Firewall
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Service template for a Simple Corp. firewall</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>rulesInput:</p>
-<p>type: list</p>
-<p>entry_schema: FirewallRules</p>
-<p>substitution_mappings:</p>
-<p>node_type: abstract.Firewall</p>
-<p>properties:</p>
-<p>rules: [ rulesInput ]</p>
-<p>node_templates:</p>
-<p>acme:</p>
-<p>type: SimpleFirewall</p>
-<p>properties:</p>
-<p>rules: { get_input: rulesInput }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Service template for a Simple Corp. firewall
 
+topology_template:
+
+  inputs:
+    rulesInput:
+      type: list
+      entry_schema: FirewallRules
+    
+  substitution_mappings:
+    node_type: abstract.Firewall
+    properties:
+      rules: [ rulesInput ]
+
+  node_templates:
+    acme:
+      type: SimpleFirewall
+      properties:
+        rules: { get_input: rulesInput }
+```
 As the substitution mappings section in the service templates show,
 either firewall service template can be used to implement the abstract
 firewall component defined above.
@@ -3571,72 +3168,60 @@ specifies that this service template only matches abstract firewall
 nodes with a vendor property equal to ‘ACME’.
 
 Service template for an ACME firewall with a substitution filter
+```
+tosca_definitions_version: tosca_2_0
+description: Service template for an ACME firewall
+topology_template:
+  inputs:
+    rulesInput:
+      type: list
+      entry_schema: FirewallRules
+  
+  substitution_mappings:
+    node_type: abstract.Firewall
+    substitution_filter:
+      properties:
+vendor: { equal: ACME }
+    properties:
+      rules: [ rulesInput ]
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Service template for an ACME firewall</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>rulesInput:</p>
-<p>type: list</p>
-<p>entry_schema: FirewallRules</p>
-<p>substitution_mappings:</p>
-<p>node_type: abstract.Firewall</p>
-<p>substitution_filter:</p>
-<p>properties:</p>
-<p>vendor: { equal: ACME }</p>
-<p>properties:</p>
-<p>rules: [ rulesInput ]</p>
-<p>node_templates:</p>
-<p>acme:</p>
-<p>type: ACMEFirewall</p>
-<p>properties:</p>
-<p>rules: { get_input: rulesInput }</p>
-<p>acmeConfig: # any ACME-specific properties go here.</p></td>
-</tr>
-</tbody>
-</table>
-
+  node_templates:
+    acme:
+      type: ACMEFirewall
+      properties:
+        rules: { get_input: rulesInput }
+        acmeConfig: # any ACME-specific properties go here.
+```
 Similarly, an updated service template for Simple Corp’s firewall looks
 as follows:
 
 Service template for a Simple firewall with a substitution filter
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Service template for a Simple Corp. firewall</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>rulesInput:</p>
-<p>type: list</p>
-<p>entry_schema: FirewallRules</p>
-<p>substitution_mappings:</p>
-<p>node_type: abstract.Firewall</p>
-<p>substitution_filter:</p>
-<p>properties:</p>
-<p>vendor: { equal: Simple }</p>
-<p>properties:</p>
-<p>rules: [ rulesInput ]</p>
-<p>node_templates:</p>
-<p>acme:</p>
-<p>type: SimpleFirewall</p>
-<p>properties:</p>
-<p>rules: { get_input: rulesInput }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Service template for a Simple Corp. firewall
+
+topology_template:
+
+  inputs:
+    rulesInput:
+      type: list
+      entry_schema: FirewallRules
+    
+  substitution_mappings:
+    node_type: abstract.Firewall
+    substitution_filter:
+      properties:
+vendor: { equal: Simple }
+    properties:
+      rules: [ rulesInput ]
+
+  node_templates:
+    acme:
+      type: SimpleFirewall
+      properties:
+        rules: { get_input: rulesInput }
+```
 
 As specified in this example, only abstract firewall node templates that
 have the *vendor* property set to ‘Simple’ can be substituted by this
@@ -3834,105 +3419,65 @@ orchestrator implementers but is not required to be implemented.
 
 Let's consider the following node types in an orchestrator internal type
 catalog.
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>node_types:</p>
-<p>tosca.samples.nodes.MyAbstractNode:</p>
-<p>derived_from: tosca.nodes.Root</p>
-<p>properties:</p>
-<p>str_prop:</p>
-<p>type: string</p>
-<p>nbr_prop:</p>
-<p>type: integer</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+node_types:
+  tosca.samples.nodes.MyAbstractNode:
+    derived_from: tosca.nodes.Root
+    properties:
+      str_prop:
+        type: string
+      nbr_prop:
+        type: integer
+```
 MyAbstractNode is an abstract type as Root does not define any
 implementation and the defined node neither.
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>tosca.samples.nodes.MyNodeImpl1:</p>
-<p>derived_from: tosca.samples.nodes.MyAbstractNode</p>
-<p>properties:</p>
-<p>nbr_prop :</p>
-<p>constraints:</p>
-<p>- greater_or_equal: 1</p>
-<p>interfaces:</p>
-<p>standard:</p>
-<p>create: test.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+node_types:
+  tosca.samples.nodes.MyNodeImpl1:
+    derived_from: tosca.samples.nodes.MyAbstractNode
+    properties:
+      nbr_prop :
+        constraints:
+          - greater_or_equal: 1
+    interfaces:
+      standard:
+        create: test.sh
+```
 
 MyNodeImpl1 is an implementation (through the test.sh script) of
 MyAbstractNode that requires the nbr_prop property to be higher than 1.
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>node_types:</p>
-<p>tosca.samples.nodes.MyNodeImpl2:</p>
-<p>derived_from: tosca.samples.nodes.MyAbstractNode</p>
-<p>properties:</p>
-<p>nbr_prop :</p>
-<p>constraints:</p>
-<p>- greater_or_equal: 25</p>
-<p>interfaces:</p>
-<p>standard:</p>
-<p>create: test2.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+node_types:
+  tosca.samples.nodes.MyNodeImpl2:
+    derived_from: tosca.samples.nodes.MyAbstractNode
+    properties:
+    nbr_prop :
+      constraints:
+          - greater_or_equal: 25
+    interfaces:
+      standard:
+        create: test2.sh
+```
 MyNodeImpl2 is an implementation (through the test2.sh script) of
 MyAbstractNode that requires the nbr_prop property to be higher than 25.
 
 Let's consider the following topology template that a user wants to
 deploy:
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_node:</p>
-<p>type: tosca.samples.MyAbstractNode</p>
-<p>properties:</p>
-<p>str_prop: standard</p>
-<p>nbr_prop: 10</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+topology_template:
+  node_templates:
+    my_node:
+      type: tosca.samples.MyAbstractNode
+      properties:
+        str_prop: standard
+        nbr_prop: 10
+```
 The specified node template (my_node) is an abstract node template as
 its type is abstract and it does not add any implementation. Before
 being able to deploy this template, a TOSCA orchestrator will have to
@@ -3953,33 +3498,23 @@ matched to a specific pre-defined template that an orchestrator may
 have. First of all, the orchestrator will probably define a concrete
 implementation of the Compute node. So, let's consider the following
 example type
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>node_types:</p>
-<p>tosca.samples.nodes.MyCloudCompute:</p>
-<p>derived_from: tosca.nodes.Compute</p>
-<p>properties:</p>
-<p>image_id:</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>flavor_id:</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>interfaces:</p>
-<p>standard:</p>
-<p>create: create.py</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+node_types:
+  tosca.samples.nodes.MyCloudCompute:
+    derived_from: tosca.nodes.Compute
+    properties:
+      image_id:
+        type: string
+        required: true
+      flavor_id:
+        type: string
+        required: true
+    interfaces:
+      standard:
+        create: create.py
+```
 This type adds two properties to the Compute node so the orchestrator
 knows which image_id and flavor_id are used to instantiate the VM.
 Implementation is simplified here and just a single python script is
@@ -3995,88 +3530,68 @@ template in its own pre-defined templates or provider catalog (note that
 this is orchestrator specific and this specification has no intent on
 defining how the orchestrator should manage, import or support its
 internal catalogs).
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>node_templates:</p>
-<p>small_ubuntu:</p>
-<p>type: tosca.samples.nodes.MyCloudCompute</p>
-<p>properties:</p>
-<p>image_id: ubuntu</p>
-<p>flavor_id: small</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>num_cpus: 1</p>
-<p>cpu_frequency: 1 GHz</p>
-<p>disk_size: 15 GiB</p>
-<p>mem_size: 2 GiB</p>
-<p>os:</p>
-<p>type: linux</p>
-<p>distribution: ubuntu</p>
-<p>large_ubuntu:</p>
-<p>type: tosca.samples.nodes.MyCloudCompute</p>
-<p>properties:</p>
-<p>image_id: ubuntu</p>
-<p>flavor_id: small</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>num_cpus: 4</p>
-<p>cpu_frequency: 2 GHz</p>
-<p>disk_size: 15 GiB</p>
-<p>mem_size: 8 GiB</p>
-<p>os:</p>
-<p>type: linux</p>
-<p>distribution: ubuntu</p>
-<p>large_windows:</p>
-<p>type: tosca.samples.nodes.MyCloudCompute</p>
-<p>properties:</p>
-<p>image_id: ubuntu</p>
-<p>flavor_id: small</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>num_cpus: 4</p>
-<p>cpu_frequency: 2 GHz</p>
-<p>disk_size: 15 GiB</p>
-<p>mem_size: 8 GiB</p>
-<p>os:</p>
-<p>type: windows</p>
-<p>distribution: server</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+node_templates:
+    small_ubuntu:
+      type: tosca.samples.nodes.MyCloudCompute
+      properties:
+        image_id: ubuntu
+        flavor_id: small
+      capabilities:
+        host:
+	      num_cpus: 1
+	      cpu_frequency: 1 GHz
+	      disk_size: 15 GiB
+	      mem_size: 2 GiB
+        os:
+          type: linux
+          distribution: ubuntu
+    large_ubuntu:
+      type: tosca.samples.nodes.MyCloudCompute
+      properties:
+        image_id: ubuntu
+        flavor_id: small
+      capabilities:
+        host:
+	      num_cpus: 4
+	      cpu_frequency: 2 GHz
+	      disk_size: 15 GiB
+	      mem_size: 8 GiB
+        os:
+          type: linux
+          distribution: ubuntu
+    large_windows:
+      type: tosca.samples.nodes.MyCloudCompute
+      properties:
+        image_id: ubuntu
+        flavor_id: small
+      capabilities:
+        host:
+	      num_cpus: 4
+	      cpu_frequency: 2 GHz
+	      disk_size: 15 GiB
+	      mem_size: 8 GiB
+        os:
+          type: windows
+          distribution: server
+```
 If a user defines the following template:
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_node:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>num_cpus: 1</p>
-<p>mem_size: 2 GiB</p>
-<p>os:</p>
-<p>distribution: Ubuntu</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+topology_template:
+  node_templates:
+    my_node:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+	      num_cpus: 1
+	      mem_size: 2 GiB
+        os:
+          distribution: Ubuntu
+```
 The orchestrator will select the small_ubuntu pre-defined template as a
 valid match. The image_id and flavor_id properties are internal to the
 orchestrator.
@@ -4144,116 +3659,97 @@ instance node.
 ##### Matching a node filter target against a type catalog
 
 Let’s consider the following nodes in a type catalog:
+```
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>capability_types:</p>
-<p>tosca.samples.capabilities.MyMessagingEndpoint :</p>
-<p>derived_from: tosca.capabilities.Endpoint</p>
-<p>properties:</p>
-<p>throughput :</p>
-<p>type: integer</p>
-<p>required: true</p>
-<p>tosca.samples.capabilities.MyLimitedMessagingEndpoint :</p>
-<p>derived_from: tosca.samples.capabilities.MyMessagingEndpoint</p>
-<p>properties:</p>
-<p>throughput :</p>
-<p>type: integer</p>
-<p>required: true</p>
-<p>constraints:</p>
-<p>- lower_than: 5</p>
-<p>node_types:</p>
-<p>tosca.samples.nodes.MyNode :</p>
-<p>derived_from: tosca.nodes.Root</p>
-<p>requirements: tosca.samples.capabilities.MyMessagingEndpoint</p>
-<p>interfaces:</p>
-<p>standard:</p>
-<p>create: install.sh</p>
-<p>tosca.samples.nodes.MyAbstractMessagingSystem:</p>
-<p>derived_from: tosca.nodes.Root</p>
-<p>properties:</p>
-<p>scaling:</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>constraints:</p>
-<p>- valid_values: [ “auto”, ”manual”, “none” ]</p>
-<p>highly_available :</p>
-<p>type: boolean</p>
-<p>required: true</p>
-<p>capabilities:</p>
-<p>messaging: tosca.samples.capabilities.MyMessagingEndpoint</p>
-<p>tosca.samples.nodes.MyMessagingServiceSystem:</p>
-<p>derived_from: tosca.samples.nodes.MyAbstractMessagingSystem</p>
-<p>properties:</p>
-<p>scaling :</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>constraints:</p>
-<p>- valid_values: [ “manual”]</p>
-<p>highly_available:</p>
-<p>constraints:</p>
-<p>- equal: true</p>
-<p>interfaces:</p>
-<p>standard:</p>
-<p>create: create.py</p>
-<p>tosca.samples.nodes.MyMessagingSystem:</p>
-<p>derived_from: tosca.samples.nodes.MyAbstractMessagingSystem</p>
-<p>properties:</p>
-<p>scaling :</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>constraints:</p>
-<p>- valid_values: [ “none”]</p>
-<p>highly_available:</p>
-<p>constraints:</p>
-<p>- equal: false</p>
-<p>capabilities:</p>
-<p>messaging: tosca.samples.capabilities.MyLimitedMessagingEndpoint</p>
-<p>interfaces:</p>
-<p>standard:</p>
-<p>create: install.sh</p>
-<p>start: start.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+capability_types:
+  tosca.samples.capabilities.MyMessagingEndpoint :
+    derived_from: tosca.capabilities.Endpoint
+    properties:
+      throughput :
+        type: integer
+        required: true
+  tosca.samples.capabilities.MyLimitedMessagingEndpoint :
+    derived_from: tosca.samples.capabilities.MyMessagingEndpoint 
+    properties:
+      throughput :
+        type: integer
+        required: true
+        constraints:
+          - lower_than: 5
 
+
+node_types:
+  tosca.samples.nodes.MyNode :
+    derived_from: tosca.nodes.Root
+    requirements: tosca.samples.capabilities.MyMessagingEndpoint
+    interfaces:
+      standard:
+        create: install.sh
+  tosca.samples.nodes.MyAbstractMessagingSystem:
+    derived_from: tosca.nodes.Root
+    properties:
+      scaling:
+        type: string
+        required: true
+        constraints:
+          - valid_values: [ “auto”, ”manual”, “none” ]
+      highly_available :
+        type: boolean
+        required: true
+    capabilities:
+      messaging: tosca.samples.capabilities.MyMessagingEndpoint
+  tosca.samples.nodes.MyMessagingServiceSystem:
+    derived_from: tosca.samples.nodes.MyAbstractMessagingSystem
+    properties:
+      scaling :
+        type: string
+        required: true
+        constraints:
+          - valid_values: [ “manual”]
+      highly_available:
+        constraints:
+          - equal: true
+    interfaces:
+      standard:
+        create: create.py
+  tosca.samples.nodes.MyMessagingSystem:
+    derived_from: tosca.samples.nodes.MyAbstractMessagingSystem
+    properties:
+      scaling :
+        type: string
+        required: true
+        constraints:
+          - valid_values: [ “none”]
+      highly_available:
+        constraints:
+          - equal: false
+    capabilities:
+      messaging: tosca.samples.capabilities.MyLimitedMessagingEndpoint 
+    interfaces:
+      standard:
+        create: install.sh
+        start: start.sh
+```
 And the following user template to deploy:
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_node:</p>
-<p>type: tosca.samples.nodes.MyNode</p>
-<p>requirements:</p>
-<p>- messaging:</p>
-<p>node: tosca.samples.nodes.MyAbstractMessagingSystem</p>
-<p>node_filter:</p>
-<p>properties:</p>
-<p>- scaling: { valid_values: [manual, auto] }</p>
-<p>- highly_available: { equal: true }</p>
-<p>capabilities:</p>
-<p>- tosca.samples.capabilities.MyMessagingEndpoint:</p>
-<p>properties:</p>
-<p>- throughput: { greater_than: 10 }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+topology_template:
+  node_templates:
+    my_node:
+      type: tosca.samples.nodes.MyNode
+      requirements:
+        - messaging:
+            node: tosca.samples.nodes.MyAbstractMessagingSystem
+            node_filter:
+              properties:
+                - scaling: { valid_values: [manual, auto] }
+                - highly_available: { equal: true }
+              capabilities:
+                - tosca.samples.capabilities.MyMessagingEndpoint:
+                    properties:
+                      - throughput: { greater_than: 10 } 
+```
 In order to fulfill the messaging endpoint target the orchestrator will
 have to add a node template from a type that derives from
 MyAbstractMessagingSystem (as specified within the node filter node
@@ -4273,84 +3769,62 @@ the following example we will consider the same user template as in the
 previous example as well as the same abstract types. However, the
 implemented type will be defined through the following topology
 template:
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># Nodes in this topology can be configured to enable auto-scaling or
-not</p>
-<p>scaling_input :</p>
-<p>type: string</p>
-<p>required: true</p>
-<p>constraints:</p>
-<p>- valid_values: [ “auto”, “none” ]</p>
-<p> </p>
-<p>substitution_mappings:</p>
-<p>node_type: tosca.samples.nodes.MyAbstractMessagingSystem</p>
-<p>properties:</p>
-<p>scaling: [ scaling_input ]</p>
-<p>highly_available: true</p>
-<p>capabilities:</p>
-<p>messaging : [ my_load_balancer, load_balanced_messaging_endpoint]</p>
-<p>node_templates:</p>
-<p>my_load_balancer:</p>
-<p>type: tosca.samples.nodes.MyLoadBalancer</p>
-<p>capability:</p>
-<p>load_balanced_messaging_endpoint:
-tosca.samples.capabilities.MyMessagingEndpoint</p>
-<p>my_other_node_that_trigger_a_service_somewhere:</p>
-<p>type: org.custom.Type</p>
-<p>properties:</p>
-<p>my_scaling_info: get_input { scaling }</p>
-<p>my_other_node:</p>
-<p>type: org.something.Type:</p>
-<p>properties:</p>
-<p>my_other_scaled_prop: get_input { scaling }</p>
-<p>another_prop: value</p>
-<p>… other nodes templates</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+topology_template:
+  inputs:
+    # Nodes in this topology can be configured to enable auto-scaling or not
+    scaling_input :
+        type: string
+        required: true
+        constraints:
+          - valid_values: [ “auto”, “none” ]
+ 
+  substitution_mappings:
+    node_type: tosca.samples.nodes.MyAbstractMessagingSystem
+    properties:
+      scaling: [ scaling_input ]
+      highly_available: true
+    capabilities:
+      messaging : [ my_load_balancer, load_balanced_messaging_endpoint]
+  node_templates:
+    my_load_balancer:
+      type: tosca.samples.nodes.MyLoadBalancer
+      capability:
+        load_balanced_messaging_endpoint: tosca.samples.capabilities.MyMessagingEndpoint
+    my_other_node_that_trigger_a_service_somewhere:
+      type: org.custom.Type
+      properties:
+        my_scaling_info: get_input { scaling }
+    my_other_node:
+      type: org.something.Type:
+      properties:
+        my_other_scaled_prop: get_input { scaling }
+        another_prop: value
+… other nodes templates
+```
 
 This template from a substitution boundaries point of view would be
 equivalent to the following node type:
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>node_type:</p>
-<p>my_node_resulting_from_topology</p>
-<p># From topology_template -&gt; substitution_mappings -&gt;
-node_type</p>
-<p>derived_from: tosca.samples.nodes.MyAbstractMessagingSystem</p>
-<p>properties:</p>
-<p>scaling :</p>
-<p>constraints:</p>
-<p>- valid_values: [ “auto”, “none” ]</p>
-<p>highly_available:</p>
-<p>default: true</p>
-<p>constraints:</p>
-<p>- equal: true</p>
-<p># Equivalent:</p>
-<p># implementation: The topology specified above</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+node_type:
+  my_node_resulting_from_topology
+    # From topology_template -> substitution_mappings -> node_type
+    derived_from: tosca.samples.nodes.MyAbstractMessagingSystem
+    properties:
+      scaling :
+        constraints:
+            - valid_values: [ “auto”, “none” ]
+      highly_available:
+        default: true
+        constraints:
+            - equal: true
+      # Equivalent:
+      # implementation: The topology specified above
+```
 In this example the orchestrator can select the topology template
 specified above as a valid match for the requested target node filter.
 
