@@ -1,600 +1,108 @@
-Technical Committee:
 
-[OASIS Topology and Orchestration Specification for Cloud Applications
-(TOSCA) TC](https://www.oasis-open.org/committees/tosca/)
+![OASIS Logo](https://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
 
-Chairs:
+### OASIS Committee Note
+-------
 
-Paul Lipton (<paul.lipton@live.com>), Individual Member
+# Introduction to TOSCA Version 2.0
 
-Chris Lauwers (<lauwers@ubicity.com>), Individual Member
+## Committee Note 01
 
-Editors:
+## 21 March 2023
 
-Chris Lauwers (<lauwers@ubicity.com>), Individual Member
+&nbsp;
 
-Calin Curescu (<calin.curescu@ericsson.com>), Ericsson
+#### This stage:
+https://docs.oasis-open.org/tosca/tosca-intro/v2.0/cn01/tosca-intro-v2.0-cn01.md (Authoritative) \
+https://docs.oasis-open.org/tosca/tosca-intro/v2.0/cn01/tosca-intro-v2.0-cn01.html \
+https://docs.oasis-open.org/tosca/tosca-intro/v2.0/cn01/tosca-intro-v2.0-cn01.pdf
 
-Additional artifacts:
+#### Previous stage:
+N/A
 
-This document is one component of a Work Product that also includes:
+#### Latest stage:
+https://docs.oasis-open.org/tosca/tosca-intro/v2.0/tosca-intro-v2.0.md (Authoritative) \
+https://docs.oasis-open.org/tosca/tosca-intro/v2.0/tosca-intro-v2.0.html \
+https://docs.oasis-open.org/tosca/tosca-intro/v2.0/tosca-intro-v2.0.pdf
 
-- *TOSCA Version 2.0.* Edited by Chris Lauwers and Calin Curescu. Latest
-  version:
-  <https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.docx>.
+#### Technical Committee:
+[OASIS Topology and Orchestration Specification for Cloud Applications (TOSCA) TC](https://www.oasis-open.org/committees/tosca/)
 
-Related work:
+#### Chair:
 
-This document is related to:
+Chris Lauwers (lauwers@ubicity.com), Individual Member
 
-- <span class="mark">related documents (list full titles, with
-  hyperlinks if available)</span>
+#### Editors:
 
-Abstract:
+Chris Lauwers (lauwers@ubicity.com), Individual Member \
+Calin Curescu (calin.curescu@ericsson.com), [Ericsson](http://ericsson.com/)
 
-This document is intended as an introduction to TOSCA.
+#### Related work:
 
-Status:
+This document provides an introduction to:
+* _Topology and Orchestration Specification for Cloud Applications Version 2.0._ Edited by Chris Lauwers and Calin Curescu. Latest stage: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.html.
 
-This [Working
-Draft](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2018-05-22#dWorkingDraft)
-(WD) has been produced by one or more TC Members; it has not yet been
-voted on by the TC or
-[approved](https://www.oasis-open.org/policies-guidelines/tc-process#committeeDraft)
-as a Committee Note Draft. The OASIS document [Approval
-Process](https://www.oasis-open.org/policies-guidelines/tc-process#standApprovProcess)
-begins officially with a TC vote to approve a WD as a Committee Note
-Draft. A TC may approve a Working Draft, revise it, and re-approve it
-any number of times as a Committee Note Draft.
+#### Abstract:
 
-URI patterns:
+This document provides an introduction to the TOSCA Version 2.0 standard and an overview of its features.
 
-Initial publication URI:  
-https://docs.oasis-open.org/tosca/tosca-intro/v2.0/cnd01/tosca-intro-v2.0-cnd01.docx.
+#### Status:
 
-Permanent "Latest version" URI:  
-https://docs.oasis-open.org/tosca/tosca-intro/v2.0/tosca-intro-v2.0.docx.
+This is a Non-Standards Track Work Product. The patent provisions of the OASIS IPR Policy do not apply.
 
-(Managed by OASIS TC Administration; please don't modify.)
+This document was last revised or approved by the OASIS Topology and Orchestration Specification for Cloud Applications (TOSCA) TC on the above date. The level of approval is also listed above. Check the "Latest stage" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Technical Committee (TC) are listed at https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=tosca#technical.
 
-Notices
+TC members should send comments on this document to the TC's email list. Others should send comments to the TC's public comment list, after subscribing to it by following the instructions at the "Send A Comment" button on the TC's web page at https://www.oasis-open.org/committees/tosca/.
 
-Copyright © OASIS Open 2020. All Rights Reserved.
+#### Citation format:
+When referencing this document the following citation format should be used:
 
-All capitalized terms in the following text have the meanings assigned
-to them in the OASIS Intellectual Property Rights Policy (the "OASIS IPR
-Policy"). The full
-[Policy](https://www.oasis-open.org/policies-guidelines/ipr) may be
-found at the OASIS website.
+**[TOSCA-Intro-v2.0]**
 
-This document and translations of it may be copied and furnished to
-others, and derivative works that comment on or otherwise explain it or
-assist in its implementation may be prepared, copied, published, and
-distributed, in whole or in part, without restriction of any kind,
-provided that the above copyright notice and this section are included
-on all such copies and derivative works. However, this document itself
-may not be modified in any way, including by removing the copyright
-notice or references to OASIS, except as needed for the purpose of
-developing any document or deliverable produced by an OASIS Technical
-Committee (in which case the rules applicable to copyrights, as set
-forth in the OASIS IPR Policy, must be followed) or as required to
-translate it into languages other than English.
+_Introduction to TOSCA Version 2.0_.
+Edited by Chris Lauwers and Calin Curescu.
+21 March 2023.
+OASIS Committee Note 01.
+https://docs.oasis-open.org/tosca/tosca-intro/v2.0/cn01/tosca-intro-v2.0-cn01.html.
+Latest stage: https://docs.oasis-open.org/tosca/tosca-intro/v2.0/tosca-intro-v2.0.html.
 
-The limited permissions granted above are perpetual and will not be
-revoked by OASIS or its successors or assigns.
+#### Notices
+Copyright &copy; OASIS Open 2023. All Rights Reserved.
 
-This document and the information contained herein is provided on an "AS
-IS" basis and OASIS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
-INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED
-WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+Distributed under the terms of the OASIS [IPR Policy](https://www.oasis-open.org/policies-guidelines/ipr/).
+
+The name "OASIS" is a trademark of [OASIS](https://www.oasis-open.org/), the owner and developer of this specification, and should be used only to refer to the organization and its official outputs.
+
+For complete copyright information please see the full Notices section in an Appendix below.
+
+-------
 
 # Table of Contents
+[[TOC will be inserted here]]
 
-[1 Introduction [6](#introduction)](#introduction)
+-------
 
-[1.1 References (non-normative)
-[6](#references-non-normative)](#references-non-normative)
+<!-- Insert a "line rule" (three or more hyphens alone on a new line, following a blank line) before each major section. This is used to generate a page break in the PDF format. -->
 
-[1.2 Section Level 2 [6](#section-level-2)](#section-level-2)
+# 1 Introduction
 
-[1.2.1 Section Level 3 [6](#section-level-3)](#section-level-3)
+## 1.1 Introductory Material
 
-[2 TOSCA by example [7](#tosca-by-example)](#tosca-by-example)
+## 1.2 Glossary
 
-[2.1 A “hello world” template for TOSCA
-[7](#a-hello-world-template-for-tosca)](#a-hello-world-template-for-tosca)
+<!-- Optional section with suggested subsections -->
 
-[2.2 Requesting input parameters and providing output
-[8](#requesting-input-parameters-and-providing-output)](#requesting-input-parameters-and-providing-output)
+### 1.2.1 Definitions of terms
 
-[2.3 TOSCA template for a simple software installation
-[9](#tosca-template-for-a-simple-software-installation)](#tosca-template-for-a-simple-software-installation)
+### 1.2.2 Acronyms and abbreviations
 
-[2.4 Using YAML Macros to simplify templates
-[11](#using-yaml-macros-to-simplify-templates)](#using-yaml-macros-to-simplify-templates)
+### 1.2.3 Document conventions
 
-[3 TOSCA Base Profile [12](#tosca-base-profile)](#tosca-base-profile)
+- Naming conventions
+- Font colors and styles
+- Typographic conventions
 
-[4 Interfaces, Operations, and Artifacts
-[13](#interfaces-operations-and-artifacts)](#interfaces-operations-and-artifacts)
-
-[4.1 Overriding behavior of predefined node types
-[13](#overriding-behavior-of-predefined-node-types)](#overriding-behavior-of-predefined-node-types)
-
-[4.2 TOSCA template for database content deployment
-[13](#tosca-template-for-database-content-deployment)](#tosca-template-for-database-content-deployment)
-
-[4.3 TOSCA template for a two-tier application
-[15](#tosca-template-for-a-two-tier-application)](#tosca-template-for-a-two-tier-application)
-
-[4.4 Using a custom script to establish a relationship in a template
-[17](#using-a-custom-script-to-establish-a-relationship-in-a-template)](#using-a-custom-script-to-establish-a-relationship-in-a-template)
-
-[4.5 Using custom relationship types in a TOSCA template
-[18](#using-custom-relationship-types-in-a-tosca-template)](#using-custom-relationship-types-in-a-tosca-template)
-
-[4.5.1 Definition of a custom relationship type
-[19](#definition-of-a-custom-relationship-type)](#definition-of-a-custom-relationship-type)
-
-[4.6 Defining generic dependencies between nodes in a template
-[20](#defining-generic-dependencies-between-nodes-in-a-template)](#defining-generic-dependencies-between-nodes-in-a-template)
-
-[4.6.1 Example: declaring input variables for all operations on a single
-interface
-[20](#example-declaring-input-variables-for-all-operations-on-a-single-interface)](#example-declaring-input-variables-for-all-operations-on-a-single-interface)
-
-[4.6.2 Example: declaring input variables for a single operation
-[21](#example-declaring-input-variables-for-a-single-operation)](#example-declaring-input-variables-for-a-single-operation)
-
-[5 TOSCA workflows [22](#tosca-workflows)](#tosca-workflows)
-
-[5.1 Normative workflows
-[22](#normative-workflows)](#normative-workflows)
-
-[5.1.1 Notes [22](#notes)](#notes)
-
-[5.2 Declarative workflows
-[22](#declarative-workflows)](#declarative-workflows)
-
-[5.2.1 Notes [22](#notes-1)](#notes-1)
-
-[5.2.2 Relationship impacts on topology weaving
-[23](#relationship-impacts-on-topology-weaving)](#relationship-impacts-on-topology-weaving)
-
-[5.2.3 Limitations [26](#limitations)](#limitations)
-
-[5.3 Imperative workflows
-[26](#imperative-workflows)](#imperative-workflows)
-
-[5.3.1 Defining sequence of operations in an imperative workflow
-[26](#defining-sequence-of-operations-in-an-imperative-workflow)](#defining-sequence-of-operations-in-an-imperative-workflow)
-
-[5.3.2 Definition of a simple workflow
-[28](#definition-of-a-simple-workflow)](#definition-of-a-simple-workflow)
-
-[5.3.3 Specifying preconditions to a workflow
-[31](#specifying-preconditions-to-a-workflow)](#specifying-preconditions-to-a-workflow)
-
-[5.3.4 Workflow reusability
-[32](#workflow-reusability)](#workflow-reusability)
-
-[5.3.5 Defining conditional logic on some part of the workflow
-[34](#defining-conditional-logic-on-some-part-of-the-workflow)](#defining-conditional-logic-on-some-part-of-the-workflow)
-
-[5.3.6 Define inputs for a workflow
-[35](#define-inputs-for-a-workflow)](#define-inputs-for-a-workflow)
-
-[5.3.7 Handle operation failure
-[36](#handle-operation-failure)](#handle-operation-failure)
-
-[**7.3.8 Use a custom workflow language**
-[37](#_Toc5736864)](#_Toc5736864)
-
-[5.4 Making declarative more flexible and imperative more generic
-[38](#making-declarative-more-flexible-and-imperative-more-generic)](#making-declarative-more-flexible-and-imperative-more-generic)
-
-[5.4.2 Weaving improvements
-[38](#weaving-improvements)](#weaving-improvements)
-
-[6 Instance Model [41](#instance-model)](#instance-model)
-
-[6.1 Topology Template Model versus Instance Model
-[41](#topology-template-model-versus-instance-model)](#topology-template-model-versus-instance-model)
-
-[6.2 Using attributes implicitly reflected from properties
-[41](#using-attributes-implicitly-reflected-from-properties)](#using-attributes-implicitly-reflected-from-properties)
-
-[6.3 Returning output values from operations
-[42](#returning-output-values-from-operations)](#returning-output-values-from-operations)
-
-[6.3.1 Example: setting output values to a node attribute
-[42](#example-setting-output-values-to-a-node-attribute)](#example-setting-output-values-to-a-node-attribute)
-
-[6.3.2 Example: setting output values to a capability attribute
-[43](#example-setting-output-values-to-a-capability-attribute)](#example-setting-output-values-to-a-capability-attribute)
-
-[6.4 Receiving asynchronous notifications
-[43](#receiving-asynchronous-notifications)](#receiving-asynchronous-notifications)
-
-[6.5 Creating Multiple Node Instances from the Same Node Template
-[44](#creating-multiple-node-instances-from-the-same-node-template)](#creating-multiple-node-instances-from-the-same-node-template)
-
-[6.5.1 Specifying Number of Occurrences
-[45](#specifying-number-of-occurrences)](#specifying-number-of-occurrences)
-
-[6.5.2 Specifying Inputs [46](#specifying-inputs)](#specifying-inputs)
-
-[7 Describing abstract requirements for nodes and capabilities in a
-TOSCA template
-[48](#describing-abstract-requirements-for-nodes-and-capabilities-in-a-tosca-template)](#describing-abstract-requirements-for-nodes-and-capabilities-in-a-tosca-template)
-
-[7.1 Using a node_filter to define hosting infrastructure requirements
-for a software
-[48](#using-a-node_filter-to-define-hosting-infrastructure-requirements-for-a-software)](#using-a-node_filter-to-define-hosting-infrastructure-requirements-for-a-software)
-
-[7.2 Using an abstract node template to define infrastructure
-requirements for software
-[49](#using-an-abstract-node-template-to-define-infrastructure-requirements-for-software)](#using-an-abstract-node-template-to-define-infrastructure-requirements-for-software)
-
-[7.3 Using a node_filter to define requirements on a database for an
-application
-[50](#using-a-node_filter-to-define-requirements-on-a-database-for-an-application)](#using-a-node_filter-to-define-requirements-on-a-database-for-an-application)
-
-[8 Substitution Mapping
-[52](#substitution-mapping)](#substitution-mapping)
-
-[8.1 Using node template substitution for model composition
-[52](#using-node-template-substitution-for-model-composition)](#using-node-template-substitution-for-model-composition)
-
-[8.1.1 Understanding node template instantiation through a TOSCA
-Orchestrator
-[52](#understanding-node-template-instantiation-through-a-tosca-orchestrator)](#understanding-node-template-instantiation-through-a-tosca-orchestrator)
-
-[8.1.2 Definition of the top-level service template
-[52](#definition-of-the-top-level-service-template)](#definition-of-the-top-level-service-template)
-
-[8.1.3 Definition of the database stack in a service template
-[54](#definition-of-the-database-stack-in-a-service-template)](#definition-of-the-database-stack-in-a-service-template)
-
-[8.2 Using node template substitution for chaining subsystems
-[56](#using-node-template-substitution-for-chaining-subsystems)](#using-node-template-substitution-for-chaining-subsystems)
-
-[8.2.1 Defining the overall subsystem chain
-[56](#defining-the-overall-subsystem-chain)](#defining-the-overall-subsystem-chain)
-
-[8.2.2 Defining a subsystem (node) type
-[58](#defining-a-subsystem-node-type)](#defining-a-subsystem-node-type)
-
-[8.2.3 Defining the details of a subsystem
-[58](#defining-the-details-of-a-subsystem)](#defining-the-details-of-a-subsystem)
-
-[8.3 Using node template substitution to provide product choice
-[61](#using-node-template-substitution-to-provide-product-choice)](#using-node-template-substitution-to-provide-product-choice)
-
-[8.3.1 Defining a service template with vendor-independent component
-[61](#defining-a-service-template-with-vendor-independent-component)](#defining-a-service-template-with-vendor-independent-component)
-
-[8.3.2 Defining vendor-specific component options
-[62](#defining-vendor-specific-component-options)](#defining-vendor-specific-component-options)
-
-[8.3.3 Substitution matching using substitution filters
-[63](#substitution-matching-using-substitution-filters)](#substitution-matching-using-substitution-filters)
-
-[8.4 Abstract nodes and target node filters matching
-[64](#abstract-nodes-and-target-node-filters-matching)](#abstract-nodes-and-target-node-filters-matching)
-
-[8.4.1 Reminder on types [64](#reminder-on-types)](#reminder-on-types)
-
-[8.4.2 Orchestrator catalogs
-[65](#orchestrator-catalogs)](#orchestrator-catalogs)
-
-[8.4.3 Abstract node template matching
-[65](#abstract-node-template-matching)](#abstract-node-template-matching)
-
-[8.4.4 Target node filter matching
-[69](#target-node-filter-matching)](#target-node-filter-matching)
-
-[8.4.5 Post matching properties
-[73](#post-matching-properties)](#post-matching-properties)
-
-[9 TOSCA Policies [74](#tosca-policies)](#tosca-policies)
-
-[9.1 Grouping node templates
-[74](#grouping-node-templates)](#grouping-node-templates)
-
-[9.2 A declarative approach
-[76](#a-declarative-approach)](#a-declarative-approach)
-
-[9.2.1 Declarative considerations
-[76](#declarative-considerations)](#declarative-considerations)
-
-[9.3 Consideration of Event, Condition and Action
-[76](#consideration-of-event-condition-and-action)](#consideration-of-event-condition-and-action)
-
-[9.4 Types of policies [76](#types-of-policies)](#types-of-policies)
-
-[9.4.1 Access control policies
-[76](#access-control-policies)](#access-control-policies)
-
-[9.4.2 Placement policies
-[77](#placement-policies)](#placement-policies)
-
-[9.4.3 Quality-of-Service (QoS) policies
-[77](#quality-of-service-qos-policies)](#quality-of-service-qos-policies)
-
-[9.5 Policy relationship considerations
-[77](#policy-relationship-considerations)](#policy-relationship-considerations)
-
-[9.6 Use Cases [78](#use-cases)](#use-cases)
-
-[9.6.1 Placement [78](#placement)](#placement)
-
-[9.6.2 Scaling [79](#scaling)](#scaling)
-
-[10 TOSCA Cloud Service Archive (CSAR) format
-[81](#_Toc8675949)](#_Toc8675949)
-
-[10.1 Overall Structure of a CSAR [81](#_Toc8675950)](#_Toc8675950)
-
-[10.2 TOSCA Meta File [81](#_Toc8675951)](#_Toc8675951)
-
-[10.2.1 Custom keynames in the TOSCA.meta file
-[82](#_Toc8675952)](#_Toc8675952)
-
-[10.2.2 Example [82](#_Toc8675953)](#_Toc8675953)
-
-[10.3 Archive without TOSCA-Metadata [82](#_Toc8675954)](#_Toc8675954)
-
-[10.3.1 Example [82](#_Toc8675955)](#_Toc8675955)
-
-[11 Component Modeling Use Cases
-[84](#component-modeling-use-cases)](#component-modeling-use-cases)
-
-[11.1.1 Use Case: Exploring the HostedOn relationship using
-WebApplication and WebServer
-[84](#use-case-exploring-the-hostedon-relationship-using-webapplication-and-webserver)](#use-case-exploring-the-hostedon-relationship-using-webapplication-and-webserver)
-
-[11.1.2 Use Case: Establishing a ConnectsTo relationship to WebServer
-[85](#use-case-establishing-a-connectsto-relationship-to-webserver)](#use-case-establishing-a-connectsto-relationship-to-webserver)
-
-[11.1.3 Use Case: Attaching (local) BlockStorage to a Compute node
-[85](#use-case-attaching-local-blockstorage-to-a-compute-node)](#use-case-attaching-local-blockstorage-to-a-compute-node)
-
-[11.1.4 Use Case: Reusing a BlockStorage Relationship using Relationship
-Type or Relationship Template
-[86](#use-case-reusing-a-blockstorage-relationship-using-relationship-type-or-relationship-template)](#use-case-reusing-a-blockstorage-relationship-using-relationship-type-or-relationship-template)
-
-[12 Application Modeling Use Cases
-[90](#application-modeling-use-cases)](#application-modeling-use-cases)
-
-[12.1 Use cases [90](#use-cases-1)](#use-cases-1)
-
-[12.1.1 Overview [90](#overview)](#overview)
-
-[12.1.2 Compute: Create a single Compute instance with a host Operating
-System
-[91](#compute-create-a-single-compute-instance-with-a-host-operating-system)](#compute-create-a-single-compute-instance-with-a-host-operating-system)
-
-[12.1.3 Software Component 1: Automatic deployment of a Virtual Machine
-(VM) image artifact
-[93](#software-component-1-automatic-deployment-of-a-virtual-machine-vm-image-artifact)](#software-component-1-automatic-deployment-of-a-virtual-machine-vm-image-artifact)
-
-[12.1.4 Block Storage 1: Using the normative AttachesTo Relationship
-Type
-[95](#block-storage-1-using-the-normative-attachesto-relationship-type)](#block-storage-1-using-the-normative-attachesto-relationship-type)
-
-[12.1.5 Block Storage 2: Using a custom AttachesTo Relationship Type
-[96](#block-storage-2-using-a-custom-attachesto-relationship-type)](#block-storage-2-using-a-custom-attachesto-relationship-type)
-
-[12.1.6 Block Storage 3: Using a Relationship Template of type
-AttachesTo
-[98](#block-storage-3-using-a-relationship-template-of-type-attachesto)](#block-storage-3-using-a-relationship-template-of-type-attachesto)
-
-[12.1.7 Block Storage 4: Single Block Storage shared by 2-Tier
-Application with custom AttachesTo Type and implied relationships
-[100](#block-storage-4-single-block-storage-shared-by-2-tier-application-with-custom-attachesto-type-and-implied-relationships)](#block-storage-4-single-block-storage-shared-by-2-tier-application-with-custom-attachesto-type-and-implied-relationships)
-
-[12.1.8 Block Storage 5: Single Block Storage shared by 2-Tier
-Application with custom AttachesTo Type and explicit Relationship
-Templates
-[102](#block-storage-5-single-block-storage-shared-by-2-tier-application-with-custom-attachesto-type-and-explicit-relationship-templates)](#block-storage-5-single-block-storage-shared-by-2-tier-application-with-custom-attachesto-type-and-explicit-relationship-templates)
-
-[12.1.9 Block Storage 6: Multiple Block Storage attached to different
-Servers
-[104](#block-storage-6-multiple-block-storage-attached-to-different-servers)](#block-storage-6-multiple-block-storage-attached-to-different-servers)
-
-[12.1.10 Object Storage 1: Creating an Object Storage service
-[107](#object-storage-1-creating-an-object-storage-service)](#object-storage-1-creating-an-object-storage-service)
-
-[12.1.11 Network 1: Server bound to a new network
-[107](#network-1-server-bound-to-a-new-network)](#network-1-server-bound-to-a-new-network)
-
-[12.1.12 Network 2: Server bound to an existing network
-[109](#network-2-server-bound-to-an-existing-network)](#network-2-server-bound-to-an-existing-network)
-
-[12.1.13 Network 3: Two servers bound to a single network
-[110](#network-3-two-servers-bound-to-a-single-network)](#network-3-two-servers-bound-to-a-single-network)
-
-[12.1.14 Network 4: Server bound to three networks
-[112](#network-4-server-bound-to-three-networks)](#network-4-server-bound-to-three-networks)
-
-[12.1.15 WebServer-DBMS 1: WordPress + MySQL, single instance
-[113](#webserver-dbms-1-wordpress-mysql-single-instance)](#webserver-dbms-1-wordpress-mysql-single-instance)
-
-[12.1.16 WebServer-DBMS 2: Nodejs with PayPal Sample App and MongoDB on
-separate instances
-[117](#webserver-dbms-2-nodejs-with-paypal-sample-app-and-mongodb-on-separate-instances)](#webserver-dbms-2-nodejs-with-paypal-sample-app-and-mongodb-on-separate-instances)
-
-[12.1.17 Multi-Tier-1: Elasticsearch, Logstash, Kibana (ELK) use case
-with multiple instances
-[120](#multi-tier-1-elasticsearch-logstash-kibana-elk-use-case-with-multiple-instances)](#multi-tier-1-elasticsearch-logstash-kibana-elk-use-case-with-multiple-instances)
-
-[12.1.18 Container-1: Containers using Docker single Compute instance
-(Containers only)
-[124](#container-1-containers-using-docker-single-compute-instance-containers-only)](#container-1-containers-using-docker-single-compute-instance-containers-only)
-
-[12.1.19 Artifacts: Compute Node with Multiple Artifacts
-[126](#artifacts-compute-node-with-multiple-artifacts)](#artifacts-compute-node-with-multiple-artifacts)
-
-[13 TOSCA networking use cases
-[128](#tosca-networking-use-cases)](#tosca-networking-use-cases)
-
-[13.1 Networking and Service Template Portability
-[128](#networking-and-service-template-portability)](#networking-and-service-template-portability)
-
-[13.2 Connectivity semantics
-[128](#connectivity-semantics)](#connectivity-semantics)
-
-[13.3 Expressing connectivity semantics
-[129](#expressing-connectivity-semantics)](#expressing-connectivity-semantics)
-
-[13.3.1 Connection initiation semantics
-[129](#connection-initiation-semantics)](#connection-initiation-semantics)
-
-[13.3.2 Specifying layer 4 ports
-[131](#specifying-layer-4-ports)](#specifying-layer-4-ports)
-
-[13.4 Network provisioning
-[131](#network-provisioning)](#network-provisioning)
-
-[13.4.1 Declarative network provisioning
-[131](#declarative-network-provisioning)](#declarative-network-provisioning)
-
-[13.4.2 Implicit network fulfillment
-[131](#implicit-network-fulfillment)](#implicit-network-fulfillment)
-
-[13.4.3 Controlling network fulfillment
-[131](#controlling-network-fulfillment)](#controlling-network-fulfillment)
-
-[13.5 Network Types [135](#network-types)](#network-types)
-
-[13.5.1 tosca.nodes.network.Network
-[135](#tosca.nodes.network.network)](#tosca.nodes.network.network)
-
-[13.5.2 tosca.nodes.network.Port
-[138](#tosca.nodes.network.port)](#tosca.nodes.network.port)
-
-[13.5.3 tosca.capabilities.network.Linkable
-[139](#tosca.capabilities.network.linkable)](#tosca.capabilities.network.linkable)
-
-[13.5.4 tosca.relationships.network.LinksTo
-[140](#tosca.relationships.network.linksto)](#tosca.relationships.network.linksto)
-
-[13.5.5 tosca.relationships.network.BindsTo
-[140](#tosca.relationships.network.bindsto)](#tosca.relationships.network.bindsto)
-
-[13.6 Network modeling approaches
-[141](#network-modeling-approaches)](#network-modeling-approaches)
-
-[13.6.1 Option 1: Specifying a network outside the application’s Service
-Template
-[141](#option-1-specifying-a-network-outside-the-applications-service-template)](#option-1-specifying-a-network-outside-the-applications-service-template)
-
-[13.6.2 Option 2: Specifying network requirements within the
-application’s Service Template
-[145](#option-2-specifying-network-requirements-within-the-applications-service-template)](#option-2-specifying-network-requirements-within-the-applications-service-template)
-
-[14 TOSCA Orchestrators
-[146](#tosca-orchestrators)](#tosca-orchestrators)
-
-[14.1 Artifact Processing and creating Portable Service Templates
-[146](#artifact-processing-and-creating-portable-service-templates)](#artifact-processing-and-creating-portable-service-templates)
-
-[14.1.1 CSAR Onboarding [147](#csar-onboarding)](#csar-onboarding)
-
-[14.1.2 Artifacts Processing
-[148](#artifacts-processing)](#artifacts-processing)
-
-[14.1.3 Dynamic Artifacts [151](#dynamic-artifacts)](#dynamic-artifacts)
-
-[14.1.4 Discussion of Examples
-[151](#discussion-of-examples)](#discussion-of-examples)
-
-[14.1.5 Artifact Types and Metadata
-[159](#artifact-types-and-metadata)](#artifact-types-and-metadata)
-
-[Appendix A. Acknowledgments [160](#acknowledgments)](#acknowledgments)
-
-[Appendix B. Some Section [162](#some-section)](#some-section)
-
-[B.1 Subsidiary Appendix Section
-[162](#subsidiary-appendix-section)](#subsidiary-appendix-section)
-
-[B.1.1 Sub-subsidiary Appendix Section
-[162](#sub-subsidiary-appendix-section)](#sub-subsidiary-appendix-section)
-
-[Appendix C. Revision History
-[163](#revision-history)](#revision-history)
-
-# Introduction
-
-<span class="mark">Type introductory text here.</span>
-
-## References (non-normative)
-
-**NOTE (remove this note and following examples before publication)**:
-
-Recommended approach: Set up \[Reference\] label elements as
-"Bookmarks", then use hyperlinks to them within the document. (**Here’s
-how**: Insert hyperlink -\>Place in this document -\> scroll down to
-Bookmarks, select appropriate one.)
-
-Use the "Ref" paragraph style to format references.
-
-The proper format for citation of technical work produced by an OASIS TC
-(whether Standards Track or Non-Standards Track) is:
-
-\[Citation Label\] Work Product
-[title](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#workProductName)
-(italicized). Edited by Albert Alston, Bob Ballston, and Calvin Carlson.
-Approval date (DD Month YYYY). OASIS
-[Stage](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#stage)
-Identifier and
-[Revision](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#revision)
-Number (*e.g.*, OASIS Committee Specification Draft 01). Principal URI
-([version-specific
-URI](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#this-version),
-*e.g*., with stage component: somespec-v1.0-csd01.html). Latest version:
-([latest version
-URI](http://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html#latest-version),
-without stage identifiers).
-
-For example:
-
-**\[OpenDoc-1.2\]** *Open Document Format for Office Applications
-(OpenDocument) Version 1.2*. Edited by Patrick Durusau and Michael
-Brauer. 19 January 2011. OASIS Committee Specification Draft 07.
-<http://docs.oasis-open.org/office/v1.2/csd07/OpenDocument-v1.2-csd07.html>.
-Latest version:
-<http://docs.oasis-open.org/office/v1.2/OpenDocument-v1.2.html>.
-
-Reference sources:
-
-For references to IETF RFCs, use the approved citation formats at:  
-<http://docs.oasis-open.org/templates/ietf-rfc-list/ietf-rfc-list.html>.
-
-For references to W3C Recommendations, use the approved citation formats
-at:
-<http://docs.oasis-open.org/templates/w3c-recommendations-list/w3c-recommendations-list.html>.
-
-## Section Level 2
-
-text
-
-### Section Level 3
-
-text
-
-#### Section Level 4
-
-text
-
-##### Section Level 5 -deepest recommended level
-
-text
-
-# TOSCA by example
+# 2 TOSCA by example
 
 This **non-normative** section contains several sections that show how
 to model applications with TOSCA using YAML by example starting with a
@@ -905,7 +413,7 @@ Compute</p>
 </tbody>
 </table>
 
-# TOSCA Base Profile
+# 3 TOSCA Base Profile
 
 - Introduce node types and data types
 
@@ -917,7 +425,7 @@ Compute</p>
 
 - Introduce Semantic versioning
 
-# Interfaces, Operations, and Artifacts
+# 4 Interfaces, Operations, and Artifacts
 
 ## Overriding behavior of predefined node types
 
@@ -1527,7 +1035,7 @@ scope within the same interfaces section of a node or template
 definition, the lowest (or innermost) scoped declaration would override
 those declared at higher (or more outer) levels of the definition.
 
-# TOSCA workflows
+# 5 TOSCA workflows
 
 TOSCA defines two different kinds of workflows that can be used to
 deploy (instantiate and start), manage at runtime or undeploy (stop and
@@ -2615,7 +2123,7 @@ tosca.interfaces.relationships.Configure.add_source</p></th>
 </tbody>
 </table>
 
-# Instance Model
+# 6 Instance Model
 
 ## Topology Template Model versus Instance Model
 
@@ -3336,7 +2844,7 @@ using node template.</p>
 </tbody>
 </table>
 
-# Substitution Mapping
+# 7 Substitution Mapping
 
 ## Using node template substitution for model composition
 
@@ -4863,7 +4371,7 @@ not possible to ship them with the template. Therefore, there is no
 standard for defining theses additional properties and the mean of
 providing them will be specific to the orchestrator implementation.
 
-# TOSCA Policies
+# 8 TOSCA Policies
 
 This section is **non-normative** and describes the approach TOSCA plans
 to take for policy description with TOSCA Service Templates. In
@@ -14049,3 +13557,76 @@ document.</p></li>
 </tr>
 </tbody>
 </table>
+
+-------
+
+# Appendix A. Informative References
+
+<!-- Required section -->
+
+This appendix contains the informative references that are used in this document.
+
+While any hyperlinks included in this appendix were valid at the time of publication, OASIS cannot guarantee their long-term validity.
+
+(Reference sources:
+For references to IETF RFCs, use the approved citation formats at: \
+https://docs.oasis-open.org/templates/ietf-rfc-list/ietf-rfc-list.html. \
+For references to W3C Recommendations, use the approved citation formats at: \
+https://docs.oasis-open.org/templates/w3c-recommendations-list/w3c-recommendations-list.html. \
+Remove this note before submitting for publication.)
+
+###### [TOSCA-v2.0]
+ _Topology and Orchestration Specification for Cloud Applications Version 2.0._ Edited by Chris Lauwers and Calin Curescu. Latest stage: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.html.
+
+-------
+
+# Appendix B. Acknowledgments
+
+(Note: A Work Product approved by the TC must include a list of people who participated in the development of the Work Product. This is generally done by collecting the list of names in this appendix. This list shall be initially compiled by the Chair, and any Member of the TC may add or remove their names from the list by request.  
+Remove this note before submitting for publication.)
+
+## B.1 Special Thanks
+
+<!-- This is an optional subsection to call out contributions from TC members. If a TC wants to thank non-TC members then they should avoid using the term "contribution" and instead thank them for their "expertise" or "assistance". -->
+
+Substantial contributions to this document from the following individuals are gratefully acknowledged:
+
+Participant Name, Affiliation or "Individual Member"
+
+## B.2 Participants
+
+<!-- A TC can determine who they list here, however, TC Observers must not be listed. It is common practice for TCs to list everyone that was part of the TC during the creation of the document, but this is ultimately a TC decision on who they want to list and not list, and in what order. -->
+
+The following individuals have participated in the creation of this document and are gratefully acknowledged:
+
+**TOSCA TC Members:**
+
+| First Name | Last Name | Company |
+| :--- | :--- | :--- |
+Philippe | Alcon | Marvelous Networks
+Alex | Amir | Viacat
+Kris | Anders | Trend Mission
+Darren | Anysteel | Macro Networks
+
+-------
+
+# Appendix C. Revision History
+| Revision | Date | Editor | Changes Made |
+| :--- | :--- | :--- | :--- |
+| filename-v1.0-wd01 | yyyy-mm-dd | Editor Name | Initial working draft |
+
+------
+
+# Appendix D. Notices
+
+Copyright &copy; OASIS Open 2023. All Rights Reserved.
+
+All capitalized terms in the following text have the meanings assigned to them in the OASIS Intellectual Property Rights Policy (the "OASIS IPR Policy"). The full [Policy](https://www.oasis-open.org/policies-guidelines/ipr/) may be found at the OASIS website.
+
+This document and translations of it may be copied and furnished to others, and derivative works that comment on or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole or in part, without restriction of any kind, provided that the above copyright notice and this section are included on all such copies and derivative works. However, this document itself may not be modified in any way, including by removing the copyright notice or references to OASIS, except as needed for the purpose of developing any document or deliverable produced by an OASIS Technical Committee (in which case the rules applicable to copyrights, as set forth in the OASIS IPR Policy, must be followed) or as required to translate it into languages other than English.
+
+The limited permissions granted above are perpetual and will not be revoked by OASIS or its successors or assigns.
+
+This document and the information contained herein is provided on an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+The name "OASIS" is a trademark of [OASIS](https://www.oasis-open.org/), the owner and developer of this specification, and should be used only to refer to the organization and its official outputs. OASIS welcomes reference to, and implementation and use of, specifications, while reserving the right to enforce its marks against misleading uses. Please see https://www.oasis-open.org/policies-guidelines/trademark/ for above guidance.
