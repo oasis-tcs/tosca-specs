@@ -4294,6 +4294,410 @@ my_scaling_policy_1:
 - *Example*: Compute1 and Compute2 are 2 node templates. Compute1 has 10
   instances, 5 in one region 5 in other region.
 
+# Component Modeling Use Cases
+
+This section is **non-normative** and includes use cases that explore
+how to model components and their relationships using TOSCA.
+
+### Use Case: Exploring the HostedOn relationship using WebApplication and WebServer
+
+This use case examines the ways TOSCA YAML can be used to express a
+simple hosting relationship (i.e., HostedOn) using the normative TOSCA
+WebServer and WebApplication node types defined in this specification.
+
+#### WebServer declares its “host” capability
+
+For convenience, relevant parts of the normative TOSCA Node Type for
+WebServer are shown below:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.WebServer</p>
+<p>derived_from: <a
+href="#tosca.nodes.softwarecomponent">SoftwareComponent</a></p>
+<p>capabilities:</p>
+<p>...</p>
+<p>host:</p>
+<p>type: <a
+href="#tosca.capabilities.container">tosca.capabilities.Container</a></p>
+<p>valid_source_types: [ <a
+href="#tosca.nodes.webapplication">tosca.nodes.WebApplication</a>
+]</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+As can be seen, the WebServer Node Type declares its capability to
+“contain” (i.e., host) other nodes using the symbolic name “host” and
+providing the Capability Type tosca.capabilities.Container. It should be
+noted that the symbolic name of “host” is not a reserved word, but one
+assigned by the type designer that implies at or betokens the associated
+capability. The Container capability definition also includes a required
+list of valid Node Types that can be contained by this, the WebServer,
+Node Type. This list is declared using the keyname of valid_source_types
+and in this case it includes only allowed type WebApplication.
+
+#### WebApplication declares its “host” requirement
+
+The WebApplication node type needs to be able to describe the type of
+capability a target node would have to provide in order to “host” it.
+The normative TOSCA capability type tosca.capabilities.Container is used
+to describe all normative TOSCA hosting (i.e., container-containee
+pattern) relationships. As can be seen below, the WebApplication
+accomplishes this by declaring a requirement with the symbolic name
+“host” with the **capability** keyname set to
+tosca.capabilities.Container.
+
+Again, for convenience, the relevant parts of the normative
+WebApplication Node Type are shown below:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>tosca.nodes.WebApplication:</p>
+<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
+<p>requirements:</p>
+<p>- host:</p>
+<p>capability: <a
+href="#tosca.capabilities.container">tosca.capabilities.Container</a></p>
+<p>node: <a href="#tosca.nodes.webserver">tosca.nodes.WebServer</a></p>
+<p>relationship: <a
+href="#tosca.relationships.hostedon-1">tosca.relationships.HostedOn</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+##### Notes
+
+- The symbolic name “host” is not a keyword and was selected for
+  consistent use in TOSCA normative node types to give the reader an
+  indication of the type of requirement being referenced. A valid
+  HostedOn relationship could still be established between WebApplicaton
+  and WebServer in a TOSCA Service Template regardless of the symbolic
+  name assigned to either the requirement or capability declaration.
+
+### Use Case: Establishing a ConnectsTo relationship to WebServer
+
+This use case examines the ways TOSCA YAML can be used to express a
+simple connection relationship (i.e.,
+[ConnectsTo](#tosca.relationships.connectsto-1)) between some service
+derived from the [SoftwareComponent](#tosca.nodes.softwarecomponent)
+Node Type, to the normative [WebServer](#tosca.nodes.webserver) node
+type defined in this specification.
+
+The service template that would establish a
+[ConnectsTo](#tosca.relationships.connectsto-1) relationship as follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_types:</p>
+<p>MyServiceType:</p>
+<p>derived_from: <a
+href="#tosca.nodes.softwarecomponent">SoftwareComponent</a></p>
+<p>requirements:</p>
+<p># This type of service requires a connection to a WebServer’s
+data_endpoint</p>
+<p>- connection1:</p>
+<p>node: <a href="#tosca.nodes.webserver">WebServer</a></p>
+<p>relationship: <a
+href="#tosca.relationships.connectsto-1">ConnectsTo</a></p>
+<p>capability: <a href="#tosca.capabilities.endpoint">Endpoint</a></p>
+<p>topology_template:</p>
+<p>node_templates:</p>
+<p>my_web_service:</p>
+<p>type: MyServiceType</p>
+<p>...</p>
+<p>requirements:</p>
+<p>- connection1:</p>
+<p>node: my_web_server</p>
+<p>my_web_server:</p>
+<p># Note, the normative WebServer node type declares the
+“data_endpoint”</p>
+<p># capability of type <a
+href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a>.</p>
+<p>type: <a href="#tosca.nodes.webserver">WebServer</a></p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+Since the normative WebServer Node Type only declares one capability of
+type tosca.capabilties.Endpoint (or Endpoint, its shortname alias in
+TOSCA) using the symbolic name data_endpoint, the my_web_service node
+template does not need to declare that symbolic name on its requirement
+declaration. If however, the my_web_server node was based upon some
+other node type that declared more than one capability of type Endpoint,
+then the capability keyname could be used to supply the desired symbolic
+name if necessary.
+
+#### Best practice
+
+It should be noted that the best practice for designing Node Types in
+TOSCA should not export two capabilities of the same type if they truly
+offer different functionality (i.e., different capabilities) which
+should be distinguished using different Capability Type definitions.
+
+### Use Case: Attaching (local) BlockStorage to a Compute node 
+
+This use case examines the ways TOSCA YAML can be used to express a
+simple AttachesTo relationship between a Compute node and a locally
+attached BlockStorage node.
+
+The service template that would establish an
+[AttachesTo](#tosca.relationships.attachesto) relationship follows:
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>my_server:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>...</p>
+<p>requirements:</p>
+<p># contextually this can only be a relationship type</p>
+<p>- local_storage:</p>
+<p># capability is provided by Compute Node Type</p>
+<p>node: my_block_storage</p>
+<p>relationship:</p>
+<p>type: <a href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>properties:</p>
+<p>location: /path1/path2</p>
+<p># This maps the local requirement name ‘local_storage’ to the</p>
+<p># target node’s capability name ‘attachment’</p>
+<p>my_block_storage:</p>
+<p>type: <a
+href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
+<p>properties:</p>
+<p>size: 10 GB</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+### Use Case: Reusing a BlockStorage Relationship using Relationship Type or Relationship Template
+
+This builds upon the previous use case (10.1.3) to examine how a
+template author could attach multiple Compute nodes (templates) to the
+same BlockStorage node (template), but with slightly different property
+values for the AttachesTo relationship.
+
+Specifically, several notation options are shown (in this use case) that
+achieve the same desired result.
+
+####  Rationale
+
+Referencing an explicitly declared Relationship Template is a
+convenience of the that allows template authors an entity to set,
+constrain or override the properties and operations as defined in its
+declared (Relationship) Type much as allowed now for Node Templates. It
+is especially useful when a complex Relationship Type (with many
+configurable properties or operations) has several logical occurrences
+in the same Service (Topology) Template; allowing the author to avoid
+configuring these same properties and operations in multiple Node
+Templates.
+
+#### Notation Style \#1: Augment AttachesTo Relationship Type directly in each Node Template
+
+This notation extends the methodology used for establishing a HostedOn
+relationship, but allowing template author to supply (dynamic)
+configuration and/or override of properties and operations.
+
+**Note:** This option will remain valid for regardless of other notation
+(copy or aliasing) options being discussed or adopted for future
+versions.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>my_block_storage:</p>
+<p>type: <a
+href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
+<p>properties:</p>
+<p>size: 10</p>
+<p>my_web_app_tier_1:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_block_storage</p>
+<p>relationship: MyAttachesTo</p>
+<p># use default property settings in the Relationship Type
+definition</p>
+<p>my_web_app_tier_2:</p>
+<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_block_storage</p>
+<p>relationship:</p>
+<p>type: MyAttachesTo</p>
+<p># Override default property setting for just the ‘location’
+property</p>
+<p>properties:</p>
+<p>location: /some_other_data_location</p>
+<p>relationship_types:</p>
+<p>MyAttachesTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>properties:</p>
+<p>location: /default_location</p>
+<p>interfaces:</p>
+<p>Configure:</p>
+<p>post_configure_target:</p>
+<p>implementation: default_script.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notation Style \#2: Use the ‘template’ keyword on the Node Templates to specify which named Relationship Template to use
+
+This option shows how to explicitly declare different named Relationship
+Templates within the Service Template as part of a
+relationship_templates section (which have different property values)
+and can be referenced by different Compute typed Node Templates.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>my_block_storage:</p>
+<p>type: BlockStorage</p>
+<p>properties:</p>
+<p>size: 10</p>
+<p>my_web_app_tier_1:</p>
+<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_block_storage</p>
+<p>relationship: storage_attachesto_1</p>
+<p>my_web_app_tier_2:</p>
+<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- local_storage:</p>
+<p>node: my_block_storage</p>
+<p>relationship: storage_attachesto_2</p>
+<p>relationship_templates:</p>
+<p>storage_attachesto_1:</p>
+<p>type: MyAttachesTo</p>
+<p>properties:</p>
+<p>location: /my_data_location</p>
+<p>storage_attachesto_2:</p>
+<p>type: MyAttachesTo</p>
+<p>properties:</p>
+<p>location: /some_other_data_location</p>
+<p>relationship_types:</p>
+<p>MyAttachesTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>interfaces:</p>
+<p>some_interface_name:</p>
+<p>some_operation:</p>
+<p>implementation: default_script.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+#### Notation Style \#3: Using the “copy” keyname to define a similar Relationship Template
+
+How does TOSCA make it easier to create a new relationship template that
+is mostly the same as one that exists without manually copying all the
+same information? TOSCA provides the copy keyname as a convenient way to
+copy an existing template definition into a new template definition as a
+starting point or basis for describing a new definition and avoid manual
+copy. The end results are cleaner TOSCA Service Templates that allows
+the description of only the changes (or deltas) between similar
+templates.
+
+The example below shows that the Relationship Template named
+storage_attachesto_1 provides some overrides (conceptually a large set
+of overrides) on its Type which the Relationship Template named
+storage_attachesto_2 wants to “copy” before perhaps providing a smaller
+number of overrides.
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p>node_templates:</p>
+<p>my_block_storage:</p>
+<p>type: <a
+href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
+<p>properties:</p>
+<p>size: 10</p>
+<p>my_web_app_tier_1:</p>
+<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- attachment:</p>
+<p>node: my_block_storage</p>
+<p>relationship: storage_attachesto_1</p>
+<p>my_web_app_tier_2:</p>
+<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
+<p>requirements:</p>
+<p>- attachment:</p>
+<p>node: my_block_storage</p>
+<p>relationship: storage_attachesto_2</p>
+<p>relationship_templates:</p>
+<p>storage_attachesto_1:</p>
+<p>type: MyAttachesTo</p>
+<p>properties:</p>
+<p>location: /my_data_location</p>
+<p>interfaces:</p>
+<p>some_interface_name:</p>
+<p>some_operation_name_1: my_script_1.sh</p>
+<p>some_operation_name_2: my_script_2.sh</p>
+<p>some_operation_name_3: my_script_3.sh</p>
+<p>storage_attachesto_2:</p>
+<p># Copy the contents of the “storage_attachesto_1” template into this
+new one</p>
+<p>copy: storage_attachesto_1</p>
+<p># Then change just the value of the location property</p>
+<p>properties:</p>
+<p>location: /some_other_data_location</p>
+<p>relationship_types:</p>
+<p>MyAttachesTo:</p>
+<p>derived_from: <a
+href="#tosca.relationships.attachesto">AttachesTo</a></p>
+<p>interfaces:</p>
+<p>some_interface_name:</p>
+<p>some_operation:</p>
+<p>implementation: default_script.sh</p></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
 
 # Application Modeling Use Cases
 
