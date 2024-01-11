@@ -3868,37 +3868,32 @@ server stack, where a variable number of servers with apache installed
 on them can exist, depending on the load on the servers.
 
 Example 20 - Grouping Node Templates for possible policy application
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template for a scaling web server.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>apache:</p>
-<p>type: tosca.nodes.WebServer.Apache</p>
-<p>properties:</p>
-<p># Details omitted for brevity</p>
-<p>requirements:</p>
-<p>- host: server</p>
-<p>server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p># details omitted for brevity</p>
-<p>groups:</p>
-<p>webserver_group:</p>
-<p>type: tosca.groups.Root</p>
-<p>members: [ apache, server ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template for a scaling web server.
+
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    apache:
+      type: tosca.nodes.WebServer.Apache
+      properties:
+        # Details omitted for brevity
+      requirements:
+        - host: server
+
+    server:
+      type: tosca.nodes.Compute
+        # details omitted for brevity
+
+  groups:
+    webserver_group:
+      type: tosca.groups.Root
+      members: [ apache, server ]
+```
 
 The example first of all uses the concept of grouping to express which
 components (node templates) need to be scaled as a unit – i.e. the
@@ -3923,68 +3918,63 @@ to make sure components get collocation or anti-collocated. This can be
 expressed via grouping and policies as shown in the example below.
 
 Example 21 - Grouping nodes for anti-colocation policy application
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Template hosting requirements and placement policy.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p># omitted here for brevity</p>
-<p>node_templates:</p>
-<p>wordpress_server:</p>
-<p>type: tosca.nodes.WebServer</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p># Find a Compute node that fulfills these additional filter reqs.</p>
-<p>node_filter:</p>
-<p>capabilities:</p>
-<p>- host:</p>
-<p>properties:</p>
-<p>- mem_size: { greater_or_equal: 512 MB }</p>
-<p>- disk_size: { greater_or_equal: 2 GB }</p>
-<p>- os:</p>
-<p>properties:</p>
-<p>- architecture: x86_64</p>
-<p>- type: linux</p>
-<p>mysql:</p>
-<p>type: tosca.nodes.DBMS.MySQL</p>
-<p>properties:</p>
-<p># omitted here for brevity</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node: tosca.nodes.Compute</p>
-<p>node_filter:</p>
-<p>capabilities:</p>
-<p>- host:</p>
-<p>properties:</p>
-<p>- disk_size: { greater_or_equal: 1 GB }</p>
-<p>- os:</p>
-<p>properties:</p>
-<p>- architecture: x86_64</p>
-<p>- type: linux</p>
-<p>groups:</p>
-<p>my_co_location_group:</p>
-<p>type: tosca.groups.Root</p>
-<p>members: [ wordpress_server, mysql ]</p>
-<p>policies:</p>
-<p>- my_anti_collocation_policy:</p>
-<p>type: my.policies.anticolocateion</p>
-<p>targets: [ my_co_location_group ]</p>
-<p># For this example, specific policy definitions are considered</p>
-<p># domain specific and are not included here</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: Template hosting requirements and placement policy.
 
+topology_template:
+  inputs:
+    # omitted here for brevity
+
+  node_templates:
+    wordpress_server:
+      type: tosca.nodes.WebServer
+      properties:
+        # omitted here for brevity
+      requirements:
+        - host: 
+            # Find a Compute node that fulfills these additional filter reqs.
+            node_filter:
+              capabilities:
+                - host:
+                    properties:
+                      - mem_size: { greater_or_equal: 512 MB }
+                      - disk_size: { greater_or_equal: 2 GB }
+                - os:
+                    properties:
+                      - architecture: x86_64
+                      - type: linux
+
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      properties:
+        # omitted here for brevity
+      requirements:
+        - host: 
+            node: tosca.nodes.Compute
+            node_filter:
+              capabilities:
+                - host:
+                    properties:
+                      - disk_size: { greater_or_equal: 1 GB }
+                - os:
+                    properties:
+                      - architecture: x86_64
+                      - type: linux
+
+  groups:
+    my_co_location_group:
+      type: tosca.groups.Root
+      members: [ wordpress_server, mysql ]
+  
+  policies:
+    - my_anti_collocation_policy:
+        type: my.policies.anticolocateion
+        targets: [ my_co_location_group ]
+        # For this example, specific policy definitions are considered 
+        # domain specific and are not included here
+```
 In the example above, both software components **wordpress_server** and
 **mysql** have similar hosting requirements. Therefore, a provider could
 decide to put both on the same server as long as both their respective
@@ -4169,26 +4159,15 @@ This use case introduces the following policy features:
 ##### Logical Diagram
 
 Sample YAML: Compute separation
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>failover_policy_1:</p>
-<p>type: tosca.policy.placement.Antilocate</p>
-<p>description: My placement policy for Compute node separation</p>
-<p>properties:</p>
-<p># 3 diff target containers</p>
-<p>container_type: Compute</p>
-<p>container_number: 3</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+failover_policy_1:
+  type: tosca.policy.placement.Antilocate
+  description: My placement policy for Compute node separation
+  properties:
+    # 3 diff target containers
+    container_type: Compute 
+    container_number: 3 
+```
 ##### Notes
 
 - There may be availability (constraints) considerations especially if
@@ -4220,30 +4199,17 @@ This use case introduces the following policy features:
   zones.
 
 ##### Sample YAML: Region separation amongst named set of regions
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>failover_policy_2:</p>
-<p>type: tosca.policy.placement</p>
-<p>description: My failover policy with allowed target regions (logical
-containers)</p>
-<p>properties:</p>
-<p>container_type: region</p>
-<p>container_number: 3</p>
-<p># If “containers” keyname is provided, they represent the allowed
-set</p>
-<p># of target containers to use for placement for .</p>
-<p>containers: [ region1, region2, region3, region4 ]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+failover_policy_2:
+  type: tosca.policy.placement
+  description: My failover policy with allowed target regions (logical containers)
+  properties:
+    container_type: region 
+    container_number: 3 
+    # If “containers” keyname is provided, they represent the allowed set 
+    # of target containers to use for placement for .
+    containers: [ region1, region2, region3, region4 ]
+```
 #### Use Case 3: Co-locate based upon Compute affinity
 
 ##### Description
@@ -4272,24 +4238,13 @@ This use case introduces the following policy features:
   or storage access time, CPU speed, etc.).
 
 ##### Sample YAML: Region separation amongst named set of regions
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>keep_together_policy:</p>
-<p>type: tosca.policy.placement.Colocate</p>
-<p>description: Keep associated nodes (groups of nodes) based upon
-Compute</p>
-<p>properties:</p>
-<p>affinity: Compute</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+keep_together_policy:
+  type: tosca.policy.placement.Colocate
+  description: Keep associated nodes (groups of nodes) based upon Compute
+  properties:
+    affinity: Compute
+```
 
 ### Scaling
 
@@ -4307,27 +4262,16 @@ This use case introduces the following policy features:
 - Basic autoscaling policy
 
 ##### Sample YAML
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>my_scaling_policy_1:</p>
-<p>type: tosca.policy.scaling</p>
-<p>description: Simple node autoscaling</p>
-<p>properties:</p>
-<p>min_instances: &lt;integer&gt;</p>
-<p>max_instances: &lt;integer&gt;</p>
-<p>default_instances: &lt;integer&gt;</p>
-<p>increment: &lt;integer&gt;</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+my_scaling_policy_1:
+  type: tosca.policy.scaling
+  description: Simple node autoscaling
+  properties:
+    min_instances: <integer>
+    max_instances: <integer>
+    default_instances: <integer>
+    increment: <integer>
+```
 ##### Notes
 
 - Assume horizontal scaling for this use case
