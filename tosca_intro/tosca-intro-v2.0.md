@@ -4309,30 +4309,15 @@ WebServer and WebApplication node types defined in this specification.
 
 For convenience, relevant parts of the normative TOSCA Node Type for
 WebServer are shown below:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.nodes.WebServer</p>
-<p>derived_from: <a
-href="#tosca.nodes.softwarecomponent">SoftwareComponent</a></p>
-<p>capabilities:</p>
-<p>...</p>
-<p>host:</p>
-<p>type: <a
-href="#tosca.capabilities.container">tosca.capabilities.Container</a></p>
-<p>valid_source_types: [ <a
-href="#tosca.nodes.webapplication">tosca.nodes.WebApplication</a>
-]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+tosca.nodes.WebServer
+  derived_from: SoftwareComponent
+  capabilities:
+    ...
+    host: 
+      type: tosca.capabilities.Container
+      valid_source_types: [ tosca.nodes.WebApplication ]
+```
 As can be seen, the WebServer Node Type declares its capability to
 “contain” (i.e., host) other nodes using the symbolic name “host” and
 providing the Capability Type tosca.capabilities.Container. It should be
@@ -4356,27 +4341,15 @@ tosca.capabilities.Container.
 
 Again, for convenience, the relevant parts of the normative
 WebApplication Node Type are shown below:
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.nodes.WebApplication:</p>
-<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>capability: <a
-href="#tosca.capabilities.container">tosca.capabilities.Container</a></p>
-<p>node: <a href="#tosca.nodes.webserver">tosca.nodes.WebServer</a></p>
-<p>relationship: <a
-href="#tosca.relationships.hostedon-1">tosca.relationships.HostedOn</a></p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+tosca.nodes.WebApplication:
+  derived_from: tosca.nodes.Root
+  requirements:
+    - host:        
+        capability: tosca.capabilities.Container
+        node: tosca.nodes.WebServer
+        relationship: tosca.relationships.HostedOn
+```
 
 ##### Notes
 
@@ -4398,45 +4371,31 @@ type defined in this specification.
 
 The service template that would establish a
 [ConnectsTo](#tosca.relationships.connectsto-1) relationship as follows:
+```
+node_types:
+  MyServiceType:
+    derived_from: SoftwareComponent
+    requirements:
+      # This type of service requires a connection to a WebServer’s data_endpoint
+      - connection1: 
+          node: WebServer
+          relationship: ConnectsTo
+          capability: Endpoint
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_types:</p>
-<p>MyServiceType:</p>
-<p>derived_from: <a
-href="#tosca.nodes.softwarecomponent">SoftwareComponent</a></p>
-<p>requirements:</p>
-<p># This type of service requires a connection to a WebServer’s
-data_endpoint</p>
-<p>- connection1:</p>
-<p>node: <a href="#tosca.nodes.webserver">WebServer</a></p>
-<p>relationship: <a
-href="#tosca.relationships.connectsto-1">ConnectsTo</a></p>
-<p>capability: <a href="#tosca.capabilities.endpoint">Endpoint</a></p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_web_service:</p>
-<p>type: MyServiceType</p>
-<p>...</p>
-<p>requirements:</p>
-<p>- connection1:</p>
-<p>node: my_web_server</p>
-<p>my_web_server:</p>
-<p># Note, the normative WebServer node type declares the
-“data_endpoint”</p>
-<p># capability of type <a
-href="#tosca.capabilities.endpoint">tosca.capabilities.Endpoint</a>.</p>
-<p>type: <a href="#tosca.nodes.webserver">WebServer</a></p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+topology_template:
+  node_templates:
+    my_web_service:
+      type: MyServiceType
+      ...
+      requirements:
+        - connection1: 
+            node: my_web_server
 
+    my_web_server:
+      # Note, the normative WebServer node type declares the “data_endpoint” 
+      # capability of type tosca.capabilities.Endpoint.  
+      type: WebServer
+```
 Since the normative WebServer Node Type only declares one capability of
 type tosca.capabilties.Endpoint (or Endpoint, its shortname alias in
 TOSCA) using the symbolic name data_endpoint, the my_web_service node
@@ -4461,39 +4420,28 @@ attached BlockStorage node.
 
 The service template that would establish an
 [AttachesTo](#tosca.relationships.attachesto) relationship follows:
+```
+node_templates:
+  my_server:
+    type: Compute
+    ...
+    requirements:
+      # contextually this can only be a relationship type
+      - local_storage: 
+          # capability is provided by Compute Node Type
+          node: my_block_storage            
+          relationship: 
+            type: AttachesTo
+            properties:
+              location: /path1/path2
+          # This maps the local requirement name ‘local_storage’ to the
+          # target node’s capability name ‘attachment’
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>my_server:</p>
-<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>...</p>
-<p>requirements:</p>
-<p># contextually this can only be a relationship type</p>
-<p>- local_storage:</p>
-<p># capability is provided by Compute Node Type</p>
-<p>node: my_block_storage</p>
-<p>relationship:</p>
-<p>type: <a href="#tosca.relationships.attachesto">AttachesTo</a></p>
-<p>properties:</p>
-<p>location: /path1/path2</p>
-<p># This maps the local requirement name ‘local_storage’ to the</p>
-<p># target node’s capability name ‘attachment’</p>
-<p>my_block_storage:</p>
-<p>type: <a
-href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
-<p>properties:</p>
-<p>size: 10 GB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+  my_block_storage:
+    type: BlockStorage
+    properties:
+      size: 10 GB
+```
 ### Use Case: Reusing a BlockStorage Relationship using Relationship Type or Relationship Template
 
 This builds upon the previous use case (10.1.3) to examine how a
@@ -4525,107 +4473,92 @@ configuration and/or override of properties and operations.
 **Note:** This option will remain valid for regardless of other notation
 (copy or aliasing) options being discussed or adopted for future
 versions.
+```
+node_templates:
+  
+  my_block_storage:
+    type: BlockStorage
+    properties:
+      size: 10
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>my_block_storage:</p>
-<p>type: <a
-href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
-<p>properties:</p>
-<p>size: 10</p>
-<p>my_web_app_tier_1:</p>
-<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_block_storage</p>
-<p>relationship: MyAttachesTo</p>
-<p># use default property settings in the Relationship Type
-definition</p>
-<p>my_web_app_tier_2:</p>
-<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_block_storage</p>
-<p>relationship:</p>
-<p>type: MyAttachesTo</p>
-<p># Override default property setting for just the ‘location’
-property</p>
-<p>properties:</p>
-<p>location: /some_other_data_location</p>
-<p>relationship_types:</p>
-<p>MyAttachesTo:</p>
-<p>derived_from: <a
-href="#tosca.relationships.attachesto">AttachesTo</a></p>
-<p>properties:</p>
-<p>location: /default_location</p>
-<p>interfaces:</p>
-<p>Configure:</p>
-<p>post_configure_target:</p>
-<p>implementation: default_script.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  my_web_app_tier_1:
+    type: Compute
+    requirements:
+      - local_storage: 
+          node: my_block_storage
+          relationship: MyAttachesTo
+            # use default property settings in the Relationship Type definition
 
+  my_web_app_tier_2:
+    type: Compute
+    requirements:
+      - local_storage: 
+          node: my_block_storage
+          relationship:
+            type: MyAttachesTo
+            # Override default property setting for just the ‘location’ property
+            properties:
+              location: /some_other_data_location 
+
+relationship_types:
+
+  MyAttachesTo:
+    derived_from: AttachesTo
+    properties:
+      location: /default_location
+    interfaces:
+      Configure:
+        post_configure_target:
+          implementation: default_script.sh
+```
 #### Notation Style \#2: Use the ‘template’ keyword on the Node Templates to specify which named Relationship Template to use
 
 This option shows how to explicitly declare different named Relationship
 Templates within the Service Template as part of a
 relationship_templates section (which have different property values)
 and can be referenced by different Compute typed Node Templates.
+```
+node_templates:
+  
+  my_block_storage:
+    type: BlockStorage
+    properties:
+      size: 10
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>my_block_storage:</p>
-<p>type: BlockStorage</p>
-<p>properties:</p>
-<p>size: 10</p>
-<p>my_web_app_tier_1:</p>
-<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_block_storage</p>
-<p>relationship: storage_attachesto_1</p>
-<p>my_web_app_tier_2:</p>
-<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_block_storage</p>
-<p>relationship: storage_attachesto_2</p>
-<p>relationship_templates:</p>
-<p>storage_attachesto_1:</p>
-<p>type: MyAttachesTo</p>
-<p>properties:</p>
-<p>location: /my_data_location</p>
-<p>storage_attachesto_2:</p>
-<p>type: MyAttachesTo</p>
-<p>properties:</p>
-<p>location: /some_other_data_location</p>
-<p>relationship_types:</p>
-<p>MyAttachesTo:</p>
-<p>derived_from: <a
-href="#tosca.relationships.attachesto">AttachesTo</a></p>
-<p>interfaces:</p>
-<p>some_interface_name:</p>
-<p>some_operation:</p>
-<p>implementation: default_script.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  my_web_app_tier_1:
+    derived_from: Compute
+    requirements:
+      - local_storage:
+          node: my_block_storage
+          relationship: storage_attachesto_1
 
+  my_web_app_tier_2:
+    derived_from: Compute
+    requirements:
+      - local_storage: 
+          node: my_block_storage
+          relationship: storage_attachesto_2
+
+relationship_templates:
+  storage_attachesto_1:
+    type: MyAttachesTo
+    properties:
+      location: /my_data_location
+
+  storage_attachesto_2:
+    type: MyAttachesTo
+    properties:
+      location: /some_other_data_location
+
+relationship_types:
+
+  MyAttachesTo:
+    derived_from: AttachesTo
+    interfaces:
+      some_interface_name:
+        some_operation:
+          implementation: default_script.sh
+```
 #### Notation Style \#3: Using the “copy” keyname to define a similar Relationship Template
 
 How does TOSCA make it easier to create a new relationship template that
@@ -4642,63 +4575,55 @@ storage_attachesto_1 provides some overrides (conceptually a large set
 of overrides) on its Type which the Relationship Template named
 storage_attachesto_2 wants to “copy” before perhaps providing a smaller
 number of overrides.
+```
+node_templates:
+  
+  my_block_storage:
+    type: BlockStorage
+    properties:
+      size: 10
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>my_block_storage:</p>
-<p>type: <a
-href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
-<p>properties:</p>
-<p>size: 10</p>
-<p>my_web_app_tier_1:</p>
-<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>requirements:</p>
-<p>- attachment:</p>
-<p>node: my_block_storage</p>
-<p>relationship: storage_attachesto_1</p>
-<p>my_web_app_tier_2:</p>
-<p>derived_from: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>requirements:</p>
-<p>- attachment:</p>
-<p>node: my_block_storage</p>
-<p>relationship: storage_attachesto_2</p>
-<p>relationship_templates:</p>
-<p>storage_attachesto_1:</p>
-<p>type: MyAttachesTo</p>
-<p>properties:</p>
-<p>location: /my_data_location</p>
-<p>interfaces:</p>
-<p>some_interface_name:</p>
-<p>some_operation_name_1: my_script_1.sh</p>
-<p>some_operation_name_2: my_script_2.sh</p>
-<p>some_operation_name_3: my_script_3.sh</p>
-<p>storage_attachesto_2:</p>
-<p># Copy the contents of the “storage_attachesto_1” template into this
-new one</p>
-<p>copy: storage_attachesto_1</p>
-<p># Then change just the value of the location property</p>
-<p>properties:</p>
-<p>location: /some_other_data_location</p>
-<p>relationship_types:</p>
-<p>MyAttachesTo:</p>
-<p>derived_from: <a
-href="#tosca.relationships.attachesto">AttachesTo</a></p>
-<p>interfaces:</p>
-<p>some_interface_name:</p>
-<p>some_operation:</p>
-<p>implementation: default_script.sh</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  my_web_app_tier_1:
+    derived_from: Compute
+    requirements:
+      - attachment: 
+          node: my_block_storage
+          relationship: storage_attachesto_1
 
+  my_web_app_tier_2:
+    derived_from: Compute
+    requirements:
+      - attachment: 
+          node: my_block_storage
+          relationship: storage_attachesto_2
 
+relationship_templates:
+  storage_attachesto_1:
+    type: MyAttachesTo
+    properties:
+      location: /my_data_location
+    interfaces:
+      some_interface_name:
+        some_operation_name_1: my_script_1.sh
+        some_operation_name_2: my_script_2.sh
+        some_operation_name_3: my_script_3.sh
+
+  storage_attachesto_2:
+    # Copy the contents of the “storage_attachesto_1” template into this new one
+    copy: storage_attachesto_1
+    # Then change just the value of the location property
+    properties:
+      location: /some_other_data_location
+
+relationship_types:
+
+  MyAttachesTo:
+    derived_from: AttachesTo
+    interfaces:
+      some_interface_name:
+        some_operation:
+          implementation: default_script.sh
+```
 # Application Modeling Use Cases
 
 This section is **non-normative** and includes use cases that show how
@@ -4937,51 +4862,40 @@ This use case introduces the following TOSCA features:
 <img src="media/image24.png" style="width:1.97513in;height:2.8in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA that just defines a single compute instance and selects a
-(guest) host Operating System from the Compute node’s properties. Note,
-this example does not include default values on inputs properties.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 1 GB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: ubuntu</p>
-<p>version: 12.04</p>
-<p>outputs:</p>
-<p>private_ip:</p>
-<p>description: The private IP address of the deployed server
-instance.</p>
-<p>value: { get_attribute: [my_server, private_address] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA that just defines a single compute instance and selects a (guest) host Operating System from the Compute node’s properties. Note, this example does not include default values on inputs properties.
 
+topology_template:
+  inputs:
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+
+  node_templates:
+    my_server:
+      type: Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: {  get_input: cpus  }
+            mem_size: 1 GB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: ubuntu
+            version: 12.04
+  outputs:
+    private_ip:
+      description: The private IP address of the deployed server instance.
+      value: { get_attribute: [my_server, private_address] }
+```
 #### Notes
 
 - This use case uses a versioned, Linux Ubuntu distribution on the
@@ -5037,57 +4951,45 @@ This use case assumes the following:
 <img src="media/image25.png" style="width:4.22137in;height:4.00833in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with a SoftwareComponent node with a declared Virtual machine
-(VM) deployment artifact that automatically deploys to its host Compute
-node.</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_virtual_machine:</p>
-<p>type: <a
-href="#tosca.nodes.softwarecomponent">SoftwareComponent</a></p>
-<p>artifacts:</p>
-<p>my_vm_image:</p>
-<p>file: images/fedora-18-x86_64.qcow2</p>
-<p>type: tosca.artifacts.Deployment.Image.VM.QCOW2</p>
-<p>topology: my_VMs_topology.yaml</p>
-<p>requirements:</p>
-<p>- host: my_server</p>
-<p># Automatically deploy the VM image referenced on the create
-operation</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: my_vm_image</p>
-<p># Compute instance with no Operating System guest host</p>
-<p>my_server:</p>
-<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>capabilities:</p>
-<p># Note: no guest OperatingSystem requirements as these are in the
-image.</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4 GB</p>
-<p>outputs:</p>
-<p>private_ip:</p>
-<p>description: The private IP address of the deployed server
-instance.</p>
-<p>value: { get_attribute: [my_server, private_address] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with a SoftwareComponent node with a declared Virtual machine (VM) deployment artifact that automatically deploys to its host Compute node.
 
+topology_template:
+  
+  node_templates:
+    my_virtual_machine:
+      type: SoftwareComponent
+      artifacts:
+        my_vm_image: 
+          file: images/fedora-18-x86_64.qcow2
+          type: tosca.artifacts.Deployment.Image.VM.QCOW2
+          topology: my_VMs_topology.yaml
+      requirements:
+        - host: my_server
+      # Automatically deploy the VM image referenced on the create operation
+      interfaces:
+        Standard: 
+          create: my_vm_image
+
+    # Compute instance with no Operating System guest host
+    my_server:
+      type: Compute
+      capabilities:
+        # Note: no guest OperatingSystem requirements as these are in the image.
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: {  get_input: cpus  }
+            mem_size: 4 GB
+
+  outputs:
+    private_ip:
+      description: The private IP address of the deployed server instance.
+      value: { get_attribute: [my_server, private_address] }
+```
 #### Notes
 
 - The use of the type keyname on the artifact definition (within the
@@ -5112,78 +5014,69 @@ Compute node using the normative AttachesTo relationship.
 <img src="media/image26.png" style="width:5.21144in;height:3.02413in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with server and attached block storage using the normative
-AttachesTo Relationship Type.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>storage_size:</p>
-<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
-<p>description: Size of the storage to be created.</p>
-<p>default: 1 GB</p>
-<p>storage_snapshot_id:</p>
-<p>type: string</p>
-<p>description: &gt;</p>
-<p>Optional identifier for an existing snapshot to use when creating
-storage.</p>
-<p>storage_location:</p>
-<p>type: string</p>
-<p>description: Block storage mount point (filesystem path).</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 1 GB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: linux</p>
-<p>distribution: fedora</p>
-<p>version: 18.0</p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_storage</p>
-<p>relationship:</p>
-<p>type: <a href="#tosca.relationships.attachesto">AttachesTo</a></p>
-<p>properties:</p>
-<p>location: { get_input: storage_location }</p>
-<p>my_storage:</p>
-<p>type: <a
-href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
-<p>properties:</p>
-<p>size: { get_input: storage_size }</p>
-<p>snapshot_id: { get_input: storage_snapshot_id }</p>
-<p>outputs:</p>
-<p>private_ip:</p>
-<p>description: The private IP address of the newly created compute
-instance.</p>
-<p>value: { get_attribute: [my_server, private_address] }</p>
-<p>volume_id:</p>
-<p>description: The volume id of the block storage instance.</p>
-<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with server and attached block storage using the normative AttachesTo Relationship Type.
 
+topology_template:
+
+  inputs:
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+    storage_size:
+      type: scalar-unit.size
+      description: Size of the storage to be created.
+      default: 1 GB
+    storage_snapshot_id:
+      type: string
+      description: >
+        Optional identifier for an existing snapshot to use when creating storage.    
+    storage_location:
+      type: string
+      description: Block storage mount point (filesystem path).
+
+  node_templates:
+    my_server:
+      type: Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 1 GB
+        os:
+          properties:
+            architecture: x86_64 
+            type: linux  
+            distribution: fedora  
+            version: 18.0
+      requirements:
+        - local_storage: 
+            node: my_storage
+            relationship: 
+              type: AttachesTo
+              properties:
+                location: { get_input: storage_location }
+
+    my_storage:
+      type: BlockStorage
+      properties:
+        size: { get_input: storage_size }
+        snapshot_id: { get_input: storage_snapshot_id }
+
+  outputs:
+    private_ip:
+      description: The private IP address of the newly created compute instance.
+      value: { get_attribute: [my_server, private_address] }
+    volume_id:
+      description: The volume id of the block storage instance.
+      value: { get_attribute: [my_storage, volume_id] }
+```
 ### Block Storage 2: Using a custom AttachesTo Relationship Type
 
 #### Description
@@ -5197,83 +5090,72 @@ normative AttachesTo relationship.
 <img src="media/image27.png" style="width:5.37419in;height:2.8841in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with server and attached block storage using a custom
-AttachesTo Relationship Type.</p>
-<p>relationship_types:</p>
-<p>MyCustomAttachesTo:</p>
-<p>derived_from: <a
-href="#tosca.relationships.attachesto">AttachesTo</a></p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>storage_size:</p>
-<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
-<p>description: Size of the storage to be created.</p>
-<p>default: 1 GB</p>
-<p>storage_snapshot_id:</p>
-<p>type: string</p>
-<p>description: &gt;</p>
-<p>Optional identifier for an existing snapshot to use when creating
-storage.</p>
-<p>storage_location:</p>
-<p>type: string</p>
-<p>description: Block storage mount point (filesystem path).</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4 GB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Fedora</p>
-<p>version: 18.0</p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_storage</p>
-<p># Declare custom AttachesTo type using the ‘relationship’ keyword</p>
-<p>relationship:</p>
-<p>type: MyCustomAttachesTo</p>
-<p>properties:</p>
-<p>location: { get_input: storage_location }</p>
-<p>my_storage:</p>
-<p>type: <a
-href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
-<p>properties:</p>
-<p>size: { get_input: storage_size }</p>
-<p>snapshot_id: { get_input: storage_snapshot_id }</p>
-<p>outputs:</p>
-<p>private_ip:</p>
-<p>description: The private IP address of the newly created compute
-instance.</p>
-<p>value: { get_attribute: [my_server, private_address] }</p>
-<p>volume_id:</p>
-<p>description: The volume id of the block storage instance.</p>
-<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with server and attached block storage using a custom AttachesTo Relationship Type.
 
+relationship_types:
+  MyCustomAttachesTo:
+     derived_from: AttachesTo
+
+topology_template:
+  inputs:
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+    storage_size:
+      type: scalar-unit.size
+      description: Size of the storage to be created.
+      default: 1 GB
+    storage_snapshot_id:
+      type: string
+      description: >
+        Optional identifier for an existing snapshot to use when creating storage.    
+    storage_location:
+      type: string
+      description: Block storage mount point (filesystem path).
+
+  node_templates:
+    my_server:
+      type: Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 4 GB
+        os:
+          properties:
+            architecture: x86_64 
+            type: Linux  
+            distribution: Fedora  
+            version: 18.0
+      requirements:
+        - local_storage: 
+            node: my_storage
+            # Declare custom AttachesTo type using the ‘relationship’ keyword
+            relationship: 
+              type: MyCustomAttachesTo
+              properties: 
+                location: { get_input: storage_location }
+    my_storage:
+      type: BlockStorage
+      properties:
+        size: { get_input: storage_size }
+        snapshot_id: { get_input: storage_snapshot_id }
+
+  outputs:
+    private_ip:
+      description: The private IP address of the newly created compute instance.
+      value: { get_attribute: [my_server, private_address] }
+    volume_id:
+      description: The volume id of the block storage instance.
+      value: { get_attribute: [my_storage, volume_id] }
+```
 ### Block Storage 3: Using a Relationship Template of type AttachesTo
 
 #### Description
@@ -5287,75 +5169,67 @@ normative AttachesTo Relationship Type.
 <img src="media/image28.png" style="width:5.15551in;height:2.70946in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with server and attached block storage using a named
-Relationship Template for the storage attachment.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>storage_size:</p>
-<p>type: <a href="#TYPE_TOSCA_SCALAR_UNIT_SIZE">scalar-unit.size</a></p>
-<p>description: Size of the storage to be created.</p>
-<p>default: 1 GB</p>
-<p>storage_location:</p>
-<p>type: string</p>
-<p>description: Block storage mount point (filesystem path).</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4 GB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Fedora</p>
-<p>version: 18.0</p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_storage</p>
-<p># Declare template to use with ‘relationship’ keyword</p>
-<p>relationship: storage_attachment</p>
-<p>my_storage:</p>
-<p>type: <a
-href="#tosca.nodes.storage.blockstorage">BlockStorage</a></p>
-<p>properties:</p>
-<p>size: { get_input: storage_size }</p>
-<p>relationship_templates:</p>
-<p>storage_attachment:</p>
-<p>type: <a href="#tosca.relationships.attachesto">AttachesTo</a></p>
-<p>properties:</p>
-<p>location: { get_input: storage_location }</p>
-<p>outputs:</p>
-<p>private_ip:</p>
-<p>description: The private IP address of the newly created compute
-instance.</p>
-<p>value: { get_attribute: [my_server, private_address] }</p>
-<p>volume_id:</p>
-<p>description: The volume id of the block storage instance.</p>
-<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with server and attached block storage using a named Relationship Template for the storage attachment.
 
+topology_template:
+  inputs:
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+    storage_size:
+      type: scalar-unit.size
+      description: Size of the storage to be created.
+      default: 1 GB
+    storage_location:
+      type: string
+      description: Block storage mount point (filesystem path).
+
+  node_templates:
+    my_server:
+      type: Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 4 GB
+        os:
+          properties:
+            architecture: x86_64 
+            type: Linux  
+            distribution: Fedora  
+            version: 18.0
+      requirements:
+        - local_storage: 
+            node: my_storage
+            # Declare template to use with ‘relationship’ keyword
+            relationship: storage_attachment
+
+    my_storage:
+      type: BlockStorage
+      properties:
+        size: { get_input: storage_size }
+
+  relationship_templates:
+    storage_attachment:
+      type: AttachesTo
+      properties:
+        location: { get_input: storage_location }
+
+  outputs:
+    private_ip:
+      description: The private IP address of the newly created compute instance.
+      value: { get_attribute: [my_server, private_address] }
+    volume_id:
+      description: The volume id of the block storage instance.
+      value: { get_attribute: [my_storage, volume_id] }
+```
 ### Block Storage 4: Single Block Storage shared by 2-Tier Application with custom AttachesTo Type and implied relationships
 
 #### Description
@@ -5374,106 +5248,95 @@ collisions.
 <img src="media/image29.png" style="width:5.9474in;height:4.23704in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with a Single Block Storage node shared by 2-Tier Application
-with custom AttachesTo Type and implied relationships.</p>
-<p>relationship_types:</p>
-<p>MyAttachesTo:</p>
-<p>derived_from: tosca.relationships.AttachesTo</p>
-<p>properties:</p>
-<p>location:</p>
-<p>type: string</p>
-<p>default: /default_location</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>storage_size:</p>
-<p>type: scalar-unit.size</p>
-<p>default: 1 GB</p>
-<p>description: Size of the storage to be created.</p>
-<p>storage_snapshot_id:</p>
-<p>type: string</p>
-<p>description: &gt;</p>
-<p>Optional identifier for an existing snapshot to use when creating
-storage.</p>
-<p>node_templates:</p>
-<p>my_web_app_tier_1:</p>
-<p>type: <a
-href="#tosca.nodes.abstract.compute">tosca.nodes.Compute</a></p>
-<p>capabilities:<br />
-host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Fedora</p>
-<p>version: 18.0</p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_storage</p>
-<p>relationship: MyAttachesTo</p>
-<p>my_web_app_tier_2:</p>
-<p>type: <a
-href="#tosca.nodes.abstract.compute">tosca.nodes.Compute</a></p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Fedora</p>
-<p>version: 18.0</p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_storage</p>
-<p>relationship:</p>
-<p>type: MyAttachesTo</p>
-<p>properties:</p>
-<p>location: /some_other_data_location</p>
-<p>my_storage:</p>
-<p>type:
-tosca.nodes.Storage.BlockStoragetosca.nodes.Storage.BlockStorage</p>
-<p>properties:</p>
-<p>size: { get_input: storage_size }</p>
-<p>snapshot_id: { get_input: storage_snapshot_id }</p>
-<p>outputs:</p>
-<p>private_ip_1:</p>
-<p>description: The private IP address of the application’s first
-tier.</p>
-<p>value: { get_attribute: [my_web_app_tier_1, private_address] }</p>
-<p>private_ip_2:</p>
-<p>description: The private IP address of the application’s second
-tier.</p>
-<p>value: { get_attribute: [my_web_app_tier_2, private_address] }</p>
-<p>volume_id:</p>
-<p>description: The volume id of the block storage instance.</p>
-<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with a Single Block Storage node shared by 2-Tier Application with custom AttachesTo Type and implied relationships.
 
+relationship_types:
+  MyAttachesTo:
+    derived_from: tosca.relationships.AttachesTo
+    properties: 
+      location:
+        type: string
+        default: /default_location
+
+topology_template:
+  inputs:
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+    storage_size:
+      type: scalar-unit.size
+      default: 1 GB
+      description: Size of the storage to be created.
+    storage_snapshot_id:
+      type: string
+      description: >
+        Optional identifier for an existing snapshot to use when creating storage.    
+
+  node_templates:
+    my_web_app_tier_1:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: Fedora
+            version: 18.0
+      requirements:
+        - local_storage: 
+            node: my_storage
+            relationship: MyAttachesTo
+
+    my_web_app_tier_2:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: Fedora
+            version: 18.0
+      requirements:
+        - local_storage: 
+            node: my_storage
+            relationship: 
+              type: MyAttachesTo
+              properties:
+                location: /some_other_data_location
+
+    my_storage:
+      type: tosca.nodes.Storage.BlockStoragetosca.nodes.Storage.BlockStorage
+      properties:
+        size: { get_input: storage_size }
+        snapshot_id: { get_input: storage_snapshot_id }
+
+  outputs:
+    private_ip_1:
+      description: The private IP address of the application’s first tier.
+      value: { get_attribute: [my_web_app_tier_1, private_address] }
+    private_ip_2:
+      description: The private IP address of the application’s second tier.
+      value: { get_attribute: [my_web_app_tier_2, private_address] }
+    volume_id:
+      description: The volume id of the block storage instance.
+      value: { get_attribute: [my_storage, volume_id] }
+```
 ### Block Storage 5: Single Block Storage shared by 2-Tier Application with custom AttachesTo Type and explicit Relationship Templates
 
 #### Description
@@ -5492,113 +5355,107 @@ collisions.
 <img src="media/image30.png" style="width:5.19659in;height:3.73611in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with a single Block Storage node shared by 2-Tier Application
-with custom AttachesTo Type and explicit Relationship Templates.</p>
-<p>relationship_types:</p>
-<p>MyAttachesTo:</p>
-<p>derived_from: tosca.relationships.AttachesTo</p>
-<p>properties:</p>
-<p>location:</p>
-<p>type: string</p>
-<p>default: /default_location</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>storage_size:</p>
-<p>type: scalar-unit.size</p>
-<p>default: 1 GB</p>
-<p>description: Size of the storage to be created.</p>
-<p>storage_snapshot_id:</p>
-<p>type: string</p>
-<p>description: &gt;</p>
-<p>Optional identifier for an existing snapshot to use when creating
-storage.</p>
-<p>storage_location:</p>
-<p>type: string</p>
-<p>description: &gt;</p>
-<p>Block storage mount point (filesystem path).</p>
-<p>node_templates:</p>
-<p>my_web_app_tier_1:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Fedora</p>
-<p>version: 18.0</p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_storage</p>
-<p>relationship: storage_attachesto_1</p>
-<p>my_web_app_tier_2:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Fedora</p>
-<p>version: 18.0</p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_storage</p>
-<p>relationship: storage_attachesto_2</p>
-<p>my_storage:</p>
-<p>type: tosca.nodes.Storage.BlockStorage</p>
-<p>properties:</p>
-<p>size: { get_input: storage_size }</p>
-<p>snapshot_id: { get_input: storage_snapshot_id }</p>
-<p>relationship_templates:</p>
-<p>storage_attachesto_1:</p>
-<p>type: MyAttachesTo</p>
-<p>properties:</p>
-<p>location: /my_data_location</p>
-<p>storage_attachesto_2:</p>
-<p>type: MyAttachesTo</p>
-<p>properties:</p>
-<p>location: /some_other_data_location</p>
-<p>outputs:</p>
-<p>private_ip_1:</p>
-<p>description: The private IP address of the application’s first
-tier.</p>
-<p>value: { get_attribute: [my_web_app_tier_1, private_address] }</p>
-<p>private_ip_2:</p>
-<p>description: The private IP address of the application’s second
-tier.</p>
-<p>value: { get_attribute: [my_web_app_tier_2, private_address] }</p>
-<p>volume_id:</p>
-<p>description: The volume id of the block storage instance.</p>
-<p>value: { get_attribute: [my_storage, volume_id] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with a single Block Storage node shared by 2-Tier Application with custom AttachesTo Type and explicit Relationship Templates.
 
+relationship_types:
+  MyAttachesTo:
+    derived_from: tosca.relationships.AttachesTo
+    properties: 
+      location:
+        type: string
+        default: /default_location
+
+topology_template:
+  inputs:
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+    storage_size:
+      type: scalar-unit.size
+      default: 1 GB
+      description: Size of the storage to be created.
+    storage_snapshot_id:
+      type: string
+      description: >
+        Optional identifier for an existing snapshot to use when creating storage.
+    storage_location:
+      type: string
+      description: >
+        Block storage mount point (filesystem path).
+
+  node_templates:
+
+    my_web_app_tier_1:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: Fedora
+            version: 18.0
+      requirements:
+        - local_storage:
+            node: my_storage
+            relationship: storage_attachesto_1
+
+    my_web_app_tier_2:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: Fedora
+            version: 18.0
+      requirements:
+        - local_storage: 
+            node: my_storage
+            relationship: storage_attachesto_2
+
+    my_storage:
+      type: tosca.nodes.Storage.BlockStorage
+      properties:
+        size: { get_input: storage_size }
+        snapshot_id: { get_input: storage_snapshot_id }
+
+  relationship_templates:
+    storage_attachesto_1:
+      type: MyAttachesTo
+      properties:
+        location: /my_data_location
+
+    storage_attachesto_2:
+      type: MyAttachesTo
+      properties:
+        location: /some_other_data_location
+  outputs:
+    private_ip_1:
+      description: The private IP address of the application’s first tier.
+      value: { get_attribute: [my_web_app_tier_1, private_address] }
+    private_ip_2:
+      description: The private IP address of the application’s second tier.
+      value: { get_attribute: [my_web_app_tier_2, private_address] }
+    volume_id:
+      description: The volume id of the block storage instance.
+      value: { get_attribute: [my_storage, volume_id] }
+```
 ### Block Storage 6: Multiple Block Storage attached to different Servers
 
 #### Description
@@ -5612,110 +5469,101 @@ using the normative AttachesTo relationship.
 <img src="media/image31.png" style="width:4.93864in;height:3.84195in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with 2 servers each with different attached block storage.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>storage_size:</p>
-<p>type: scalar-unit.size</p>
-<p>default: 1 GB</p>
-<p>description: Size of the storage to be created.</p>
-<p>storage_snapshot_id:</p>
-<p>type: string</p>
-<p>description: &gt;</p>
-<p>Optional identifier for an existing snapshot to use when creating
-storage.</p>
-<p>storage_location:</p>
-<p>type: string</p>
-<p>description: &gt;</p>
-<p>Block storage mount point (filesystem path).</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Fedora</p>
-<p>version: 18.0</p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_storage</p>
-<p>relationship:</p>
-<p>type: AttachesTo</p>
-<p>properties:</p>
-<p>location: { get_input: storage_location }</p>
-<p>my_storage:</p>
-<p>type: tosca.nodes.Storage.BlockStorage</p>
-<p>properties:</p>
-<p>size: { get_input: storage_size }</p>
-<p>snapshot_id: { get_input: storage_snapshot_id }</p>
-<p>my_server2:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Fedora</p>
-<p>version: 18.0</p>
-<p>requirements:</p>
-<p>- local_storage:</p>
-<p>node: my_storage2</p>
-<p>relationship:</p>
-<p>type: AttachesTo</p>
-<p>properties:</p>
-<p>location: { get_input: storage_location }</p>
-<p>my_storage2:</p>
-<p>type: tosca.nodes.Storage.BlockStorage</p>
-<p>properties:</p>
-<p>size: { get_input: storage_size }</p>
-<p>snapshot_id: { get_input: storage_snapshot_id }</p>
-<p>outputs:</p>
-<p>server_ip_1:</p>
-<p>description: The private IP address of the application’s first
-server.</p>
-<p>value: { get_attribute: [my_server, private_address] }</p>
-<p>server_ip_2:</p>
-<p>description: The private IP address of the application’s second
-server.</p>
-<p>value: { get_attribute: [my_server2, private_address] }</p>
-<p>volume_id_1:</p>
-<p>description: The volume id of the first block storage instance.</p>
-<p>value: { get_attribute: [my_storage, volume_id] }</p>
-<p>volume_id_2:</p>
-<p>description: The volume id of the second block storage instance.</p>
-<p>value: { get_attribute: [my_storage2, volume_id] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with 2 servers each with different attached block storage.
 
+topology_template:
+  inputs:
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+    storage_size:
+      type: scalar-unit.size
+      default: 1 GB
+      description: Size of the storage to be created.
+    storage_snapshot_id:
+      type: string
+      description: >
+        Optional identifier for an existing snapshot to use when creating storage.
+    storage_location:
+      type: string
+      description: >
+        Block storage mount point (filesystem path).
+
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: Fedora
+            version: 18.0
+      requirements:
+         - local_storage: 
+             node: my_storage
+             relationship: 
+               type: AttachesTo
+               properties:
+                 location: { get_input: storage_location }
+    my_storage:
+      type: tosca.nodes.Storage.BlockStorage
+      properties:
+        size: { get_input: storage_size }
+        snapshot_id: { get_input: storage_snapshot_id }
+
+    my_server2:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: Fedora
+            version: 18.0
+      requirements:
+         - local_storage: 
+             node: my_storage2
+             relationship: 
+               type: AttachesTo
+               properties:
+                 location: { get_input: storage_location }
+    my_storage2:
+      type: tosca.nodes.Storage.BlockStorage
+      properties:
+        size: { get_input: storage_size }
+        snapshot_id: { get_input: storage_snapshot_id }
+
+  outputs:
+    server_ip_1:
+      description: The private IP address of the application’s first server.
+      value: { get_attribute: [my_server, private_address] }
+    server_ip_2:
+      description: The private IP address of the application’s second server.
+      value: { get_attribute: [my_server2, private_address] }
+    volume_id_1:
+      description: The volume id of the first block storage instance.
+      value: { get_attribute: [my_storage, volume_id] }
+    volume_id_2:
+      description: The volume id of the second block storage instance.
+      value: { get_attribute: [my_storage2, volume_id] }
+```
 ### Object Storage 1: Creating an Object Storage service
 
 #### Description
@@ -5725,32 +5573,25 @@ server.</p>
 <img src="media/image32.png" style="width:2.23276in;height:1.85in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>Tosca template for creating an object storage service.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>objectstore_name:</p>
-<p>type: string</p>
-<p>node_templates:</p>
-<p>obj_store_server:</p>
-<p>type: tosca.nodes.Storage.ObjectStorage</p>
-<p>properties:</p>
-<p>name: { get_input: objectstore_name }</p>
-<p>size: 4096 MB</p>
-<p>maxsize: 20 GB</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+    Tosca template for creating an object storage service.
+
+topology_template:
+  inputs:
+    objectstore_name:
+      type: string
+
+  node_templates:
+    obj_store_server:
+      type: tosca.nodes.Storage.ObjectStorage
+      properties:
+        name: { get_input: objectstore_name }
+        size: 4096 MB
+        maxsize: 20 GB
+```
 
 ### Network 1: Server bound to a new network
 
@@ -5767,56 +5608,51 @@ in the Network node.
 <img src="media/image33.png" style="width:5.35417in;height:2.97985in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with 1 server bound to a new network</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>network_name:</p>
-<p>type: string</p>
-<p>description: Network name</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: 1</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: CirrOS</p>
-<p>version: 0.3.2</p>
-<p>my_network:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties:</p>
-<p>network_name: { get_input: network_name }</p>
-<p>ip_version: 4</p>
-<p>cidr: '192.168.0.0/24'</p>
-<p>start_ip: '192.168.0.50'</p>
-<p>end_ip: '192.168.0.200'</p>
-<p>gateway_ip: '192.168.0.1'</p>
-<p>my_port:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>requirements:</p>
-<p>- binding: my_server</p>
-<p>- link: my_network</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with 1 server bound to a new network
 
+topology_template:
+
+  inputs:
+    network_name:
+      type: string
+      description: Network name
+
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: 1
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: CirrOS
+            version: 0.3.2
+
+    my_network:
+      type: tosca.nodes.network.Network
+      properties:
+        network_name: { get_input: network_name }
+        ip_version: 4
+        cidr: '192.168.0.0/24'
+        start_ip: '192.168.0.50'
+        end_ip: '192.168.0.200'
+        gateway_ip: '192.168.0.1'
+
+    my_port:
+      type: tosca.nodes.network.Port
+      requirements:
+        - binding: my_server
+        - link: my_network
+```
 ### Network 2: Server bound to an existing network
 
 #### Description
@@ -5830,53 +5666,47 @@ network.
 <img src="media/image34.png" style="width:5.30538in;height:2.61111in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with 1 server bound to an existing network</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>network_name:</p>
-<p>type: string</p>
-<p>description: Network name</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: 1</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: CirrOS</p>
-<p>version: 0.3.2</p>
-<p>my_network:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties:</p>
-<p>network_name: { get_input: network_name }</p>
-<p>my_port:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>requirements:</p>
-<p>- binding:</p>
-<p>node: my_server</p>
-<p>- link:</p>
-<p>node: my_network</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with 1 server bound to an existing network
 
+topology_template:
+  inputs:
+    network_name:
+      type: string
+      description: Network name
+
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host: 
+          properties:
+            disk_size: 10 GB
+            num_cpus: 1
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: CirrOS
+            version: 0.3.2
+
+    my_network:
+      type: tosca.nodes.network.Network
+      properties:
+        network_name: { get_input: network_name }
+
+    my_port:
+      type: tosca.nodes.network.Port
+      requirements:
+        - binding:
+            node: my_server
+        - link:
+            node: my_network
+```
 ### Network 3: Two servers bound to a single network
 
 #### Description
@@ -5889,86 +5719,83 @@ same Network (node) using two logical network Ports.
 <img src="media/image35.png" style="width:5.90278in;height:3.46613in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with 2 servers bound to the 1 network</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>network_name:</p>
-<p>type: string</p>
-<p>description: Network name</p>
-<p>network_cidr:</p>
-<p>type: string</p>
-<p>default: 10.0.0.0/24</p>
-<p>description: CIDR for the network</p>
-<p>network_start_ip:</p>
-<p>type: string</p>
-<p>default: 10.0.0.100</p>
-<p>description: Start IP for the allocation pool</p>
-<p>network_end_ip:</p>
-<p>type: string</p>
-<p>default: 10.0.0.150</p>
-<p>description: End IP for the allocation pool</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: 1</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: CirrOS</p>
-<p>version: 0.3.2</p>
-<p>my_server2:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: 1</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: CirrOS</p>
-<p>version: 0.3.2</p>
-<p>my_network:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties:</p>
-<p>ip_version: 4</p>
-<p>cidr: { get_input: network_cidr }</p>
-<p>network_name: { get_input: network_name }</p>
-<p>start_ip: { get_input: network_start_ip }</p>
-<p>end_ip: { get_input: network_end_ip }</p>
-<p>my_port:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>requirements:</p>
-<p>- binding: my_server</p>
-<p>- link: my_network</p>
-<p>my_port2:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>requirements:</p>
-<p>- binding: my_server2</p>
-<p>- link: my_network</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with 2 servers bound to the 1 network
 
+topology_template:
+
+  inputs:
+    network_name:
+      type: string
+      description: Network name
+    network_cidr:
+      type: string
+      default: 10.0.0.0/24
+      description: CIDR for the network
+    network_start_ip:
+      type: string
+      default: 10.0.0.100
+      description: Start IP for the allocation pool
+    network_end_ip:
+      type: string
+      default: 10.0.0.150
+      description: End IP for the allocation pool
+
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: 1
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: CirrOS
+            version: 0.3.2
+
+    my_server2:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: 1
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: CirrOS
+            version: 0.3.2
+
+    my_network:
+      type: tosca.nodes.network.Network
+      properties:
+        ip_version: 4
+        cidr: { get_input: network_cidr }
+        network_name: { get_input: network_name }
+        start_ip: { get_input: network_start_ip }
+        end_ip: { get_input: network_end_ip }
+
+    my_port:
+      type: tosca.nodes.network.Port
+      requirements:
+        - binding: my_server
+        - link: my_network
+
+    my_port2:
+      type: tosca.nodes.network.Port
+      requirements:
+        - binding: my_server2
+        - link: my_network
+```
 ### Network 4: Server bound to three networks
 
 #### Description
@@ -5982,74 +5809,72 @@ node).
 <img src="media/image36.png" style="width:5.83333in;height:4.00579in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with 1 server bound to 3 networks</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>my_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: 1</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: CirrOS</p>
-<p>version: 0.3.2</p>
-<p>my_network1:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties:</p>
-<p>cidr: '192.168.1.0/24'</p>
-<p>network_name: net1</p>
-<p>my_network2:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties:</p>
-<p>cidr: '192.168.2.0/24'</p>
-<p>network_name: net2</p>
-<p>my_network3:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties:</p>
-<p>cidr: '192.168.3.0/24'</p>
-<p>network_name: net3</p>
-<p>my_port1:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>properties:</p>
-<p>order: 0</p>
-<p>requirements:</p>
-<p>- binding: my_server</p>
-<p>- link: my_network1</p>
-<p>my_port2:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>properties:</p>
-<p>order: 1</p>
-<p>requirements:</p>
-<p>- binding: my_server</p>
-<p>- link: my_network2</p>
-<p>my_port3:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>properties:</p>
-<p>order: 2</p>
-<p>requirements:</p>
-<p>- binding: my_server</p>
-<p>- link: my_network3</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with 1 server bound to 3 networks
 
+topology_template:
+
+  node_templates:
+    my_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: 1
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64
+            type: Linux
+            distribution: CirrOS
+            version: 0.3.2
+
+    my_network1:
+      type: tosca.nodes.network.Network
+      properties:
+        cidr: '192.168.1.0/24'
+        network_name: net1
+
+    my_network2:
+      type: tosca.nodes.network.Network
+      properties:
+        cidr: '192.168.2.0/24'
+        network_name: net2
+
+    my_network3:
+      type: tosca.nodes.network.Network
+      properties:
+        cidr: '192.168.3.0/24'
+        network_name: net3
+
+    my_port1:
+      type: tosca.nodes.network.Port
+      properties:
+        order: 0
+      requirements:
+        - binding: my_server
+        - link: my_network1
+
+    my_port2:
+      type: tosca.nodes.network.Port
+      properties:
+        order: 1
+      requirements:
+        - binding: my_server
+        - link: my_network2
+
+    my_port3:
+      type: tosca.nodes.network.Port
+      properties:
+        order: 2
+      requirements:
+        - binding: my_server
+        - link: my_network3
+```
 ### WebServer-DBMS 1: WordPress + MySQL, single instance
 
 #### Description
@@ -6062,263 +5887,172 @@ database hosted on a single server (instance).
 <img src="media/image37.png" style="width:4.5242in;height:4.64525in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with WordPress, a web server, a MySQL DBMS hosting the
-application’s database content on the same server. Does not have input
-defaults or constraints.</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>db_name:</p>
-<p>type: string</p>
-<p>description: The name of the database.</p>
-<p>db_user:</p>
-<p>type: string</p>
-<p>description: The username of the DB user.</p>
-<p>db_pwd:</p>
-<p>type: string</p>
-<p>description: The WordPress database admin account password.</p>
-<p>db_root_pwd:</p>
-<p>type: string</p>
-<p>description: Root password for MySQL.</p>
-<p>db_port:</p>
-<p>type: <a href="#tosca.datatypes.network.portdef">PortDef</a></p>
-<p>description: Port for the MySQL database</p>
-<p>node_templates:</p>
-<p>wordpress:</p>
-<p>type: tosca.nodes.WebApplication.WordPress</p>
-<p>properties:</p>
-<p>context_root: { get_input: context_root }</p>
-<p>requirements:</p>
-<p>- host: webserver</p>
-<p>- database_endpoint: mysql_database</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: <a
-href="#UC_2_WORDPRESS_INSTALL_SH">wordpress_install.sh</a></p>
-<p>configure:</p>
-<p>implementation: <a
-href="#UC_2_WORDPRESS_CONFIGURE_SH">wordpress_configure.sh</a></p>
-<p>inputs:</p>
-<p>wp_db_name: { get_property: [ mysql_database, name ] }</p>
-<p>wp_db_user: { get_property: [ mysql_database, user ] }</p>
-<p>wp_db_password: { get_property: [ mysql_database, password ] }</p>
-<p># In my own template, find requirement/capability, find port
-property</p>
-<p>wp_db_port: { get_property: [ SELF, database_endpoint, port ] }</p>
-<p>mysql_database:</p>
-<p>type: <a href="#tosca.nodes.database">Database</a></p>
-<p>properties:</p>
-<p>name: { get_input: db_name }</p>
-<p>user: { get_input: db_user }</p>
-<p>password: { get_input: db_pwd }</p>
-<p>port: { get_input: db_port }</p>
-<p>capabilities:</p>
-<p>database_endpoint:</p>
-<p>properties:</p>
-<p>port: { get_input: db_port }</p>
-<p>requirements:</p>
-<p>- host: mysql_dbms</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure: <a
-href="#UC_2_MYSQL_DATABASE_CONFIGURE_SH">mysql_database_configure.sh</a></p>
-<p>mysql_dbms:</p>
-<p>type: <a href="#tosca.nodes.dbms">DBMS</a></p>
-<p>properties:</p>
-<p>root_password: { get_input: db_root_pwd }</p>
-<p>port: { get_input: db_port }</p>
-<p>requirements:</p>
-<p>- host: server</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>inputs:</p>
-<p>db_root_password: { get_property: [ mysql_dbms, root_password ] }</p>
-<p>create: <a
-href="#UC_2_MYSQL_DBMS_INSTALL_SH">mysql_dbms_install.sh</a></p>
-<p>start: <a
-href="#UC_2_MYSQL_DBMS_START_SH">mysql_dbms_start.sh</a></p>
-<p>configure: <a
-href="#UC_2_MYSQL_DBMS_CONFIGURE_SH">mysql_dbms_configure</a>.sh</p>
-<p>webserver:</p>
-<p>type: <a href="#tosca.nodes.webserver">WebServer</a></p>
-<p>requirements:</p>
-<p>- host: server</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: <a
-href="#UC_2_WEBSERVER_INSTALL_SH">webserver_install.sh</a></p>
-<p>start: <a href="#UC_2_WEBSERVER_START_SH">webserver_start.sh</a></p>
-<p>server:</p>
-<p>type: <a href="#tosca.nodes.abstract.compute">Compute</a></p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties:</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: cpus }</p>
-<p>mem_size: 4096 MB</p>
-<p>os:</p>
-<p>properties:</p>
-<p>architecture: x86_64</p>
-<p>type: linux</p>
-<p>distribution: fedora</p>
-<p>version: 17.0</p>
-<p>outputs:</p>
-<p>website_url:</p>
-<p>description: URL for Wordpress wiki.</p>
-<p>value: { get_attribute: [server, public_address] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with WordPress, a web server, a MySQL DBMS hosting the application’s database content on the same server. Does not have input defaults or constraints.
 
+topology_template:
+  inputs:
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+    db_name:
+      type: string
+      description: The name of the database.
+    db_user:
+      type: string
+      description: The username of the DB user.
+    db_pwd:
+      type: string
+      description: The WordPress database admin account password.
+    db_root_pwd:
+      type: string
+      description: Root password for MySQL.
+    db_port:
+      type: PortDef
+      description: Port for the MySQL database
+
+  node_templates:
+    wordpress:
+      type: tosca.nodes.WebApplication.WordPress
+      properties: 
+        context_root: { get_input: context_root }
+      requirements:
+        - host: webserver
+        - database_endpoint: mysql_database
+      interfaces:
+        Standard:
+          create: wordpress_install.sh
+          configure: 
+            implementation: wordpress_configure.sh            
+            inputs:
+              wp_db_name: { get_property: [ mysql_database, name ] }
+              wp_db_user: { get_property: [ mysql_database, user ] }
+              wp_db_password: { get_property: [ mysql_database, password ] }   
+              # In my own template, find requirement/capability, find port property
+              wp_db_port: { get_property: [ SELF, database_endpoint, port ] }
+
+    mysql_database:
+      type: Database
+      properties:
+        name: { get_input: db_name } 
+        user: { get_input: db_user }
+        password: { get_input: db_pwd }
+        port: { get_input: db_port }
+      capabilities:
+        database_endpoint:
+          properties:
+            port: { get_input: db_port }
+      requirements:
+        - host: mysql_dbms
+      interfaces:
+        Standard:
+          configure: mysql_database_configure.sh
+
+    mysql_dbms:
+      type: DBMS
+      properties:
+        root_password: { get_input: db_root_pwd }
+        port: { get_input: db_port }
+      requirements:
+        - host: server
+      interfaces:
+        Standard:              
+          inputs:
+              db_root_password: { get_property: [ mysql_dbms, root_password ] }
+          create: mysql_dbms_install.sh
+          start: mysql_dbms_start.sh
+          configure: mysql_dbms_configure.sh
+
+    webserver:
+      type: WebServer
+      requirements:
+        - host: server
+      interfaces:
+        Standard:
+          create: webserver_install.sh
+          start: webserver_start.sh
+	  
+    server:
+      type: Compute
+      capabilities:
+        host:
+          properties:
+            disk_size: 10 GB
+            num_cpus: { get_input: cpus }
+            mem_size: 4096 MB
+        os:
+          properties:
+            architecture: x86_64 
+            type: linux  
+            distribution: fedora  
+            version: 17.0
+
+  outputs:
+    website_url:
+      description: URL for Wordpress wiki.
+      value: { get_attribute: [server, public_address] }
+```
 #### Sample scripts
 
 Where the referenced implementation scripts in the example above would
 have the following contents
 
 ##### wordpress_install.sh
-
-| yum -y install wordpress |
-|--------------------------|
+```
+yum -y install wordpress
+```
 
 ##### wordpress_configure.sh
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>sed -i "/Deny from All/d" /etc/httpd/conf.d/wordpress.conf</p>
-<p>sed -i "s/Require local/Require all granted/"
-/etc/httpd/conf.d/wordpress.conf</p>
-<p>sed -i s/database_name_here/name/ /etc/wordpress/wp-config.php</p>
-<p>sed -i s/username_here/user/ /etc/wordpress/wp-config.php</p>
-<p>sed -i s/password_here/password/ /etc/wordpress/wp-config.php</p>
-<p>systemctl restart httpd.service</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+sed -i "/Deny from All/d" /etc/httpd/conf.d/wordpress.conf
+sed -i "s/Require local/Require all granted/" /etc/httpd/conf.d/wordpress.conf
+sed -i s/database_name_here/name/ /etc/wordpress/wp-config.php
+sed -i s/username_here/user/ /etc/wordpress/wp-config.php
+sed -i s/password_here/password/ /etc/wordpress/wp-config.php
+systemctl restart httpd.service
+```
 ##### mysql_database_configure.sh
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Setup MySQL root password and create user</p>
-<p>cat &lt;&lt; EOF | mysql -u root --password=db_root_password</p>
-<p>CREATE DATABASE name;</p>
-<p>GRANT ALL PRIVILEGES ON name.* TO "user"@"localhost"</p>
-<p>IDENTIFIED BY "password";</p>
-<p>FLUSH PRIVILEGES;</p>
-<p>EXIT</p>
-<p>EOF</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Setup MySQL root password and create user
+cat << EOF | mysql -u root --password=db_root_password
+CREATE DATABASE name;
+GRANT ALL PRIVILEGES ON name.* TO "user"@"localhost"
+IDENTIFIED BY "password";
+FLUSH PRIVILEGES;
+EXIT
+EOF
+```
 ##### mysql_dbms_install.sh
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>yum -y install mysql mysql-server</p>
-<p># Use systemd to start MySQL server at system boot time</p>
-<p>systemctl enable mysqld.service</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+yum -y install mysql mysql-server
+# Use systemd to start MySQL server at system boot time
+systemctl enable mysqld.service
+```
 
 ##### mysql_dbms_start.sh
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Start the MySQL service (NOTE: may already be started at image
-boot time)</p>
-<p>systemctl start mysqld.service</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Start the MySQL service (NOTE: may already be started at image boot time)
+systemctl start mysqld.service
+```
 ##### mysql_dbms_configure
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Set the MySQL server root password</p>
-<p>mysqladmin -u root password db_root_password</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```
+# Set the MySQL server root password 
+mysqladmin -u root password db_root_password
+```
 
 ##### webserver_install.sh
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>yum -y install httpd</p>
-<p>systemctl enable httpd.service</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+yum -y install httpd
+systemctl enable httpd.service
+```
 ##### webserver_start.sh
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># Start the httpd service (NOTE: may already be started at image
-boot time)</p>
-<p>systemctl start httpd.service</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
+```
+# Start the httpd service (NOTE: may already be started at image boot time)
+systemctl start httpd.service
+```
 ### WebServer-DBMS 2: Nodejs with PayPal Sample App and MongoDB on separate instances 
 
 #### Description
@@ -6333,112 +6067,112 @@ relationship.
 <img src="media/image38.png" style="width:5.54167in;height:4.46357in" />
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with a nodejs web server hosting a PayPal sample application
-which connects to a mongodb database.</p>
-<p>imports:</p>
-<p>- custom_types/paypalpizzastore_nodejs_app.yaml</p>
-<p>dsl_definitions:</p>
-<p>ubuntu_node: &amp;ubuntu_node</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: my_cpus }</p>
-<p>mem_size: 4096 MB</p>
-<p>os_capabilities: &amp;os_capabilities</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Ubuntu</p>
-<p>version: 14.04</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>my_cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>default: 1</p>
-<p>github_url:</p>
-<p>type: string</p>
-<p>description: The URL to download nodejs.</p>
-<p>default: https://github.com/sample.git</p>
-<p>node_templates:</p>
-<p>paypal_pizzastore:</p>
-<p>type: tosca.nodes.WebApplication.PayPalPizzaStore</p>
-<p>properties:</p>
-<p>github_url: { get_input: github_url }</p>
-<p>requirements:</p>
-<p>- host:nodejs</p>
-<p>- database_connection: mongo_db</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>implementation: scripts/nodejs/configure.sh</p>
-<p>inputs:</p>
-<p>github_url: { get_property: [ SELF, github_url ] }</p>
-<p>mongodb_ip: { get_attribute: [mongo_server, private_address] }</p>
-<p>start: scriptsscripts/nodejs/start.sh</p>
-<p>nodejs:</p>
-<p>type: tosca.nodes.WebServer.Nodejs</p>
-<p>requirements:</p>
-<p>- host: app_server</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: scripts/nodejs/create.sh</p>
-<p>mongo_db:</p>
-<p>type: tosca.nodes.Database</p>
-<p>requirements:</p>
-<p>- host: mongo_dbms</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: create_database.sh</p>
-<p>mongo_dbms:</p>
-<p>type: tosca.nodes.DBMS</p>
-<p>requirements:</p>
-<p>- host: mongo_server</p>
-<p>properties:</p>
-<p>port: 27017</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.node.lifecycle.Standard:</p>
-<p>create: mongodb/create.sh</p>
-<p>configure:</p>
-<p>implementation: mongodb/config.sh</p>
-<p>inputs:</p>
-<p>mongodb_ip: { get_attribute: [mongo_server, private_address] }</p>
-<p>start: mongodb/start.sh</p>
-<p>mongo_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>os:</p>
-<p>properties: *os_capabilities</p>
-<p>host:</p>
-<p>properties: *ubuntu_node</p>
-<p>app_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>os:</p>
-<p>properties: *os_capabilities</p>
-<p>host:</p>
-<p>properties: *ubuntu_node</p>
-<p>outputs:</p>
-<p>nodejs_url:</p>
-<p>description: URL for the nodejs server, http://&lt;IP&gt;:3000</p>
-<p>value: { get_attribute: [app_server, private_address] }</p>
-<p>mongodb_url:</p>
-<p>description: URL for the mongodb server.</p>
-<p>value: { get_attribute: [ mongo_server, private_address ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with a nodejs web server hosting a PayPal sample application which connects to a mongodb database.
 
+imports:
+  - custom_types/paypalpizzastore_nodejs_app.yaml
+
+dsl_definitions:
+    ubuntu_node: &ubuntu_node
+      disk_size: 10 GB
+      num_cpus: { get_input: my_cpus }
+      mem_size: 4096 MB
+    os_capabilities: &os_capabilities
+      architecture: x86_64
+      type: Linux
+      distribution: Ubuntu
+      version: 14.04
+
+topology_template:
+  inputs:
+    my_cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+      default: 1
+    github_url:
+       type: string
+       description: The URL to download nodejs.
+       default:  https://github.com/sample.git
+
+  node_templates:
+
+    paypal_pizzastore:
+      type: tosca.nodes.WebApplication.PayPalPizzaStore
+      properties:
+          github_url: { get_input: github_url }
+      requirements:
+        - host:nodejs
+        - database_connection: mongo_db
+      interfaces:
+        Standard:
+           configure:
+             implementation: scripts/nodejs/configure.sh
+             inputs:
+               github_url: { get_property: [ SELF, github_url ] }
+               mongodb_ip: { get_attribute: [mongo_server, private_address] }
+           start: scriptsscripts/nodejs/start.sh
+  
+    nodejs:
+      type: tosca.nodes.WebServer.Nodejs
+      requirements:
+        - host: app_server
+      interfaces:
+        Standard:
+          create: scripts/nodejs/create.sh
+
+    mongo_db:
+      type: tosca.nodes.Database
+      requirements:
+        - host: mongo_dbms
+      interfaces:
+        Standard:
+         create: create_database.sh
+
+    mongo_dbms:
+      type: tosca.nodes.DBMS
+      requirements:
+        - host: mongo_server
+      properties:
+        port: 27017
+      interfaces:
+        tosca.interfaces.node.lifecycle.Standard:
+          create: mongodb/create.sh
+          configure:
+            implementation: mongodb/config.sh
+            inputs:
+              mongodb_ip: { get_attribute: [mongo_server, private_address] }
+          start: mongodb/start.sh
+
+    mongo_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        os:
+          properties: *os_capabilities
+        host:
+          properties: *ubuntu_node
+
+    app_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        os:
+          properties: *os_capabilities
+        host:
+          properties: *ubuntu_node
+
+  outputs:
+    nodejs_url:
+      description: URL for the nodejs server, http://<IP>:3000
+      value: { get_attribute: [app_server, private_address] }
+    mongodb_url:
+      description: URL for the mongodb server.
+      value: { get_attribute: [ mongo_server, private_address ] }
+```
 #### Notes:
 
 - Scripts referenced in this example are assumed to be placed by the
@@ -6472,222 +6206,223 @@ This use case also demonstrates:
 TheThe following YAML is the primary template (i.e., the
 Entry-Definition) for the overall use case. The imported YAML for the
 various subcomponents are not shown here for brevity.
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>This TOSCA deploys nodejs, mongodb, elasticsearch, logstash and
-kibana each on a separate server with monitoring enabled for nodejs
-server where a sample nodejs application is running. The syslog and
-collectd are installed on a nodejs server.</p>
-<p>imports:</p>
-<p>- paypalpizzastore_nodejs_app.yaml</p>
-<p>- elasticsearch.yaml</p>
-<p>- logstash.yaml</p>
-<p>- kibana.yaml</p>
-<p>- collectd.yaml</p>
-<p>- rsyslog.yaml</p>
-<p>dsl_definitions:</p>
-<p>host_capabilities: &amp;host_capabilities</p>
-<p># container properties (flavor)</p>
-<p>disk_size: 10 GB</p>
-<p>num_cpus: { get_input: my_cpus }</p>
-<p>mem_size: 4096 MB</p>
-<p>os_capabilities: &amp;os_capabilities</p>
-<p>architecture: x86_64</p>
-<p>type: Linux</p>
-<p>distribution: Ubuntu</p>
-<p>version: 14.04</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>my_cpus:</p>
-<p>type: integer</p>
-<p>description: Number of CPUs for the server.</p>
-<p>constraints:</p>
-<p>- valid_values: [ 1, 2, 4, 8 ]</p>
-<p>github_url:</p>
-<p>type: string</p>
-<p>description: The URL to download nodejs.</p>
-<p>default: https://github.com/sample.git</p>
-<p>node_templates:</p>
-<p>paypal_pizzastore:</p>
-<p>type: tosca.nodes.WebApplication.PayPalPizzaStore</p>
-<p>properties:</p>
-<p>github_url: { get_input: github_url }</p>
-<p>requirements:</p>
-<p>- host: nodejs</p>
-<p>- database_connection: mongo_db</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>configure:</p>
-<p>implementation: scripts/nodejs/configure.sh</p>
-<p>inputs:</p>
-<p>github_url: { get_property: [ SELF, github_url ] }</p>
-<p>mongodb_ip: { get_attribute: [mongo_server, private_address] }</p>
-<p>start: scripts/nodejs/start.sh</p>
-<p>nodejs:</p>
-<p>type: tosca.nodes.WebServer.Nodejs</p>
-<p>requirements:</p>
-<p>- host: app_server</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: scripts/nodejs/create.sh</p>
-<p>mongo_db:</p>
-<p>type: tosca.nodes.Database</p>
-<p>requirements:</p>
-<p>- host: mongo_dbms</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create: create_database.sh</p>
-<p>mongo_dbms:</p>
-<p>type: tosca.nodes.DBMS</p>
-<p>requirements:</p>
-<p>- host: mongo_server</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.node.lifecycle.Standard:</p>
-<p>create: scripts/mongodb/create.sh</p>
-<p>configure:</p>
-<p>implementation: scripts/mongodb/config.sh</p>
-<p>inputs:</p>
-<p>mongodb_ip: { get_attribute: [mongo_server, ip_address] }</p>
-<p>start: scripts/mongodb/start.sh</p>
-<p>elasticsearch:</p>
-<p>type: tosca.nodes.SoftwareComponent.Elasticsearch</p>
-<p>requirements:</p>
-<p>- host: elasticsearch_server</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.node.lifecycle.Standard:</p>
-<p>create: scripts/elasticsearch/create.sh</p>
-<p>start: scripts/elasticsearch/start.sh</p>
-<p>logstash:</p>
-<p>type: tosca.nodes.SoftwareComponent.Logstash</p>
-<p>requirements:</p>
-<p>- host: logstash_server</p>
-<p>- search_endpoint: elasticsearch</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.relationship.Configure:</p>
-<p>pre_configure_source:</p>
-<p>implementation: python/logstash/configure_elasticsearch.py</p>
-<p>input:</p>
-<p>elasticsearch_ip: { get_attribute: [elasticsearch_server, ip_address]
-}</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.node.lifecycle.Standard:</p>
-<p>create: scripts/lostash/create.sh</p>
-<p>configure: scripts/logstash/config.sh</p>
-<p>start: scripts/logstash/start.sh</p>
-<p>kibana:</p>
-<p>type: tosca.nodes.SoftwareComponent.Kibana</p>
-<p>requirements:</p>
-<p>- host: kibana_server</p>
-<p>- search_endpoint: elasticsearch</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.node.lifecycle.Standard:</p>
-<p>create: scripts/kibana/create.sh</p>
-<p>configure:</p>
-<p>implementation: scripts/kibana/config.sh</p>
-<p>input:</p>
-<p>elasticsearch_ip: { get_attribute: [elasticsearch_server, ip_address]
-}</p>
-<p>kibana_ip: { get_attribute: [kibana_server, ip_address] }</p>
-<p>start: scripts/kibana/start.sh</p>
-<p>app_collectd:</p>
-<p>type: tosca.nodes.SoftwareComponent.Collectd</p>
-<p>requirements:</p>
-<p>- host: app_server</p>
-<p>- collectd_endpoint: logstash</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.relationship.Configure:</p>
-<p>pre_configure_target:</p>
-<p>implementation: python/logstash/configure_collectd.py</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.node.lifecycle.Standard:</p>
-<p>create: scripts/collectd/create.sh</p>
-<p>configure:</p>
-<p>implementation: python/collectd/config.py</p>
-<p>input:</p>
-<p>logstash_ip: { get_attribute: [logstash_server, ip_address] }</p>
-<p>start: scripts/collectd/start.sh</p>
-<p>app_rsyslog:</p>
-<p>type: tosca.nodes.SoftwareComponent.Rsyslog</p>
-<p>requirements:</p>
-<p>- host: app_server</p>
-<p>- rsyslog_endpoint: logstash</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.relationship.Configure:</p>
-<p>pre_configure_target:</p>
-<p>implementation: python/logstash/configure_rsyslog.py</p>
-<p>interfaces:</p>
-<p>tosca.interfaces.node.lifecycle.Standard:</p>
-<p>create: scripts/rsyslog/create.sh</p>
-<p>configure:</p>
-<p>implementation: scripts/rsyslog/config.sh</p>
-<p>input:</p>
-<p>logstash_ip: { get_attribute: [logstash_server, ip_address] }</p>
-<p>start: scripts/rsyslog/start.sh</p>
-<p>app_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties: *host_capabilities</p>
-<p>os:</p>
-<p>properties: *os_capabilities</p>
-<p>mongo_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties: *host_capabilities</p>
-<p>os:</p>
-<p>properties: *os_capabilities</p>
-<p>elasticsearch_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties: *host_capabilities</p>
-<p>os:</p>
-<p>properties: *os_capabilities</p>
-<p>logstash_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties: *host_capabilities</p>
-<p>os:</p>
-<p>properties: *os_capabilities</p>
-<p>kibana_server:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>host:</p>
-<p>properties: *host_capabilities</p>
-<p>os:</p>
-<p>properties: *os_capabilities</p>
-<p>outputs:</p>
-<p>nodejs_url:</p>
-<p>description: URL for the nodejs server.</p>
-<p>value: { get_attribute: [ app_server, private_address ] }</p>
-<p>mongodb_url:</p>
-<p>description: URL for the mongodb server.</p>
-<p>value: { get_attribute: [ mongo_server, private_address ] }</p>
-<p>elasticsearch_url:</p>
-<p>description: URL for the elasticsearch server.</p>
-<p>value: { get_attribute: [ elasticsearch_server, private_address ]
-}</p>
-<p>logstash_url:</p>
-<p>description: URL for the logstash server.</p>
-<p>value: { get_attribute: [ logstash_server, private_address ] }</p>
-<p>kibana_url:</p>
-<p>description: URL for the kibana server.</p>
-<p>value: { get_attribute: [ kibana_server, private_address ] }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  This TOSCA deploys nodejs, mongodb, elasticsearch, logstash and kibana each on a separate server with monitoring enabled for nodejs server where a sample nodejs application is running. The syslog and collectd are installed on a nodejs server.
 
+imports:
+  - paypalpizzastore_nodejs_app.yaml
+  - elasticsearch.yaml
+  - logstash.yaml
+  - kibana.yaml
+  - collectd.yaml
+  - rsyslog.yaml
+
+dsl_definitions:
+    host_capabilities: &host_capabilities
+      # container properties (flavor)
+      disk_size: 10 GB
+      num_cpus: { get_input: my_cpus }
+      mem_size: 4096 MB
+    os_capabilities: &os_capabilities
+      architecture: x86_64
+      type: Linux
+      distribution: Ubuntu
+      version: 14.04
+
+topology_template:
+  inputs:
+    my_cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      constraints:
+        - valid_values: [ 1, 2, 4, 8 ]
+    github_url:
+       type: string
+       description: The URL to download nodejs.
+       default: https://github.com/sample.git
+  
+  node_templates:
+    paypal_pizzastore:
+      type: tosca.nodes.WebApplication.PayPalPizzaStore
+      properties:
+          github_url: { get_input: github_url }
+      requirements:
+        - host: nodejs
+        - database_connection: mongo_db
+      interfaces:
+        Standard:
+           configure:
+             implementation: scripts/nodejs/configure.sh
+             inputs:
+               github_url: { get_property: [ SELF, github_url ] }
+               mongodb_ip: { get_attribute: [mongo_server, private_address] }
+           start: scripts/nodejs/start.sh
+  
+    nodejs:
+      type: tosca.nodes.WebServer.Nodejs
+      requirements:
+        - host: app_server
+      interfaces:
+        Standard:
+          create: scripts/nodejs/create.sh
+
+    mongo_db:
+      type: tosca.nodes.Database
+      requirements:
+        - host: mongo_dbms
+      interfaces:
+        Standard:
+         create: create_database.sh
+
+    mongo_dbms:
+      type: tosca.nodes.DBMS
+      requirements:
+        - host: mongo_server
+      interfaces:
+        tosca.interfaces.node.lifecycle.Standard:
+          create: scripts/mongodb/create.sh
+          configure: 
+            implementation: scripts/mongodb/config.sh
+            inputs: 
+              mongodb_ip: { get_attribute: [mongo_server, ip_address] }
+          start: scripts/mongodb/start.sh
+
+    elasticsearch:
+      type: tosca.nodes.SoftwareComponent.Elasticsearch
+      requirements:
+        - host: elasticsearch_server
+      interfaces:
+        tosca.interfaces.node.lifecycle.Standard:
+          create: scripts/elasticsearch/create.sh
+          start: scripts/elasticsearch/start.sh
+    logstash:
+      type: tosca.nodes.SoftwareComponent.Logstash
+      requirements:
+        - host: logstash_server
+        - search_endpoint: elasticsearch
+          interfaces:
+            tosca.interfaces.relationship.Configure:
+              pre_configure_source:
+                implementation: python/logstash/configure_elasticsearch.py
+                input:
+                  elasticsearch_ip: { get_attribute: [elasticsearch_server, ip_address] }
+      interfaces:
+        tosca.interfaces.node.lifecycle.Standard:
+          create: scripts/lostash/create.sh
+          configure: scripts/logstash/config.sh
+          start: scripts/logstash/start.sh
+
+    kibana:
+      type: tosca.nodes.SoftwareComponent.Kibana
+      requirements:
+        - host: kibana_server
+        - search_endpoint: elasticsearch
+      interfaces:
+        tosca.interfaces.node.lifecycle.Standard:
+          create: scripts/kibana/create.sh
+          configure:
+            implementation: scripts/kibana/config.sh
+            input:
+              elasticsearch_ip: { get_attribute: [elasticsearch_server, ip_address] }
+              kibana_ip: { get_attribute: [kibana_server, ip_address] }
+          start: scripts/kibana/start.sh
+
+    app_collectd:
+      type: tosca.nodes.SoftwareComponent.Collectd
+      requirements:
+        - host: app_server
+        - collectd_endpoint: logstash
+          interfaces:
+            tosca.interfaces.relationship.Configure:
+              pre_configure_target:
+                implementation: python/logstash/configure_collectd.py
+      interfaces:
+        tosca.interfaces.node.lifecycle.Standard:
+          create: scripts/collectd/create.sh
+          configure:
+            implementation: python/collectd/config.py
+            input:
+              logstash_ip: { get_attribute: [logstash_server, ip_address] }
+          start: scripts/collectd/start.sh
+
+    app_rsyslog:
+      type: tosca.nodes.SoftwareComponent.Rsyslog
+      requirements:
+        - host: app_server
+        - rsyslog_endpoint: logstash
+          interfaces:
+            tosca.interfaces.relationship.Configure:
+              pre_configure_target:
+                implementation: python/logstash/configure_rsyslog.py
+      interfaces:
+        tosca.interfaces.node.lifecycle.Standard:
+          create: scripts/rsyslog/create.sh
+          configure:
+            implementation: scripts/rsyslog/config.sh
+            input:
+              logstash_ip: { get_attribute: [logstash_server, ip_address] }
+          start: scripts/rsyslog/start.sh
+
+    app_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties: *host_capabilities
+        os:
+          properties: *os_capabilities
+
+    mongo_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties: *host_capabilities
+        os:
+          properties: *os_capabilities
+
+    elasticsearch_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties: *host_capabilities
+        os:
+          properties: *os_capabilities
+
+    logstash_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties: *host_capabilities
+        os:
+          properties: *os_capabilities
+
+    kibana_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        host:
+          properties: *host_capabilities
+        os:
+          properties: *os_capabilities
+
+  outputs:
+    nodejs_url:
+      description: URL for the nodejs server.
+      value: { get_attribute: [ app_server, private_address ] }
+    mongodb_url:
+      description: URL for the mongodb server.
+      value: { get_attribute: [ mongo_server, private_address ] }
+    elasticsearch_url:
+      description: URL for the elasticsearch server.
+      value: { get_attribute: [ elasticsearch_server, private_address ] }
+    logstash_url:
+      description: URL for the logstash server.
+      value: { get_attribute: [ logstash_server, private_address ] }
+    kibana_url:
+      description: URL for the kibana server.
+      value: { get_attribute: [ kibana_server, private_address ] }
+```
 #### Sample scripts
 
 Where the referenced implementation scripts in the example above would
@@ -6718,71 +6453,63 @@ This use case also demonstrates:
 #### Sample YAML
 
 #####  Two Docker “Container” nodes (Only) with Docker Requirements 
+```
+tosca_definitions_version: tosca_2_0
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: &gt;</p>
-<p>TOSCA with wordpress, web server and mysql on the same server.</p>
-<p># Repositories to retrieve code artifacts from</p>
-<p>repositories:</p>
-<p>docker_hub: https://registry.hub.docker.com/</p>
-<p>topology_template:</p>
-<p>inputs:</p>
-<p>wp_host_port:</p>
-<p>type: integer</p>
-<p>description: The host port that maps to port 80 of the WordPress
-container.</p>
-<p>db_root_pwd:</p>
-<p>type: string</p>
-<p>description: Root password for MySQL.</p>
-<p>node_templates:</p>
-<p># The MYSQL container based on official MySQL image in Docker hub</p>
-<p>mysql_container:</p>
-<p>type: tosca.nodes.Container.Application.Docker</p>
-<p>capabilities:</p>
-<p># This is a capability that would mimic the Docker –link feature</p>
-<p>database_link: tosca.capabilities.Docker.Link</p>
-<p>artifacts:</p>
-<p>my_image:</p>
-<p>file: mysql</p>
-<p>type: tosca.artifacts.Deployment.Image.Container.Docker</p>
-<p>repository: docker_hub</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create:</p>
-<p>implementation: my_image</p>
-<p>inputs:</p>
-<p>db_root_password: { get_input: db_root_pwd }</p>
-<p># The WordPress container based on official WordPress image in Docker
-hub</p>
-<p>wordpress_container:</p>
-<p>type: tosca.nodes.Container.Application.Docker</p>
-<p>requirements:</p>
-<p>- database_link: mysql_container</p>
-<p>artifacts:</p>
-<p>my_image:</p>
-<p>file: wordpress</p>
-<p>type: tosca.artifacts.Deployment.Image.Container.Docker</p>
-<p>repository: docker_hub</p>
-<p>&lt;metadata-link&gt; : &lt;topology_artifact_name&gt; # defined
-outside and linked to from here</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create:</p>
-<p>implementation: my_image</p>
-<p>inputs:</p>
-<p>host_port: { get_input: wp_host_port }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+description: >
+  TOSCA with wordpress, web server and mysql on the same server.
 
+# Repositories to retrieve code artifacts from 
+repositories:
+  docker_hub: https://registry.hub.docker.com/
+
+topology_template:
+
+  inputs:
+    wp_host_port:
+      type: integer
+      description: The host port that maps to port 80 of the WordPress container.
+    db_root_pwd:
+      type: string
+      description: Root password for MySQL.
+
+  node_templates:
+    # The MYSQL container based on official MySQL image in Docker hub
+    mysql_container:
+      type: tosca.nodes.Container.Application.Docker
+      capabilities:
+        # This is a capability that would mimic the Docker –link feature
+        database_link: tosca.capabilities.Docker.Link
+      artifacts:
+        my_image: 
+          file: mysql
+          type: tosca.artifacts.Deployment.Image.Container.Docker
+          repository: docker_hub
+      interfaces:
+        Standard:
+          create:
+            implementation: my_image
+            inputs:
+              db_root_password: { get_input: db_root_pwd }
+
+    # The WordPress container based on official WordPress image in Docker hub
+    wordpress_container:
+      type: tosca.nodes.Container.Application.Docker
+      requirements:
+        - database_link: mysql_container
+      artifacts:
+        my_image: 
+          file: wordpress
+          type: tosca.artifacts.Deployment.Image.Container.Docker
+          repository: docker_hub
+          <metadata-link> : <topology_artifact_name> # defined outside and linked to from here
+      interfaces:
+        Standard:
+          create:
+            implementation: my_image
+            inputs:
+              host_port: { get_input: wp_host_port }
+```
 ### Artifacts: Compute Node with Multiple Artifacts
 
 #### Description
@@ -6792,45 +6519,36 @@ a node for different lifecycle operations of a node (create, terminate,
 configure, etc.)
 
 #### Sample YAML
+```
+tosca_definitions_version: tosca_2_0
+description: Sample tosca archive to illustrate use of a node with multiple artifacts for different life cycle operations of the node
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Sample tosca archive to illustrate use of a node with
-multiple artifacts for different life cycle operations of the node</p>
-<p>topology_template :</p>
-<p>node_templates :</p>
-<p>dbServer:</p>
-<p>   type: tosca.nodes.Compute</p>
-<p>   properties:</p>
-<p>     name: dbServer</p>
-<p>     description: </p>
-<p>     artifacts:</p>
-<p>       - sw_image:</p>
-<p>          type: tosca.artifacts.Deployment.SwImage</p>
-<p>file: <a
-href="http://1.1.1.1/images/ubuntu-14.04.qcow2">http://1.1.1.1/images/ubuntu-14.04.qcow2</a></p>
-<p>           name: ubuntu-14.04</p>
-<p>version: 14.04</p>
-<p>          checksum: e5c1e205f62f3</p>
-<p>      - configuration:</p>
-<p>         type: tosca.artifacts.Implementation.Ansible</p>
-<p>          file:
-implementation/configuration/Ansible/configure.yml</p>
-<p>         version: 2.0</p>
-<p>     - terminate:</p>
-<p>        type: tosca.artifacts.Implementation.scripts</p>
-<p>         file: implementation/configuration/scripts/terminate.sh</p>
-<p>        version: 6.2</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+topology_template :
+
+  node_templates :
+    dbServer:
+      type: tosca.nodes.Compute
+      properties:
+        name: dbServer
+        description:  
+        artifacts:
+          - sw_image:
+              type: tosca.artifacts.Deployment.SwImage
+              file: http://1.1.1.1/images/ubuntu-14.04.qcow2
+              name: ubuntu-14.04
+              version: 14.04
+              checksum: e5c1e205f62f3 
+
+         - configuration:
+             type: tosca.artifacts.Implementation.Ansible
+             file: implementation/configuration/Ansible/configure.yml
+             version: 2.0
+
+        - terminate:
+            type: tosca.artifacts.Implementation.scripts
+            file: implementation/configuration/scripts/terminate.sh
+            version: 6.2
+```
 
 # TOSCA networking use cases
 
@@ -7126,447 +6844,7 @@ DHCP_ENABLED=false. See this illustrated in the figure below:
 
 <img src="media/image45.emf" style="width:5.86111in;height:4.88889in" />
 
-## Network Types
 
-### tosca.nodes.network.Network
-
-The TOSCA Network node represents a simple, logical network service.
-
-| Shorthand Name      | Network                     |
-|---------------------|-----------------------------|
-| Type Qualified Name | tosca:Network               |
-| Type URI            | tosca.nodes.network.Network |
-
-#### Properties
-
-<table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 11%" />
-<col style="width: 9%" />
-<col style="width: 15%" />
-<col style="width: 47%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Required</th>
-<th>Type</th>
-<th>Constraints</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>ip_version</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_INTEGER">integer</a></td>
-<td><p>valid_values: [4, 6]</p>
-<p>default: 4</p></td>
-<td>The IP version of the requested network</td>
-</tr>
-<tr class="even">
-<td>cidr</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td>The cidr block of the requested network</td>
-</tr>
-<tr class="odd">
-<td>start_ip</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td>The IP address to be used as the 1<sup>st</sup> one in a pool of
-addresses derived from the cidr block full IP range</td>
-</tr>
-<tr class="even">
-<td>end_ip</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td>The IP address to be used as the last one in a pool of addresses
-derived from the cidr block full IP range</td>
-</tr>
-<tr class="odd">
-<td>gateway_ip</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td>The gateway IP address.</td>
-</tr>
-<tr class="even">
-<td>network_name</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td><p>An Identifier that represents an existing Network instance in the
-underlying cloud infrastructure – OR – be used as the name of the new
-created network.</p>
-<ul>
-<li><p>If network_name is provided along with network_id they will be
-used to uniquely identify an existing network and not creating a new
-one, means all other possible properties are not allowed.</p></li>
-<li><p>network_name should be more convenient for using. But in case
-that network name uniqueness is not guaranteed then one should provide a
-network_id as well.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>network_id</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td><p>An Identifier that represents an existing Network instance in the
-underlying cloud infrastructure.</p>
-<p>This property is mutually exclusive with all other properties except
-network_name.</p>
-<ul>
-<li><p>Appearance of network_id in network template instructs the Tosca
-container to use an existing network instead of creating a new
-one.</p></li>
-<li><p>network_name should be more convenient for using. But in case
-that network name uniqueness is not guaranteed then one should add a
-network_id as well.</p></li>
-<li><p>network_name and network_id can be still used together to achieve
-both uniqueness and convenient.</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>segmentation_id</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td>A segmentation identifier in the underlying cloud infrastructure
-(e.g., VLAN id, GRE tunnel id). If the segmentation_id is specified, the
-network_type or physical_network properties should be provided as
-well.</td>
-</tr>
-<tr class="odd">
-<td>network_type</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td>Optionally, specifies the nature of the physical network in the
-underlying cloud infrastructure. Examples are flat, vlan, gre or vxlan.
-For flat and vlan types, physical_network should be provided too.</td>
-</tr>
-<tr class="even">
-<td>physical_network</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td>Optionally, identifies the physical network on top of which the
-network is implemented, e.g. physnet1. This property is required if
-network_type is flat or vlan.</td>
-</tr>
-<tr class="odd">
-<td>dhcp_enabled</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_BOOLEAN">boolean</a></td>
-<td>default: true</td>
-<td>Indicates the TOSCA container to create a virtual network instance
-with or without a DHCP service.</td>
-</tr>
-</tbody>
-</table>
-
-#### Attributes
-
-| Name            | Required | Type                        | Constraints | Description                                                                                               |
-|-----------------|----------|-----------------------------|-------------|-----------------------------------------------------------------------------------------------------------|
-| segmentation_id | no       | [string](#TYPE_YAML_STRING) | None        | The actual *segmentation_id* that is been assigned to the network by the underlying cloud infrastructure. |
-
-#### Definition
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.nodes.network.Network:</p>
-<p>derived_from: <a href="#tosca.nodes.root">tosca.nodes.Root</a></p>
-<p>properties:</p>
-<p>ip_version:</p>
-<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
-<p>required: false</p>
-<p>default: 4</p>
-<p>constraints:</p>
-<p>- valid_values: [ 4, 6 ]</p>
-<p>cidr:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>start_ip:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>end_ip:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>gateway_ip:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>network_name:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>network_id:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>segmentation_id:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>network_type:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>physical_network:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>capabilities:</p>
-<p>link:</p>
-<p>type: <a
-href="#DEFN_TYPE_CAPABILITIES_NETWORK_LINKABLE">tosca.capabilities.network.Linkable</a></p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-### tosca.nodes.network.Port
-
-The TOSCA Port node represents a logical entity that associates between
-Compute and Network normative types.
-
-The Port node type effectively represents a single virtual NIC on the
-Compute node instance.
-
-| Shorthand Name      | Port                     |
-|---------------------|--------------------------|
-| Type Qualified Name | tosca:Port               |
-| Type URI            | tosca.nodes.network.Port |
-
-#### Properties
-
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 11%" />
-<col style="width: 10%" />
-<col style="width: 16%" />
-<col style="width: 46%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Required</th>
-<th>Type</th>
-<th>Constraints</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>ip_address</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_INTEGER">string</a></td>
-<td>None</td>
-<td><p>Allow the user to set a fixed IP address.</p>
-<p>Note that this address is a request to the provider which they will
-attempt to fulfill but may not be able to dependent on the network the
-port is associated with.</p></td>
-</tr>
-<tr class="even">
-<td>order</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_INTEGER">integer</a></td>
-<td><p>greater_or_equal: 0</p>
-<p>default: 0</p></td>
-<td><p>The order of the NIC on the compute instance (e.g. eth2).</p>
-<p><strong>Note</strong>: when binding more than one port to a single
-compute (aka multi vNICs) and ordering is desired, it is *mandatory*
-that all ports will be set with an order value and. The <em>order</em>
-values must represent a positive, arithmetic progression that starts
-with 0 (e.g. 0, 1, 2, …, n).</p></td>
-</tr>
-<tr class="odd">
-<td>is_default</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_BOOLEAN">boolean</a></td>
-<td>default: false</td>
-<td><p>Set is_default=true to apply a default gateway route on the
-running compute instance to the associated network gateway.</p>
-<p>Only one port that is associated to single compute node can set as
-default=true.</p></td>
-</tr>
-<tr class="even">
-<td>ip_range_start</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td><p>Defines the starting IP of a range to be allocated for the
-compute instances that are associated by this Port.</p>
-<p>Without setting this property the IP allocation is done from the
-entire CIDR block of the network.</p></td>
-</tr>
-<tr class="odd">
-<td>ip_range_end</td>
-<td>no</td>
-<td><a href="#TYPE_YAML_STRING">string</a></td>
-<td>None</td>
-<td><p>Defines the ending IP of a range to be allocated for the compute
-instances that are associated by this Port.</p>
-<p>Without setting this property the IP allocation is done from the
-entire CIDR block of the network.</p></td>
-</tr>
-</tbody>
-</table>
-
-#### Attributes
-
-| Name       | Required | Type                        | Constraints | Description                                                          |
-|------------|----------|-----------------------------|-------------|----------------------------------------------------------------------|
-| ip_address | no       | [string](#TYPE_YAML_STRING) | None        | The IP address would be assigned to the associated compute instance. |
-
-#### Definition
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.nodes.network.Port:</p>
-<p>derived_from: tosca.nodes.Root</p>
-<p>properties:</p>
-<p>ip_address:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>order:</p>
-<p>type: <a href="#TYPE_YAML_INTEGER">integer</a></p>
-<p>required: true</p>
-<p>default: 0</p>
-<p>constraints:</p>
-<p>- greater_or_equal: 0</p>
-<p>is_default:</p>
-<p>type: <a href="#TYPE_YAML_BOOLEAN">boolean</a></p>
-<p>required: false</p>
-<p>default: false</p>
-<p>ip_range_start:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>ip_range_end:</p>
-<p>type: <a href="#TYPE_YAML_STRING">string</a></p>
-<p>required: false</p>
-<p>requirements:</p>
-<p>- link:</p>
-<p>capability: <a
-href="#DEFN_TYPE_CAPABILITIES_NETWORK_LINKABLE">tosca.capabilities.network.Linkable</a></p>
-<p>relationship: <a
-href="#DEFN_TYPE_RELATIONSHIPS_NETWORK_LINKSTO">tosca.relationships.network.LinksTo</a></p>
-<p>- binding:</p>
-<p>capability: <a
-href="#tosca.capabilities.network.bindable">tosca.capabilities.network.Bindable</a></p>
-<p>relationship: <a
-href="#DEFN_TYPE_RELATIONSHIPS_NETWORK_BINDTO">tosca.relationships.network.BindsTo</a></p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-### tosca.capabilities.network.Linkable
-
-A node type that includes the Linkable capability indicates that it can
-be pointed to by a
-[tosca.relationships.network.LinksTo](#DEFN_TYPE_RELATIONSHIPS_NETWORK_CONNECTS)
-relationship type.
-
-| Shorthand Name      | Linkable                            |
-|---------------------|-------------------------------------|
-| Type Qualified Name | tosca:.Linkable                     |
-| Type URI            | tosca.capabilities.network.Linkable |
-
-#### Properties
-
-| Name | Required | Type | Constraints | Description |
-|------|----------|------|-------------|-------------|
-| N/A  | N/A      | N/A  | N/A         | N/A         |
-
-#### Definition
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.capabilities.network.Linkable:</p>
-<p>derived_from: <a
-href="#tosca.capabilities.node">tosca.capabilities.Node</a></p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-### tosca.relationships.network.LinksTo
-
-This relationship type represents an association relationship between
-Port and Network node types.
-
-| Shorthand Name      | LinksTo                             |
-|---------------------|-------------------------------------|
-| Type Qualified Name | tosca:LinksTo                       |
-| Type URI            | tosca.relationships.network.LinksTo |
-
-#### Definition
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.relationships.network.LinksTo:</p>
-<p>derived_from: <a
-href="#tosca.relationships.dependson-1">tosca.relationships.DependsOn</a></p>
-<p>valid_target_types: [ <a
-href="#DEFN_TYPE_CAPABILITIES_NETWORK_LINKABLE">tosca.capabilities.network.Linkable</a>
-]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-### tosca.relationships.network.BindsTo
-
-This type represents a network association relationship between Port and
-Compute node types.
-
-| Shorthand Name      | network.BindsTo                     |
-|---------------------|-------------------------------------|
-| Type Qualified Name | tosca:BindsTo                       |
-| Type URI            | tosca.relationships.network.BindsTo |
-
-#### Definition
-
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca.relationships.network.BindsTo:</p>
-<p>derived_from: <a
-href="#tosca.relationships.dependson-1">tosca.relationships.DependsOn</a></p>
-<p>valid_target_types: [ <a
-href="#tosca.capabilities.network.bindable">tosca.capabilities.network.Bindable</a>
-]</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
 
 ## Network modeling approaches
 
@@ -7625,72 +6903,71 @@ application designer which packs it into the application CSAR.
 Figure‑8: Service template with network template B
 
 The node templates for these three networks would be defined as follows:
+```
+node_templates:
+  frontend:
+    type: tosca.nodes.Compute
+    properties: # omitted for brevity
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>frontend:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>properties: # omitted for brevity</p>
-<p>backend:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>properties: # omitted for brevity</p>
-<p>database:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>properties: # omitted for brevity</p>
-<p>oam_network:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties: # omitted for brevity</p>
-<p>admin_network:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties: # omitted for brevity</p>
-<p>data_network:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties: # omitted for brevity</p>
-<p># ports definition</p>
-<p>fe_oam_net_port:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>properties:</p>
-<p>is_default: true</p>
-<p>ip_range_start: { get_input: fe_oam_net_ip_range_start }</p>
-<p>ip_range_end: { get_input: fe_oam_net_ip_range_end }</p>
-<p>requirements:</p>
-<p>- link: oam_network</p>
-<p>- binding: frontend</p>
-<p>fe_admin_net_port:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>requirements:</p>
-<p>- link: admin_network</p>
-<p>- binding: frontend</p>
-<p>be_admin_net_port:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>properties:</p>
-<p>order: 0</p>
-<p>requirements:</p>
-<p>- link: admin_network</p>
-<p>- binding: backend</p>
-<p>be_data_net_port:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>properties:</p>
-<p>order: 1</p>
-<p>requirements:</p>
-<p>- link: data_network</p>
-<p>- binding: backend</p>
-<p>db_data_net_port:</p>
-<p>type: tosca.nodes.network.Port</p>
-<p>requirements:</p>
-<p>- link: data_network</p>
-<p>- binding: database</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  backend:
+    type: tosca.nodes.Compute
+    properties: # omitted for brevity
 
+  database:
+    type: tosca.nodes.Compute
+    properties: # omitted for brevity
+
+  oam_network:
+    type: tosca.nodes.network.Network
+    properties: # omitted for brevity 
+
+  admin_network:
+    type: tosca.nodes.network.Network
+    properties: # omitted for brevity  
+
+  data_network:
+    type: tosca.nodes.network.Network
+    properties: # omitted for brevity 
+  
+  # ports definition
+  fe_oam_net_port:
+    type: tosca.nodes.network.Port
+    properties:
+      is_default: true
+      ip_range_start: { get_input: fe_oam_net_ip_range_start }
+      ip_range_end: { get_input: fe_oam_net_ip_range_end } 
+    requirements:
+      - link: oam_network 
+      - binding: frontend
+      
+  fe_admin_net_port:
+    type: tosca.nodes.network.Port
+    requirements:
+      - link: admin_network 
+      - binding: frontend
+      
+  be_admin_net_port:
+    type: tosca.nodes.network.Port
+    properties:
+       order: 0
+    requirements:
+      - link: admin_network 
+      - binding: backend
+      
+  be_data_net_port:
+    type: tosca.nodes.network.Port
+    properties:
+       order: 1
+    requirements:
+      - link: data_network 
+      - binding: backend
+
+  db_data_net_port:
+    type: tosca.nodes.network.Port
+    requirements:      
+      - link: data_network
+      - binding: database
+```
 ### Option 2: Specifying network requirements within the application’s Service Template
 
 This approach allows the Service Template designer to map an endpoint to
@@ -7699,54 +6976,47 @@ a logical network.
 The use case shown below examines a way to express in the TOSCA YAML
 service template a typical 3-tier application with their required
 networking modeling:
+```
+node_templates:
+  frontend:
+    type: tosca.nodes.Compute
+    properties: # omitted for brevity
+    requirements:
+      - network_oam: oam_network
+      - network_admin: admin_network
+  backend:
+    type: tosca.nodes.Compute
+    properties: # omitted for brevity
+    requirements:
+      - network_admin: admin_network 
+      - network_data: data_network
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>node_templates:</p>
-<p>frontend:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>properties: # omitted for brevity</p>
-<p>requirements:</p>
-<p>- network_oam: oam_network</p>
-<p>- network_admin: admin_network</p>
-<p>backend:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>properties: # omitted for brevity</p>
-<p>requirements:</p>
-<p>- network_admin: admin_network</p>
-<p>- network_data: data_network</p>
-<p>database:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>properties: # omitted for brevity</p>
-<p>requirements:</p>
-<p>- network_data: data_network</p>
-<p>oam_network:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties:</p>
-<p>ip_version: { get_input: oam_network_ip_version }</p>
-<p>cidr: { get_input: oam_network_cidr }</p>
-<p>start_ip: { get_input: oam_network_start_ip }</p>
-<p>end_ip: { get_input: oam_network_end_ip }</p>
-<p>admin_network:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties:</p>
-<p>ip_version: { get_input: admin_network_ip_version }</p>
-<p>dhcp_enabled: { get_input: admin_network_dhcp_enabled }</p>
-<p>data_network:</p>
-<p>type: tosca.nodes.network.Network</p>
-<p>properties:</p>
-<p>ip_version: { get_input: data_network_ip_version }</p>
-<p>cidr: { get_input: data_network_cidr }</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+  database:
+    type: tosca.nodes.Compute
+    properties: # omitted for brevity
+    requirements:
+      - network_data: data_network 
 
+  oam_network:
+    type: tosca.nodes.network.Network
+    properties:
+      ip_version:  { get_input: oam_network_ip_version } 
+      cidr: { get_input: oam_network_cidr }
+      start_ip: { get_input: oam_network_start_ip }
+      end_ip: { get_input: oam_network_end_ip }
+
+  admin_network:
+    type: tosca.nodes.network.Network
+    properties:
+      ip_version:  { get_input: admin_network_ip_version } 
+      dhcp_enabled: { get_input: admin_network_dhcp_enabled }  
+
+  data_network:
+    type: tosca.nodes.network.Network
+    properties:
+	ip_version:  { get_input: data_network_ip_version } 
+       cidr: { get_input: data_network_cidr } 
+```
 # TOSCA Orchestrators
 
 Discuss the following:
@@ -8173,75 +7443,53 @@ these scripts are associated.
 
 We use the following example to illustrate the steps taken by TOSCA
 orchestrators to process shell script artifacts.
+```
+tosca_definitions_version: tosca_2_0
+description: Sample tosca archive to illustrate simple shell script usage.
+template_name: tosca-samples-shell
+template_version: 1.0.0-SNAPSHOT
+template_author: TOSCA TC
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>tosca_definitions_version: tosca_2_0</p>
-<p>description: Sample tosca archive to illustrate simple shell script
-usage.</p>
-<p>template_name: tosca-samples-shell</p>
-<p>template_version: 1.0.0-SNAPSHOT</p>
-<p>template_author: TOSCA TC</p>
-<p>node_types:</p>
-<p>tosca.nodes.samples.LogIp:</p>
-<p>derived_from: tosca.nodes.SoftwareComponent</p>
-<p>description: Simple linux cross platform create script.</p>
-<p>attributes:</p>
-<p>log_attr: { get_operation_output: [SELF, Standard, create, LOG_OUT]
-}</p>
-<p>interfaces:</p>
-<p>Standard:</p>
-<p>create:</p>
-<p>inputs:</p>
-<p>SELF_IP: { get_attribute: [HOST, ip_address] }</p>
-<p>implementation: scripts/create.sh</p>
-<p>topology_template:</p>
-<p>node_templates:</p>
-<p>log_ip:</p>
-<p>type: tosca.nodes.samples.LogIp</p>
-<p>requirements:</p>
-<p>- host:</p>
-<p>node: compute</p>
-<p>capability: tosca.capabilities.Container</p>
-<p>relationship: tosca.relationships.HostedOn</p>
-<p># Any linux compute.</p>
-<p>compute:</p>
-<p>type: tosca.nodes.Compute</p>
-<p>capabilities:</p>
-<p>os:</p>
-<p>properties:</p>
-<p>type: linux</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+node_types:
+  tosca.nodes.samples.LogIp:
+    derived_from: tosca.nodes.SoftwareComponent
+    description: Simple linux cross platform create script.
+    attributes:
+      log_attr: { get_operation_output: [SELF, Standard, create, LOG_OUT] }
+    interfaces:
+      Standard:
+        create:
+          inputs:
+            SELF_IP: { get_attribute: [HOST, ip_address] }
+          implementation: scripts/create.sh
 
+topology_template:
+  node_templates:
+    log_ip:
+      type: tosca.nodes.samples.LogIp
+      requirements:
+        - host:
+            node: compute
+            capability: tosca.capabilities.Container
+            relationship: tosca.relationships.HostedOn
+    # Any linux compute.
+    compute:
+      type: tosca.nodes.Compute
+      capabilities:
+        os:
+          properties:
+            type: linux
+```
 This example uses the following script to install the LogIP software :
+```
+#!/bin/bash
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>#!/bin/bash</p>
-<p># This is exported so available to fetch as output using the
-get_operation_output function</p>
-<p>export LOG_OUT="Create script : $SELF_IP"</p>
-<p># Just a simple example of create operation, of course software
-installation is better</p>
-<p>echo "$LOG_OUT" &gt;&gt; /tmp/tosca_create.log</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+# This is exported so available to fetch as output using the get_operation_output function
+export LOG_OUT="Create script : $SELF_IP"
 
+# Just a simple example of create operation, of course software installation is better
+echo "$LOG_OUT" >> /tmp/tosca_create.log
+```
 For this simple example, the artifact processing steps outlined above
 are as follows:
 
