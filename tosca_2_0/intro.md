@@ -57,6 +57,18 @@ TOSCA Uses model-driven approach:
 - Similarly, changes to external resources are reflected into models
   first and then handled by automationp platform.
 
+## Model-Driven Enable all Lifecycle Management Phases
+
+- Service models are used:
+
+  - As starting point for Moves, Adds, Changes, and Deletions
+    (MACDs)
+
+  - As context for handling faults and events using Closed Loop
+    Automation
+
+- Can't do this without models.
+
 ## TOSCA Models are Graphs
 
 - TOSCA models systems as graphs, where the vertices represent the
@@ -76,17 +88,8 @@ TOSCA Uses model-driven approach:
   and it is the task of the orchestrator to translate descriptions
   into the commands to realize the systems being described.
 
-## Models Enable all Lifecycle Management Phases
-
-- Service models are used:
-
-  - As starting point for Moves, Adds, Changes, and Deletions
-    (MACDs)
-
-  - As context for handling faults and events using Closed Loop
-    Automation
-
-- Declarative approach is used for all phases of a service lifecycle.
+- This is what delivers simplicity. Often referred to as desired state
+  or intent-based orchestration.
 
 # TOSCA Core Concepts
 
