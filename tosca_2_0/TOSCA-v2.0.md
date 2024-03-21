@@ -295,9 +295,52 @@ TOSCA’s automated lifecycle management capabilities.
 
 TOSCA is a domain-specific language for designing services and for
 defining the deployment and run-time management aspects of these
-services with the goal of enabling fully automated service management.
-As such, TOSCA is designed to support all three phases of the service
-lifecycle:
+services with the goal of enabling fully automated service lifecycle
+management.
+
+## TOSCA Entities
+
+> Show a picture with *representations*, *templates*, and *types*
+
+1. TOSCA can manage physical resources in the real world as well as
+   logical or virtual components deployed on those resources. In the
+   context of TOSCA, we will refer to the physical or virtual
+   components under management as *external implementations*. External
+   implementations are the physical or virtual components in the real
+   world that are managed by the TOSCA orchestrator.
+
+2. TOSCA is model driven. It maintains models for each of the
+   components under management and models how these components are
+   assembled into complete systems. These models are referred to as
+   **Representations** .TOSCA orchestrators must keep their internal
+   service representations in sync with the actual state of the
+   external implementations. Note that TOSCA does not standardize an
+   object model for representations. Instead, such models are
+   implementation specific.
+
+3. Representations are created from templates to allow for
+   variability.  .  **TOSCA Templates**: TOSCA templates define
+   (typed) components of a service. For example, service templates
+   include node templates that assign specific values (often using
+   TOSCA intrinsic functions) to the configurable properties defined
+   in the corresponding node types.  It is not uncommon to have
+   multiple node templates of the same node type in a service
+   template.  At deployment time, TOSCA orchestrators combine TOSCA
+   service templates with deployment-specific input values to create
+   run-time representations of the service that is to be deployed and
+   managed.
+
+4. To promote reuse, templates are typed.  *TOSCA Types*: TOSCA types
+   define re-usable building blocks that can be used during service
+   design. For example, TOSCA Node Types define reusable service
+   components, including their configurable properties.  For example,
+   "Node Types" define an externally visible façade of these
+   components as well as the necessary implementations to interact
+   with physical resources. These components are organized in profiles
+   for reuse.
+
+As such, TOSCA is designed to support all three phases of
+the service lifecycle:
 
 1.  **Day 0—Service Design**: Service designers use TOSCA to model
     services as topology graphs that consist of nodes and relationships.
@@ -316,52 +359,6 @@ TOSCA only for service design and delegate orchestration and ongoing
 lifecycle management functionality to external (non-TOSCA)
 orchestrators. Other implementations may decide to use TOSCA for all
 three phases of the service lifecycle.
-
-## TOSCA Entities
-> - Declarative orchestration expects that that models are created from
->  templates.
->
-> - To make this possible, designers define reusable components ("Node
->  Types") that define an externally visible façade of these components
->  as well as the necessary implementations to interact with physical
->  resources. These components are organized in profiles for reuse.
->
-> - TOSCA is perfect for multi-cloud orchestration you
->  describe, since it has built-in support for abstractions. In fact,
->  it has two separate features in support of abstraction: 1. Type
->  derivation (where specialized node types derived from an abstract
->  base type) 2. Substitution mapping (where substituting templates
->  provide internal implementations for abstract types).
-
-<!----
-{"id": "129", "author": "Chris Lauwers", "date": "2021-06-28T23:14:00Z", "comment": "This subsection has been moved here from the Operational Model chapter. We need to revisit where exactly it belongs to make sure the document flows correctly.", "target": "<span class=\"comment-start\" id=\"130\" author=\"Chris Lauwers\" date=\"2021-06-28T23:14:00Z\">Alternatively, we could also move this section into Chapter 5</span>Entities"}-->
-
-When defining services using TOSCA, we must distinguish between four
-kinds of entities:
-
-1.  **TOSCA Types**: TOSCA types define re-usable building blocks that
-    can be used during service design. For example, TOSCA Node Types
-    define reusable service components, including their configurable
-    properties.
-2.  **TOSCA Templates**: TOSCA templates define (typed) components of a
-    service. For example, service templates include node templates that
-    assign specific values (often using TOSCA intrinsic functions) to
-    the configurable properties defined in the corresponding node types.
-    It is not uncommon to have multiple node templates of the same node
-    type in a service template.
-3.  **Representations**: At deployment time, TOSCA implementations
-    combine TOSCA service templates with deployment-specific input
-    values to create run-time representations of the service that is to
-    be deployed and managed. Note that TOSCA does not standardize an
-    object model for representations. Instead, such models are
-    implementation specific.
-4.  **External Implementations**: These are the actual entities in the
-    external world that correspond to the representations managed by the
-    orchestrator. TOSCA implementations that provide runtime service
-    management must keep their internal service representations in sync
-    with the actual state of the external implementations.
-
-> Show a picture with *representations*, *templates*, and *types*
 
 |Term|Definition|
 |---|---|
