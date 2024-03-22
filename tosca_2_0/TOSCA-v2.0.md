@@ -190,7 +190,7 @@ networks, systems, and cloud-native applications.
 
 The TOSCA specification promotes a *model-driven management* approach,
 whereby TOSCA processors maintain service models (*digital twins*) for
-all system componentsk under management.  In a model-driven approach,
+all system components under management. In a model-driven approach,
 all management actions are performed on service models first and then
 propagated to external real-world entities by the automation platform.
 Similarly, changes to external resources are reflected into models
@@ -236,7 +236,7 @@ described. The use of graphs enables this as follows:
 Declarative management is often also referred to as desired state or
 intent-based orchestration.
 
-### TOSCA Supports Modular Design
+### TOSCA Promotes Reuse and Modularity
 
 TOSCA models are based on *service templates* that are created by
 service designers. Service templates consist of node templates and
@@ -291,53 +291,103 @@ This list is by no means intended to be exhaustive and only serves to
 demonstrate the breadth of application domains that can benefit from
 TOSCA’s automated lifecycle management capabilities.
 
-# TOSCA Core Concepts
-
-TOSCA is a domain-specific language for designing services and for
-defining the deployment and run-time management aspects of these
-services with the goal of enabling fully automated service lifecycle
-management.
-
-## TOSCA Entities
+## TOSCA Core Concepts
 
 > Show a picture with *representations*, *templates*, and *types*
 
-1. TOSCA can manage physical resources in the real world as well as
-   logical or virtual components deployed on those resources. In the
-   context of TOSCA, we will refer to the physical or virtual
-   components under management as *external implementations*. External
-   implementations are the physical or virtual components in the real
-   world that are managed by the TOSCA orchestrator.
+As stated above, the TOSCA language is based on a *model-driven*
+management paradigm where management systems maintain models of all
+external components under management. Using model-driven management,
+all management operations are performed on the models first and any
+resulting changes to the models are then propagated to the external
+components. Similarly, any status changes or errors experienced by the
+external components are reflected in the models first before they are
+handled by the management system. The models maintained by the
+management system must capture all aspects of the external components
+that are relevant for the purpose of managing those components.
 
-2. TOSCA is model driven. It maintains models for each of the
-   components under management and models how these components are
-   assembled into complete systems. These models are referred to as
-   **Representations** .TOSCA orchestrators must keep their internal
-   service representations in sync with the actual state of the
-   external implementations. Note that TOSCA does not standardize an
-   object model for representations. Instead, such models are
-   implementation specific.
+External components under management can consist of physical resources
+deployed in the real world as well as logical or virtual components
+provisioned or configured on those resources. In the context of TOSCA,
+we will refer to the physical or virtual components under management
+as **external implementations**, and we will refer to the models as
+**representations**. 
 
-3. Representations are created from templates to allow for
-   variability.  .  **TOSCA Templates**: TOSCA templates define
-   (typed) components of a service. For example, service templates
-   include node templates that assign specific values (often using
-   TOSCA intrinsic functions) to the configurable properties defined
-   in the corresponding node types.  It is not uncommon to have
-   multiple node templates of the same node type in a service
-   template.  At deployment time, TOSCA orchestrators combine TOSCA
-   service templates with deployment-specific input values to create
-   run-time representations of the service that is to be deployed and
-   managed.
+A model-driven management system must include a component that is
+responsible for keeping the *representations* and the *external
+implementations* in sync. In the context of this specification, we
+will refer to this component as the **Orchestrator**. An orchestrator
+may perform this synchronization task based on workflows, policies, or
+other mechanisms that are expressed using statements in the TOSCA
+language, in which case we will refer to the component as a **TOSCA
+Orchestrator**. Alternatively, an orchestrator may also perform this
+task based on domain-specific knowledge that is built-in to the
+orchestrator and not defined using the TOSCA language. This
+specification allows for either approach.
 
-4. To promote reuse, templates are typed.  *TOSCA Types*: TOSCA types
-   define re-usable building blocks that can be used during service
-   design. For example, TOSCA Node Types define reusable service
-   components, including their configurable properties.  For example,
-   "Node Types" define an externally visible façade of these
-   components as well as the necessary implementations to interact
-   with physical resources. These components are organized in profiles
-   for reuse.
+TOSCA representations don't just track individual components and their
+management aspects, they also capture how the various components
+interact to provide resulting system functionality. TOSCA accomplishes
+this by modeling the *topology* of systems using *graphs* where nodes
+in the graph represent the components under management and vertices in
+the graph represent containment, dependencies, interactions, or other
+relationships between these components. In this specification, we use
+the term **service representation** to refer to a graph that models
+the topology of an entire system or subsystem, and we use the terms
+**node representation** and **relationship representation**
+respectively to model the nodes and vertices in a service
+representation graph. Note that TOSCA does not standardize any object
+models or schemas for representations. Instead, such models are
+implementation specific.
+
+The following diagram shows how external implementations are modeled
+using representations, and how the Orchestrators synchronizes the two.
+
+TOSCA service representations shown in the figure above are based on
+designs or blueprints that are created by service designers using the
+TOSCA language. In this specification, we refer to those designs as
+**service templates** and we use the term **TOSCA Processor** to refer
+to the management component that *instantiates* service
+representations based on *service templates*.  Since *service
+representations* are graphs, the *service templates* from which those
+representations are created are themselves graphs as well. Service
+templates consist of **node templates** from which node
+representations are created, and **relationship templates** from which
+relationship representations are created. Note that whereas TOSCA does
+not standardize representations, it does standardize grammar for
+defining templates.
+
+TOSCA allows for multiple service representations to be created from
+the same service template. It also includes grammar for creating
+multiple node representations from the same node template and for
+creating multiple relationship representations from the same
+relationship template. TOSCA supports modular designs where different
+deployments can combine sub-system representations created from
+different service templates into deployment-specific system
+representations. To allow for deployment-specific variability between
+different representations, node templates and relationship templates
+can **TOSCA functions** to specify that configuration values need to
+be provided as inputs to the deployment, or that configuration values
+need to be retrieved at deployment time from other node or
+relationship representations in the service representation graph. At
+deployment time, TOSCA processors evaluate these functions to generate
+values to be used in service representations.
+
+TOSCA templates created by service designers are typed using **TOSCA
+types**. TOSCA types define the *schema* with which TOSCA templates
+have to comply, which allows for design-time validation of TOSCA
+service designs. A TOSCA processor must include a TOSCA
+parser/validator to make sure service templates are valid TOSCA.
+
+In addition, TOSCA types promote reuse. For example, **TOSCA node
+types** define reusable building blocks that facility the creation of
+TOSCA services. For example, "Node Types" define an externally visible
+façade of these components including their configurable
+properties. TOSCA types also provide abstraction by hiding the
+necessary implementations to interact with physical resources. TOSCA
+types are typically organized in domain-specific profiles.
+
+
 
 As such, TOSCA is designed to support all three phases of
 the service lifecycle:
@@ -368,7 +418,9 @@ three phases of the service lifecycle.
 |Service Template| A *Service Template* is used to specify the *topology* (or structure) and *orchestration* (or invocation of management behavior) of services so that they can be provisioned and managed in accordance with constraints and policies.                                                                                                                   |
 |Topology Model| A Topology Model defines the structure of a service in the context of a Service Template. A Topology model consists of a set of Node Template and Relationship Template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
 |Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
+|External implementations|The physical or virtual components in the real world that are managed by the TOSCA orchestrator.|
 
+# TOSCA Abstractions
 The TOSCA language introduces a YAML-based grammar for creating service
 templates that define the lifecycle management of application,
 infrastructure, and network services. The language defines a *metamodel*
