@@ -327,7 +327,9 @@ to the orchestrator rather than being defined using TOSCA. This
 specification allows for either approach.
 
 The following diagram shows how external implementations are modeled
-using representations, and how the Orchestrators synchronizes the two.
+using representations, and how the Orchestrator synchronizes the two.
+
+![TOSCA Representations and Implementations](images/representations_implementations.png)
 
 TOSCA representations don't just track individual components and their
 management aspects, they also capture how the various components
@@ -346,15 +348,15 @@ Information about how node and relationship representations are
 organized in service representation graphs is captured in designs or
 blueprints that are created by service designers and expressed in the
 TOSCA language. In this specification, we refer to those designs as
-**service templates** and we use the term **TOSCA processor** to refer
-to the management component that *instantiates* service
-representations based on *service templates*. TOSCA *service
-templates* define graphs which allows the *service representations* to
-be created as graphs as well. Service templates consist of **node
-templates** from which node representations are created, and
-**relationship templates** from which relationship representations are
-created. Note that whereas TOSCA does not standardize representations,
-it does standardize grammar for defining templates.
+**service templates** and we use the term **resolver** to refer to the
+management component that *instantiates* service representations based
+on *service templates*. TOSCA *service templates* define graphs which
+allows the *service representations* to be created as graphs as
+well. Service templates consist of **node templates** from which node
+representations are created, and **relationship templates** from which
+relationship representations are created. Note that whereas TOSCA does
+not standardize representations, it does standardize grammar for
+defining templates.
 
 The use of templates supports reuse of service designs while at the
 same time allowing for service-specific variability. Specifically,
@@ -372,6 +374,11 @@ deployments can combine sub-system representations created from
 different service templates into deployment-specific system
 representations.
 
+The following diagram shows how representations are created
+from templates by a resolver:
+
+![TOSCA Templates and Representations](images/templates_representations.png)
+
 To allow for *design-time validation* of service templates, all TOSCA
 templates defined by those service templates have associated **TOSCA
 types**. TOSCA types define *schemas* and *constraints* with which
@@ -379,29 +386,50 @@ TOSCA templates have to comply. For example, a *TOSCA node type*
 defines configurable properties that must be provided for the
 associated component, it defines the runtime attributes that are
 expected to be available for the component, and it specifies allowed
-and required interactions with other components. A TOSCA processor
-must include a TOSCA parser/validator that checks if the templates
-used in a TOSCA service template are valid for the types with which
-they are associated. This allows for management errors to be flagged
-at service *design time* rather than at service *deployment
-time*.
+and required interactions with other components. A TOSCA-based
+management system must include a TOSCA parser/validator that checks if
+the templates used in a TOSCA service template are valid for the types
+with which they are associated. This allows for management errors to
+be flagged at service *design time* rather than at service *deployment
+time*.  The following diagram shows how templates are created from and
+validated against TOSCA type definitions:
 
-> Show another picture
+![TOSCA Types and Templates](images/types_templates.png)
 
 The use of types in TOSCA provides the additional benefits of
 abstraction, information hiding, and reuse. TOSCA types can be
 organized in a *type hierarcy* which allows for the definition of
-abstract base types with concrete derived types.  **TOSCA node types*
-and **TOSCA relationship types** define the externally visible
+abstract base types with concrete derived types. **TOSCA node types*
+and **TOSCA relationship types** define an externally visible
 *management façade* for entitities of that type while hiding internal
 implementation details. This management façade defines interfaces that
 can be used by an orchestrator to interact with the external
-implementations represented by the entity.  When node types and
+implementations represented by the entity. When node types and
 relationship types are packaged together with internal implementation
 artifacts for their interfaces, they becomes a *reusable building
 block* that can greatly facility the creation of end-to-end
 services. TOSCA types that define such reusable building blocks are
 typically organized in domain-specific **TOSCA profiles**.
+
+The following figure summarizes the various concepts introduced in
+this section. When a TOSCA implementation implements multiple TOSCA
+processing modules such as parsing, validating, and resolving, such an
+implementation is commonly referred to as a **TOSCA processor**.
+
+![TOSCA Core Concepts](images/core_concepts.png)
+
+Note that this diagram is not intended to highlight concepts used in
+this specification, not to suggest software architectures or
+implementations. Nor is this diagram intended to be comprehensive or
+exclusive. Other kinds of processors and modules may qualify as
+implementations of TOSCA, for example:
+
+- TOSCA translator: A tool that translates TOSCA files into documents
+  that use another language, such as Kubernetes Helm charts or Amazon
+  CloudFormation templates.
+- TOSCA template generator: A tool that generates a TOSCA file. An
+  example of generator is a modeling tool capable of generating or
+  editing a system design expressed using TOSCA.
 
 ## Summary of Terms
 |Term|Definition|
@@ -729,28 +757,6 @@ prescribe how TOSCA must be implemented. Instead, it aims to provide
 users of TOSCA with a mental model of how TOSCA implementations are
 expected to process TOSCA files.
 
-Many kinds of processors and artifacts qualify as implementations
-of TOSCA. Those that this specification is explicitly mentioning or
-referring to fall into the following categories:
-
-- TOSCA processor (or “processor”): An engine or tool that is capable of
-  parsing and interpreting a TOSCA service template for a particular
-  purpose. For example, the purpose could be validation, translation or
-  visual rendering.
-- TOSCA orchestrator (also called orchestration engine): A TOSCA
-  processor that interprets a TOSCA file or a TOSCA CSAR in order to
-  instantiate, deploy, and manage the described application in a Cloud.
-- TOSCA translator: A tool that translates TOSCA files into documents
-  that use another language, such as Kubernetes Helm charts or Amazon
-  CloudFormation templates.
-- TOSCA template generator: A tool that generates a TOSCA file. An
-  example of generator is a modeling tool capable of generating or
-  editing a TOSCA file (often such a tool would also be a TOSCA
-  processor).
-
-The above list is not exclusive. The above definitions should be
-understood as referring to and implementing TOSCA as described in this
-document.
 
 While TOSCA does not mandate that compatible implementations must
 support all three lifecycle phases, a complete architecture must
