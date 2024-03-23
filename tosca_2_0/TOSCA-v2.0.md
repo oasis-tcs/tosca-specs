@@ -346,7 +346,7 @@ Information about how node and relationship representations are
 organized in service representation graphs is captured in designs or
 blueprints that are created by service designers and expressed in the
 TOSCA language. In this specification, we refer to those designs as
-**service templates** and we use the term **TOSCA Processor** to refer
+**service templates** and we use the term **TOSCA processor** to refer
 to the management component that *instantiates* service
 representations based on *service templates*. TOSCA *service
 templates* define graphs which allows the *service representations* to
@@ -375,30 +375,35 @@ representations.
 To allow for *design-time validation* of service templates, all TOSCA
 templates defined by those service templates have associated **TOSCA
 types**. TOSCA types define *schemas* and *constraints* with which
-TOSCA templates have to comply. A TOSCA processor must include a TOSCA
-parser/validator that checks if the templates used in a TOSCA service
-template are valid for the types with which they are associated. This
-allows for management errors to be flagged at service *design time*
-rather than at service *deployment time*. TOSCA types can be organized
-in a *type hierarcy* which allows for the definition of abstract base
-types with concrete derived types.
+TOSCA templates have to comply. For example, a *TOSCA node type*
+defines configurable properties that must be provided for the
+associated component, it defines the runtime attributes that are
+expected to be available for the component, and it specifies allowed
+and required interactions with other components. A TOSCA processor
+must include a TOSCA parser/validator that checks if the templates
+used in a TOSCA service template are valid for the types with which
+they are associated. This allows for management errors to be flagged
+at service *design time* rather than at service *deployment
+time*.
 
 > Show another picture
 
-The use of types in TOSCA promotes encapsulation, information hiding,
-and reuse. For example, each **TOSCA node type* defines the externally
-visible *management façade* for components of that type while hiding
-internal implementation details. Specifically, a TOSCA node type
-exposes the configurable properties for the associated component, it
-specifies allowed and required interactions with other components, it
-defines interfaces that can be used by an orchestrator to interact
-with the external implementations represented by the component, etc.
-When a node type is packaged together with internal implementation
-artifacts for its interfaces, it becomes a *reusable building block*
-that can greatly facility the creation of end-to-end services. TOSCA
-types that define such reusable building blocks are typically
-organized in domain-specific **TOSCA profiles**.
+The use of types in TOSCA provides the additional benefits of
+abstraction, information hiding, and reuse. TOSCA types can be
+organized in a *type hierarcy* which allows for the definition of
+abstract base types with concrete derived types.  **TOSCA node types*
+and **TOSCA relationship types** define the externally visible
+*management façade* for entitities of that type while hiding internal
+implementation details. This management façade defines interfaces that
+can be used by an orchestrator to interact with the external
+implementations represented by the entity.  When node types and
+relationship types are packaged together with internal implementation
+artifacts for their interfaces, they becomes a *reusable building
+block* that can greatly facility the creation of end-to-end
+services. TOSCA types that define such reusable building blocks are
+typically organized in domain-specific **TOSCA profiles**.
 
+## Summary of Terms
 |Term|Definition|
 |---|---|
 |Representation Model|A deployed service is a running instance of a Service Template. The instance is typically derived by running a declarative workflow that is automatically generated based on the node templates and relationship templates defined in the service template.|
