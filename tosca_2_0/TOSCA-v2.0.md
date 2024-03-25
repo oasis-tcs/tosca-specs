@@ -143,39 +143,38 @@ monitoring, etc.).
 ## Objectives
 
 Large systems such a cloud applications, telecommunications networks,
-and software are becoming increasingly more complex. This change is
-driven by the adoption of cloud-native architectures that build
-systems as collections of microservices, by the disaggreation of large
-hardware appliances, the decoupling of hardware and software, and the
-adotpion of edge deployments that move application functionality
-closer to the end-user.
+and software services are becoming increasingly more difficult to
+manage. This challenge is the result of a recent technology trends
+such as the adoption of cloud-native architectures that build systems
+as collections of microservices, the disaggreation of large hardware
+appliances, the decoupling of hardware and software, and the adoption
+of edge deployments that move application functionality closer to the
+end-user.
 
 Management of such systems can be greatly simplified if the creation
 and lifecycle management of application, infrastructure, and network
 services can be fully automated and supported across a variety of
-deployment environments.
-
-TOSCA was expressly designed to address the complexity associated with
-managing large systems by providing a language for automating the
-lifecycle management of large complex systems.
+deployment environments. TOSCA was expressly designed to address the
+complexity associated with managing large systems by providing a
+language for automating the lifecycle management of large complex
+systems.
 
 As a result of the above technology trends, large systems typically
-involve multiple different technologies and include components from
+involve a wide variety of technologies and include components from
 multiple vendors. This results in management systems based on
 vendor-specific tools, dedicated component management systems, and
 special-purpose controllers, each of which manages only a small subset
-of the system.  To make matters worse, these tools often use
+of the system. To make matters worse, these tools often use
 incompatible interfaces or data schemas, resulting in integration
 nightmares. As the number of components grows—because the scale of the
 system increases and disaggregation becomes the norm—so will the
-number of required management tools.
-
-Thus, the goal of TOSCA is to define a language that is agnostic to
-specific technological and commercial ecosystems and that supports the
-design and operation of large systems without being tied to specific
-technologies or specific vendors. This enables a uniform management
-approach that can be used for all parts of the system and for all
-layers of the technology stack.
+number of required management tools.  The goal of TOSCA is to define a
+language that is agnostic to specific technological and commercial
+ecosystems and that supports the design and operation of large systems
+without being tied to specific technologies or specific vendors. This
+enables a uniform management approach that can be used for all parts
+of the system and can integrate components accross all layers of the
+technology stack.
 
 The capabilities offered by TOSCA will facilitate higher service
 continuity, reduce service disruption and manual mitigation, increase
@@ -192,17 +191,17 @@ The TOSCA specification promotes a *model-driven management* approach,
 whereby TOSCA processors maintain service models (*digital twins*) for
 all system components under management. In a model-driven approach,
 all management actions are performed on service models first and then
-propagated to external real-world entities by the automation platform.
-Similarly, changes to external resources are reflected into models
-first and then handled by automation platform.
+propagated to the external real-world entities by the management
+system. Similarly, changes to external resources are reflected into
+models first and then handled by management system.
 
-TOSCA's model-driven management approach is what enable its use for
+TOSCA's model-driven management approach is what enables its use for
 all Lifecycle Management Phases: information embedded in the model
 structure (the dependencies, connections, compositions) drives the
-automated processes. Specifically, allows service models to be used:
+automated processes. Specifically, it allows service models to be
+used:
 
 - As starting point for Moves, Adds, Changes, and Deletions (MACDs)
-
 - As context for handling faults and events using Closed Loop
   Automation
 
@@ -215,32 +214,31 @@ TOSCA models systems as graphs, where the vertices represent the
 components of the system and the edges represents relationships,
 dependencies, and other interactions between these components. 
 
-The use of graphs enables "declarative" orchestration, where system
+The use of graphs enables *declarative*" orchestration, where system
 designers can simply create descriptions ("models") of their systems,
 and delegate to the orchestrator the task of translating these
 descriptions into the commands to realize the systems being
 described. The use of graphs enables this as follows:
 
-- Relationships in a TOSCA graph encode dependencies that allows an
-  orchestrator to automatically determine the *sequencing* between
-  managment operations on different components in the system, thereby
-  avoiding the need for human-defined workflows.
-
+- Relationships in a TOSCA graph encode dependencies that allow an
+  orchestrator to automatically determine the *sequencing* between the
+  managment operations on invoked on various components in the system,
+  thereby avoiding the need for human-defined workflows.
 - Relationships in a TOSCA graph allow an orchestrator to
-  automatically determine which systems components may be affected by
-  a component failure or by a change to an external resource. The
+  automatically determine which system components may be affected by a
+  component failure or by a change to an external resource. The
   orchestrator can then determine corrective actions that restore the
-  system has a whole to its nominal state, rather than just fixing an
-  individual component.
+  system has a whole to its nominal state, rather than just fixing
+  individual components.
 
-Declarative management is often also referred to as desired state or
-intent-based orchestration.
+Declarative management is often also referred to as *desired state* or
+*intent-based* orchestration.
 
 ### TOSCA Promotes Reuse and Modularity
 
 TOSCA models are based on *service templates* that are created by
 service designers. Service templates consist of node templates and
-relationships that have associated node types and relationshp
+relationship templates that have associated node types and relationshp
 types. Types in TOSCA represent reusable components that are the
 building blocks from which services can be constructed, therey
 promoting modularity and reuse.
@@ -252,11 +250,11 @@ complete system models can be done by an orchestrator at deployment
 time. This enables automation of placement decisions, resource
 allocation, and system integration.
 
-In addition, TOSCA allow for the definition of abstract components
-that hide technology and vendor-specific implementation details. The
-choice of how to *implement* abstract components can be left to the
-orchestrator at deployment time. This further increases the value of
-TOSCA as a technology and vendor-neutral technology for orchestration.
+TOSCA also allow for the definition of abstract components that hide
+technology and vendor-specific implementation details. The choice of
+how to *implement* abstract components can be left to the orchestrator
+at deployment time. This further increases the value of TOSCA as a
+technology and vendor-neutral technology for orchestration.
 
 TOSCA's modularity features allow some service design decisions to be
 made by an orchestrator at deployment time rather than by a service
@@ -331,6 +329,8 @@ using representations, and how the Orchestrator synchronizes the two.
 
 ![TOSCA Representations and Implementations](images/representations_implementations.png)
 
+Figure : Representations and Implementations
+
 TOSCA representations don't just track individual components and their
 management aspects, they also capture how the various components
 interact with the goal of providing complete system
@@ -379,6 +379,8 @@ from templates by a resolver:
 
 ![TOSCA Templates and Representations](images/templates_representations.png)
 
+Figure : TOSCA Templates and Representations
+
 To allow for *design-time validation* of service templates, all TOSCA
 templates defined by those service templates have associated **TOSCA
 types**. TOSCA types define *schemas* and *constraints* with which
@@ -396,6 +398,8 @@ validated against TOSCA type definitions:
 
 ![TOSCA Types and Templates](images/types_templates.png)
 
+Figure : TOSCA Types and TOSCA Templates
+
 The use of types in TOSCA provides the additional benefits of
 abstraction, information hiding, and reuse. TOSCA types can be
 organized in a *type hierarcy* which allows for the definition of
@@ -406,10 +410,10 @@ implementation details. This management façade defines interfaces that
 can be used by an orchestrator to interact with the external
 implementations represented by the entity. When node types and
 relationship types are packaged together with internal implementation
-artifacts for their interfaces, they becomes a *reusable building
-block* that can greatly facility the creation of end-to-end
-services. TOSCA types that define such reusable building blocks are
-typically organized in domain-specific **TOSCA profiles**.
+artifacts for their interfaces, they become *reusable building blocks*
+that can greatly facility the creation of end-to-end services. TOSCA
+types that define such reusable building blocks are typically
+organized in domain-specific **TOSCA profiles**.
 
 The following figure summarizes the various concepts introduced in
 this section. When a TOSCA implementation implements multiple TOSCA
@@ -418,7 +422,9 @@ implementation is commonly referred to as a **TOSCA processor**.
 
 ![TOSCA Core Concepts](images/core_concepts.png)
 
-Note that this diagram is not intended to highlight concepts used in
+Figure : Summary of Core TOSCA Concepts
+
+Note that this diagram is only intended to highlight concepts used in
 this specification, not to suggest software architectures or
 implementations. Nor is this diagram intended to be comprehensive or
 exclusive. Other kinds of processors and modules may qualify as
