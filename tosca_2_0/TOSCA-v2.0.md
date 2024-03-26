@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 06
 
-## 4 September 2023
+## 20 March 2024
 
 #### This stage:
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.md (Authoritative) \
@@ -813,21 +813,45 @@ TOSCA Processor contains the following functional blocks:
 
 A resolver performs the following functions
 
-##### Creating Service Representations
+##### Creating Node Representations
 
-- Applies service inputs.
-- Converts normalized node templates to node representations (one-to-one
-  equivalency *\[cardinality?\]*) *\[a full TOSCA orchestrator can
-  manage these instead of the external orchestrator/platform\]*
-- Calls intrinsic functions (on demand for all the above) using the
-  graph of node representations.
+- Converts normalized node templates to node representations.
+    - Either one-to-one or one-to-many if multiplicity is involved.
+    - Node templates with a "select" directive create a node in the
+      local representation graph that is a reference to the selected
+      node (from the local or a remote representation graph).
+    - Node templates with a "substitute" directive create a node in
+      the local representation graph that is associated to a remote
+      representation graph created from the substitution template.
+- Determines the values of the node properties and attributes
+    - From inputs
+    - By applying intrinsic functions (e.g. get_property, etc.)
+    - Some property and attribute values cannot be initialized since
+      they either depend on other uninitialized properties or attributes
+      or need to access other node representations via relationships that
+      have not been yet initialized.
 
-##### Requirement Fulfillment
+##### Creating Relationships connecting Node Representations
 
-- Satisfies all requirements and creates the relationship graph (an
-  unsatisfied requirement results in an error)
+- Relationships are created by Requirement Fulfillment
+    - If a requirement uses a node_filter that refers to uninitialized properties
+      or attributes, then the fulfillment of this requirement is postponed until
+      all referred properties or attributes are initialized.
+    - A circular dependency signifies a erroneous template and shall report an error
+    - After a relationship is created, properties and attributes that depend on it
+      to be initialized will be initialized. 
+- In the end all requirements are satisfied and all relationships are added to the
+  representation graph.
+    - An unsatisfied non-optional requirement results in an error.
 
 ##### Substitution Mapping
+- When substitution is directed for a node, the resolver creates a new representation
+  according to the substitution template, basically creating a service that is
+  represented by the substituted node.
+- The substitution service is initialized from the properties of the substituted node
+  and the workflows of the substitution service act as operations for the substituted
+  node (that is, the behavior of the node is substituted by the substitution service).
+    - This is defined via substitution mapping rules.
 
 ### Orchestrator
 
@@ -843,6 +867,80 @@ An orchestrator performs the following actions:
   of requirements may change.
 - (Optionally) changes the node representations themselves for day 2
   transformations.
+
+#### Changes in the representation graph
+
+During the lifetime of a service there can be several actions or events that 
+change the representation graph of the running service.
+
+We can identify the several situations that mandate the change of the 
+representation graph, for example:
+- Update:
+    - The service input values have changed and need to be re-evaluated while
+      the service is running.
+- Upgrade:
+    - The service template has changed and needs to be re-evaluated while the
+      service is running.
+- Runtime failures:
+    - Nodes or relationships in the representation graph have failed and need
+      to be recreated while the service is running.
+- Change in dependencies
+    - External nodes or relationships to external nodes have failed and new
+      relationships to external nodes need to be created (i.e. external
+      requirements need to be fulfilled again) while the service is running.
+      
+For the service to reach the new desired runtime state, operations that are 
+associated with the creation, deletion, and modification of
+nodes and relationships in the representation graph need to be performed.
+
+We can visualize (and the orchestrator can preform) these restorative actions
+via graph traversals on the "old" and "new" representation graph.
+
+First let's categorize the nodes and relationships in the "old" and "new"
+representation graphs in the following four categories:
+- Unchanged: These are nodes and relationships that appear in both the
+  "old" and "new" representation graphs and have the same property values.
+  Given that a template can be upgrades, we correlate the same nodes and
+  relationships via their symbolic node names and requirement names.
+- Modified: These are nodes and relationships that appear in both the
+  "old" and "new" representation graphs and have different property values.
+- Obsolete: These are nodes and relationships that appear in the "old"
+  representation graph but not in the "new" representation graph.
+- Novel: These are nodes and relationships that do not appear in the "old"
+  representation graph but appear in the "new" representation graph.
+
+##### An example of graph-traversal changes performed with changes in the representation graph
+
+For example we start by traversing the "old" representation graph in 
+reverse dependency order:
+- we start in parallel with all nodes that have no incoming dependency relationship
+    - we perform operations associated with deleting on all adjacent relationships
+      to this node that are in the "obsolete" category.
+    - we perform operations associated with deleting on the node itself if it is
+      in the "obsolete" category.
+    - we move to nodes that have no incoming dependency relationship to nodes that
+      have not been processed yet.
+
+After we have processed the deletion of the obsolete elements we traverse the "new" 
+representation graph in dependency order to preform the modifications and creations:
+- we start in parallel with the nodes that have no outgoing dependency relationship
+    - we perform operations associated with creation resp. modification on the node itself
+      if it is in the "novel" resp. "modified" category
+    - we perform operations associated with creation resp. modification on all adjacent
+      relationships in the "novel" resp. "modified" category if the node on the other
+      side of the relationship has been processed.
+    - we move to nodes that have no outgoing dependency relationship to nodes that
+      have not been processed yet.
+
+After this we can consider the service to be in the new desired runtime state, and the
+"old" representation graph can be discarded and the "new" representation graph becomes
+the current representation graph of the service.
+
+Note that this graph traversal behavior should be associated with the relevant
+interface types that are defined in a TOSCA profile, where it should be specified 
+which relationship types form the dependency relationships, which operation(s)
+are associated with the deletion, modification, and creation of the nodes and 
+relationships when the representation graph changes.
 
 -------
 
