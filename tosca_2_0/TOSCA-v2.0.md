@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 06
 
-## 20 March 2024
+## 27 March 2024
 
 #### This stage:
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.md (Authoritative) \
@@ -74,7 +74,7 @@ https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.html.
 Latest stage: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.html.
 
 #### Notices
-Copyright &copy; OASIS Open 2023. All Rights Reserved.
+Copyright &copy; OASIS Open 2024. All Rights Reserved.
 
 Distributed under the terms of the OASIS [IPR Policy](https://www.oasis-open.org/policies-guidelines/ipr/).
 
@@ -89,24 +89,39 @@ For complete copyright information please see the full Notices section in an App
 
 -------
 # 1 Introduction
-
 <!-- All text is normative unless otherwise labeled -->
 *The content in this section is non-normative, except where it is marked
 normative.*
+
+The Topology and Orchestration Specification for Cloud Applications
+(TOSCA) provides a language for describing application components and
+their relationships by means of a service topology, and for specifying
+the lifecycle management procedures for creation or modification of
+services using orchestration processes. The combination of topology
+and orchestration enables not only the automation of deployment but
+also the automation of the complete service lifecycle management. The
+TOSCA specification promotes a model-driven approach, whereby
+information embedded in the model structure (the dependencies,
+connections, compositions) drives the automated processes.
 
 ## 1.1 Changes from earlier Versions
 
 <!-- Optional section -->
 <!-- Describe significant changes from previous differently-numbered Versions, not changes between stages of the current Version -->
 
-## 1.2 Glossary
+## 1.2 Document conventions
+
+- Naming conventions
+- Font colors and styles
+- Typographic conventions
+
+## 1.3 Glossary
 
 <!-- Optional section with suggested subsections -->
 
-### 1.2.1 Definitions of terms
-
-The following terms are used throughout this specification and have the
-following definitions when used in context of this document.
+### 1.3.1 Definitions of terms
+The following terms are used throughout this specification and have
+the following definitions when used in context of this document.
 
 |Term|Definition|
 |---|---|
@@ -117,15 +132,10 @@ following definitions when used in context of this document.
 |Topology Model| A Topology Model defines the structure of a service in the context of a Service Template. A Topology model consists of a set of Node Template and Relationship Template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
 |Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
 
-### 1.2.2 Acronyms and abbreviations
+### 1.3.2 Acronyms and abbreviations
 
-### 1.2.3 Document conventions
-
-- Naming conventions
-- Font colors and styles
-- Typographic conventions
-
-# Overview
+-------
+# 2 TOSCA Overview
 
 The *Topology and Orchestration Specification for Cloud Applications*
 (TOSCA) is a *domain-specific language* (DSL) for automating
@@ -140,7 +150,7 @@ automation of deployment but also the automation of the complete
 service lifecycle management (including scaling, patching, upgrading,
 monitoring, etc.).
 
-## Objectives
+## 2.1 Objectives
 
 Large systems such a cloud applications, telecommunications networks,
 and software services are becoming increasingly more difficult to
@@ -183,9 +193,9 @@ orchestration. Ultimately, this will benefit the consumers,
 developers, and providers of more and more complex and heterogeneous
 networks, systems, and cloud-native applications.
 
-## TOSCA Features and Benefits
+## 2.2 TOSCA Features and Benefits
 
-### TOSCA is Model-Driven
+### 2.2.1 TOSCA is Model-Driven
 
 The TOSCA specification promotes a *model-driven management* approach,
 whereby TOSCA processors maintain service models (*digital twins*) for
@@ -208,7 +218,7 @@ used:
 Without the context provided by service models, lifecycle management
 cannot be fully automated.
 
-### TOSCA Models are Graphs
+### 2.2.2 TOSCA Models are Graphs
 
 TOSCA models systems as graphs, where the vertices represent the
 components of the system and the edges represents relationships,
@@ -234,7 +244,7 @@ described. The use of graphs enables this as follows:
 Declarative management is often also referred to as *desired state* or
 *intent-based* orchestration.
 
-### TOSCA Promotes Reuse and Modularity
+### 2.2.3 TOSCA Promotes Reuse and Modularity
 
 TOSCA models are based on *service templates* that are created by
 service designers. Service templates consist of node templates and
@@ -261,7 +271,7 @@ made by an orchestrator at deployment time rather than by a service
 designer at service design time. TOSCA supports the use of *policies*
 to guide the design decisions make by orchestrators at design time.
 
-### TOSCA is Domain-Independent
+### 2.2.4 TOSCA is Domain-Independent
 
 Since the fundamental abstraction defined by the TOSCA language is a
 *graph*, TOSCA can be used for application domain whithin which
@@ -289,7 +299,7 @@ This list is by no means intended to be exhaustive and only serves to
 demonstrate the breadth of application domains that can benefit from
 TOSCA’s automated lifecycle management capabilities.
 
-## TOSCA Core Concepts
+## 2.3 TOSCA Core Concepts
 
 As stated above, the TOSCA language assumes a *model-driven*
 management paradigm. Using model-driven management, management systems
@@ -437,18 +447,8 @@ implementations of TOSCA, for example:
   example of generator is a modeling tool capable of generating or
   editing a system design expressed using TOSCA.
 
-## Summary of Terms
-|Term|Definition|
-|---|---|
-|Representation Model|A deployed service is a running instance of a Service Template. The instance is typically derived by running a declarative workflow that is automatically generated based on the node templates and relationship templates defined in the service template.|
-|Node Template| A *Node Template* specifies the occurrence of a component node as part of a service template. Each Node Template refers to a Node Type that defines the semantics of the node (e.g., properties, attributes, requirements, capabilities, interfaces). Node Types are defined separately for reuse purposes.                                                          |
-|Relationship Template| A *Relationship Template* specifies the occurrence of a relationship between nodes in a service template. Each Relationship Template refers to a Relationship Type that defines the semantics of the relationship (e.g., properties, attributes, interfaces, etc.). Relationship Types are defined separately for reuse purposes.                                           |
-|Service Template| A *Service Template* is used to specify the *topology* (or structure) and *orchestration* (or invocation of management behavior) of services so that they can be provisioned and managed in accordance with constraints and policies.                                                                                                                   |
-|Topology Model| A Topology Model defines the structure of a service in the context of a Service Template. A Topology model consists of a set of Node Template and Relationship Template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
-|Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
-|External implementations|The physical or virtual components in the real world that are managed by the TOSCA orchestrator.|
-
-# TOSCA Language Abstractions
+-------
+# 3 TOSCA Language Abstractions
 
 The TOSCA language introduces a YAML-based grammar for automating the
 lifecycle management of application, infrastructure, and network
@@ -463,7 +463,7 @@ behavior of the service such as quality-of-service objectives,
 performance objectives, and security constraints, and allow for
 closed-loop automation.
 
-## Service Templates, Node Templates, and Relationships
+## 3.1 Service Templates, Node Templates, and Relationship Templates
 
 Within a TOSCA file, a **service template** defines the topology model
 of a service as a directed graph. Each node in this graph is
@@ -525,7 +525,7 @@ explained next.
 <!----
 {"id": "98", "author": "Chris Lauwers", "date": "2021-01-18T18:17:00Z", "comment": "Should we introduce \u201cservice topology graph\u201d\nwhen what we mean is really the \u201cinstance\nmodel\u201d.", "target": "The"}-->
 
-## Requirements and Capabilities
+## 3.2 Requirements and Capabilities
 
 <!----
 {"id": "107", "author": "Michael Rehder", "date": "2020-12-15T09:11:00Z", "comment": "Confusing \u2013 \u201cservice topology\u201d is a new\nterm. It\u2019s a \u201ctopology template\u201d but not all \u201cservice template\u201d are a\n\u201ctopology template\u201d.", "target": "service topology within a single service\ntemplate"}-->
@@ -593,7 +593,7 @@ Figure : Requirements and Capabilities
 <!----
 {"id": "108", "author": "Michael Rehder", "date": "2020-12-15T16:33:00Z", "comment": "There should be some\ndiscussion about this issue \u2013 how are the relations defined in the\ntopology template related to the relations of the substituted node\ntype?", "target": ""}-->
 
-## Decomposition of Node Representations
+## 3.3 Decomposition of Node Representations
 <!----
 {"id": "114", "author": "Michael Rehder", "date": "2020-12-15T16:17:00Z", "comment": "Another\nplace where I find the use of the term \u201cService Template\u201d overly\nconfusing. It should say \u201cTopology Template\u201d as that is the construct in\nthe end that is supporting the substitution.  \nSection 4.5.1 says \u201ctopology template\u201d so I think this change is in line\nwith the practical definitions in the document.", "target": "Service Template\n"}-->
 
@@ -614,9 +614,9 @@ another vendor specialized in deploying and managing application
 servers. This approach enables separation of concerns and re-use of
 common infrastructure templates.
 
-![Service Decomposition](images/service_decomposition.png)
+![Node Decomposition](images/service_decomposition.png)
 
-Figure : Service Decomposition
+Figure : Node Decomposition
 
 From the point of view of a service template (e.g. the business
 application service template from the example above) that uses another
@@ -635,7 +635,7 @@ single node application server tier and a Service Template for a
 clustered application server tier might exist, and the appropriate
 option can be selected an a deployment-by-deployment basis.
 
-## Interfaces, Operations, and Artifacts
+## 3.4 Interfaces, Operations, and Artifacts
 
 Both node and relationship types may define lifecycle **operations**
 that define the actions an orchestration engine can invoke when
@@ -667,7 +667,7 @@ artifact. This metadata might be needed by an orchestrator to properly
 process the artifact, for example by describing the appropriate
 execution environment.
 
-## Workflows
+## 3.5 Workflows
 
 A deployed service is an instance of a service template. More
 precisely, a service is deployed by first creating a *service
@@ -706,7 +706,7 @@ by” relationship template). Finally, the process model Node Template
 will be instantiated by deploying the process model on that process
 engine (as indicated by the “deployed on” relationship template).
 
-## Policies
+## 3.6 Policies
 
 Non-functional behavior or quality-of-services are defined in TOSCA by
 means of **policies**. A policy can express such diverse things like
@@ -736,27 +736,8 @@ Template. Thus, a Policy Template defines the invariant properties of
 a Policy, while the Policy sets the variant properties resulting from
 the actual usage of a Policy Template in a Node Template.
 
-Archive Format for Cloud Applications
--------------------------------------
-
-In order to support in a certain environment for the execution and
-management of the lifecycle of a cloud application, all corresponding
-artifacts have to be available in that environment. This means that
-beside the TOSCA file of the cloud application, the deployment
-artifacts and implementation artifacts have to be available in that
-environment. To ease the task of ensuring the availability of all of
-these, this specification defines a corresponding archive format called
-CSAR (Cloud Service ARchive).
-
-A CSAR is a container file, i.e. it contains multiple files of possibly
-different file types. These files are typically organized in several
-subdirectories, each of which contains related files (and possibly other
-subdirectories etc.). The organization into subdirectories and their
-content is specific for a particular cloud application. CSARs are zip
-files, typically compressed. A CSAR may contain a file called TOSCA.meta
-that describes the organization of the CSAR.
-
-# TOSCA Operational Model
+-------
+# 4 TOSCA Operational Model
 
 TOSCA is designed to support all three phases of the service
 lifecycle:
@@ -966,8 +947,7 @@ are associated with the deletion, modification, and creation of the nodes and
 relationships when the representation graph changes.
 
 -------
-
-# TOSCA Metamodel
+# 5 TOSCA Metamodel
 <!----
 {"id": "157", "author": "Chris Lauwers", "date": "2022-06-25T17:36:00Z", "comment": "Inconsistent capitalization", "target": "<span class=\"comment-start\" id=\"158\" author=\"Chris Lauwers\" date=\"2022-06-25T17:36:00Z\">This section should be moved into the previous chapter</span><span class=\"comment-start\" id=\"159\" author=\"Chris Lauwers\" date=\"2022-12-05T18:42:00Z\">What is a metamodel?</span>Metamodel"}-->
 
@@ -11274,6 +11254,28 @@ $ceil: [ <float_type_arg> ]
 ```
 TOSCA Cloud Service Archive (CSAR) format
 =========================================
+
+Archive Format for Cloud Applications
+-------------------------------------
+
+In order to support in a certain environment for the execution and
+management of the lifecycle of a cloud application, all corresponding
+artifacts have to be available in that environment. This means that
+beside the TOSCA file of the cloud application, the deployment
+artifacts and implementation artifacts have to be available in that
+environment. To ease the task of ensuring the availability of all of
+these, this specification defines a corresponding archive format called
+CSAR (Cloud Service ARchive).
+
+A CSAR is a container file, i.e. it contains multiple files of possibly
+different file types. These files are typically organized in several
+subdirectories, each of which contains related files (and possibly other
+subdirectories etc.). The organization into subdirectories and their
+content is specific for a particular cloud application. CSARs are zip
+files, typically compressed. A CSAR may contain a file called TOSCA.meta
+that describes the organization of the CSAR.
+
+
 
 This section defines the metadata of a cloud service archive as well as
 its overall structure. Except for the examples, this section is
