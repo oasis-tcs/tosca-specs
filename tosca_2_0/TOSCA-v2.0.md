@@ -947,19 +947,22 @@ are associated with the deletion, modification, and creation of the nodes and
 relationships when the representation graph changes.
 
 -------
-# 5 TOSCA Metamodel
-<!----
-{"id": "157", "author": "Chris Lauwers", "date": "2022-06-25T17:36:00Z", "comment": "Inconsistent capitalization", "target": "<span class=\"comment-start\" id=\"158\" author=\"Chris Lauwers\" date=\"2022-06-25T17:36:00Z\">This section should be moved into the previous chapter</span><span class=\"comment-start\" id=\"159\" author=\"Chris Lauwers\" date=\"2022-12-05T18:42:00Z\">What is a metamodel?</span>Metamodel"}-->
+# 5 TOSCA Modeling Concepts and Goals
 
-This section defines the models and the modeling goals that comprise the
-TOSCA Version 2.0 specification.
+This section defines the modeling constructs in the TOSCA Version 2.0
+specification.  The TOSCA language includes grammar for defining TOSCA
+types and templates as specified in [Chapter 2](#tosca-core-concepts).
 
-## Modeling Concepts and Goals
+- The TOSCA specification is based on defining modeling entities.
+
+- Entity definitions are based on different sets of keynames (with
+  specific syntax and semantics) that are associated with values (of a
+  specific format).
 
 > TBD. Here we should have selected core concepts of TOSCA 1.0 from
 > section “[3   Core Concepts and Usage
 > Pattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)”
-> and this section should be a more in-depth section than section 2.1
+> and this Chapter should be a more in-depth section than Chapter 2.1
 > in this document.
 
 <!----
@@ -970,20 +973,14 @@ TOSCA Version 2.0 specification.
 > Explain separation of concerns and different roles. Refer to email
 > from Peter.
 
-## Modeling Definitions and Reuse
+## Types and Type Derivation
 
-The TOSCA metamodel includes complex definitions used in types and
-templates. Reuse concepts simplify the design of TOSCA templates by
-allowing relevant TOSCA entities to use and/or modify definitions
-already specified during entity type design. The following four concepts
-are clarified next:
+Reuse concepts simplify the design of TOSCA templates by allowing
+relevant TOSCA entities to use and/or modify definitions already
+specified during entity type design. The following four concepts are
+clarified next:
 
 - **Definition**:
-
-  - The TOSCA specification is based on defining modeling entities.
-  - Entity definitions are based on different sets of keynames (with
-    specific syntax and semantics) that are associated with values (of a
-    specific format).
 
 <!----
 {"id": "163", "author": "Chris Lauwers", "date": "2021-01-17T00:51:00Z", "comment": "Alternative language proposed by PJ:\n  Entity definitions comprise pairs of keynames and values. Each entity\n  has it own syntax, semantics and set of\n  keynames.", "target": "format"}-->
