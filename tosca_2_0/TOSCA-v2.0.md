@@ -951,7 +951,7 @@ relationships when the representation graph changes.
 
 This section defines the modeling constructs in the TOSCA Version 2.0
 specification.  The TOSCA language includes grammar for defining TOSCA
-types and templates as specified in [Chapter 2](#2.3-tosca-core-concepts).
+types and templates as specified in [Chapter 2](#23-tosca-core-concepts).
 
 - The TOSCA specification is based on defining modeling entities.
 
