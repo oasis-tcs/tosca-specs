@@ -959,7 +959,7 @@ derivation and entity refinement.
 > Explain separation of concerns and different roles. Refer to email
 > from Peter.
 
-## Type Definitions
+## Type Definitions and Entity Definitions
 
 TOSCA adopts a model-driven management approach where management
 actions are performed using models maintained by the management
@@ -977,8 +977,6 @@ share a number of common keynames, each type definition has its own
 syntax, semantics, and set of keynames, TOSCA supports *node types*,
 *relationship types*, *capability types*, *interface types*, *artifact
 types*, *policy types*, *group types*, and *data types*.
-
-## Entity Definitions
 
 Some keynames in TOSCA type definitions are used to specify **entity
 definitions** that *declare* the presence of other entities in the
@@ -1000,7 +998,7 @@ corresponding entity type. TOSCA supports *capability definitions*,
 definitions*, *group definitions*, *property definitions*, *attribute
 definitions*, and *parameter definitions*.
 
-## Templates
+## Templates and Entity Assignments
 
 TOSCA-based management systems use models to describe systems and
 services under management. These system models are created from
@@ -1012,9 +1010,6 @@ that specify additional information for the definitions specified in
 the corresponding node types. Service templates may include other
 templates as well such as relationship templates, groups, policies
 etc.
-
-
-## Entity Assignments
 
 Many of the keynames used in node templates specify additional
 information for the entity definitions in the corresponding node
@@ -1046,41 +1041,33 @@ of the abstract types.
 
 The TOSCA specification includes *type derivation rules* that describe
 which keyname definitions are inherited from the parent type and which
-definitions are *intrinsic* to the type declaration and so are not
+definitions are *intrinsic* to the type declaration and are not
 inherited. For example, all type definitions include a `version`
 keyword, the value of which is never inherited from a parent type.
 
 Except for keynames that are explicitly flagged as *intrinsic* to each
 type definition, derived types inherit all the definitions of their
 parent type. Specifically, derived types inherite all *entity
-definitions* from their parent.  In addition, these entity definitions
-can be expanded or modified. How this happens is governed by
-derivation rules.
+definitions* from their parent. In addition, these entity definitions
+can be expanded or modified.
 
-### Augmentation
-
-- Definitions within a parent type can be expanded, which is the
-  addition of properties, to better suit the requirements of the
-  referencing type.
-
-- The augmentation rules pertaining to an entity describe how the
-  inherited parent type during a type derivation can be added to.
-
-### Refinement
-
-- Definitions within a parent type can be refined (adjusted) to better
-  suit the needs of the referencing type.
-
-- The refinement rules pertaining to an entity describe how such
-  entity definitions that are inherited from the parent type during a
-  type derivation can be expanded or modified.
+- Expansion of entity definitions is done through **entity
+  augmentation**. Derived types use entity augmentation to *add*
+  entity definitions to those already defined in the parent
+  type. Augmentation rules pertaining to an entity describe how
+  derived types can add to the entity definitions in the inherited
+  parent type.
+- Modification of entity definitions is done through **entity
+  refinement**. Derived types use entity refinement to further
+  constrain or otherwise *specialize* entities already defined in the
+  parent type.  Refinement rules pertaining to an entity describe how
+  such entity definitions that are inherited from the parent type
+  during a type derivation can be expanded or modified.
 
 <!----
 {"id": "165", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:43:00Z", "comment": "Type\n  definition is part of Definition not\n  Refinement", "target": ""}-->
 
-## Goal of the Derivation and Refinement Rules
-
-The main reason for derivation and refinement rules is to create a
+The main reason for augmentation and refinement rules is to create a
 framework useful for a consistent TOSCA type profile creation. The
 intuitive idea is that a derived type follows to a large extent the
 structure and behavior of a parent type, otherwise it would be better to
@@ -1092,16 +1079,19 @@ selection and substitution mechanisms. These two mechanisms are used by
 TOSCA templates to connect to TOSCA nodes and services defined by other
 TOSCA templates:
 
-- The selection mechanism allows a node instance created a-priori by
-  another service template to be selected for usage (i.e., building
-  relationships) to the current TOSCA template.
-
-- The substitution mechanism allows a node instance to be represented by
-  a service created simultaneously via a substitution template.
+- The selection mechanism allows a node representation created
+  a-priori from another service template to be selected for usage
+  (i.e., building relationships) by node representations created from
+  the current TOSCA template.
+- The substitution mechanism allows a node representation to be
+  decomposed by a service created simultaneously from a substituting
+  template.
 
 It is relevant to emphasize the cross-template usage, as only in this
 case we deal with templates defined at different design time-points,
 with potentially different editing and maintenance restrictions.
+
+# TOSCA Grammar
 
 ## Mandatory Keynames
 
