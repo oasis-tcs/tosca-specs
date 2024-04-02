@@ -947,99 +947,127 @@ are associated with the deletion, modification, and creation of the nodes and
 relationships when the representation graph changes.
 
 -------
-# 5 TOSCA Metamodel
-<!----
-{"id": "157", "author": "Chris Lauwers", "date": "2022-06-25T17:36:00Z", "comment": "Inconsistent capitalization", "target": "<span class=\"comment-start\" id=\"158\" author=\"Chris Lauwers\" date=\"2022-06-25T17:36:00Z\">This section should be moved into the previous chapter</span><span class=\"comment-start\" id=\"159\" author=\"Chris Lauwers\" date=\"2022-12-05T18:42:00Z\">What is a metamodel?</span>Metamodel"}-->
+# 5 TOSCA Modeling Concepts
 
-This section defines the models and the modeling goals that comprise the
-TOSCA Version 2.0 specification.
-
-## Modeling Concepts and Goals
-
-> TBD. Here we should have selected core concepts of TOSCA 1.0 from
-> section “[3   Core Concepts and Usage
-> Pattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)”
-> and this section should be a more in-depth section than section 2.1
-> in this document.
-
-<!----
-{"id": "161", "author": "Calin Curescu", "date": "2020-04-16T12:53:00Z", "comment": "This section needs completion before submitting the TOSCA 2.0.", "target": "Modeling concepts and goals\n\nTBD. Here we should have selected core concepts of TOSCA 1.0 from\nsection \u201c[3\u00a0\u00a0\u00a0Core Concepts and Usage\nPattern](http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.html#_Toc356403643)\u201d\nand this section should be a more in-depth section than section 2.1 in\nthis document."}-->
-
-> Add a metamodel picture
+This section defines concepts used in support of the modeling
+functionality of the TOSCA Version 2.0 specification. Specifically, it
+introduces grammar for defining TOSCA types and templates as defined
+in [Chapter 2](#23-tosca-core-concepts), it introduces the concepts of
+entity definitions and entity assignments, and presents rules for type
+derivation and entity refinement.
 
 > Explain separation of concerns and different roles. Refer to email
 > from Peter.
 
-## Modeling Definitions and Reuse
+## Type Definitions and Entity Definitions
 
-The TOSCA metamodel includes complex definitions used in types and
-templates. Reuse concepts simplify the design of TOSCA templates by
-allowing relevant TOSCA entities to use and/or modify definitions
-already specified during entity type design. The following four concepts
-are clarified next:
+TOSCA adopts a model-driven management approach where management
+actions are performed using models maintained by the management
+system. These models are created from *templates* defined in TOSCA
+files and expressed using the TOSCA language. All TOSCA templates are
+*typed* using TOSCA types that are also defined in TOSCA files and
+expressed in the TOSCA language. Not only do types promote reuse, they
+also simplify the design of TOSCA templates by allowing relevant TOSCA
+entities to use and/or modify definitions already specified in the
+types.
 
-- **Definition**:
+**Type definitions** consist of pairs keynames and associated values
+that specify information relevant to the type. While all TOSCA types
+share a number of common keynames, each type definition has its own
+syntax, semantics, and set of keynames, TOSCA supports *node types*,
+*relationship types*, *capability types*, *interface types*, *artifact
+types*, *policy types*, *group types*, and *data types*.
 
-  - The TOSCA specification is based on defining modeling entities.
-  - Entity definitions are based on different sets of keynames (with
-    specific syntax and semantics) that are associated with values (of a
-    specific format).
+Some keynames in TOSCA type definitions are used to specify **entity
+definitions** that *declare* the presence of other entities in the
+context of the type. For example, most TOSCA type definitions include
+*property definitions* and *attribute definitions*. Node types and
+relationship types also include *interface definitions*, and node
+types have *requirement definitions* and *capability definitions*.
+Interface types can include *parameter definitions* that specify
+required inputs and expected outputs for interface operations.
 
-<!----
-{"id": "163", "author": "Chris Lauwers", "date": "2021-01-17T00:51:00Z", "comment": "Alternative language proposed by PJ:\n  Entity definitions comprise pairs of keynames and values. Each entity\n  has it own syntax, semantics and set of\n  keynames.", "target": "format"}-->
+Just like type definitions, entity definitions consist of pairs of
+keynames and values. Each entity definition has it own syntax,
+semantics and set of keynames, but all entity definitions share a
+`type` keyname that references the TOSCA type of the entity being
+defined. Other keynames in entity definitions are used to further
+define and/or modify definitions already specified in the
+corresponding entity type. TOSCA supports *capability definitions*,
+*requirement definitions*, *interface definitions*, *policy
+definitions*, *group definitions*, *property definitions*, *attribute
+definitions*, and *parameter definitions*.
 
-- **Derivation**:
+## Templates and Entity Assignments
 
-  - Specific TOSCA entities support a type definition.
-  - When defining a type, it can be derived from a parent type and inherit
-    all the definitions of the parent type.
-  - The derivation rules describe what (keyname) definitions are inherited
-    from the parent type and further if and how they can be expanded or modified. Note
-    that some definitions (for example, “version”) and intrinsic to the
-    type declaration and so are not inherited.
-  - A parent type can in turn be derived from a parent type. There is no
-    limit to the depth of a chain of derivations.
-  
-<!----
-{"id": "164", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:42:00Z", "comment": "Expansion and modification is part of\n  Refinement not Derivation. This bullet point should be\n  removed", "target": ""}-->
+TOSCA-based management systems use models to describe systems and
+services under management. These system models are created from
+service templates that are defined in TOSCA files and expressed using
+statements in the TOSCA language. Service templates are directed
+graphs that consist of *node templates* and *requirements*. Node
+templates are defined using pairs of keynames and associated values
+that specify additional information for the definitions specified in
+the corresponding node types. Service templates may include other
+templates as well such as relationship templates, groups, policies
+etc.
 
-- **Refinement**:
+Many of the keynames used in node templates specify additional
+information for the entity definitions in the corresponding node
+types. Such informationis referred to as an **entity assigment**.  For
+each entity definition in the type of a template, the template can
+include a corresponding entity assignment that provides
+template-specific information about the entity. For example, node
+templates can include property assignments that assign
+template-specific values for the properties defined using *property
+definitions* in the *node type*. Property assigements can be provided
+as fixed values, but more often they will be specified using TOSCA
+functions that retrieve template input values or that retrieve
+property or attribute values from other entities in a service
+representation graph. Entity assignments make sure that the service
+template can be used to generate a complete representation of the
+system under management.
 
-  - Definitions within a type definition consist of the definition of
-    keynames and other TOSCA entities (e.g. properties, requirements,
-    capabilities, etc.). 
-    Definitions within a parent type can be refined (adjusted) to better
-    suit the needs of the referencing type.
-  - The refinement rules pertaining to an entity describe how such entity
-    definitions that are inherited from the parent type during a type
-    derivation can be expanded or modified.
+## Type Derivation, Augmentation, and Refinement
+
+The TOSCA type system supports *inheritance* which means that types
+can be derived from a parent type. A parent type can in turn be
+derived from its own parent type. There is no limit to the depth of a
+chain of derivations. Inheritance is a useful feature in support of
+abstraction. For example, base node types can be used to define
+abstract components without specifying technology or vendor-specific
+details about those components. Concrete derived node types can the be
+used to define technology-specific or vendor-specific specializations
+of the abstract types.
+
+The TOSCA specification includes *type derivation rules* that describe
+which keyname definitions are inherited from the parent type and which
+definitions are *intrinsic* to the type declaration and are not
+inherited. For example, all type definitions include a `version`
+keyword, the value of which is never inherited from a parent type.
+
+Except for keynames that are explicitly flagged as *intrinsic* to each
+type definition, derived types inherit all the definitions of their
+parent type. Specifically, derived types inherite all *entity
+definitions* from their parent. In addition, these entity definitions
+can be expanded or modified.
+
+- Expansion of entity definitions is done through **entity
+  augmentation**. Derived types use entity augmentation to *add*
+  entity definitions to those already defined in the parent
+  type. Augmentation rules pertaining to an entity describe how
+  derived types can add to the entity definitions in the inherited
+  parent type.
+- Modification of entity definitions is done through **entity
+  refinement**. Derived types use entity refinement to further
+  constrain or otherwise *specialize* entities already defined in the
+  parent type.  Refinement rules pertaining to an entity describe how
+  such entity definitions that are inherited from the parent type
+  during a type derivation can be expanded or modified.
 
 <!----
 {"id": "165", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:43:00Z", "comment": "Type\n  definition is part of Definition not\n  Refinement", "target": ""}-->
 
-- **Augmentation**:
-
-  - Definitions within a parent type can be expanded, which is the
-    addition of properties, to better suit the requirements of the
-    referencing type.
-  - The augmentation rules pertaining to an entity describe how the
-    inherited parent type during a type derivation can be added to.
-
-<!----
-{"id": "166", "author": "Mike Rehder", "date": "2020-04-30T11:10:00Z", "comment": "I think separating augmentation is helpful\n  (as YANG has done). I think it makes it easier to understand the rules\n  that apply for the refining or augmenting\n  scenario", "target": "**Augmentation**"}-->
-
-- **Assignment**:
-
-  - When creating a service template, we specify several entities that are
-    part of the template (e.g., nodes, relationships, groups, etc.).
-  - When adding such an entity in the service template, for some
-    definitions that appear in the corresponding entity type (e.g.,
-    properties, operations, requirements, etc.) we may (or must) assign a
-    certain specification (or value).
-
-## Goal of the Derivation and Refinement Rules
-
-The main reason for derivation and refinement rules is to create a
+The main reason for augmentation and refinement rules is to create a
 framework useful for a consistent TOSCA type profile creation. The
 intuitive idea is that a derived type follows to a large extent the
 structure and behavior of a parent type, otherwise it would be better to
@@ -1051,16 +1079,19 @@ selection and substitution mechanisms. These two mechanisms are used by
 TOSCA templates to connect to TOSCA nodes and services defined by other
 TOSCA templates:
 
-- The selection mechanism allows a node instance created a-priori by
-  another service template to be selected for usage (i.e., building
-  relationships) to the current TOSCA template.
-
-- The substitution mechanism allows a node instance to be represented by
-  a service created simultaneously via a substitution template.
+- The selection mechanism allows a node representation created
+  a-priori from another service template to be selected for usage
+  (i.e., building relationships) by node representations created from
+  the current TOSCA template.
+- The substitution mechanism allows a node representation to be
+  decomposed by a service created simultaneously from a substituting
+  template.
 
 It is relevant to emphasize the cross-template usage, as only in this
 case we deal with templates defined at different design time-points,
 with potentially different editing and maintenance restrictions.
+
+# TOSCA Grammar
 
 ## Mandatory Keynames
 
