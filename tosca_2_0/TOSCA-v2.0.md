@@ -304,13 +304,12 @@ TOSCA’s automated lifecycle management capabilities.
 ## 2.3 TOSCA Core Concepts
 
 As stated above, the TOSCA language assumes a *model-driven*
-management paradigm. Using model-driven management, management systems
-maintain models of all external components under management and all
-management operations are performed on the models first and any
-resulting changes to the models are then propagated to the external
+management paradigm. Using model-driven management, a model representing the managed external components is maintained and all
+management operations are performed on this model first and any
+resulting changes to the model are then propagated to the external
 components. Similarly, any status changes or errors experienced by the
-external components are reflected in the models first before they are
-handled by the management system. The models maintained by the
+external components are reflected in the model first before they are
+handled by the management system. The model maintained by the
 management system must capture all aspects of the external components
 that are relevant for the purpose of managing those components.
 
@@ -362,9 +361,8 @@ blueprints that are created by service designers and expressed in the
 TOSCA language. In this specification, we refer to those designs as
 **service templates** and we use the term **resolver** to refer to the
 management component that *instantiates* service representations based
-on *service templates*. TOSCA *service templates* define graphs which
-allows the *service representations* to be created as graphs as
-well. Service templates consist of **node templates** from which node
+on *service templates*. TOSCA *service templates* define service elements and their relationships which
+results in the *service representations* to be created as graphs. Service templates consist of **node templates** from which node
 representations are created, and **relationship templates** from which
 relationship representations are created. Note that whereas TOSCA does
 not standardize representations, it does standardize grammar for
