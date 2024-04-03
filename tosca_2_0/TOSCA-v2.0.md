@@ -161,14 +161,6 @@ appliances, the decoupling of hardware and software, and the adoption
 of edge deployments that move application functionality closer to the
 end-user.
 
-Management of such systems can be greatly simplified if the creation
-and lifecycle management of application, infrastructure, and network
-services can be fully automated and supported across a variety of
-deployment environments. TOSCA was expressly designed to address the
-complexity associated with managing large systems by providing a
-language for automating the lifecycle management of large complex
-systems.
-
 As a result of the above technology trends, large systems typically
 involve a wide variety of technologies and include components from
 multiple vendors. This results in management systems based on
@@ -178,7 +170,17 @@ of the system. To make matters worse, these tools often use
 incompatible interfaces or data schemas, resulting in integration
 nightmares. As the number of components grows—because the scale of the
 system increases and disaggregation becomes the norm—so will the
-number of required management tools.  The goal of TOSCA is to define a
+number of required management tools. 
+
+Management of such systems can be greatly simplified if the creation
+and lifecycle management of application, infrastructure, and network
+services can be fully automated and supported across a variety of
+deployment environments. TOSCA was expressly designed to address the
+complexity associated with managing large systems by providing a
+language for specifying an information model and automating the lifecycle management of large complex
+systems.
+
+The goal of TOSCA is to define a
 language that is agnostic to specific technological and commercial
 ecosystems and that supports the design and operation of large systems
 without being tied to specific technologies or specific vendors. This
