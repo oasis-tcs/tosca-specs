@@ -235,7 +235,7 @@ described. The use of graphs enables this as follows:
 - Relationships in a TOSCA graph encode dependencies that allow an
   orchestrator to automatically determine the *sequencing* between the
   managment operations on invoked on various components in the system,
-  thereby avoiding the need for human-defined workflows.
+  thereby avoiding the need for human-defined workflows. Implementing lifecycle or other management operations on the service can be achieved by traversing this graph.
 - Relationships in a TOSCA graph allow an orchestrator to
   automatically determine which system components may be affected by a
   component failure or by a change to an external resource. The
