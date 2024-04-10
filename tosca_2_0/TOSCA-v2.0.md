@@ -819,7 +819,6 @@ prescribe how TOSCA must be implemented. Instead, it aims to provide
 users of TOSCA with a mental model of how TOSCA implementations are
 expected to process TOSCA files.
 
-
 While TOSCA does not mandate that compatible implementations must
 support all three lifecycle phases, a complete architecture must
 anticipate all three and must include support for all four kinds of
@@ -836,8 +835,6 @@ The functional architecture defines the following three blocks:
     that must be provided by all TOSCA implementations. TOSCA processors
     convert TOSCA-based service definitions into service
     representations that can be processed by an Orchestrator.
-<!----
-{"id": "132", "author": "Chris Lauwers", "date": "2021-06-28T23:19:00Z", "comment": "We need to better define the concept of\n    \"representations\"", "target": "representations "}-->
 2.  **Orchestrator**: This functional block creates external
     implementations on various resource platforms based on the service
     representations created by a TOSCA processor. The orchestration
@@ -1001,7 +998,7 @@ relationships when the representation graph changes.
 -------
 # 5 TOSCA Grammar Overview
 
-## TOSCA Modeling Concepts
+## 5.1 TOSCA Modeling Concepts
 
 This section defines concepts used in support of the modeling
 functionality of the TOSCA Version 2.0 specification. Specifically, it
@@ -1013,7 +1010,7 @@ derivation and entity refinement.
 > Explain separation of concerns and different roles. Refer to email
 > from Peter.
 
-### Type Definitions and Entity Definitions
+### 5.1.1 Type Definitions and Entity Definitions
 
 TOSCA adopts a model-driven management approach where management
 actions are performed using models maintained by the management
@@ -1052,7 +1049,7 @@ corresponding entity type. TOSCA supports *capability definitions*,
 definitions*, *group definitions*, *property definitions*, *attribute
 definitions*, and *parameter definitions*.
 
-### Templates and Entity Assignments
+### 5.1.2 Templates and Entity Assignments
 
 TOSCA-based management systems use models to describe systems and
 services under management. These system models are created from
@@ -1081,7 +1078,7 @@ representation graph. Entity assignments make sure that the service
 template can be used to generate a complete representation of the
 system under management.
 
-### Type Derivation, Augmentation, and Refinement
+### 5.1.3 Type Derivation, Augmentation, and Refinement
 
 The TOSCA type system supports *inheritance* which means that types
 can be derived from a parent type. A parent type can in turn be
@@ -1118,9 +1115,6 @@ can be expanded or modified.
   such entity definitions that are inherited from the parent type
   during a type derivation can be expanded or modified.
 
-<!----
-{"id": "165", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:43:00Z", "comment": "Type\n  definition is part of Definition not\n  Refinement", "target": ""}-->
-
 The main reason for augmentation and refinement rules is to create a
 framework useful for a consistent TOSCA type profile creation. The
 intuitive idea is that a derived type follows to a large extent the
@@ -1145,7 +1139,7 @@ It is relevant to emphasize the cross-template usage, as only in this
 case we deal with templates defined at different design time-points,
 with potentially different editing and maintenance restrictions.
 
-## Mandatory Keynames
+## 5.2 Mandatory Keynames
 
 The TOSCA metamodel includes complex definitions used in types (e.g.,
 Node Types, Relationship Types, Capability Types, Data Types, etc.),
@@ -1164,7 +1158,61 @@ parent types (according to the derivation rules of that type entity). If
 a keyname definition is inherited, the derived type does not have to
 provide such definition.
 
-# TOSCA File
+## 5.3 Common Keynames
+
+Except where explicitly noted, all multi-line TOSCA grammar elements
+support the following keynames:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|description|no|string|Declares a description for the TOSCA element being defined.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the element being defined.|
+
+Grammar for these keynames is described here and may not be repeated
+for each entity definition.
+
+### 5.3.1 metadata
+This optional keyname is used to associate domain-specific metadata
+with a TOSCA element. The metadata keyname allows a declaration of a
+map of keynames with values that can use all types supported by
+the [YAML 1.2.2 recommended
+schemas](https://yaml.org/spec/1.2.2/#chapter-10-recommended-schemas)
+\[Yaml-1.2\] as follows:
+```
+metadata: <map_of_yaml_values>
+```
+Specifically, the following YAML types can be used for metadata
+values: map, seq, str, null, bool, int, float.
+
+The following shows an example that uses metadata to track revision
+status of a TOSCA file:
+```
+metadata: 
+  creation_date: 2024-04-14
+  date_updated: 2024-05-01
+  status: developmental  
+```
+### 5.3.2 description
+
+This optional keyname provides a means to include single or multiline
+descriptions within a TOSCA element as a *scalar string value* as
+follows:
+```
+description: <description_string>
+```
+Standard YAML block scalar and flow scalar formats are supported for
+the description string.  The following shows a Single line example
+
+```
+description: A simple example service template 
+```
+The following shows a multi-line flow scalar example
+```
+description: "A multiline description 
+using a quoted string”
+```
+
+# 6 TOSCA File Definition
 <!----
 {"id": "172", "author": "Calin Curescu", "date": "2020-04-20T18:49:00Z", "comment": "TBD. Here comes some intro and generic description of the different specification blocks that will build the following sections.", "target": "TOSCA Service"}-->
 <!----
@@ -1172,10 +1220,10 @@ provide such definition.
 <!----
 {"id": "178", "author": "Chris Lauwers", "date": "2022-06-22T14:26:00Z", "comment": "Update to reflect new naming", "target": "TOSCA file definition"}-->
 
-A TOSCA file contains reusable definitions of building blocks for use in cloud
-applications or complete models of cloud applications or both. This section
-describes the top-level TOSCA keynames—along with their grammars—that
-are allowed to appear in a TOSCA file.
+A TOSCA file can contain definitions of reusable building blocks for
+use in cloud applications, complete models of cloud applications, or
+both. This section describes the top-level TOSCA keynames—along with
+their grammars—that are allowed to appear in a TOSCA file.
 
 The major entities that can be defined in a TOSCA file are depicted in
 Figure 1.
@@ -1183,127 +1231,56 @@ Figure 1.
 
 Figure : Structural Elements of a TOSCA File
 
-
-## TOSCA File Definition
-
-### Keynames
+## 6.1 Keynames
 
 The following is the list of recognized keynames for a TOSCA file:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in the TOSCA file |
-|profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
-|metadata|no|map of YAML values|Defines a section used to declare additional metadata information.  Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations. |
+|tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in this TOSCA file.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information. Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations.|
 |description|no|string|Declares a description for this TOSCA file and its contents.|
-|dsl_definitions|no |N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout the TOSCA file.|
-|repositories|no|map of Repository definitions|Declares the map of external repositories that contain artifacts that are referenced in the TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
-|imports|no|list of Import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
-|artifact_types|no|map of Artifact Types|This section contains a map of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
-|data_types|no|map of Data Types|Declares a map of TOSCA Data Type definitions for use in the TOSCA file and/or external TOSCA files.|
-|capability_types|no|map of Capability Types|This section contains a map of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
-|interface_types|no|map of Interface Types|This section contains a map of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
-|relationship_types|no|map of Relationship Types|This section contains a map of relationship type definitions for use in the TOSCA file and/or external TOSCA files.|
-|node_types|no|map of Node Types|This section contains a map of node type definitions for use in the TOSCA file and/or external TOSCA files.|
-|group_types|no|map of Group Types|This section contains a map of group type definitions for use in the TOSCA file and/or external TOSCA files.|
-|policy_types|no|map of Policy Types|This section contains a map of policy type definitions for use in the TOSCA file and/or external TOSCA files.|
+|dsl_definitions|no|N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout this TOSCA file.|
+|profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
+|repositories|no|map of repository definitions|Declares a map of external repositories that contain artifacts that are referenced in this TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
+|imports|no|list of import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
+|artifact_types|no|map of artifact Types|Declares a map of artifact type definitions for use in this TOSCA file and/or external TOSCA files.|
+|data_types|no|map of data types|Declares a map of TOSCA data type definitions for use in this TOSCA file and/or external TOSCA files.|
+|capability_types|no|map of capability types|Declares a map of capability type definitions for use in this TOSCA file and/or external TOSCA files.|
+|interface_types|no|map of interface types|Declares a map of interface type definitions for use in this TOSCA file and/or external TOSCA files.|
+|relationship_types|no|map of relationship types|Declares a map of relationship type definitions for use in this TOSCA file and/or external TOSCA files.|
+|node_types|no|map of node types|Declares a map of node type definitions for use in this TOSCA file and/or external TOSCA files.|
+|group_types|no|map of group types|Declares a map of group type definitions for use in this TOSCA file and/or external TOSCA files.|
+|policy_types|no|map of policy types|Declares a map of policy type definitions for use in this TOSCA file and/or external TOSCA files.|
 |service_template|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application's or service's components, as well as relationship templates representing relations between these components.|
-|functions|no|map of function definitions|This section contains a map of function definitions for use in the TOSCA file and/or external TOSCA files.|
+|functions|no|map of function definitions|Declares a map of function definitions for use in this TOSCA file and/or external TOSCA files.|
 
-### Grammar
-
-The overall structure of a TOSCA file and its top-level keynames is
-shown below:
-```
-# Mandatory TOSCA version string
-tosca_definitions_version: <value>  # Mandatory, see section 3.1 for usage
-profile: <string>                   # Optional, see section 3.2 for usage
-
-# Optional metadata keyname: value pairs
-metadata:
-  
-  # map of YAML values
-
-# Optional description of the definitions inside the file.
-description: <template_ description>
-
-dsl_definitions:
-  # map of YAML alias anchors (or macros)
-
-repositories:
-  # map of external repository definitions which host TOSCA artifacts
-
-imports:
-  # ordered list of import definitions 
-
-artifact_types:
-  # map of artifact type definitions
-
-data_types:
-  # map of datatype definitions
-
-capability_types:
-  # map of capability type definitions
-
-interface_types
-  # map of interface type definitions
-
-relationship_types:
-  # map of relationship type definitions
-
-node_types:
-  # map of node type definitions
-
-group_types:
-  # map of group type definitions
-
-policy_types:
-  # map of policy type definitions
-
-functions:
-  # map of function definitions`
-
-service_template:
-  # service template definition of the cloud application or service
-
-```
-
-#### Requirements
+The following rules apply:
 
 - The key `tosca_definitions_version` MUST be the first line of each
   TOSCA file.
+- TOSCA files do not have to define a `service_template` and MAY
+  contain simply type definitions, repository definitions, function
+  definitions, or other import statements and be imported for use in
+  other TOSCA files. However, a TOSCA file that defines a `profile`
+  MUST NOT define a `service_template`.
 
-#### Notes
 <!----
 {"id": "194", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "**[TOSCA-246](../customXml/item1.xml): Comments captured**: Perhaps need an advanced concept to define \u201cfeatures\u201d that are not necessarily attached to a particular node. (like things you might include in a manifest). Like the requirement for a global time sync. How do we reference that feature, where is that feature attached to (some node?). perhaps add a new keyword like \u201ccloud\u201d that can hold all these Features that have no immediate Node to attach them to. Perhaps a syntax convention, where we might just list the names of the features (in some precedent order (sequence). Need to answer: -Who requires, it who fulfills it and how do u maintain the relationship? Luc: Environmental requirements. e.g., Python or something similar.", "target": "Notes"}-->
 
-- TOSCA files do not have to contain a service_template and MAY contain
-  simply type definitions (e.g., Artifact, Interface, Capability, Node,
-  Relationship Types, etc.), repository definitions, function
-  definitions, or other import statements and be imported for use in
-  other TOSCA files.
+The remainder of this chapter provides detailed descriptions of the
+keynames and associated grammars used in a TOSCA file definition.
 
-### Top-level keyname definitions
-
-#### tosca_definitions_version
-
-This mandatory element provides a means to specify the TOSCA version
-used within the TOSCA file. It is an indicator for the version of the
-TOSCA grammar that should be used to parse the remainder of the TOSCA
-file.
-
-##### Keyname
-```
-tosca_definitions_version 
-```
-##### Grammar
-
+## TOSCA Definitions Version
+The mandatory `tosca_definitions_version` keyname provides a means to
+specify the TOSCA version used within the TOSCA file as follows:
 ```
 tosca_definitions_version: <tosca_version> 
 ```
-
-TOSCA uses the following version strings for the various revisions of
-the TOSCA specification:
+It is an indicator for the version of the TOSCA grammar that MUST be
+used to parse the remainder of the TOSCA file. TOSCA uses the
+following version strings for the various revisions of the TOSCA
+specification:
 
 | Version String        | TOSCA Specification                      |
 |-----------------------|------------------------------------------|
@@ -1313,133 +1290,38 @@ the TOSCA specification:
 | tosca_simple_yaml_1_1 | TOSCA Simple Profile in YAML Version 1.1 |
 | tosca_simple_yaml_1_0 | TOSCA Simple Profile in YAML Version 1.0 |
 
-The version for this specification is tosca_2_0.
-
-Note that it is not mandatory for TOSCA Version 2.0 implementations to
-support older versions of the TOSCA specifications.
-
-##### Examples:
-
-A TOSCA file designed using the TOSCA Version 2.0 specification:
+The version for this specification is `tosca_2_0`. The following
+shows an example `tosca_definitions_version` in a TOSCA file created
+using the TOSCA Version 2.0 specification:
 ```
 tosca_definitions_version: tosca_2_0
 ```
+Note that it is not mandatory for TOSCA Version 2.0 implementations to
+support older versions of the TOSCA specifications.
 
-#### profile
-<!----
-{"id": "207", "author": "Chris Lauwers", "date": "2020-09-01T02:02:00Z", "comment": "Perhaps this should be its own section?", "target": "<span class=\"comment-start\" id=\"208\" author=\"Chris Lauwers\" date=\"2020-09-01T16:52:00Z\">What happens if files imported by a \u201cprofile\u201d file also defines a profile?</span>profile"}-->
+## DSL Definitions
 
-The profile keyword is used to assign a profile name to the collection
-of types defined in this TOSCA file. TOSCA implementations use profile
-names to register known profiles into an internal repository. These
-profiles can then be imported by other TOSCA files using the profile
-keyword in their import statement.
+The optional `dsl_definitions` keyname provides a section where
+template designers can define YAML-style macros for use elsewhere in
+the TOSCA file. DSL definitions use the following grammar:
 
-##### Keyname
-```
-profile
-```
-
-##### Grammar
-```
-profile: <string_value\> 
-```
-
-TOSCA does not place any restrictions on the value of the profile name
-string. However, we encourage a Java-style reverse-domain notation with
-version as a best-practice convention.
-
-##### Examples
-
-The following is an example of a TOSCA file that defines TOSCA Simple
-Profile Version 2.0 types:
-```
-profile: org.oasis-open.tosca.simple:2.0 
-```
-
-The following defines a domain-specific profile for Kubernetes:
-```
-profile: io.kubernetes:1.18 
-```
-
-#### metadata
-
-This keyname is used to associate domain-specific metadata with the
-Service Template. The metadata keyname allows a declaration of a map of
-keynames with values that can use all types supported by the [YAML 1.2.2
-recommended
-schemas](https://yaml.org/spec/1.2.2/#chapter-10-recommended-schemas)
-\[Yaml-1.2\]. Specifically, the following types can be used for metadata
-values: map, seq, str, null, bool, int, float.
-<!----
-{"id": "213", "author": "Chris Lauwers", "date": "2022-12-06T14:44:00Z", "comment": "Did we\ndecide to allow recursive metadata (i.e. maps of\nmaps?)", "target": "float"}-->
-
-##### Keyname
-```
-metadata 
-```
-
-##### Grammar
-```
-metadata: 
-  <map_of_yaml_values>
-```
-
-##### Example
-```
-metadata: 
-  creation_date: 2015-04-14
-  date_updated: 2015-05-01
-  status: developmental  
-```
-
-#### description
-
-This optional keyname provides a means to include single or multiline
-descriptions within a TOSCA template as a scalar string value.
-
-##### Keyname
-```
-description 
-```
-
-##### Grammar
-```
-description: <description>
-```
-
-##### Example
-
-Single line example
-```
-description: A simple example service template 
-```
-
-Multi-line example
-```
-description: "A multiline description 
-using a quoted string”
-```
-
-#### dsl_definitions
-
-This optional keyname provides a section to define macros YAML-style
-macros for use in the TOSCA file.
-
-##### Keyname
-```
-dsl_definitions 
-```
-
-##### Grammar 
 ```
 dsl_definitions:
    <dsl_definition_1>
    ...
    <dsl_definition_n>
 ```
+The grammar for each `<dsl_definition>` is as follows:
+```
+<anchor_block>: &<anchor>
+  <anchor_definitions>
+```
+where `<anchor_block>` defines a set of reusable YAML definitions (the
+`<anchor_definitions>`) for which `<anchor>` can be used as an alias
+elsewhere in the document.
 
-##### Example
+The following example shows DSL definitions for common image property
+assignments:
 <!----
 {"id": "236", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:18:00Z", "comment": "There should also be an example of how to use the macro once defined.", "target": "Example"}-->
 ```
@@ -1449,12 +1331,278 @@ dsl_definitions:
       type: linux
       distribution: ubuntu
       os_version: 14.04
-
     redhat_image_props: &redhat_image_props
       architecture: x86_64
       type: linux
       distribution: rhel
       os_version: 6.6
+```
+
+## Profiles
+
+A TOSCA profile is a named collection of TOSCA type definitions,
+repository definitions, artifacts, and function definitions that
+logically belong together. One can think of TOSCA profiles as platform
+libraries exposed by the TOSCA processor and made available to all
+services that use that processor. Profiles in TOSCA are similar to
+libraries in traditional computer programming languages. They are
+intended to define collections of domain-specific components that can
+be used by service designers to compose complex service
+templates. Entities defined in TOSCA profiles are used as follows:
+
+- Types defined in a TOSCA profile provide reusable building blocks
+  based on which which services can be composed.
+- Artifacts defined in a TOSCA profile can provide
+  implementations for the TOSCA types defined in the profile. 
+
+TOSCA implementations can organize supported profiles in a catalog to
+allow other service templates to import those profiles by profile name.
+This avoids the need for every service that uses those profiles to
+include the profile type definitions in their service definition
+packages.
+
+TOSCA files that define profiles can be bundled together with other
+TOSCA files in the same CSAR package. For example, a TOSCA profile
+that defines *abstract* node types can be packaged together with TOSCA
+files that define substituting service templates for those abstract
+types.
+
+### Grammar
+A TOSCA file defines a TOSCA Profile using the `profile` keyword as
+follows:
+```
+profile: <profile_name> 
+```
+
+Using this grammar, the `profile` keyword assigns a *profile name* to
+the collection of types, repositories, and functions defined in this
+TOSCA file. The specified `profile_name` can be an arbitrary string
+value that defines the name by which other TOSCA files can import this
+profile. TOSCA does not place any restrictions on the value of the
+profile name string. However, we encourage a Java-style reverse-domain
+notation with version as a best-practice convention.  For example, the
+following profile statement is used to define TOSCA Simple Profile
+Version 2.0 types:
+```
+profile: org.oasis-open.tosca.simple:2.0 
+```
+The following defines a domain-specific profile for Kubernetes:
+```
+profile: io.kubernetes:1.30
+```
+TOSCA parsers MUST process profile definitions according to the
+following rules:
+
+- TOSCA files that define a profile (i.e., that contain a `profile`
+  keyname) MUST NOT also define a service template.
+- If the parser encounters the `profile` keyname in a TOSCA file, then the
+  corresponding profile name will be applied to all types defined in
+  that file as well as to types defined in any imported TOSCA files.
+- If one of those imported files also defines the `profile` keyname—and
+  that profile name is different from the name of the importing
+  profile—then that profile name overrides the profile name value from
+  that point in the import tree onward, recursively.
+
+### TOSCA Simple Profile
+
+Version 1.x of the TOSCA specification included a collection of
+normative type definitions for building cloud applications. This
+collection of type definitions was defined as the **TOSCA Simple
+Profile**. Implementations of TOSCA Version 1.x were expected to include
+implementations for the types defined in the TOSCA Simple Profile, and
+service templates defined using TOSCA Version 1.x implicitly imported
+the corresponding TOSCA Simple Profile version.
+
+Starting with TOSCA Version 2.0, the TOSCA Simple Profile type
+definitions are no longer part of the TOSCA standard and support for the
+TOSCA Simple Profile is no longer mandatory. Instead, the definition of
+the TOSCA Simple Profile has been moved to an OASIS Open Github
+repository with the goal of being maintained by the TOSCA community and
+governed as an open-source project. In addition, TOSCA Version 2.0
+removes the implicit import of the TOSCA Simple Profile. Service
+templates that want to continue to use the TOSCA Simple Profile type
+definitions must explicitly import that profile.
+
+Eliminating mandatory support for the TOSCA Simple Profile makes it
+easier for TOSCA to be used for additional application domains. For
+example, the European Telecommunications Standards Institute (ETSI) has
+introduced a TOSCA profile for **Network Functions Virtualization**
+defines Virtualized Network Function Descriptors (VNFDs), Network
+Service Descriptors (NSDs) and a Physical Network Function Descriptors
+(PNFDs).
+
+> We should give a couple of additional examples.
+
+### Profile Versions
+
+TOSCA Profiles are likely to evolve over time and profile designers will
+release different versions of their profiles. For example, the TOSCA
+Simple Profile has gone through minor revisions with each release of the
+TOSCA Version 1 standard. It is expected that profile designers will use
+a version qualifier to distinguish between different versions of their
+profiles, and service template designers must use the proper string name
+to make sure they import the desired versions of these profiles.
+
+> Do we impose a structure on profile names that distinguishes the version
+> qualifier from the base profile name? If so, is there a specific
+> separator character or string (in which case the use of the separator
+> must be escaped somehow (or disallowed) in profile names.
+
+When multiple versions of the same profile exist, it is possibly that
+service templates could mix and match different versions of a profile in
+the same service definition. The following code snippets illustrate this
+scenario:
+
+Assume a profile designer creates version 1 of a base profile that
+defines (among other things) a **Host** capability type and a
+corresponding **HostedOn** relationship type as follows:
+```
+tosca_definitions_version: tosca_2_0
+profile: org.base.v1
+capability_types:
+  Host:
+    description: Hosting capability
+relationship_types:
+  HostedOn:
+    valid_capability_types: [ Host ]
+```
+Now let’s assume a different profile designer creates a
+platform-specific profile that defines (among other things) a
+**Platform** node type. The Platform node type defines a capability of
+type **Host**. Since the **Host** capability is defined in the
+**org.base.v1** profile, that profile must be imported as shown in the
+snippet below:
+```
+tosca_definitions_version: tosca_2_0
+profile: org.platform
+imports:
+  - profile: org.base.v1
+    namespace: p1
+node_types:
+  Platform:
+    capabilities:
+      host:
+        type: p1:Host
+```
+At some later point of time, the original profile designer updates the
+**org.base** profile to Version 2. The updated version of this profile
+just adds a **Credential** data type (in addition to defining the
+**Host** capability type and the **HostedOn** relationship type), as
+follows:
+```
+tosca_definitions_version: tosca_2_0
+profile: org.base.v2
+capability_types:
+  Host:
+    description: Hosting capability
+relationship_types:
+  HostedOn:
+    valid_capability_types: [ Host ]
+data_types:
+  Credential:
+    properties:
+      key:
+        type: string
+```
+Finally, let’s assume a service designer creates a template for a
+service that is to be hosted on the platform defined in the
+**org.platform** profile. The template introduces a **Service** node
+type that has a requirement for the platform’s **Host** capability. It
+also has a credential property of type **Credential** as defined in
+**org.base.v2**:
+```
+tosca_definitions_version: tosca_2_0
+imports:
+  - profile: org.base.v2
+    namespace: p2
+  - profile: org.platform
+    namespace: pl
+node_types:
+  Service:
+    properties:
+      credential:
+        type: p2:Credential
+    requirements:
+      - host:
+          capability: p2:Host
+          relationship: p2:HostedOn
+service_template:
+  node_templates:
+    service:
+      type: Service
+      properties:
+        credential:
+          key: password
+      requirements:
+        - host: platform
+    platform:
+      type: pl:Platform
+```
+This service template is invalid, since the **platform** node template
+does not define a capability of a type that is compatible with the
+**valid_capability_types** specified by the **host** requirement in the
+**service** node template. TOSCA grammar extensions are needed to
+specify that the **Host** capability type defined in **org.base.v2** is
+the same as the **Host** capability type defined in **org.base.v1**
+
+The example in this section illustrates a general version compatibility
+issue that exists when different versions of the same profile are used
+in a TOSCA service.
+
+> A number of suggestions for these extensions are currently being
+> discussed. Grammar extensions will be included in this document one they
+> are agreed upon.
+
+## Repositories
+
+A repository definition defines an external repository that contains
+TOSCA files and/or = artifacts that are referenced within the TOSCA
+file.
+
+#### Keynames
+
+The following is the list of recognized keynames for a TOSCA repository
+definition:
+
+| Keyname     | Mandatory | Type                        | Description                                                         |
+|-------------|-----------|-----------------------------|---------------------------------------------------------------------|
+| description | no        | [string](#TYPE_YAML_STRING) | The optional description for the repository.                        |
+| url         | yes       | [string](#TYPE_YAML_STRING) | The mandatory URL or network address used to access the repository. |
+
+### Grammar
+
+Repository definitions have one the following grammars:
+
+#### Single-line grammar:
+```
+<repository_name>: <repository_address>
+```
+##### Multi-line grammar
+```
+<repository_name>:
+  description: <repository_description>
+  url: <repository_address>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- repository_name: represents the mandatory symbolic name of the
+  repository as a [string](#TYPE_YAML_STRING).
+
+- repository_description: contains an optional description of the
+  repository.
+
+- repository_address: represents the mandatory URL of the repository as
+  a string.
+
+#### Example
+
+The following represents a repository definition:
+```
+repositories:
+  my_code_repo:
+    description: My project’s code repository in GitHub
+    url: https://github.com/my-project/
 ```
 
 #### repositories
@@ -1757,213 +1905,6 @@ policy_types:
   mycompany.mytypes.myScalingPolicy:
     derived_from: tosca.policies.Scaling
 ```
-## Profiles
-
-A profile is a named collection of TOSCA type definitions, artifacts,
-and service templates that logically belong together. One can think of
-TOSCA profiles as platform libraries exposed by the TOSCA orchestration
-platform and made available to all services that use that platform.
-Profiles in TOSCA are similar to libraries in traditional computer
-programming languages.
-
-Profiles contain a collection of pre-defined components that can be used
-by service designers to compose complex service templates, Entities
-defined in TOSCA profiles are used as follows:
-
-- Types defined in a TOSCA profile provide reusable building blocks from
-  which services can be composed.
-- Artifacts and service templates defined in a TOSCA profile provide
-  implementations for the TOSCA types defined in the profile. Whereas
-  artifacts provide interface operation implementations for concrete
-  nodes and relationships, service templates defined in TOSCA profiles
-  are intended to implement abstract nodes through substitution mapping.
-
-TOSCA implementations can organize supported profiles in a catalog to
-allow other service templates to import those profiles by profile name.
-This avoids the need for every service that use those profiles to
-include the profile type definitions in their service definition
-packages.
-
-### Examples
-
-Version 1.x of the TOSCA specification included a collection of
-normative type definitions for building cloud applications. This
-collection of type definitions was defined as the **TOSCA Simple
-Profile**. Implementations of TOSCA Version 1.x were expected to include
-implementations for the types defined in the TOSCA Simple Profile, and
-service templates defined using TOSCA Version 1.x implicitly imported
-the corresponding TOSCA Simple Profile version.
-
-Starting with TOSCA Version 2.0, the TOSCA Simple Profile type
-definitions are no longer part of the TOSCA standard and support for the
-TOSCA Simple Profile is no longer mandatory. Instead, the definition of
-the TOSCA Simple Profile has been moved to an OASIS Open Github
-repository with the goal of being maintained by the TOSCA community and
-governed as an open-source project. In addition, TOSCA Version 2.0
-removes the implicit import of the TOSCA Simple Profile. Service
-templates that want to continue to use the TOSCA Simple Profile type
-definitions must explicitly import that profile.
-
-Eliminating mandatory support for the TOSCA Simple Profile makes it
-easier for TOSCA to be used for additional application domains. For
-example, the European Telecommunications Standards Institute (ETSI) has
-introduced a TOSCA profile for **Network Functions Virtualization**
-defines Virtualized Network Function Descriptors (VNFDs), Network
-Service Descriptors (NSDs) and a Physical Network Function Descriptors
-(PNFDs).
-
-> We should give a couple of additional examples.
-
-### Defining Profiles
-
-A TOSCA file defines a TOSCA Profile if the profile keyword is used in
-that service template. The value of the profile keyword defines the name
-for the profile, which allows other service templates to import the
-profile by name.
-
-TOSCA does not impose naming conventions for profile names, but as a
-best practice we recommend a domain-name-like structure as used for Java
-package naming. For example, the following profile statement is used to
-define TOSCA Simple Profile Version 2.0 types:
-```
-profile: org.oasis-open.tosca.simple:2.0 
-```
-TOSCA parsers MUST process profile definitions according to the
-following rules:
-
-- TOSCA files that define a profile (i.e., that contain a profile
-  keyname) MUST NOT also define a service template.
-- If the parser encounters the profile keyname in a TOSCA file, then the
-  corresponding profile name will be applied to all types defined in
-  that file as well as to types defined in any imported TOSCA files.
-- If one of those imported files also defines the profile keyname—and
-  that profile name is different from the name of the importing
-  profile—then that profile name overrides the profile name value from
-  that point in the import tree onward, recursively.
-- TOSCA service templates defined in profiles MUST advertise
-  substitution mapping to allow them to be used as implementations for
-  abstract nodes defined using profile types.
-
-### Profile Versions
-
-TOSCA Profiles are likely to evolve over time and profile designers will
-release different versions of their profiles. For example, the TOSCA
-Simple Profile has gone through minor revisions with each release of the
-TOSCA Version 1 standard. It is expected that profile designers will use
-a version qualifier to distinguish between different versions of their
-profiles, and service template designers must use the proper string name
-to make sure they import the desired versions of these profiles.
-
-> Do we impose a structure on profile names that distinguishes the version
-> qualifier from the base profile name? If so, is there a specific
-> separator character or string (in which case the use of the separator
-> must be escaped somehow (or disallowed) in profile names.
-
-When multiple versions of the same profile exist, it is possibly that
-service templates could mix and match different versions of a profile in
-the same service definition. The following code snippets illustrate this
-scenario:
-
-Assume a profile designer creates version 1 of a base profile that
-defines (among other things) a **Host** capability type and a
-corresponding **HostedOn** relationship type as follows:
-```
-tosca_definitions_version: tosca_2_0
-profile: org.base.v1
-capability_types:
-  Host:
-    description: Hosting capability
-relationship_types:
-  HostedOn:
-    valid_capability_types: [ Host ]
-```
-Now let’s assume a different profile designer creates a
-platform-specific profile that defines (among other things) a
-**Platform** node type. The Platform node type defines a capability of
-type **Host**. Since the **Host** capability is defined in the
-**org.base.v1** profile, that profile must be imported as shown in the
-snippet below:
-```
-tosca_definitions_version: tosca_2_0
-profile: org.platform
-imports:
-  - profile: org.base.v1
-    namespace: p1
-node_types:
-  Platform:
-    capabilities:
-      host:
-        type: p1:Host
-```
-At some later point of time, the original profile designer updates the
-**org.base** profile to Version 2. The updated version of this profile
-just adds a **Credential** data type (in addition to defining the
-**Host** capability type and the **HostedOn** relationship type), as
-follows:
-```
-tosca_definitions_version: tosca_2_0
-profile: org.base.v2
-capability_types:
-  Host:
-    description: Hosting capability
-relationship_types:
-  HostedOn:
-    valid_capability_types: [ Host ]
-data_types:
-  Credential:
-    properties:
-      key:
-        type: string
-```
-Finally, let’s assume a service designer creates a template for a
-service that is to be hosted on the platform defined in the
-**org.platform** profile. The template introduces a **Service** node
-type that has a requirement for the platform’s **Host** capability. It
-also has a credential property of type **Credential** as defined in
-**org.base.v2**:
-```
-tosca_definitions_version: tosca_2_0
-imports:
-  - profile: org.base.v2
-    namespace: p2
-  - profile: org.platform
-    namespace: pl
-node_types:
-  Service:
-    properties:
-      credential:
-        type: p2:Credential
-    requirements:
-      - host:
-          capability: p2:Host
-          relationship: p2:HostedOn
-service_template:
-  node_templates:
-    service:
-      type: Service
-      properties:
-        credential:
-          key: password
-      requirements:
-        - host: platform
-    platform:
-      type: pl:Platform
-```
-This service template is invalid, since the **platform** node template
-does not define a capability of a type that is compatible with the
-**valid_capability_types** specified by the **host** requirement in the
-**service** node template. TOSCA grammar extensions are needed to
-specify that the **Host** capability type defined in **org.base.v2** is
-the same as the **Host** capability type defined in **org.base.v1**
-
-The example in this section illustrates a general version compatibility
-issue that exists when different versions of the same profile are used
-in a TOSCA service.
-
-> A number of suggestions for these extensions are currently being
-> discussed. Grammar extensions will be included in this document one they
-> are agreed upon.
-
 ## Imports
 <!----
 {"id": "346", "author": "Chris Lauwers", "date": "2020-09-01T00:20:00Z", "comment": "I don\u2019t know what is meant by \u201creferences\u201d.", "target": "Imports"}-->
@@ -2361,57 +2302,6 @@ Within each namespace, names must be unique. This means the following:
 
   - Groups (groups)
 
-### Repository definition
-
-A repository definition defines an external repository which contains
-deployment and implementation artifacts that are referenced within the
-TOSCA file.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA repository
-definition:
-
-| Keyname     | Mandatory | Type                        | Description                                                         |
-|-------------|-----------|-----------------------------|---------------------------------------------------------------------|
-| description | no        | [string](#TYPE_YAML_STRING) | The optional description for the repository.                        |
-| url         | yes       | [string](#TYPE_YAML_STRING) | The mandatory URL or network address used to access the repository. |
-
-### Grammar
-
-Repository definitions have one the following grammars:
-
-#### Single-line grammar:
-```
-<repository_name>: <repository_address>
-```
-##### Multi-line grammar
-```
-<repository_name>:
-  description: <repository_description>
-  url: <repository_address>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- repository_name: represents the mandatory symbolic name of the
-  repository as a [string](#TYPE_YAML_STRING).
-
-- repository_description: contains an optional description of the
-  repository.
-
-- repository_address: represents the mandatory URL of the repository as
-  a string.
-
-#### Example
-
-The following represents a repository definition:
-```
-repositories:
-  my_code_repo:
-    description: My project’s code repository in GitHub
-    url: https://github.com/my-project/
-```
 ## Additional information definitions
 
 ### Description definition
