@@ -156,11 +156,13 @@ Used by this specification
 - DSL  Domian Specific Language
 
 Used as examples
-- TAR Tape Archive A file format originally used in unix
 - DBMS  Database Management System
+- EJB Enterprise Java Beans
 - SD-WAN Software Defined Wide Area Network
 - SQL Structured Query Language
-- VPN   Virtual Private Network
+- TAR Tape Archive A file format originally used in unix
+- VPN Virtual Private Network
+- USD United States Dollar
 -------
 # 2 TOSCA Overview
 
@@ -501,24 +503,17 @@ presence of an entity of a specific **node type** as a component of a
 service. A node type defines the semantics of such a component,
 including the configurable properties of the component (via **property
 definitions**), its runtime state (via **attribute definitions**) and
-the operations (via *interface definitions*) available to manipulate
-the component. In a service template a node template assigns values to
+the operations (via **interface definitions**) available to manipulate
+the component. In a service template, a node template assigns values to
 the properties defined in the node type. An orchestrator updates
 attribute values as a result of performing lifecycle management
-operations. 
+operations.
 
-<!----
-{"id": "94", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-04T16:20:00Z", "comment": "A diagram of the example would help", "target": "\nexample"}-->
-
-For example, consider a service that consists of an application
-server, a process engine, and a process model. A service template
-defining that service would include one node template of node type
-"application server”, another Node Template of Node Type “process
-engine”, and a third Node Template of Node Type “process model”. The
-application server Node Type defines properties like the IP address of
-an instance of this type, an operation for installing the application
-server with the corresponding IP address, and an operation for
-shutting down an instance of this application server. A constraint in
+For example, consider a service that consists of an some computing application, a database and something computing resource to run them on. A service template
+defining that service would include one node template of node type or the particular application, another Node Template of Node Type  “database management system” or a more specific derivative, "MariaDB" perhaps, and a third Node Template of Node Type "compute" or more likely a more specific derivative. The
+DBMS Node Type defines properties like the IP address of
+an instance of this type, an operation for installing the database application with the corresponding IP address, and an operation for
+shutting down an instance of this DBMS. A constraint in
 the Node Template can specify a range of IP addresses available when
 making a concrete application server available.
 
@@ -536,10 +531,10 @@ properties, attributes, and interfaces. Node types and relationship
 types are typically defined separately for reuse purposes and
 organized into profiles.
 
-In the example above, a relationship can be established from the process
-engine Node Template to the application server Node Template with the
-meaning “hosted by”, and from the process model Node Template to the
-process engine Node Template with meaning “deployed on”.
+In the example above, a relationship can be established from the application
+server Node Template to the database Node Template with the
+meaning “depends on”, and from both the application and DBMS Node Templates to the
+compute Node Template with meaning “deployed on”.
 
 Note that in this specification, relationship templates more
 frequently referred to as **requirements** for reasons that will be
@@ -563,7 +558,7 @@ We discussed earlier how relationship templates are used to link node
 templates together into a service topology graph. However, it may not
 always be possible to define all node templates for a given service
 topology within a single service template. For example, modular design
-practices may dictate that different service subcomponents be modeled
+practices may dictate that different service subcomponents be modelled
 using separate service templates. This may result in relationships
 that need to be established across multiple service
 templates. Additionally, relationships may need to target components
@@ -598,10 +593,10 @@ from which these representations were created. TOSCA processors can
 take representations created from multiple service templates into
 account when fulfilling requirements, or they can attempt to use
 representations for external resources managed in an inventory. Either
-way, requirement fulfillment results in relationships that are
+way, requirement fulfilment results in relationships that are
 established across service template boundaries.
 
-Requirements and capabilities are modeled by annotating node types
+Requirements and capabilities are modelled by annotating node types
 with **requirement definitions** and **capability definitions**
 respectively. Capability definitions themselves have associated
 **capability types** that are defined as reusable entities so that
@@ -609,7 +604,7 @@ those definitions can be used in the context of several node
 types. Just like node types and relationship types, capability types
 can define properties and attributes. Requirement definitions are
 effectively *relationship definitions* that specify the relationship
-type that will be used when creating the relationship that fulfills
+type that will be used when creating the relationship that fulfils
 the requirement.
 
 The following figure summarizes the various TOSCA abstractions used
@@ -656,17 +651,17 @@ template if it exposes the same external *façade* (i.e. properties,
 capabilities, requirements, etc.) as the node template for which it is
 a substitution. Thus, a substitution with any service template that
 has the same *facade* as a certain node template in one service
-Template becomes possible, allowing for a hierachical decomposition of
+Template becomes possible, allowing for a hierarchical decomposition of
 service templates. This concept also allows for providing
 substitutable alternatives that can be selected by a TOSCA processor
-at service deployment time. For example, a service template for a
-single node application server tier and a Service Template for a
-clustered application server tier might exist, and the appropriate
+at service deployment time. For example there might exist two Service Templates, one for a
+single node application server tier and another for a
+clustered application server tier, in this case and the appropriate
 option can be selected an a deployment-by-deployment basis.
 
 ## 3.4 Interfaces, Operations, and Artifacts
 
-Both node and relationship types may define lifecycle **operations**
+Both Node Types and Relationship Types may define lifecycle **operations**
 that define the actions an orchestration engine can invoke when
 instantiating a service from a service template or when managing a
 deployed service. For example, a node type for some software product
@@ -701,7 +696,7 @@ execution environment.
 A deployed service is an instance of a service template. More
 precisely, a service is deployed by first creating a *service
 representation* based on the *service template* describing the service
-and then *orchestrating* the *exernal implementations* modeled by
+and then *orchestrating* the *external implementations* modelled by
 those representations. If TOSCA orchestration is used, the external
 implementations are created by running workflows that invoke interface
 operations defined in the types of the nodes and relationships in the
@@ -757,8 +752,8 @@ types the non-functional behavior or quality-of-service it describes.
 
 **Policy templates** provide actual values of properties of the types
 defined by policy types. For example, a policy template for monthly
-payments for US customers will set the “payment period” property to
-“monthly” and the “currency” property to “US\$”, leaving the “amount”
+payments for customers located in the USA will set the “payment period” property to
+“monthly” and the “currency” property to “USD”, leaving the “amount”
 property open. The “amount” property will be set when the
 corresponding Policy Template is used for a Policy within a Node
 Template. Thus, a Policy Template defines the invariant properties of
@@ -866,9 +861,9 @@ A resolver performs the following functions
 
 ##### Creating Relationships connecting Node Representations
 
-- Relationships are created by Requirement Fulfillment
+- Relationships are created by Requirement Fulfilment
     - If a requirement uses a node_filter that refers to uninitialized properties
-      or attributes, then the fulfillment of this requirement is postponed until
+      or attributes, then the fulfilment of this requirement is postponed until
       all referred properties or attributes are initialized.
     - A circular dependency signifies a erroneous template and shall report an error
     - After a relationship is created, properties and attributes that depend on it
