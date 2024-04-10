@@ -476,6 +476,29 @@ implementations of TOSCA, for example:
   example of generator is a modeling tool capable of generating or
   editing a system design expressed using TOSCA.
 
+## 2.4 Using TOSCA
+
+### 2.4.1 TOSCA Files
+
+### 2.4.2 Archive Format for Cloud Applications
+
+In order to support in a certain environment for the execution and
+management of the lifecycle of a cloud application, all corresponding
+artifacts have to be available in that environment. This means that
+beside the TOSCA file of the cloud application, the deployment
+artifacts and implementation artifacts have to be available in that
+environment. To ease the task of ensuring the availability of all of
+these, this specification defines a corresponding archive format called
+CSAR (Cloud Service ARchive).
+
+A CSAR is a container file, i.e. it contains multiple files of possibly
+different file types. These files are typically organized in several
+subdirectories, each of which contains related files (and possibly other
+subdirectories etc.). The organization into subdirectories and their
+content is specific for a particular cloud application. CSARs are zip
+files, typically compressed. A CSAR may contain a file called TOSCA.meta
+that describes the organization of the CSAR.
+
 -------
 # 3 TOSCA Language Abstractions
 
@@ -689,12 +712,12 @@ implementation for an interface operation. A TOSCA artifact could be
 an executable (e.g. a script, an executable program, an image), a
 configuration file or data file, or something that might be needed so
 that another executable can run (e.g. a library). Artifacts can be of
-different types, for example EJBs or python scripts. The content of an
-artifact depends on its **artifact type**. Typically, descriptive
-metadata (such as properties) will also be provided along with the
-artifact. This metadata might be needed by an orchestrator to properly
-process the artifact, for example by describing the appropriate
-execution environment.
+different types, for example Ansible playbooks or python scripts. The
+content of an artifact depends on its **artifact type**. Typically,
+descriptive metadata (such as properties) will also be provided along
+with the artifact. This metadata might be needed by an orchestrator to
+properly process the artifact, for example by describing the
+appropriate execution environment.
 
 ## 3.5 Workflows
 
@@ -11314,28 +11337,6 @@ $ceil: [ <float_type_arg> ]
 ```
 TOSCA Cloud Service Archive (CSAR) format
 =========================================
-
-Archive Format for Cloud Applications
--------------------------------------
-
-In order to support in a certain environment for the execution and
-management of the lifecycle of a cloud application, all corresponding
-artifacts have to be available in that environment. This means that
-beside the TOSCA file of the cloud application, the deployment
-artifacts and implementation artifacts have to be available in that
-environment. To ease the task of ensuring the availability of all of
-these, this specification defines a corresponding archive format called
-CSAR (Cloud Service ARchive).
-
-A CSAR is a container file, i.e. it contains multiple files of possibly
-different file types. These files are typically organized in several
-subdirectories, each of which contains related files (and possibly other
-subdirectories etc.). The organization into subdirectories and their
-content is specific for a particular cloud application. CSARs are zip
-files, typically compressed. A CSAR may contain a file called TOSCA.meta
-that describes the organization of the CSAR.
-
-
 
 This section defines the metadata of a cloud service archive as well as
 its overall structure. Except for the examples, this section is
