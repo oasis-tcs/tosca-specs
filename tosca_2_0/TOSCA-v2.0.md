@@ -90,11 +90,11 @@ For complete copyright information please see the full Notices section in an App
 -------
 # 1 Introduction
 <!-- All text is normative unless otherwise labeled -->
-*The content in this section is non-normative, except where it is marked
-normative.*
+<!-- But there is currently no content which is marked as normative, until there is the document would read better if the second clause was deleted PJ-->
+*The content in this section is non-normative.*
 
 The Topology and Orchestration Specification for Cloud Applications
-(TOSCA) provides a language for describing application components and
+(TOSCA) provides a language for describing components and
 their relationships by means of a service topology, and for specifying
 the lifecycle management procedures for creation or modification of
 services using orchestration processes. The combination of topology
@@ -106,14 +106,27 @@ connections, compositions) drives the automated processes.
 
 ## 1.1 Changes from earlier Versions
 
-<!-- Optional section -->
-<!-- Describe significant changes from previous differently-numbered Versions, not changes between stages of the current Version -->
+This version of the specification includes significant changes from TOSCA 1.3. In particular:
+- There is improved support for the use of TOSCA for in-life operation of a service
+- The role of the representation model is clarified
+- Greater support for functions
+
+- Constraints are now expressed as boolean functions
+- A new TOSCA path syntax allows a defined traversal of an arbitary graph of nodes and relationships to an attribute or property  
+- The version type is defined
+- Additipnal built-in functions
+- Custom defined functions
+- The service template is renamed TOSCA file and service template is redefined
+- Relationship type defintion now operates in the same way as other entities
+- Short notation for entry_schema and key_schema
+- Other syntax clarifications
 
 ## 1.2 Document conventions
 
 - Naming conventions
 - Font colors and styles
 - Typographic conventions
+
 
 ## 1.3 Glossary
 
@@ -133,7 +146,21 @@ the following definitions when used in context of this document.
 |Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
 
 ### 1.3.2 Acronyms and abbreviations
+Defined in this document
+- TOSCA Topology and Orchestration Specification for Cloud Applications
+- CSAR  Cloud Service Archive A file format defined by OASIS TOSCA to contain TOSCA files
 
+Used by this specification
+- YAML  Yet Another Markup Language The Languange TOSCA uses for files
+- MACD  Moves, Adds, Changes, and Deletions
+- DSL  Domian Specific Language
+
+Used as examples
+- TAR Tape Archive A file format originally used in unix
+- DBMS  Database Management System
+- SD-WAN Software Defined Wide Area Network
+- SQL Structured Query Language
+- VPN   Virtual Private Network
 -------
 # 2 TOSCA Overview
 
@@ -254,7 +281,7 @@ TOSCA models are based on *service templates* that are created by
 service designers. Service templates consist of node templates and
 relationship templates that have associated node types and relationshp
 types. Types in TOSCA represent reusable components that are the
-building blocks from which services can be constructed, therey
+building blocks from which services can be constructed, thereby
 promoting modularity and reuse.
 
 In addition, TOSCA allows modular designs whereby service templates
@@ -264,38 +291,37 @@ complete system models can be done by an orchestrator at deployment
 time. This enables automation of placement decisions, resource
 allocation, and system integration.
 
-TOSCA also allow for the definition of abstract components that hide
+TOSCA's modularity features allow some service design decisions to be
+made by an orchestrator at deployment time rather than by a service
+designer at service design time. 
+TOSCA also allows for the definition of abstract components that hide
 technology and vendor-specific implementation details. The choice of
 how to *implement* abstract components can be left to the orchestrator
 at deployment time. This further increases the value of TOSCA as a
-technology and vendor-neutral technology for orchestration.
-
-TOSCA's modularity features allow some service design decisions to be
-made by an orchestrator at deployment time rather than by a service
-designer at service design time. TOSCA supports the use of *policies*
+technology and vendor-neutral technology for orchestration. TOSCA supports the use of *policies*
 to guide the design decisions make by orchestrators at design time.
 
 ### 2.2.4 TOSCA is Domain-Independent
 
 Since the fundamental abstraction defined by the TOSCA language is a
-*graph*, TOSCA can be used for application domain whithin which
+*graph*, TOSCA can be used for application domain within which
 systems can be modeled as graphs. For example, TOSCA can be used to
 specify automated lifecycle management of the following:
 
 - Infrastructure-as-a-Service Clouds: automate the deployment and
   management of workloads in IaaS clouds such as OpenStack, Amazon Web
   Services, Microsoft Azure, Google Cloud, and others.
+<!-- May need to acknowledge the above terms as trademarks. Can't find guidance on OASIS web site, take advice -->
 - Cloud-Native Applications: deploy containerized applications,
   micro-services, and service meshes, for example by interfacing to
   orchestration platforms such as Kubernetes.
-- Network Functions Virtualization: define the management of Virtual
+- Network Function Virtualization: define the management of Virtual
   Network Functions and their composition into complex network services.
 - Software Defined Networking: support on-demand creation of network
   services (for example SD-WAN).
 - Functions-as-a-Service: define abstract software applications without
   any deployment or operational considerations.
-- IoT and Edge computing: deploy services at the network edge with the
-  goal of minimizing latency.
+- IoT and Edge computing: deploy many very similar copies of a service at the network edge.
 - Process Automation: support open and interoperable process control
   architectures.
 
@@ -328,7 +354,7 @@ specific.
 
 A model-driven management system must include a component that is
 responsible for keeping the *representations* and the *external
-implementations* in sync. In the context of this specification, we
+implementations* syncchronized. In the context of this specification, we
 will refer to this component as the **orchestrator**. An orchestrator
 may perform this synchronization task based on workflows, policies, or
 other mechanisms that are defined using statements expressed in the
@@ -346,8 +372,8 @@ using representations, and how the Orchestrator synchronizes the two.
 Figure : Representations and Implementations
 
 TOSCA representations don't just track individual components and their
-management aspects, they also capture how the various components
-interact with the goal of providing complete system
+management aspects; they also capture how the various components
+interact, with the goal of providing complete system
 functionality. TOSCA accomplishes this by modeling the *topology* of
 systems as *graphs* where nodes in the graph represent the components
 under management and vertices in the graph represent containment,
@@ -359,8 +385,8 @@ representation** and **relationship representation** respectively to
 model the nodes and vertices in a service representation graph.
 
 Information about how node and relationship representations are
-organized in service representation graphs is captured in designs or
-blueprints that are created by service designers and expressed in the
+organized in service representation graphs is captured in designs (a.k.a
+blueprints) that are created by service designers and expressed in the
 TOSCA language. In this specification, we refer to those designs as
 **service templates** and we use the term **resolver** to refer to the
 management component that *instantiates* service representations based
@@ -369,8 +395,8 @@ elements and their relationships which results in the *service
 representations* to be created as graphs. Service templates consist of
 **node templates** from which node representations are created, and
 **relationship templates** from which relationship representations are
-created. Note that whereas TOSCA does not standardize representations,
-it does standardize grammar for defining templates.
+created. Note that while TOSCA does not standardize representations,
+it does standardize the grammar for defining templates.
 
 The use of templates supports reuse of service designs while at the
 same time allowing for service-specific variability. Specifically,
@@ -405,7 +431,7 @@ expected to be available for the component, and it specifies allowed
 and required interactions with other components. A TOSCA-based
 management system must include a TOSCA parser/validator that checks if
 the templates used in a TOSCA service template are valid for the types
-with which they are associated. This allows for management errors to
+with which they are associated. This allows many kinds of errors to
 be flagged at service *design time* rather than at service *deployment
 time*.  The following diagram shows how templates are created from and
 validated against TOSCA type definitions:
@@ -414,10 +440,9 @@ validated against TOSCA type definitions:
 
 Figure : TOSCA Types and TOSCA Templates
 
-The use of types in TOSCA provides the additional benefits of
+The use of types in TOSCA also provides the additional benefits of
 abstraction, information hiding, and reuse. TOSCA types can be
-organized in a *type hierarcy* which allows for the definition of
-abstract base types with concrete derived types. **TOSCA node types*
+organized in a *type hierarcy* where one or more type definitions can inherit from another type, each derived type may then be refined. This promoted reuse. The base type may be abstract and teh derived types may be concrete which promotes abstraction.  **TOSCA node types*
 and **TOSCA relationship types** define an externally visible
 *management façade* for entitities of that type while hiding internal
 implementation details. This management façade defines interfaces that
@@ -8535,7 +8560,7 @@ functions:
     description: >
       This is a square root function that defines two signatures:
       the argument is either integer or float and the function
-      returns the suare root as a float.
+      returns the square root as a float.
 ```
 The next sqrt is similar to above, but uses a simplified type notation
 (in this short form no validation clause can be expressed):
