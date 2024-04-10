@@ -111,11 +111,22 @@ This version of the specification includes significant changes from TOSCA 1.3. I
 - The role of the representation model is clarified
 - Greater support for functions
 
+- Constraints are now expressed as boolean functions
+- A new TOSCA path syntax allows a defined traversal of an arbitary graph of nodes and relationships to an attribute or property  
+- The version type is defined
+- Additipnal built-in functions
+- Custom defined functions
+- The service template is renamed TOSCA file and service template is redefined
+- Relationship type defintion now operates in the same way as other entities
+- Short notation for entry_schema and key_schema
+- Other syntax clarifications
+
 ## 1.2 Document conventions
 
 - Naming conventions
 - Font colors and styles
 - Typographic conventions
+
 
 ## 1.3 Glossary
 
@@ -8551,7 +8562,7 @@ functions:
     description: >
       This is a square root function that defines two signatures:
       the argument is either integer or float and the function
-      returns the suare root as a float.
+      returns the square root as a float.
 ```
 The next sqrt is similar to above, but uses a simplified type notation
 (in this short form no validation clause can be expressed):
