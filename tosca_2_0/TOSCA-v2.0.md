@@ -90,11 +90,11 @@ For complete copyright information please see the full Notices section in an App
 -------
 # 1 Introduction
 <!-- All text is normative unless otherwise labeled -->
-*The content in this section is non-normative, except where it is marked
-normative.*
+<!-- But there is currently no content which is marked as normative, until there is the document would read better if the second clause was deleted PJ-->
+*The content in this section is non-normative.*
 
 The Topology and Orchestration Specification for Cloud Applications
-(TOSCA) provides a language for describing application components and
+(TOSCA) provides a language for describing components and
 their relationships by means of a service topology, and for specifying
 the lifecycle management procedures for creation or modification of
 services using orchestration processes. The combination of topology
@@ -106,8 +106,10 @@ connections, compositions) drives the automated processes.
 
 ## 1.1 Changes from earlier Versions
 
-<!-- Optional section -->
-<!-- Describe significant changes from previous differently-numbered Versions, not changes between stages of the current Version -->
+This version of the specification includes significant changes from TOSCA 1.3. In particular:
+- There is improved support for the use of TOSCA for in-life operation of a service
+- The role of the representation model is clarified
+- Greater support for functions
 
 ## 1.2 Document conventions
 
@@ -133,7 +135,21 @@ the following definitions when used in context of this document.
 |Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
 
 ### 1.3.2 Acronyms and abbreviations
+Defined in this document
+- TOSCA Topology and Orchestration Specification for Cloud Applications
+- CSAR  Cloud Service Archive A file format defined by OASIS TOSCA to contain TOSCA files
 
+Used by this specification
+- YAML  Yet Another Markup Language The Languange TOSCA uses for files
+- MACD  Moves, Adds, Changes, and Deletions
+- DSL  Domian Specific Language
+
+Used as examples
+- TAR Tape Archive A file format originally used in unix
+- DBMS  Database Management System
+- SD-WAN Software Defined Wide Area Network
+- SQL Structured Query Language
+- VPN   Virtual Private Network
 -------
 # 2 TOSCA Overview
 
