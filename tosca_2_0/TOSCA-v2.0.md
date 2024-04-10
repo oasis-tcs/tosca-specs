@@ -161,14 +161,6 @@ appliances, the decoupling of hardware and software, and the adoption
 of edge deployments that move application functionality closer to the
 end-user.
 
-Management of such systems can be greatly simplified if the creation
-and lifecycle management of application, infrastructure, and network
-services can be fully automated and supported across a variety of
-deployment environments. TOSCA was expressly designed to address the
-complexity associated with managing large systems by providing a
-language for automating the lifecycle management of large complex
-systems.
-
 As a result of the above technology trends, large systems typically
 involve a wide variety of technologies and include components from
 multiple vendors. This results in management systems based on
@@ -178,7 +170,17 @@ of the system. To make matters worse, these tools often use
 incompatible interfaces or data schemas, resulting in integration
 nightmares. As the number of components grows—because the scale of the
 system increases and disaggregation becomes the norm—so will the
-number of required management tools.  The goal of TOSCA is to define a
+number of required management tools. 
+
+Management of such systems can be greatly simplified if the creation
+and lifecycle management of application, infrastructure, and network
+services can be fully automated and supported across a variety of
+deployment environments. TOSCA was expressly designed to address the
+complexity associated with managing large systems by providing a
+language for specifying an information model and automating the
+lifecycle management of large complex systems.
+
+The goal of TOSCA is to define a
 language that is agnostic to specific technological and commercial
 ecosystems and that supports the design and operation of large systems
 without being tied to specific technologies or specific vendors. This
@@ -233,7 +235,9 @@ described. The use of graphs enables this as follows:
 - Relationships in a TOSCA graph encode dependencies that allow an
   orchestrator to automatically determine the *sequencing* between the
   managment operations on invoked on various components in the system,
-  thereby avoiding the need for human-defined workflows.
+  thereby avoiding the need for human-defined workflows. Implementing
+  lifecycle or other management operations on the service can be
+  achieved by traversing the graph.
 - Relationships in a TOSCA graph allow an orchestrator to
   automatically determine which system components may be affected by a
   component failure or by a change to an external resource. The
@@ -302,13 +306,13 @@ TOSCA’s automated lifecycle management capabilities.
 ## 2.3 TOSCA Core Concepts
 
 As stated above, the TOSCA language assumes a *model-driven*
-management paradigm. Using model-driven management, management systems
-maintain models of all external components under management and all
-management operations are performed on the models first and any
-resulting changes to the models are then propagated to the external
+management paradigm. Using model-driven management, a model
+representing the managed external components is maintained and all
+management operations are performed on this model first and any
+resulting changes to the model are then propagated to the external
 components. Similarly, any status changes or errors experienced by the
-external components are reflected in the models first before they are
-handled by the management system. The models maintained by the
+external components are reflected in the model first before they are
+handled by the management system. The model maintained by the
 management system must capture all aspects of the external components
 that are relevant for the purpose of managing those components.
 
@@ -360,13 +364,13 @@ blueprints that are created by service designers and expressed in the
 TOSCA language. In this specification, we refer to those designs as
 **service templates** and we use the term **resolver** to refer to the
 management component that *instantiates* service representations based
-on *service templates*. TOSCA *service templates* define graphs which
-allows the *service representations* to be created as graphs as
-well. Service templates consist of **node templates** from which node
-representations are created, and **relationship templates** from which
-relationship representations are created. Note that whereas TOSCA does
-not standardize representations, it does standardize grammar for
-defining templates.
+on *service templates*. TOSCA *service templates* define service
+elements and their relationships which results in the *service
+representations* to be created as graphs. Service templates consist of
+**node templates** from which node representations are created, and
+**relationship templates** from which relationship representations are
+created. Note that whereas TOSCA does not standardize representations,
+it does standardize grammar for defining templates.
 
 The use of templates supports reuse of service designs while at the
 same time allowing for service-specific variability. Specifically,
