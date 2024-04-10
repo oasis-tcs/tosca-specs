@@ -509,8 +509,8 @@ the properties defined in the node type. An orchestrator updates
 attribute values as a result of performing lifecycle management
 operations.
 
-For example, consider a service that consists of an some computing application, a database and something computing resource to run them on. A service template
-defining that service would include one node template of node type or the particular application, another Node Template of Node Type  “database management system” or a more specific derivative, "MariaDB" perhaps, and a third Node Template of Node Type "compute" or more likely a more specific derivative. The
+For example, consider a service that consists of some computing application, a database and some computing resource to run them on. A service template
+defining that service would include one node template of node type for the particular application, another Node Template of Node Type  “database management system” or a more specific derivative, "MariaDB" perhaps, and a third Node Template of Node Type "compute" or more likely a more specific derivative. The
 DBMS Node Type defines properties like the IP address of
 an instance of this type, an operation for installing the database application with the corresponding IP address, and an operation for
 shutting down an instance of this DBMS. A constraint in
