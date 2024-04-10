@@ -976,7 +976,9 @@ are associated with the deletion, modification, and creation of the nodes and
 relationships when the representation graph changes.
 
 -------
-# 5 TOSCA Modeling Concepts
+# 5 TOSCA Grammar Overview
+
+## TOSCA Modeling Concepts
 
 This section defines concepts used in support of the modeling
 functionality of the TOSCA Version 2.0 specification. Specifically, it
@@ -988,7 +990,7 @@ derivation and entity refinement.
 > Explain separation of concerns and different roles. Refer to email
 > from Peter.
 
-## Type Definitions and Entity Definitions
+### Type Definitions and Entity Definitions
 
 TOSCA adopts a model-driven management approach where management
 actions are performed using models maintained by the management
@@ -1027,7 +1029,7 @@ corresponding entity type. TOSCA supports *capability definitions*,
 definitions*, *group definitions*, *property definitions*, *attribute
 definitions*, and *parameter definitions*.
 
-## Templates and Entity Assignments
+### Templates and Entity Assignments
 
 TOSCA-based management systems use models to describe systems and
 services under management. These system models are created from
@@ -1056,7 +1058,7 @@ representation graph. Entity assignments make sure that the service
 template can be used to generate a complete representation of the
 system under management.
 
-## Type Derivation, Augmentation, and Refinement
+### Type Derivation, Augmentation, and Refinement
 
 The TOSCA type system supports *inheritance* which means that types
 can be derived from a parent type. A parent type can in turn be
@@ -1119,8 +1121,6 @@ TOSCA templates:
 It is relevant to emphasize the cross-template usage, as only in this
 case we deal with templates defined at different design time-points,
 with potentially different editing and maintenance restrictions.
-
-# TOSCA Grammar
 
 ## Mandatory Keynames
 
