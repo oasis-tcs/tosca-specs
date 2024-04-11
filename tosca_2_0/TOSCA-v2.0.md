@@ -1555,117 +1555,427 @@ in a TOSCA service.
 
 ## Repositories
 
-A repository definition defines an external repository that contains
-TOSCA files and/or = artifacts that are referenced within the TOSCA
-file.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA repository
-definition:
-
-| Keyname     | Mandatory | Type                        | Description                                                         |
-|-------------|-----------|-----------------------------|---------------------------------------------------------------------|
-| description | no        | [string](#TYPE_YAML_STRING) | The optional description for the repository.                        |
-| url         | yes       | [string](#TYPE_YAML_STRING) | The mandatory URL or network address used to access the repository. |
-
-### Grammar
-
-Repository definitions have one the following grammars:
-
-#### Single-line grammar:
-```
-<repository_name>: <repository_address>
-```
-##### Multi-line grammar
-```
-<repository_name>:
-  description: <repository_description>
-  url: <repository_address>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- repository_name: represents the mandatory symbolic name of the
-  repository as a [string](#TYPE_YAML_STRING).
-
-- repository_description: contains an optional description of the
-  repository.
-
-- repository_address: represents the mandatory URL of the repository as
-  a string.
-
-#### Example
-
-The following represents a repository definition:
-```
-repositories:
-  my_code_repo:
-    description: My project’s code repository in GitHub
-    url: https://github.com/my-project/
-```
-
-#### repositories
-
-This optional keyname provides a section to define external repositories
-that may contain artifacts or other TOSCA files that might be referenced
-or imported by this TOSCA file.
-
-##### Keyname
-```
-repositories 
-```
-
-##### Grammar 
+A repository definition defines an external *repository* that contains
+TOSCA files and/or artifacts that are referenced or imported by this
+TOSCA file. Repositories are defined using the optional `repositories`
+keyname as follows:
 ```
 repositories:
    <repository_definition_1>
    ...
    <repository_definition_n>
 ```
+The following is the list of recognized keynames for a TOSCA repository
+definition:
 
-##### Example
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|description|no|string|Declares a description for the repository being defined.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the repository being defined.|
+|url|yes|string|The URL or network address used to access the repository.|
+
+These keynames can be used to define a repository using a multi-line
+grammar as follows:
+```
+<repository_name>:
+  description: <repository_description>
+  metadata:
+    <metadata_definitions>
+  url: <repository_address>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- repository_name: represents the mandatory symbolic name of the
+  repository as a string
+- repository_description: contains an optional description of the
+  repository.
+- metadata_definitions: contains an optional map of metadata using
+  YAML types
+- repository_address: represents the mandatory URL to access the
+  repository as a string.
+
+If only the `url` needs to be specified, repository definitions can
+also use a single-line grammar as follows:
+```
+<repository_name>: <repository_address>
+```
+The following example show repository definitions using both
+multi-line as well as single-line grammars.
 ```
 repositories:
-  my_project_artifact_repo:
-    description: development repository for TAR archives and Bash scripts
-    url: http://mycompany.com/repository/myproject/
+  my_code_repo:
+    description: My project’s code repository in GitHub
+    url: https://github.com/my-project/
   external_repo: https://foo.bar
 ```
 
-#### imports
+## Imports and Namespaces
 
-This optional keyname provides a way to import a one or more TOSCA
-profiles or other TOSCA files that contain reusable TOSCA type
-definitions (e.g., Node Types, Relationship Types, Artifact Types,
-etc.), function definitions, repository definitions, or other imports
-defined by other authors. This mechanism provides an effective way for
+Modern software projects typically use *modular designs* that divide
+large systems into smaller subsystems (*modules*) that together
+achieve complete system functionality. TOSCA includes a number of
+features in support of functionality, including the ability for a
+TOSCA file to *import* TOSCA definitions from another TOSCA file. For
+example, a first TOSCA file could contain reusable TOSCA type
+definitions (e.g., node types, relationship types, artifact types,
+etc.), function definitions, or repository definitions created by a
+domain expert. A system integrator could create a second TOSCA file
+that defines a *service template* comprised of node templates and
+relationship templates that use those types. TOSCA supports this
+scenario by allowing the second TOSCA file to *import* the first TOSCA
+file, thereby making the definitions in the first file available to
+the second file. This mechanism provides an effective way for
 companies and organizations to define domain-specific types and/or
 describe their software applications for reuse in other TOSCA files.
 
-##### Keyname
-```
-imports 
-```
+### Import Definitions
+<!----
+{"id": "350", "author": "Calin Curescu", "date": "2019-01-30T15:54:00Z", "comment": "It would be good to allow also the import of specific types (via their fully qualified names) and also entire namespaces (i.e. types from entire namespaces) from a/the catalogue. That is, in addition to importing from a file: Globally well-known Local catalog File", "target": "Import definition"}-->
 
-##### Grammar 
+*Import definitions* are used within a TOSCA file to uniquely identify
+and locate other TOSCA files that have type, repository, and function
+definitions to be imported (included) into this TOSCA file. Import
+definitions are defined in a TOSCA file using the optional `imports`
+keyname as follows:
 ```
 imports:
    - <import_definition_1>
    - ...
    - <import_definition_n>
 ```
+The value of the `imports` keyname consists of a list of import
+definitions that identify the TOSCA files to be imported.  The
+following is the list of recognized keynames for a TOSCA import
+definition:
 
-##### Example
+<!----
+{"id": "351", "author": "Chris Lauwers", "date": "2020-09-01T00:21:00Z", "comment": "I think it should be illegal to import a\nservice template that contains a topology\ntemplate.", "target": ""}-->
+<!----
+{"id": "352", "author": "Matt Rutkowski", "date": "2016-09-06T09:49:00Z", "comment": "Nodejs has NPM that uses the following to\nimport new package modules:  \nA package is:  \na) a folder containing a program described by a\n[package.json](numbering.xml) file  \nb) a gzipped tarball containing (a)  \nc) a url that resolves to (b)  \nd) a \\<name\\>@\\<version\\> that is published on the registry (see\n[npm-registry](styles.xml)) with (c)  \ne) a \\<name\\>@\\<tag\\> (see [npm-dist-tag](settings.xml)) that points to\n(d)  \nf) a \\<name\\> that has a \"latest\" tag satisfying (e)  \ng) a \\<git remote url\\> that resolves to (a)  \nwe may want to adopt something similar if TOSCA references service\ntemplate (packages) from a\ncatalog)", "target": "imported"}-->
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|url|conditional|string|The url that references a TOSCA file to be imported. An import statement must include either a url or a profile, but not both.|
+|profile|conditional|string|The profile name that references a named type profile to be imported. An import statement must include either a url or a profile, but not both.|
+|repository|conditional|string|The optional symbolic name of the repository definition where the imported file can be found as a string. The repository name can only be used when a url is specified.|
+|namespace|no|string|The optional name of the namespace into which to import the type definitions from the imported template or profile.|
+|description|no|string|Declares a description for the import definition.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the import definition.|
+
+These keynames can be used to import individual TOSCA files using the
+following multi-line grammar:
 ```
-# An example import of TOSCA files from a location relative to the 
-# file location of the TOSCA file declaring the import.
+imports:  
+  - url: <file_uri>
+    repository: <repository_name>
+    namespace: <namespace_name>
+```
+The following multi-line grammar can be used for importing TOSCA
+profiles:
+```
+imports:  
+  - profile: <profile_name>   
+    namespace: <namespace_name>
+```
+In the above grammars, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- file_uri: contains the URL that references the service template file
+  to be imported as a string.
+- repository_name: represents the optional symbolic name of the
+  repository definition where the imported file can be found as a
+  string
+- profile_name: the name of the well-known profile to be imported.
+- namespace_name: represents the optional name of the namespace into
+  which type definitions will be imported. The namespace name can be
+  used to form a namespace-qualified name that uniquely references type
+  definitions from the imported file or profile. If no namespace name is
+  specified, type definitions will be imported into the root namespace.
+
+If only the <file_uri> needs to be specified, import definitions can
+also use a single-line grammar as follows:
+```
+imports:
+  - <file_uri_1>
+  - <file_uri_2>
+```
+### Import Processing Rules 
+
+TOSCA processors and tooling MUST handle import statements as follows:
+
+#### Importing Profiles
+
+If the `profile` keyname is used in the import definition, then the
+TOSCA processor SHOULD attempt to import the profile by name:
+
+- If <profile_name> represents the name of a profile that is known to
+  the TOSCA processor, then it SHOULD cause that profile's type
+  definitions to be imported.
+- If <profile_name> is not known, the import SHOULD be considered a
+  failure.
+
+#### Importing TOSCA File
+
+If the `url` keyname is used, the TOSCA processor SHOULD attempt to
+import the file referenced by <file_uri> as follows:
+
+- If the \<file_uri\> includes a URL scheme (e.g. file: or https:)
+  then\<file_uri\> is considered to be a network accessible
+  resource. If the resource identified by \<file_URL\> represents a
+  valid TOSCA file, then it SHOULD cause that TOSCA file to be
+  imported.
+
+  - Note that if in addition to a URL with a URL scheme, the import
+    definition also specifies a \<repository_name\> (using the repository
+    key), then that import definition SHOULD be considered invalid.
+
+- If the \<file_uri\> does not include a URL scheme, it is considered
+  a relative path URL. The TOSCA processor SHOULD handle such a
+  \<file_uri\> as follows:
+
+  - If the import definition also specifies a \<repository_name\> (using
+    the repository keyname), then \<file_uri\> refers to the path name of
+    a file relative to the root of the named repository
+
+  - If the import definition does not specify a \<profile_name\> then
+    \<file_uri\> refers to a TOSCA file located in the repository that
+    contains the TOSCA file that includes the import definition. If
+    the importing TOSCA file is located in a CSAR file, then that CSAR
+    file should be treated as the repository in which to locate the
+    TOSCA file that must be imported.
+
+    - If \<file_uri\> starts with a leading slash (‘/’) then \<file_uri\>
+     specifies a path name starting at the root of the repository.
+
+    - If \<file_uri\> does not start with a leading slash, then \<file_uri\>
+     specifies a path that is relative to the importing document’s location
+     within the repository. Double dot notation (‘../’) can be used to
+     refer to parent directories in a file path name.
+
+- If \<file_uri\> does not reference a valid TOSCA file file, then the
+  import SHOULD be considered a failure.
+
+### Examples
+
+The first example shows how to use an import definition import a
+well-known profile by name:
+```
+# Importing a profile
+imports:
+- profile: org.oasis-open.tosca.simple:2.0
+```
+The next example shows an import definition used to import a
+network-accessible resource using the https protocol:
+```
+# Absolute URL with scheme
+imports:
+- url: https://myorg.org/tosca/types/mytypes.yaml
+```
+The following shows an import definition used to import a TOSCA file
+located in the same repository as the importing file. The file to be
+imported is referenced using a path name that is relative to the
+location of the importing file. This example shows the short notation:
+
+```
+# Short notation supported
+imports:
+- ../types/mytypes.yaml 
+```
+The following shows the same example but using the long notation:
+```
+# Long notation
+imports:
+- url: ../types/mytypes.yaml
+```
+The following example mixes and matches short-notation and
+long-notation import definitions:
+```
+# Short notation and long notation supported
 imports:
   - relative_path/my_defns/my_typesdefs_1.yaml
   - url: my_defns/my_typesdefs_n.yaml    
     repository: my_company_repo
     namespace: mycompany
 ```
+The following example shows how to import TOSCA files using absolute
+path names (i.e. path names that start at the root of the repository):
+
+```
+# Root file
+imports:
+- url: /base.yaml
+```
+And finally, the following shows how to import TOSCA files from a
+repository that is different than the repository that contains the
+importing TOSCA file:
+```
+# External repository
+imports:
+- url: types/mytypes.yaml
+  repository: my_repository
+```
+### Namespaces
+<!----
+{"id": "373", "author": "Chris Lauwers", "date": "2020-09-01T00:19:00Z", "comment": "I recommend removing this entire section and rewriting any parts that are still relevant inside the \u201cimports\u201d section.", "target": "Namespace"}-->
+
+When importing TOSCA files or TOSCA profiles, there exists a
+possibility for name collision. For example, an imported file may
+define a node type with the same name as a node type defined in the
+importing file.
+
+For example, let say we have two TOSCA files, A and B, both of which
+contain a Node Type definition for *MyNode*:
+
+**TOSCA File B**
+```
+tosca_definitions_version: tosca_2_0
+description: TOSCA File B
+  
+node_types:
+  MyNode:
+    derived_from: SoftwareComponent
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+```
+**TOSCA File A**
+```
+tosca_definitions_version: tosca_2_0
+description: TOSCA File A
+imports:
+  - url: /templates/TOSCAFileB.yaml
+node_types:
+  MyNode:
+    derived_from: Root
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+service_template:
+  node_templates:
+    my_node:
+      type: MyNode
+```
+As you can see, TOSCA file A imports TOSCA file B which results in
+duplicate definitions of the MyNode node type. In this example, it is
+not clear which type is intended to be used for the my_node node
+template.
+
+To address this issue, TOSCA uses the concept of namespaces:
+
+- Each TOSCA file defines a root namespace for all type definitions
+  defined in that file. Root namespaces are unnamed.
+
+- When a TOSCA file imports other TOSCA files, it has two options:
+
+  - It can import any type definitions from the imported TOSCA files
+    into its root namespace.
+
+  - Or it can import type definitions from the imported TOSCA files
+    into a separate named namespace. This is done using the
+    `namespace` keyname in the associated import definition. When
+    using types imported into a named namespace, those type names must
+    be qualified by using the namespace name as a prefix.
+
+The following snippets update the previous example using namespaces to
+disambiguate between the two MyNode type definitions. This first snippet
+shows the scenario where the MyNode definition from TOSCA file B is
+intended to be used:
+```
+tosca_definitions_version: tosca_2_0
+description: TOSCA file A
+imports:
+  - url: /templates/TOSCAFileB.yaml
+    namespace: fileB
+node_types:
+  MyNode:
+    derived_from: Root
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+service_template:
+  node_templates:
+    my_node:
+      type: fileB:MyNode
+```
+The second snippet shows the scenario where the MyNode definition from
+TOSCA file A is intended to be used:
+```
+tosca_definitions_version: tosca_2_0
+description: TOSCA file A
+imports:
+  - url: /templates/TOSCAFileB.yaml
+    namespace: fileB
+node_types:
+  MyNode:
+    derived_from: Root
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+service_template:
+  node_templates:
+    my_node:
+      type: MyNode
+```
+In many scenarios, imported TOSCA files may in turn import their own
+TOSCA files, and introduce their own namespaces to avoid name
+collisions. In those scenarios, nested namespace names are used to
+uniquely identify type definitions in the import tree.
+
+The following example shows a mytypes.yaml TOSCA file that imports a
+Kubernetes profile into the k8s namespace. It defines a SuperPod node
+type that derives from the Pod node type defined in that Kubernetes
+profile:
+```
+tosca_definitions_version: tosca_2_0
+description: mytypes.yaml
+imports:
+- profile: io.kubernetes:1.30
+  namespace: k8s
+node_types:
+  MyNode: {}
+  SuperPod:
+    derived_from: k8s:Pod
+```
+The mytypes.yaml file is then imported into the main.yaml TOSCA
+file, which defines both a node template of type SuperPod as well as a
+node template of type Pod. Nested namespace names are used to identify
+the Pod node type from the Kubernetes profile:
+```
+tosca_definitions_version: tosca_2_0
+description: main.yaml
+imports:
+- url: mytypes.yaml
+  namespace: my
+service_template:
+  node_templates:
+    mynode:
+      type: my:MyType
+    pod:
+      type: my:k8s:Pod
+```
+
+Within each namespace (including the unnamed root namespace), names
+must be unique. This means that duplicate local names (i.e., within
+the same TOSCA file SHALL be considered an error. These include, but
+are not limited to duplicate names found for the following
+definitions:
+
+  - Repositories (`repositories`)
+  - Data Types (`data_types`)
+  - Node Types (`node_types`)
+  - Relationship Types (`relationship_types`)
+  - Capability Types (`capability_types`)
+  - Artifact Types (`artifact_types`)
+  - Interface Types (`interface_types`)
+  - Policy Types (`policy_types`)
+  - Group Types (`group_types`)
+  - Function definitions (`functions`)
+
 
 #### artifact_types
 
@@ -1905,403 +2215,6 @@ policy_types:
   mycompany.mytypes.myScalingPolicy:
     derived_from: tosca.policies.Scaling
 ```
-## Imports
-<!----
-{"id": "346", "author": "Chris Lauwers", "date": "2020-09-01T00:20:00Z", "comment": "I don\u2019t know what is meant by \u201creferences\u201d.", "target": "Imports"}-->
- and Namespaces
-
-### Import definition
-<!----
-{"id": "350", "author": "Calin Curescu", "date": "2019-01-30T15:54:00Z", "comment": "It would be good to allow also the import of specific types (via their fully qualified names) and also entire namespaces (i.e. types from entire namespaces) from a/the catalogue. That is, in addition to importing from a file: Globally well-known Local catalog File", "target": "Import definition"}-->
-
-An import definition is used within a TOSCA file to locate and uniquely
-name another TOSCA file or TOSCA profile that has type, repository, and
-function 
-<!----
-{"id": "351", "author": "Chris Lauwers", "date": "2020-09-01T00:21:00Z", "comment": "I think it should be illegal to import a\nservice template that contains a topology\ntemplate.", "target": ""}-->
-definitions to
-be imported
-<!----
-{"id": "352", "author": "Matt Rutkowski", "date": "2016-09-06T09:49:00Z", "comment": "Nodejs has NPM that uses the following to\nimport new package modules:  \nA package is:  \na) a folder containing a program described by a\n[package.json](numbering.xml) file  \nb) a gzipped tarball containing (a)  \nc) a url that resolves to (b)  \nd) a \\<name\\>@\\<version\\> that is published on the registry (see\n[npm-registry](styles.xml)) with (c)  \ne) a \\<name\\>@\\<tag\\> (see [npm-dist-tag](settings.xml)) that points to\n(d)  \nf) a \\<name\\> that has a \"latest\" tag satisfying (e)  \ng) a \\<git remote url\\> that resolves to (a)  \nwe may want to adopt something similar if TOSCA references service\ntemplate (packages) from a\ncatalog)", "target": "imported"}-->
-(included) into another TOSCA file.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA import
-definition:
-
-| Keyname    | Mandatory   | Type                        | Description                                                                                                                                                             |
-|------------|-------------|-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| url        | conditional | [string](#TYPE_YAML_STRING) | The url that references a service template to be imported. An import statement must include either a url or a profile, but not both.                                    |
-| profile    | conditional | string                      | The profile name that references a named type profile to be imported. An import statement must include either a url or a profile, but not both.                         |
-| repository | conditional | [string](#TYPE_YAML_STRING) | The optional symbolic name of the repository definition where the imported file can be found as a string. The repository name can only be used when a url is specified. |
-| namespace  | no          | [string](#TYPE_YAML_STRING) | The optional name of the namespace into which to import the type definitions from the imported template or profile.                                                     |
-
-#### Grammar
-
-Import definitions have one the following grammars:
-
-##### Single-line grammar:
-When using the single-line grammar, the url keyword is assumed:
-```
-imports:
-  - <URI_1>
-  - <URI_2>
-```
-##### Multi-line grammar
-
-The following multi-line grammar can be used for importing TOSCA files:
-```
-imports:  
-  - url: <file_URI>   
-    repository: <repository_name>
-    namespace: <namespace_name>
-```
-The following multi-line grammar can be used for importing TOSCA
-profiles:
-```
-imports:  
-  - profile: <profile_name>   
-    namespace: <namespace_name>
-```
-In the above grammars, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- file_uri: contains the URL that references the service template file
-  to be imported as a [string](#TYPE_YAML_STRING).
-
-- repository_name: represents the optional symbolic name of the
-  repository definition where the imported file can be found as a
-  [string](#TYPE_YAML_STRING).
-
-- profile_name: the name of the well-known profile to be imported.
-
-- namespace_name: represents the optional name of the namespace into
-  which type definitions will be imported. The namespace name can be
-  used to form a namespace-qualified name that uniquely references type
-  definitions from the imported file or profile. If no namespace name is
-  specified, type definitions will be imported into the root namespace.
-
-#### Import processing rules 
-
-TOSCA Orchestrators, Processors and tooling SHOULD handle import
-statements as follows:
-
-##### Importing profiles
-
-If the profile keyname is used in the import definition, then the TOSCA
-orchestrator or processor SHOULD attempt to import the profile by name:
-
-- If \<profile_name\> represents the name of a profile that is known to
-  the TOSCA orchestrator or processor, then it SHOULD cause the Profile
-  Type definitions to be imported.
-
-- If \<profile_name\> is not known, the import SHOULD be considered a
-  failure.
-
-##### Importing service templates
-
-If the url keyname is used, the TOSCA orchestrator or processor SHOULD
-attempt to import the file referenced by \<file_URI\> as follows:
-
-- If the \<file_URI\> includes a URL scheme (e.g. file: or https:)
-  then\<file_URI\> is considered to be a network accessible resource. If
-  the resource identified by \<file_URL\> represents a valid TOSCA file,
-  then it SHOULD cause the remote Service Template to be imported.
-
-  - Note that if in addition to a URL with a URL scheme, the import
-    definition also specifies a \<repository_name\> (using the repository
-    key), then that import definition SHOULD be considered invalid.
-
-- If the \<file_URI\> does not include a URL scheme, it is a considered
-  a relative path URL. The TOSCA orchestrator or processor SHOULD handle
-  such a \<file_URI\> as follows:
-
-  - If the import definition also specifies a \<repository_name\> (using
-    the repository keyname), then \<file_URI\> refers to the path name of
-    a file relative to the root of the named repository
-
-  - If the import definition does not specify a \<profile_name\> then
-    \<file_URI\> refers to a TOSCA file located in the repository that
-    contains the Service Template file that includes the import
-    definition. If the importing service template is located in a CSAR
-    file, then that CSAR file should be treated as the repository in which
-    to locate the service template file that must be imported.
-
-    - If \<file_URI\> starts with a leading slash (‘/’) then \<file_URI\>
-     specifies a path name starting at the root of the repository.
-
-    - If \<file_URI\> does not start with a leading slash, then \<file_URI\>
-     specifies a path that is relative to the importing document’s location
-     within the repository. Double dot notation (‘../’) can be used to
-     refer to parent directories in a file path name.
-
-- If \<file_URI\> does not reference a valid TOSCA file file, then the
-  import SHOULD be considered a failure.
-
-#### Examples
-
-The first example shows how to use an import definition import a
-well-known profile by name:
-```
-# Importing a profile
-imports:
-- profile: org.oasis-open.tosca.simple:2.0
-```
-The next example shows an import definition used to import a
-network-accessible resource using the https protocol:
-```
-# Absolute URL with scheme
-imports:
-- url: https://myorg.org/tosca/types/mytypes.yaml
-```
-The following shows an import definition used to import a
-service template in the same repository as the importing template. The
-template to be imported is referenced using a path name that is relative
-to the location of the importing template. This example shows the short
-notation:
-```
-# Short notation supported
-imports:
-- ../types/mytypes.yaml 
-```
-The following shows the same example but using the long notation:
-```
-# Long notation
-imports:
-- url: ../types/mytypes.yaml
-```
-The following example shows how to import service templates using
-absolute path names (i.e. path names that start at the root of the
-repository):
-```
-# Root file
-imports:
-- url: /base.yaml
-```
-And finally, the following shows how to import templates from a
-repository that is different than the repository that contains the
-importing template:
-```
-# External repository
-imports:
-- url: types/mytypes.yaml
-  repository: my_repository
-```
-### Namespaces
-<!----
-{"id": "373", "author": "Chris Lauwers", "date": "2020-09-01T00:19:00Z", "comment": "I recommend removing this entire section and rewriting any parts that are still relevant inside the \u201cimports\u201d section.", "target": "Namespace"}-->
-
-When importing TOSCA files or TOSCA profiles, there exists a possibility
-for name collision. For example, an imported file may define a node type
-with the same name as a node type defined in the importing file.
-
-For example, let say we have two TOSCA files, A and B, both of which
-contain a Node Type definition for “MyNode”:
-
-**TOSCA File B**
-```
-tosca_definitions_version: tosca_2_0
-description: TOSCA File B
-  
-node_types:
-  MyNode:
-    derived_from: SoftwareComponent
-    properties:
-      # omitted here for brevity 
-    capabilities:
-      # omitted here for brevity
-```
-**TOSCA File A**
-```
-tosca_definitions_version: tosca_2_0
-description: TOSCA File A
-
-imports:
-  - url: /templates/ServiceTemplateB.yaml
-
-node_types:
-  MyNode:
-    derived_from: Root
-    properties:
-      # omitted here for brevity 
-    capabilities:
-      # omitted here for brevity
-
-service_template:
-  node_templates:
-    my_node:
-      type: MyNode
-```
-As you can see, TOSCA file A imports TOSCA file B which results in
-duplicate definitions of the MyNode node type. In this example, it is
-not clear which type is intended to be used for the my_node node
-template.
-
-To address this issue, TOSCA uses the concept of namespaces:
-
-- Each TOSCA file defines a root namespace for all type definitions
-  defined in that template. Root namespaces are unnamed.
-
-- When a TOSCA file imports other templates, it has two options:
-
-  - It can import any type definitions from the imported templates into
-    its root namespace
-
-  - Or it can import type definitions from the imported templates into a
-    separate named namespace. This is done using the namespace keyname in
-    the associated import statement. When using types imported into a
-    named namespace, those type names must be qualified using the
-    namespace name.
-
-The following snippets update the previous example using namespaces to
-disambiguate between the two MyNode type definitions. This first snippet
-shows the scenario where the MyNode definition from TOSCA file B is
-intended to be used:
-```
-tosca_definitions_version: tosca_2_0
-description: TOSCA file A
-
-imports:
-  - url: /templates/ServiceTemplateB.yaml
-    namespace: templateB
-
-node_types:
-  MyNode:
-    derived_from: Root
-    properties:
-      # omitted here for brevity 
-    capabilities:
-      # omitted here for brevity
-
-service_template:
-  node_templates:
-    my_node:
-      type: templateB:MyNode
-```
-The second snippet shows the scenario where the MyNode definition from
-TOSCA file A is intended to be used:
-```
-tosca_definitions_version: tosca_2_0
-description: TOSCA file A
-
-imports:
-  - url: /templates/ServiceTemplateB.yaml
-    namespace: templateB
-
-node_types:
-  MyNode:
-    derived_from: Root
-    properties:
-      # omitted here for brevity 
-    capabilities:
-      # omitted here for brevity
-
-service_template:
-  node_templates:
-    my_node:
-      type: MyNode
-```
-In many scenarios, imported TOSCA files may in turn import their own
-TOSCA files, and introduce their own namespaces to avoid name
-collisions. In those scenarios, nested namespace names are used to
-uniquely identify type definitions in the import tree.
-
-The following example shows a mytypes.yaml TOSCA file that imports a
-Kubernetes profile into the k8s namespace. It defines a SuperPod node
-type that derives from the Pod node type defined in that Kubernetes
-profile:
-```
-tosca_definitions_version: tosca_2_0
-description: mytypes.yaml
-
-imports:
-- profile: io.kubernetes:1.18
-  namespace: k8s
-
-node_types:
-  MyNode: {}
-  SuperPod:
-    derived_from: k8s:Pod
-```
-The mytypes.yaml template is then imported into the main.yaml TOSCA
-file, which defines both a node template of type SuperPod as well as a
-node template of type Pod. Nested namespace names are used to identify
-the Pod node type from the Kubernetes profile:
-```
-tosca_definitions_version: tosca_2_0
-description: main.yaml
-
-imports:
-- url: mytypes.yaml
-  namespace: my
-
-service_template:
-  node_templates:
-    mynode:
-      type: my:MyType
-    pod:
-      type: my:k8s:Pod
-```
-#### Additional Requirements
-
-Within each namespace, names must be unique. This means the following:
-
-- Duplicate local names (i.e., within the same TOSCA file SHALL be
-  considered an error. These include, but are not limited to duplicate
-  names found for the following definitions:
-
-  - Repositories (repositories)
-
-  - Data Types (data_types)
-
-  - Node Types (node_types)
-
-  - Relationship Types (relationship_types)
-
-  - Capability Types (capability_types)
-
-  - Artifact Types (artifact_types)
-
-  - Interface Types (interface_types)
-
-- Duplicate Template names within a Service Template SHALL be considered
-  an error. These include, but are not limited to duplicate names found
-  for the following template types:
-
-  - Node Templates (node_templates)
-
-  - Relationship Templates (relationship_templates)
-
-  - Inputs (inputs)
-
-  - Outputs (outputs)
-
-- Duplicate names for the following keynames within Types or Templates
-  SHALL be considered an error. These include, but are not limited to
-  duplicate names found for the following keynames:
-
-  - Properties (properties)
-
-  - Attributes (attributes)
-
-  - Artifacts (artifacts)
-
-  - R<span class="comment-start" id="376"
-    author="Matt Rutkowski" date="2015-08-25T21:52:00Z">MUSTFIX: Verify
-    duplicates are NOT allowed!!</span>equirements
-    (requirements)
-<!----
-{"id": "375", "author": "Calin Curescu", "date": "2020-06-08T18:24:00Z", "comment": "But requirements assignments support\n  duplicates!", "target": "R<span class=\"comment-start\" id=\"376\"\n  author=\"Matt Rutkowski\" date=\"2015-08-25T21:52:00Z\">MUSTFIX: Verify\n  duplicates are NOT allowed!!</span>equirements\n  (requirements)"}-->
-
-  - Capabilities (capabilities)<span class="comment-end" id="376"></span>
-
-  - Interfaces (interfaces)
-
-  - Policies (policies)
-
-  - Groups (groups)
-
 ## Additional information definitions
 
 ### Description definition
@@ -2309,7 +2222,7 @@ Within each namespace, names must be unique. This means the following:
 {"id": "394", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:16:00Z", "comment": "Description is already described in 4.2.1.3.6", "target": "Description definition"}-->
 
 This optional element provides a means include single or multiline
-descriptions within a TOSCA template as a scalar string value.
+descriptions within a TOSCA file as a scalar string value.
 
 #### Keyname
 
@@ -2383,10 +2296,6 @@ metadata:
 
 - Data provided within metadata, wherever it appears, MAY be ignored by
   TOSCA Orchestrators and SHOULD NOT affect runtime behavior.
-
-### DSL Definitions
-
-TBD.
 
 ## Type definitions
 
@@ -2489,12 +2398,12 @@ way. This section serves to define them at once.
 The following is the list of recognized keynames used by all TOSCA type
 definitions:
 
-| Keyname      | Mandatory | Type                                                                               | Description                                                        |
+|Keyname     |Mandatory |Type                                                                               |Description                                                        |
 |--------------|-----------|------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| derived_from | no        | [string](#TYPE_YAML_STRING)                                                        | An optional parent type name from which this type derives.         |
-| version      | no        | [version](#tosca-tal-suggests-removing-this.version)                               | An optional version for the type definition.                       |
-| metadata     | no        | [map](\l) of [string](#TYPE_YAML_STRING)<span class="comment-end" id="435"></span> | Defines a section used to declare additional metadata information. |
-| description  | no        | [string](#TYPE_YAML_STRING)                                                        | An optional description for the type.                              |
+|derived_from |no        |[string](#TYPE_YAML_STRING)                                                        |An optional parent type name from which this type derives.         |
+|version      |no        |[version](#tosca-tal-suggests-removing-this.version)                               |An optional version for the type definition.                       |
+|metadata     |no        |[map](\l) of [string](#TYPE_YAML_STRING)<span class="comment-end" id="435"></span> |Defines a section used to declare additional metadata information. |
+|description  |no        |[string](#TYPE_YAML_STRING)                                                        |An optional description for the type.                              |
 
 #### Grammar
 
@@ -2902,6 +2811,44 @@ substitution_mappings:
         - foo: 
             ...
 ```
+#### Additional Requirements
+- Duplicate Template names within a Service Template SHALL be considered
+  an error. These include, but are not limited to duplicate names found
+  for the following template types:
+
+  - Node Templates (node_templates)
+
+  - Relationship Templates (relationship_templates)
+
+  - Inputs (inputs)
+
+  - Outputs (outputs)
+
+- Duplicate names for the following keynames within Types or Templates
+  SHALL be considered an error. These include, but are not limited to
+  duplicate names found for the following keynames:
+
+  - Properties (properties)
+
+  - Attributes (attributes)
+
+  - Artifacts (artifacts)
+
+  - R<span class="comment-start" id="376"
+    author="Matt Rutkowski" date="2015-08-25T21:52:00Z">MUSTFIX: Verify
+    duplicates are NOT allowed!!</span>equirements
+    (requirements)
+<!----
+{"id": "375", "author": "Calin Curescu", "date": "2020-06-08T18:24:00Z", "comment": "But requirements assignments support\n  duplicates!", "target": "R<span class=\"comment-start\" id=\"376\"\n  author=\"Matt Rutkowski\" date=\"2015-08-25T21:52:00Z\">MUSTFIX: Verify\n  duplicates are NOT allowed!!</span>equirements\n  (requirements)"}-->
+
+  - Capabilities (capabilities)<span class="comment-end" id="376"></span>
+
+  - Interfaces (interfaces)
+
+  - Policies (policies)
+
+  - Groups (groups)
+
 # Nodes and Relationships
 
 ## Node Type
@@ -6001,7 +5948,7 @@ Artifact definitions have one of the following grammars:
 The following single-line grammar may be used when the artifact’s type
 and mime type can be inferred from the file URI:
 ```
-<[artifact_name](#TYPE_YAML_STRING)>: <[artifact_file_URI](#TYPE_YAML_STRING)> 
+<[artifact_name](#TYPE_YAML_STRING)>: <[artifact_file_uri](#TYPE_YAML_STRING)> 
 ```
 ##### Extended notation:
 
@@ -6011,7 +5958,7 @@ definition’s type and mime type need to be explicitly declared:
 <artifact_name>: 
   description: <artifact_description>
   type: <artifact_type_name>
-  file: <artifact_file_URI>
+  file: <artifact_file_uri>
   repository: <artifact_repository_name>
   deploy_path: <file_deployment_path>
   version: <artifact _version>
@@ -6031,7 +5978,7 @@ have the following meaning:
 - artifact_type_name: represents the mandatory artifact type the
   artifact definition is based upon.
 
-- artifact_file_URI: represents the mandatory URI string (relative or
+- artifact_file_uri: represents the mandatory URI string (relative or
   absolute) which can be used to locate the artifact’s file.
 
 - artifact_repository_name: represents the optional name of the
@@ -6039,7 +5986,7 @@ have the following meaning:
   (file) from.
 
 - file_deployement_path: represents the optional path the
-  artifact_file_URI will be copied into within the target node’s
+  artifact_file_uri will be copied into within the target node’s
   container.
 
 - artifact_version: represents the version of artifact
