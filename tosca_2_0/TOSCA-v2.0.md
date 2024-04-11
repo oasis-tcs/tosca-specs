@@ -1976,7 +1976,241 @@ definitions:
   - Group Types (`group_types`)
   - Function definitions (`functions`)
 
+## Additional information definitions
 
+### Description definition
+<!----
+{"id": "394", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:16:00Z", "comment": "Description is already described in 4.2.1.3.6", "target": "Description definition"}-->
+
+This optional element provides a means include single or multiline
+descriptions within a TOSCA file as a scalar string value.
+
+#### Keyname
+
+The following keyname is used to provide a description within the TOSCA
+specification:
+```
+description 
+```
+#### Grammar
+
+Description definitions have the following grammar:
+```
+description: <[description_string](#TYPE_YAML_STRING)> 
+```
+
+#### Examples
+
+Simple descriptions are treated as a single literal that includes the
+entire contents of the line that immediately follows the description
+key:
+```
+description: This is an example of a single line description (no folding). 
+```
+The YAML “folded” style may also be used for multi-line descriptions
+which “folds” line breaks as space characters.
+```
+description: >
+  This is an example of a multi-line description using YAML. It permits for line        
+  breaks for easier readability...
+
+  if needed.  However, (multiple) line breaks are folded into a single space   
+  character when processed into a single string value.
+```
+#### Notes
+
+- Use of “folded” style is discouraged for the YAML string type apart
+  from when used with the description keyname.
+
+<!----
+{"id": "403", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:13:00Z", "comment": "Can\u2019t I just use a double quoted string\n  for multi-line ?", "target": ""}-->
+
+### Metadata
+<!----
+{"id": "409", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:17:00Z", "comment": "Also covered by 4.2.1.3.2", "target": "Metadata"}-->
+
+This optional element provides a means to include optional metadata as a
+map of strings.
+
+#### Keyname
+
+The following keyname is used to provide metadata within the TOSCA
+specification:
+```
+metadata 
+```
+#### Grammar
+
+Metadata definitions have the following grammar:
+```
+metadata: 
+  map of <string>
+```
+#### Examples
+```
+metadata:
+  foo1: bar1
+  foo2: bar2
+  ...
+```
+#### Notes
+
+- Data provided within metadata, wherever it appears, MAY be ignored by
+  TOSCA Orchestrators and SHOULD NOT affect runtime behavior.
+
+## Type definitions
+
+TOSCA provides a type system to describe possible building blocks to
+construct a service template (i.e. for the nodes, relationship, group
+and policy templates, and the data, capabilities, interfaces, and
+artifacts used in the node and relationship templates). TOSCA types are
+reusable TOSCA entities and are defined in their specific sections in
+the service template, see Section 4.2.1 Service Template definition.
+
+Next, in Section 4.2.5.2 Common keynames in type definitions we present
+the definitions of common keynames that are used by all TOSCA types.
+Type-specific definitions for the different TOSCA type entities are
+presented further in the document:
+
+- Node Type in Section 4.3.1 Node Type.
+
+- Relationship Type in Section 4.3.3 Relationship Type.
+
+- Interface Type in Section 4.3.6.1 Interface Type.
+
+- Capability Type in Section 4.3.5.1 Capability Type.
+
+- Requirement Type in Section 4.3.5.4 Requirement Type.
+
+- Data Type in Section 4.4.4 Data Type.
+
+- Artifact Type in Section 4.3.7.1 Artifact Type.
+
+- Group Type in Section 4.6.1 Group Type.
+
+- Policy Type in Section 4.6.3 Policy Type.
+
+### General derivation and refinement rules
+
+To simplify type creation and to promote type extensibility TOSCA allows
+the definition of a new type (the derived type) based on another type
+(the parent type). The derivation process can be applied recursively,
+where a type may be derived from a long list of ancestor types (the
+parent, the parent of the parent, etc).
+
+Unless specifically stated in the derivation rules, when deriving new
+types from parent types the keyname definitions are inherited from the
+parent type. Moreover, the inherited definitions may be refined
+according to the derivation rules of that particular type entity.
+
+For definitions that are not inherited, a new definition **MUST** be
+provided (if the keyname is mandatory) or **MAY** be provided (if the
+keyname is not mandatory). If not provided, the keyname remains
+undefined. For definitions that are inherited, a refinement of the
+inherited definition is not mandatory even for mandatory keynames (since
+it has been inherited). A definition refinement that is exactly the same
+as the definition in the parent type does not change in any way the
+inherited definition. While unnecessary, it is not wrong.
+
+The following are some generic derivation rules used during type
+derivation (the specific rules of each TOSCA type entity are presented
+in their respective sections):
+
+- If not refined, usually a keyname/entity definition, is inherited
+  unchanged from the parent type, unless explicitly specified in the
+  rules that it is “not inherited”.
+
+- New entities (such as properties, attributes, capabilities,
+  requirements, interfaces, operations, notification, parameters) may be
+  added during derivation.
+
+- Already defined entities that have a type may be
+  redefined
+  
+<!----
+{"id": "427", "author": "Mike Rehder", "date": "2020-12-14T14:25:00Z", "comment": "New term \u201credefined\u201d. The sentence is\n  confusing \u2013 what is it trying to say? Is it saying that you can change\n  the type of a derived_from type (how?)?", "target": "redefined\n  "}-->
+to have a type derived from
+  the original type.
+
+- New validation clauses are added to already defined keynames/entities
+  (i.e. the defined validation clauses do not replace the validation
+  clause defined in the parent type but are added to it).
+
+- Some definitions must be totally
+  flexible
+<!----
+{"id": "428", "author": "Mike Rehder", "date": "2020-12-14T14:29:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201care treated as a new declaration and\u201d?", "target": "must be totally\n  flexible"}-->
+, so they will
+  overwrite the definition in the parent type.
+
+- Some definitions must 
+<!----
+{"id": "429", "author": "Mike Rehder", "date": "2020-12-14T14:28:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201ccannot\u201d?", "target": "must "}-->
+not be changed at all once defined (i.e. they
+  represent some sort of “signature” fundamental to the type).
+
+### Common keynames in type definitions
+
+The following keynames are used by all TOSCA type entities in the same
+way. This section serves to define them at once.
+
+#### Keynames
+
+The following is the list of recognized keynames used by all TOSCA type
+definitions:
+
+|Keyname     |Mandatory |Type                                                                               |Description                                                        |
+|--------------|-----------|------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+|derived_from |no        |[string](#TYPE_YAML_STRING)                                                        |An optional parent type name from which this type derives.         |
+|version      |no        |[version](#tosca-tal-suggests-removing-this.version)                               |An optional version for the type definition.                       |
+|metadata     |no        |[map](\l) of [string](#TYPE_YAML_STRING)<span class="comment-end" id="435"></span> |Defines a section used to declare additional metadata information. |
+|description  |no        |[string](#TYPE_YAML_STRING)                                                        |An optional description for the type.                              |
+
+#### Grammar
+
+The common keynames in type definitions have the following grammar:
+```
+<type_name>:
+  derived_from: <parent_type_name>
+  version: <version_number>
+  metadata: 
+    <metadata_map>
+  description: <type_description>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- parent_type_name: represents the optional parent type name.
+
+- version_number: represents the optional TOSCA version number for the
+  type.
+
+- entity_description: represents the optional description string for the
+  type.
+
+- metadata_map: represents the optional metadata map of string.
+
+#### Derivation rules
+
+During type derivation the common keyname definitions use the following
+rules:
+
+- derived_from: obviously, the definition is not inherited from the
+  parent type. If not defined, it remains undefined and this type does
+  not derive from another type. If defined, then this type derives from
+  another type, and all its keyname definitions must respect the
+  derivation rules of the type entity.
+
+- version: the definition is not inherited from the parent type. If
+  undefined, it remains undefined.
+
+- metadata: the definition is not inherited from the parent type. If
+  undefined, it remains undefined.
+
+- description: the definition is not inherited from the parent type. If
+  undefined, it remains undefined.
+
+### Types of Types
 #### artifact_types
 
 This optional keyname lists the Artifact Types that are defined by this
@@ -2215,239 +2449,6 @@ policy_types:
   mycompany.mytypes.myScalingPolicy:
     derived_from: tosca.policies.Scaling
 ```
-## Additional information definitions
-
-### Description definition
-<!----
-{"id": "394", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:16:00Z", "comment": "Description is already described in 4.2.1.3.6", "target": "Description definition"}-->
-
-This optional element provides a means include single or multiline
-descriptions within a TOSCA file as a scalar string value.
-
-#### Keyname
-
-The following keyname is used to provide a description within the TOSCA
-specification:
-```
-description 
-```
-#### Grammar
-
-Description definitions have the following grammar:
-```
-description: <[description_string](#TYPE_YAML_STRING)> 
-```
-
-#### Examples
-
-Simple descriptions are treated as a single literal that includes the
-entire contents of the line that immediately follows the description
-key:
-```
-description: This is an example of a single line description (no folding). 
-```
-The YAML “folded” style may also be used for multi-line descriptions
-which “folds” line breaks as space characters.
-```
-description: >
-  This is an example of a multi-line description using YAML. It permits for line        
-  breaks for easier readability...
-
-  if needed.  However, (multiple) line breaks are folded into a single space   
-  character when processed into a single string value.
-```
-#### Notes
-
-- Use of “folded” style is discouraged for the YAML string type apart
-  from when used with the description keyname.
-
-<!----
-{"id": "403", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:13:00Z", "comment": "Can\u2019t I just use a double quoted string\n  for multi-line ?", "target": ""}-->
-
-### Metadata
-<!----
-{"id": "409", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:17:00Z", "comment": "Also covered by 4.2.1.3.2", "target": "Metadata"}-->
-
-This optional element provides a means to include optional metadata as a
-map of strings.
-
-#### Keyname
-
-The following keyname is used to provide metadata within the TOSCA
-specification:
-```
-metadata 
-```
-#### Grammar
-
-Metadata definitions have the following grammar:
-```
-metadata: 
-  map of <string>
-```
-#### Examples
-```
-metadata:
-  foo1: bar1
-  foo2: bar2
-  ...
-```
-#### Notes
-
-- Data provided within metadata, wherever it appears, MAY be ignored by
-  TOSCA Orchestrators and SHOULD NOT affect runtime behavior.
-
-## Type definitions
-
-TOSCA provides a type system to describe possible building blocks to
-construct a service template (i.e. for the nodes, relationship, group
-and policy templates, and the data, capabilities, interfaces, and
-artifacts used in the node and relationship templates). TOSCA types are
-reusable TOSCA entities and are defined in their specific sections in
-the service template, see Section 4.2.1 Service Template definition.
-
-Next, in Section 4.2.5.2 Common keynames in type definitions we present
-the definitions of common keynames that are used by all TOSCA types.
-Type-specific definitions for the different TOSCA type entities are
-presented further in the document:
-
-- Node Type in Section 4.3.1 Node Type.
-
-- Relationship Type in Section 4.3.3 Relationship Type.
-
-- Interface Type in Section 4.3.6.1 Interface Type.
-
-- Capability Type in Section 4.3.5.1 Capability Type.
-
-- Requirement Type in Section 4.3.5.4 Requirement Type.
-
-- Data Type in Section 4.4.4 Data Type.
-
-- Artifact Type in Section 4.3.7.1 Artifact Type.
-
-- Group Type in Section 4.6.1 Group Type.
-
-- Policy Type in Section 4.6.3 Policy Type.
-
-### General derivation and refinement rules
-
-To simplify type creation and to promote type extensibility TOSCA allows
-the definition of a new type (the derived type) based on another type
-(the parent type). The derivation process can be applied recursively,
-where a type may be derived from a long list of ancestor types (the
-parent, the parent of the parent, etc).
-
-Unless specifically stated in the derivation rules, when deriving new
-types from parent types the keyname definitions are inherited from the
-parent type. Moreover, the inherited definitions may be refined
-according to the derivation rules of that particular type entity.
-
-For definitions that are not inherited, a new definition **MUST** be
-provided (if the keyname is mandatory) or **MAY** be provided (if the
-keyname is not mandatory). If not provided, the keyname remains
-undefined. For definitions that are inherited, a refinement of the
-inherited definition is not mandatory even for mandatory keynames (since
-it has been inherited). A definition refinement that is exactly the same
-as the definition in the parent type does not change in any way the
-inherited definition. While unnecessary, it is not wrong.
-
-The following are some generic derivation rules used during type
-derivation (the specific rules of each TOSCA type entity are presented
-in their respective sections):
-
-- If not refined, usually a keyname/entity definition, is inherited
-  unchanged from the parent type, unless explicitly specified in the
-  rules that it is “not inherited”.
-
-- New entities (such as properties, attributes, capabilities,
-  requirements, interfaces, operations, notification, parameters) may be
-  added during derivation.
-
-- Already defined entities that have a type may be
-  redefined
-  
-<!----
-{"id": "427", "author": "Mike Rehder", "date": "2020-12-14T14:25:00Z", "comment": "New term \u201credefined\u201d. The sentence is\n  confusing \u2013 what is it trying to say? Is it saying that you can change\n  the type of a derived_from type (how?)?", "target": "redefined\n  "}-->
-to have a type derived from
-  the original type.
-
-- New validation clauses are added to already defined keynames/entities
-  (i.e. the defined validation clauses do not replace the validation
-  clause defined in the parent type but are added to it).
-
-- Some definitions must be totally
-  flexible
-<!----
-{"id": "428", "author": "Mike Rehder", "date": "2020-12-14T14:29:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201care treated as a new declaration and\u201d?", "target": "must be totally\n  flexible"}-->
-, so they will
-  overwrite the definition in the parent type.
-
-- Some definitions must 
-<!----
-{"id": "429", "author": "Mike Rehder", "date": "2020-12-14T14:28:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201ccannot\u201d?", "target": "must "}-->
-not be changed at all once defined (i.e. they
-  represent some sort of “signature” fundamental to the type).
-
-### Common keynames in type definitions
-
-The following keynames are used by all TOSCA type entities in the same
-way. This section serves to define them at once.
-
-#### Keynames
-
-The following is the list of recognized keynames used by all TOSCA type
-definitions:
-
-|Keyname     |Mandatory |Type                                                                               |Description                                                        |
-|--------------|-----------|------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-|derived_from |no        |[string](#TYPE_YAML_STRING)                                                        |An optional parent type name from which this type derives.         |
-|version      |no        |[version](#tosca-tal-suggests-removing-this.version)                               |An optional version for the type definition.                       |
-|metadata     |no        |[map](\l) of [string](#TYPE_YAML_STRING)<span class="comment-end" id="435"></span> |Defines a section used to declare additional metadata information. |
-|description  |no        |[string](#TYPE_YAML_STRING)                                                        |An optional description for the type.                              |
-
-#### Grammar
-
-The common keynames in type definitions have the following grammar:
-```
-<type_name>:
-  derived_from: <parent_type_name>
-  version: <version_number>
-  metadata: 
-    <metadata_map>
-  description: <type_description>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- parent_type_name: represents the optional parent type name.
-
-- version_number: represents the optional TOSCA version number for the
-  type.
-
-- entity_description: represents the optional description string for the
-  type.
-
-- metadata_map: represents the optional metadata map of string.
-
-#### Derivation rules
-
-During type derivation the common keyname definitions use the following
-rules:
-
-- derived_from: obviously, the definition is not inherited from the
-  parent type. If not defined, it remains undefined and this type does
-  not derive from another type. If defined, then this type derives from
-  another type, and all its keyname definitions must respect the
-  derivation rules of the type entity.
-
-- version: the definition is not inherited from the parent type. If
-  undefined, it remains undefined.
-
-- metadata: the definition is not inherited from the parent type. If
-  undefined, it remains undefined.
-
-- description: the definition is not inherited from the parent type. If
-  undefined, it remains undefined.
 
 ## Service template definition
 
