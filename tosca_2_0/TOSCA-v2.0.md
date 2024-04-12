@@ -2060,44 +2060,69 @@ metadata:
 
 ## Type definitions
 
-TOSCA provides a type system to describe possible building blocks to
+TOSCA provides a type system to describe reusable building blocks to
 construct a service template (i.e. for the nodes, relationship, group
 and policy templates, and the data, capabilities, interfaces, and
 artifacts used in the node and relationship templates). TOSCA types are
 reusable TOSCA entities and are defined in their specific sections in
-the service template, see Section 4.2.1 Service Template definition.
+the TOSCA file.
 
-Next, in Section 4.2.5.2 Common keynames in type definitions we present
-the definitions of common keynames that are used by all TOSCA types.
-Type-specific definitions for the different TOSCA type entities are
-presented further in the document:
+In this section, we present the definitions of common keynames that
+are used by all TOSCA type definitions. Type-specific definitions for the
+different TOSCA type entities are presented further in the document:
+
+> Cross references need to be updated later
 
 - Node Type in Section 4.3.1 Node Type.
-
 - Relationship Type in Section 4.3.3 Relationship Type.
-
 - Interface Type in Section 4.3.6.1 Interface Type.
-
 - Capability Type in Section 4.3.5.1 Capability Type.
-
-- Requirement Type in Section 4.3.5.4 Requirement Type.
-
 - Data Type in Section 4.4.4 Data Type.
-
 - Artifact Type in Section 4.3.7.1 Artifact Type.
-
 - Group Type in Section 4.6.1 Group Type.
-
 - Policy Type in Section 4.6.3 Policy Type.
 
-### General derivation and refinement rules
+### Common Keynames in Type Definitions
 
+The following keynames are used by all TOSCA type entities in the same
+way. This section serves to define them at once.
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|derived_from|no|string|An optional parent type name from which this type derives.|
+|version|no|version|An optional version for the type definition.|
+|metadata|no|map|Defines a section used to declare additional metadata information.|
+|description|no|string|An optional description for the type.|
+
+The common keynames in type definitions have the following grammar:
+```
+<type_name>:
+  derived_from: <parent_type_name>
+  version: <version_number>
+  metadata: 
+    <metadata_map>
+  description: <type_description>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- parent_type_name: represents the optional parent type name.
+
+- version_number: represents the optional TOSCA version number for the
+  type.
+
+- entity_description: represents the optional description string for the
+  type.
+
+- metadata_map: represents the optional metadata map of string.
+
+### Type Derivation
 To simplify type creation and to promote type extensibility TOSCA allows
 the definition of a new type (the derived type) based on another type
 (the parent type). The derivation process can be applied recursively,
 where a type may be derived from a long list of ancestor types (the
 parent, the parent of the parent, etc).
 
+### General derivation and refinement rules
 Unless specifically stated in the derivation rules, when deriving new
 types from parent types the keyname definitions are inherited from the
 parent type. Moreover, the inherited definitions may be refined
@@ -2124,73 +2149,30 @@ in their respective sections):
   requirements, interfaces, operations, notification, parameters) may be
   added during derivation.
 
-- Already defined entities that have a type may be
-  redefined
+- Already defined entities that have a type may be redefined to have a
+  type derived from the original type.
   
 <!----
 {"id": "427", "author": "Mike Rehder", "date": "2020-12-14T14:25:00Z", "comment": "New term \u201credefined\u201d. The sentence is\n  confusing \u2013 what is it trying to say? Is it saying that you can change\n  the type of a derived_from type (how?)?", "target": "redefined\n  "}-->
-to have a type derived from
-  the original type.
 
-- New validation clauses are added to already defined keynames/entities
-  (i.e. the defined validation clauses do not replace the validation
-  clause defined in the parent type but are added to it).
+- New validation clauses are added to already defined
+  keynames/entities (i.e. the defined validation clauses do not
+  replace the validation clause defined in the parent type but are
+  added to it).
 
-- Some definitions must be totally
-  flexible
+- Some definitions must be totally flexible, so they will overwrite
+  the definition in the parent type.
+
 <!----
 {"id": "428", "author": "Mike Rehder", "date": "2020-12-14T14:29:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201care treated as a new declaration and\u201d?", "target": "must be totally\n  flexible"}-->
-, so they will
-  overwrite the definition in the parent type.
 
-- Some definitions must 
-<!----
-{"id": "429", "author": "Mike Rehder", "date": "2020-12-14T14:28:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201ccannot\u201d?", "target": "must "}-->
-not be changed at all once defined (i.e. they
+- Some definitions must not be changed at all once defined (i.e. they
   represent some sort of “signature” fundamental to the type).
 
-### Common keynames in type definitions
+<!----
+{"id": "429", "author": "Mike Rehder", "date": "2020-12-14T14:28:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201ccannot\u201d?", "target": "must "}-->
 
-The following keynames are used by all TOSCA type entities in the same
-way. This section serves to define them at once.
-
-#### Keynames
-
-The following is the list of recognized keynames used by all TOSCA type
-definitions:
-
-|Keyname     |Mandatory |Type                                                                               |Description                                                        |
-|--------------|-----------|------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-|derived_from |no        |[string](#TYPE_YAML_STRING)                                                        |An optional parent type name from which this type derives.         |
-|version      |no        |[version](#tosca-tal-suggests-removing-this.version)                               |An optional version for the type definition.                       |
-|metadata     |no        |[map](\l) of [string](#TYPE_YAML_STRING)<span class="comment-end" id="435"></span> |Defines a section used to declare additional metadata information. |
-|description  |no        |[string](#TYPE_YAML_STRING)                                                        |An optional description for the type.                              |
-
-#### Grammar
-
-The common keynames in type definitions have the following grammar:
-```
-<type_name>:
-  derived_from: <parent_type_name>
-  version: <version_number>
-  metadata: 
-    <metadata_map>
-  description: <type_description>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- parent_type_name: represents the optional parent type name.
-
-- version_number: represents the optional TOSCA version number for the
-  type.
-
-- entity_description: represents the optional description string for the
-  type.
-
-- metadata_map: represents the optional metadata map of string.
-
-#### Derivation rules
+#### Derivation Rules for Common Keynames
 
 During type derivation the common keyname definitions use the following
 rules:
@@ -2200,59 +2182,46 @@ rules:
   not derive from another type. If defined, then this type derives from
   another type, and all its keyname definitions must respect the
   derivation rules of the type entity.
-
 - version: the definition is not inherited from the parent type. If
   undefined, it remains undefined.
-
 - metadata: the definition is not inherited from the parent type. If
   undefined, it remains undefined.
-
 - description: the definition is not inherited from the parent type. If
   undefined, it remains undefined.
 
 ### Types of Types
-#### artifact_types
+TOSCA supports eight different *types of types*. These types can
+be defined in a TOSCA file using the grammars described in this
+section.
 
-This optional keyname lists the Artifact Types that are defined by this
-TOSCA file.
-
-##### Keyname
-```
-artifact_types 
-```
-
-##### Grammar
+#### Artifact Types
+Artifact types can be defined in a TOSCA file using the optional
+`artifact_types` keyword using the following grammar:
 ```
 artifact_types:
   <artifact_type_defn_1>
   ...
   <artifact type_defn_n>
 ```
-##### Example
+The following code snippet shows an example artifact type definition:
 ```
 artifact_types:
   mycompany.artifacttypes.myFileType:
     derived_from: tosca.artifacts.File
 ```
-#### data_types
+A detailed description of the artifact type definition grammar is
+provided in Section XXX.
 
-This optional keyname provides a section to define new data types in
-TOSCA.
-
-##### Keyname
-```
-data_types 
-```
-
-##### Grammar 
+#### Data Types
+Data types can be defined in a TOSCA file using the optional
+`data_types` keyword using the following grammar:
 ```
 data_types:
    <tosca_datatype_def_1>
    ...
    <tosca_datatype_def_n>
 ```
-
-##### Example
+The following code snippet shows example data type definitions:
 ```
 data_types:
   # A complex datatype definition
@@ -2264,7 +2233,6 @@ data_types:
         type: string
       phone:
         type: string
-
   # datatype definition derived from an existing type
   full_contact_info:
     derived_from: simple_contact_info
@@ -2278,56 +2246,41 @@ data_types:
       postalcode:
         type: string
 ```
-#### capability_types
-
-This optional keyname lists the Capability Types that provide the
-reusable type definitions that can be used to describe features of nodes
-that can be used to fulfill requirements of other nodes.
-
-##### Keyname
-```
-capability_types 
-```
-
-##### Grammar 
+A detailed description of the data type definition grammar is
+provided in Section XXX.
+#### Capability Types
+Capability types can be defined in a TOSCA file using the optional
+`capability_types` keyword using the following grammar:
 ```
 capability_types:
   <capability_type_defn_1>
   ...
   <capability type_defn_n>
 ```
-##### Example
+The following code snippet shows example capability type definitions:
 ```
 capability_types:
   mycompany.mytypes.myCustomEndpoint:
     derived_from: tosca.capabilities.Endpoint
     properties:
       # more details ...
-
   mycompany.mytypes.myCustomFeature:
     derived_from: tosca.capabilities.Feature
     properties:
       # more details ...
 ```
-#### interface_types
-
-This optional keyname lists the Interface Types that provide the
-reusable type definitions that can be used to describe operations
-exposed by TOSCA relationships and nodes.
-
-##### Keyname
-```
-interface_types 
-```
-
-##### Grammar 
+A detailed description of the capability type definition grammar is
+provided in Section XXX.
+#### Interface Types
+Interface types can be defined in a TOSCA file using the optional
+`interface_types` keyword using the following grammar:
 ```
 interface_types:
   <interface_type_defn_1>
   ...
   <interface type_defn_n>
 ```
-##### Example
+The following code snippet shows an example interface type definition:
 ```
 interface_types:
   mycompany.interfaces.service.Signal:
@@ -2337,55 +2290,41 @@ interface_types:
       signal_end_receive:
         description: Operation to signal end of some message processed.
 ```
-#### relationship_types
-
-This optional keyname lists the Relationship Types that provide the
-reusable type definitions that can be used to describe dependent
-relationships between nodes.
-
-##### Keyname
-```
-relationship_types 
-```
-
-##### Grammar 
+A detailed description of the interface type definition grammar is
+provided in Section XXX.
+#### Relationship Types
+Relationship types can be defined in a TOSCA file using the optional
+`relationship_types` keyword using the following grammar:
 ```
 relationship_types:
   <relationship_type_defn_1>
   ...
   <relationship type_defn_n>
 ```
-##### Example
+The following code snippet shows example relationship type definitions:
 ```
 relationship_types:
   mycompany.mytypes.myCustomClientServerType:
     derived_from: tosca.relationships.HostedOn
     properties:
       # more details ...
-
   mycompany.mytypes.myCustomConnectionType:
     derived_from: tosca.relationships.ConnectsTo
     properties:
       # more details ...
 ```
-#### node_types
-
-This optional keyname lists the Node Types that provide the reusable
-type definitions for nodes in a service.
-
-##### Keyname
-```
-node_types
-```
-
-##### Grammar 
+A detailed description of the relationship type definition grammar is
+provided in Section XXX.
+#### Node Types
+Node types can be defined in a TOSCA file using the optional
+`node_types` keyword using the following grammar:
 ```
 node_types:
   <node_type_defn_1>
   ...
   <node_type_defn_n>
 ```
-##### Example
+The following code snippet shows example node type definitions:
 ```
 node_types:
   my_webapp_node_type:
@@ -2393,23 +2332,16 @@ node_types:
     properties:
       my_port:
         type: integer
-
   my_database_node_type:
     derived_from: Database
     capabilities:
       mytypes.myfeatures.transactSQL
 ```
-#### group_types
-
-This optional keyname lists the Group Types that are defined by this
-TOSCA file.
-
-##### Keyname
-```
-group_types 
-```
-
-##### Grammar 
+A detailed description of the node type definition grammar is
+provided in Section XXX.
+#### Group Types
+Group types can be defined in a TOSCA file using the optional
+`group_types` keyword using the following grammar:
 ```
 group_types:
   <group_type_defn_1>
@@ -2417,31 +2349,24 @@ group_types:
   <group type_defn_n>
 
 ```
-##### Example
+The following code snippet shows an example group type definition:
 ```
 group_types:
   mycompany.mytypes.myScalingGroup:
     derived_from: tosca.groups.Root
 ```
-
-#### policy_types
-
-This optional keyname lists the Policy Types that are defined by this
-TOSCA file.
-
-##### Keyname
-```
-policy_types 
-```
-
-##### Grammar 
+A detailed description of the group type definition grammar is
+provided in Section XXX.
+#### Policy Types
+Policy types can be defined in a TOSCA file using the optional
+`policy_types` keyword using the following grammar:
 ```
 policy_types:
   <policy_type_defn_1>
   ...
   <policy type_defn_n>
 ```
-##### Example
+The following code snippet shows an example policy type definition:
 <!----
 {"id": "327", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:48:00Z", "comment": "There should be a second policy definition in the example or it is just a repeat of the policy type definition example", "target": "Example"}-->
 ```
@@ -2449,6 +2374,8 @@ policy_types:
   mycompany.mytypes.myScalingPolicy:
     derived_from: tosca.policies.Scaling
 ```
+A detailed description of the policy type definition grammar is
+provided in Section XXX.
 
 ## Service template definition
 
@@ -3703,7 +3630,7 @@ additional parameter definitions to be used as inputs/outputs).
 
 | Keyname    | Mandatory | Type                                                  | Description                                                                                                                  |
 |------------|-----------|-------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
-| type       | yes       | [string](#TYPE_YAML_STRING)                           | The optional keyname used to provide the name of the Relationship Type as part of the relationship keyname definition.       |
+| type       | yes       | string                           | The optional keyname used to provide the name of the Relationship Type as part of the relationship keyname definition.       |
 | interfaces | no        | map of [interface refinements](#interface-definition) | The optional keyname used to reference declared interface definitions on the corresponding Relationship Type for refinement. |
 
 #### Grammar
@@ -5424,7 +5351,7 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - operation_name: represents the mandatory symbolic name of the
-  operation as a [string](#TYPE_YAML_STRING).
+  operation as a string.
 
 - operation_implementation_definition: represents the optional
   specification of the operation’s implementation
@@ -5781,7 +5708,7 @@ In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - primary_artifact_name: represents the optional name
-  ([string](#TYPE_YAML_STRING)) of an implementation artifact definition
+  (string) of an implementation artifact definition
   (defined elsewhere), or the direct name of an implementation
   artifact’s relative filename (e.g., a service template-relative,
   path-inclusive filename or absolute file location using a URL).
@@ -7830,7 +7757,7 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - parameter_name: represents the mandatory symbolic name of the
-  parameter as a [string](#TYPE_YAML_STRING).
+  parameter as a string.
 
 - parameter_description: represents the optional
   [description](#TYPE_YAML_STRING) of the parameter.
@@ -7864,7 +7791,7 @@ have the following meaning:
     required (i.e. parameter_required is “false”) as they will stay
     undefined.
 
-- status_value: a [string](#TYPE_YAML_STRING) that contains a keyword
+- status_value: a string that contains a keyword
   that indicates the status of the parameter relative to the
   specification or implementation.
 
@@ -8209,7 +8136,7 @@ definition:
 | Keyname     | Mandatory | Type                                             | Description                              |
 |-------------|-----------|--------------------------------------------------|------------------------------------------|
 | signatures  | yes       | map of signature definitions                     | The map of signature definitions.        |
-| description | no        | [[string](#TYPE_YAML_STRING)](#TYPE_YAML_STRING) | The description of the function.         |
+| description | no        | [string](#TYPE_YAML_STRING) | The description of the function.         |
 | metadata    | no        | [map](#tosca-map-type) of metadata               | Defines additional metadata information. |
 
 The following is the list of recognized keynames for TOSCA function
@@ -9760,7 +9687,7 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - policy_name: represents the mandatory symbolic name of the policy as a
-  [string](#TYPE_YAML_STRING).
+  string.
 
 - policy_type_name: represents the name of the policy the definition is
   based upon.
@@ -9812,8 +9739,8 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 |---|---|---|---|
-|description | no|[string](#TYPE_YAML_STRING)| The optional description string for the trigger.|
-|event    | yes    | [string](#TYPE_YAML_STRING)| The mandatory name of the event that activates the trigger’s action. |
+|description | no|string| The optional description string for the trigger.|
+|event    | yes    | string| The mandatory name of the event that activates the trigger’s action. |
 |condition  | no    | [condition clause](#BKM_Condition_Clause_Def)| The optional condition that must evaluate to true in order for the trigger’s action to be performed. Note: this is optional since sometimes the event occurrence itself is enough to trigger the action.|
 |action|yes|list of [activity definition](#activity-definitions)|The list of sequential activities to be performed when the event is triggered, and the condition is met (i.e., evaluates to true).|
 <!----
@@ -9836,7 +9763,7 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - trigger_name: represents the mandatory symbolic name of the trigger as
-  a [string](#TYPE_YAML_STRING).
+  a string.
 
 - trigger_description: represents the optional
   [description](#TYPE_YAML_STRING) string for the corresponding
@@ -11015,8 +10942,8 @@ $token: [ <string_with_tokens>, <string_of_token_chars>, <substring_index> ]
 
 | Argument              | Mandatory | Type                          | Description                                                                                                                                                           |
 |-----------------------|-----------|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| string_with_tokens    | yes       | [string](#TYPE_YAML_STRING)   | The composite string that contains one or more substrings separated by token characters.                                                                              |
-| string_of_token_chars | yes       | [string](#TYPE_YAML_STRING)   | The string that contains one or more token characters that separate substrings within the composite string.                                                           |
+| string_with_tokens    | yes       | string   | The composite string that contains one or more substrings separated by token characters.                                                                              |
+| string_of_token_chars | yes       | string   | The string that contains one or more token characters that separate substrings within the composite string.                                                           |
 | substring_index       | yes       | [integer](#TYPE_YAML_INTEGER) | The integer indicates the index of the substring to return from the composite string. Note that the first substring is denoted by using the ‘0’ (zero) integer value. |
 
 #### Examples
