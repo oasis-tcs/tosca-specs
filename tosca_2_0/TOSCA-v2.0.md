@@ -127,7 +127,6 @@ This version of the specification includes significant changes from TOSCA 1.3. I
 - Font colors and styles
 - Typographic conventions
 
-
 ## 1.3 Glossary
 
 <!-- Optional section with suggested subsections -->
@@ -442,7 +441,7 @@ Figure : TOSCA Types and TOSCA Templates
 
 The use of types in TOSCA also provides the additional benefits of
 abstraction, information hiding, and reuse. TOSCA types can be
-organized in a *type hierarcy* where one or more type definitions can inherit from another type, each derived type may then be refined. This promoted reuse. The base type may be abstract and teh derived types may be concrete which promotes abstraction.  **TOSCA node types*
+organized in a *type hierarcy* where one or more type definitions can inherit from another type, each derived type may then be refined. This promotes reuse. The base type may be abstract and the derived types may be concrete which promotes abstraction.  **TOSCA node types*
 and **TOSCA relationship types** define an externally visible
 *management façade* for entitities of that type while hiding internal
 implementation details. This management façade defines interfaces that
@@ -1192,6 +1191,9 @@ metadata:
   date_updated: 2024-05-01
   status: developmental  
 ```
+Data provided within metadata, wherever it appears, MAY be ignored by
+TOSCA Orchestrators and SHOULD NOT affect runtime behavior.
+
 ### 5.3.2 description
 
 This optional keyname provides a means to include single or multiline
@@ -1201,15 +1203,26 @@ follows:
 description: <description_string>
 ```
 Standard YAML block scalar and flow scalar formats are supported for
-the description string.  The following shows a Single line example
-
+the description string. Simple descriptions are treated as a single
+literal that includes the entire contents of the line that immediately
+follows the description key:
 ```
-description: A simple example service template 
+description: This is an example of a single line description (no folding). 
 ```
-The following shows a multi-line flow scalar example
+The following shows a multi-line flow scalar example:
 ```
 description: "A multiline description 
 using a quoted string”
+```
+The YAML *folded* style may also be used for multi-line descriptions
+which *folds* line breaks as space characters.
+```
+description: >
+  This is an example of a multi-line description using YAML. It permits for line        
+  breaks for easier readability...
+
+  if needed.  However, (multiple) line breaks are folded into a single space   
+  character when processed into a single string value.
 ```
 
 # 6 TOSCA File Definition
@@ -1227,6 +1240,7 @@ their grammars—that are allowed to appear in a TOSCA file.
 
 The major entities that can be defined in a TOSCA file are depicted in
 Figure 1.
+
 ![TOSCA File](images/tosca_file.png)
 
 Figure : Structural Elements of a TOSCA File
@@ -1238,12 +1252,9 @@ The following is the list of recognized keynames for a TOSCA file:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in this TOSCA file.|
-|metadata|no|map of YAML values|Defines a section used to declare additional metadata information. Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations.|
 |description|no|string|Declares a description for this TOSCA file and its contents.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information. Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations.|
 |dsl_definitions|no|N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout this TOSCA file.|
-|profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
-|repositories|no|map of repository definitions|Declares a map of external repositories that contain artifacts that are referenced in this TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
-|imports|no|list of import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
 |artifact_types|no|map of artifact Types|Declares a map of artifact type definitions for use in this TOSCA file and/or external TOSCA files.|
 |data_types|no|map of data types|Declares a map of TOSCA data type definitions for use in this TOSCA file and/or external TOSCA files.|
 |capability_types|no|map of capability types|Declares a map of capability type definitions for use in this TOSCA file and/or external TOSCA files.|
@@ -1252,8 +1263,11 @@ The following is the list of recognized keynames for a TOSCA file:
 |node_types|no|map of node types|Declares a map of node type definitions for use in this TOSCA file and/or external TOSCA files.|
 |group_types|no|map of group types|Declares a map of group type definitions for use in this TOSCA file and/or external TOSCA files.|
 |policy_types|no|map of policy types|Declares a map of policy type definitions for use in this TOSCA file and/or external TOSCA files.|
-|service_template|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application's or service's components, as well as relationship templates representing relations between these components.|
+|repositories|no|map of repository definitions|Declares a map of external repositories that contain artifacts that are referenced in this TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
 |functions|no|map of function definitions|Declares a map of function definitions for use in this TOSCA file and/or external TOSCA files.|
+|profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
+|imports|no|list of import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
+|service_template|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application's or service's components, as well as relationship templates representing relations between these components.|
 
 The following rules apply:
 
@@ -1271,7 +1285,7 @@ The following rules apply:
 The remainder of this chapter provides detailed descriptions of the
 keynames and associated grammars used in a TOSCA file definition.
 
-## TOSCA Definitions Version
+## 6.2 TOSCA Definitions Version
 The mandatory `tosca_definitions_version` keyname provides a means to
 specify the TOSCA version used within the TOSCA file as follows:
 ```
@@ -1299,7 +1313,7 @@ tosca_definitions_version: tosca_2_0
 Note that it is not mandatory for TOSCA Version 2.0 implementations to
 support older versions of the TOSCA specifications.
 
-## DSL Definitions
+## 6.3 DSL Definitions
 
 The optional `dsl_definitions` keyname provides a section where
 template designers can define YAML-style macros for use elsewhere in
@@ -1338,7 +1352,413 @@ dsl_definitions:
       os_version: 6.6
 ```
 
-## Profiles
+## 6.4 Type definitions
+
+TOSCA provides a type system to describe reusable building blocks to
+construct a service template (i.e. for the nodes, relationship, group
+and policy templates, and the data, capabilities, interfaces, and
+artifacts used in the node and relationship templates). TOSCA types are
+reusable TOSCA entities and are defined in their specific sections in
+the TOSCA file.
+
+In this section, we present the definitions of common keynames that
+are used by all TOSCA type definitions. Type-specific definitions for the
+different TOSCA type entities are presented further in the document:
+
+> Cross references need to be updated later
+
+- Node Type in Section 4.3.1 Node Type.
+- Relationship Type in Section 4.3.3 Relationship Type.
+- Interface Type in Section 4.3.6.1 Interface Type.
+- Capability Type in Section 4.3.5.1 Capability Type.
+- Data Type in Section 4.4.4 Data Type.
+- Artifact Type in Section 4.3.7.1 Artifact Type.
+- Group Type in Section 4.6.1 Group Type.
+- Policy Type in Section 4.6.3 Policy Type.
+
+### 6.4.1 Common Keynames in Type Definitions
+
+The following keynames are used by all TOSCA type entities in the same
+way. This section serves to define them at once.
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|derived_from|no|string|An optional parent type name from which this type derives.|
+|version|no|version|An optional version for the type definition.|
+|metadata|no|map|Defines a section used to declare additional metadata information.|
+|description|no|string|An optional description for the type.|
+
+The common keynames in type definitions have the following grammar:
+```
+<type_name>:
+  derived_from: <parent_type_name>
+  version: <version_number>
+  metadata: 
+    <metadata_map>
+  description: <type_description>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- parent_type_name: represents the optional parent type name.
+
+- version_number: represents the optional TOSCA version number for the
+  type.
+
+- entity_description: represents the optional description string for the
+  type.
+
+- metadata_map: represents the optional metadata map of string.
+
+### 6.4.2 Type Derivation
+
+To simplify type creation and to promote type extensibility TOSCA
+allows the definition of a new type (the derived type) based on
+another type (the parent type). The derivation process can be applied
+recursively, where a type may be derived from a long list of ancestor
+types (the parent, the parent of the parent, etc).  Unless
+specifically stated in the derivation rules, when deriving new types
+from parent types the keyname definitions are inherited from the
+parent type. Moreover, the inherited definitions may be refined
+according to the derivation rules of that particular type entity.  For
+definitions that are not inherited, a new definition **MUST** be
+provided (if the keyname is mandatory) or **MAY** be provided (if the
+keyname is not mandatory). If not provided, the keyname remains
+undefined. For definitions that are inherited, a refinement of the
+inherited definition is not mandatory even for mandatory keynames
+(since it has been inherited). A definition refinement that is exactly
+the same as the definition in the parent type does not change in any
+way the inherited definition. While unnecessary, it is not wrong.
+
+The following are some generic derivation rules used during type
+derivation (the specific rules of each TOSCA type entity are presented
+in their respective sections):
+
+- If not refined, usually a keyname/entity definition, is inherited
+  unchanged from the parent type, unless explicitly specified in the
+  rules that it is “not inherited”.
+
+- New entities (such as properties, attributes, capabilities,
+  requirements, interfaces, operations, notification, parameters) may be
+  added during derivation.
+
+- Already defined entities that have a type may be redefined to have a
+  type derived from the original type.
+  
+<!----
+{"id": "427", "author": "Mike Rehder", "date": "2020-12-14T14:25:00Z", "comment": "New term \u201credefined\u201d. The sentence is\n  confusing \u2013 what is it trying to say? Is it saying that you can change\n  the type of a derived_from type (how?)?", "target": "redefined\n  "}-->
+
+- New validation clauses are added to already defined
+  keynames/entities (i.e. the defined validation clauses do not
+  replace the validation clause defined in the parent type but are
+  added to it).
+
+- Some definitions must be totally flexible, so they will overwrite
+  the definition in the parent type.
+
+<!----
+{"id": "428", "author": "Mike Rehder", "date": "2020-12-14T14:29:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201care treated as a new declaration and\u201d?", "target": "must be totally\n  flexible"}-->
+
+- Some definitions must not be changed at all once defined (i.e. they
+  represent some sort of “signature” fundamental to the type).
+
+<!----
+{"id": "429", "author": "Mike Rehder", "date": "2020-12-14T14:28:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201ccannot\u201d?", "target": "must "}-->
+
+During type derivation the common keynames in type definitions use the
+following rules:
+
+- derived_from: obviously, the definition is not inherited from the
+  parent type. If not defined, it remains undefined and this type does
+  not derive from another type. If defined, then this type derives from
+  another type, and all its keyname definitions must respect the
+  derivation rules of the type entity.
+- version: the definition is not inherited from the parent type. If
+  undefined, it remains undefined.
+- metadata: the definition is not inherited from the parent type. If
+  undefined, it remains undefined.
+- description: the definition is not inherited from the parent type. If
+  undefined, it remains undefined.
+
+### 6.4.3 Types of Types
+TOSCA supports eight different *types of types*. These types can
+be defined in a TOSCA file using the grammars described in this
+section.
+
+#### 6.4.3.1 Artifact Types
+Artifact types can be defined in a TOSCA file using the optional
+`artifact_types` keyword using the following grammar:
+```
+artifact_types:
+  <artifact_type_defn_1>
+  ...
+  <artifact type_defn_n>
+```
+The following code snippet shows an example artifact type definition:
+```
+artifact_types:
+  mycompany.artifacttypes.myFileType:
+    derived_from: tosca.artifacts.File
+```
+A detailed description of the artifact type definition grammar is
+provided in Section XXX.
+
+#### 6.4.3.2 Data Types
+Data types can be defined in a TOSCA file using the optional
+`data_types` keyword using the following grammar:
+```
+data_types:
+   <tosca_datatype_def_1>
+   ...
+   <tosca_datatype_def_n>
+```
+The following code snippet shows example data type definitions:
+```
+data_types:
+  # A complex datatype definition
+  simple_contactinfo_type:
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      phone:
+        type: string
+  # datatype definition derived from an existing type
+  full_contact_info:
+    derived_from: simple_contact_info
+    properties:
+      street_address:
+        type: string
+      city: 
+        type: string
+      state:
+        type: string
+      postalcode:
+        type: string
+```
+A detailed description of the data type definition grammar is
+provided in Section XXX.
+#### 6.4.3.3 Capability Types
+Capability types can be defined in a TOSCA file using the optional
+`capability_types` keyword using the following grammar:
+```
+capability_types:
+  <capability_type_defn_1>
+  ...
+  <capability type_defn_n>
+```
+The following code snippet shows example capability type definitions:
+```
+capability_types:
+  mycompany.mytypes.myCustomEndpoint:
+    derived_from: tosca.capabilities.Endpoint
+    properties:
+      # more details ...
+  mycompany.mytypes.myCustomFeature:
+    derived_from: tosca.capabilities.Feature
+    properties:
+      # more details ...
+```
+A detailed description of the capability type definition grammar is
+provided in Section XXX.
+#### 6.4.3.4 Interface Types
+Interface types can be defined in a TOSCA file using the optional
+`interface_types` keyword using the following grammar:
+```
+interface_types:
+  <interface_type_defn_1>
+  ...
+  <interface type_defn_n>
+```
+The following code snippet shows an example interface type definition:
+```
+interface_types:
+  mycompany.interfaces.service.Signal:
+    operations:
+      signal_begin_receive:
+        description: Operation to signal start of some message processing.
+      signal_end_receive:
+        description: Operation to signal end of some message processed.
+```
+A detailed description of the interface type definition grammar is
+provided in Section XXX.
+#### 6.4.3.5 Relationship Types
+Relationship types can be defined in a TOSCA file using the optional
+`relationship_types` keyword using the following grammar:
+```
+relationship_types:
+  <relationship_type_defn_1>
+  ...
+  <relationship type_defn_n>
+```
+The following code snippet shows example relationship type definitions:
+```
+relationship_types:
+  mycompany.mytypes.myCustomClientServerType:
+    derived_from: tosca.relationships.HostedOn
+    properties:
+      # more details ...
+  mycompany.mytypes.myCustomConnectionType:
+    derived_from: tosca.relationships.ConnectsTo
+    properties:
+      # more details ...
+```
+A detailed description of the relationship type definition grammar is
+provided in Section XXX.
+#### 6.4.3.6 Node Types
+Node types can be defined in a TOSCA file using the optional
+`node_types` keyword using the following grammar:
+```
+node_types:
+  <node_type_defn_1>
+  ...
+  <node_type_defn_n>
+```
+The following code snippet shows example node type definitions:
+```
+node_types:
+  my_webapp_node_type:
+    derived_from: WebApplication
+    properties:
+      my_port:
+        type: integer
+  my_database_node_type:
+    derived_from: Database
+    capabilities:
+      mytypes.myfeatures.transactSQL
+```
+A detailed description of the node type definition grammar is
+provided in Section XXX.
+#### 6.4.3.7 Group Types
+Group types can be defined in a TOSCA file using the optional
+`group_types` keyword using the following grammar:
+```
+group_types:
+  <group_type_defn_1>
+  ...
+  <group type_defn_n>
+
+```
+The following code snippet shows an example group type definition:
+```
+group_types:
+  mycompany.mytypes.myScalingGroup:
+    derived_from: tosca.groups.Root
+```
+A detailed description of the group type definition grammar is
+provided in Section XXX.
+#### 6.4.3.8 Policy Types
+Policy types can be defined in a TOSCA file using the optional
+`policy_types` keyword using the following grammar:
+```
+policy_types:
+  <policy_type_defn_1>
+  ...
+  <policy type_defn_n>
+```
+The following code snippet shows an example policy type definition:
+<!----
+{"id": "327", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:48:00Z", "comment": "There should be a second policy definition in the example or it is just a repeat of the policy type definition example", "target": "Example"}-->
+```
+policy_types:
+  mycompany.mytypes.myScalingPolicy:
+    derived_from: Scaling
+```
+A detailed description of the policy type definition grammar is
+provided in Section XXX.
+
+## 6.5 Repository Definitions
+
+A repository definition defines an external *repository* that contains
+TOSCA files and/or artifacts that are referenced or imported by this
+TOSCA file. Repositories are defined using the optional `repositories`
+keyname as follows:
+```
+repositories:
+   <repository_definition_1>
+   ...
+   <repository_definition_n>
+```
+The following is the list of recognized keynames for a TOSCA repository
+definition:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|description|no|string|Declares a description for the repository being defined.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the repository being defined.|
+|url|yes|string|The URL or network address used to access the repository.|
+
+These keynames can be used to define a repository using a multi-line
+grammar as follows:
+```
+<repository_name>:
+  description: <repository_description>
+  metadata:
+    <metadata_definitions>
+  url: <repository_address>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- repository_name: represents the mandatory symbolic name of the
+  repository as a string
+- repository_description: contains an optional description of the
+  repository.
+- metadata_definitions: contains an optional map of metadata using
+  YAML types
+- repository_address: represents the mandatory URL to access the
+  repository as a string.
+
+If only the `url` needs to be specified, repository definitions can
+also use a single-line grammar as follows:
+```
+<repository_name>: <repository_address>
+```
+The following example show repository definitions using both
+multi-line as well as single-line grammars.
+```
+repositories:
+  my_code_repo:
+    description: My project’s code repository in GitHub
+    url: https://github.com/my-project/
+  external_repo: https://foo.bar
+```
+
+## 6.6 Function Definitions
+A function definition defines an custom *function* that can be used
+within this TOSCA file. Function definitions may include one or more
+*function signatures* as well as function implementations. Functions
+are defined using the optional `functions` keyname as follows:
+
+```
+functions:
+   <function_definition_1>
+   ...
+   <function_definition_n>
+```
+The following example shows the definition of a square root function:
+```
+functions:
+  sqrt:
+    signatures:
+      - arguments:
+        - type: integer
+          validation: { $greater_or_equal: [ $value, 0 ] }
+        result:
+          type: float
+        implementation: scripts/sqrt.py
+      - arguments:
+        - type: float
+          validation: { $greater_or_equal: [ $value, 0.0 ] }
+        result:
+          type: float
+        implementation: scripts/sqrt.py
+    description: >
+      This is a square root function that defines two signatures:
+      the argument is either integer or float and the function
+      returns the square root as a float.
+```
+## 6.7 Profiles
 
 A TOSCA profile is a named collection of TOSCA type definitions,
 repository definitions, artifacts, and function definitions that
@@ -1367,7 +1787,7 @@ that defines *abstract* node types can be packaged together with TOSCA
 files that define substituting service templates for those abstract
 types.
 
-### Grammar
+### 6.7.1 Grammar
 A TOSCA file defines a TOSCA Profile using the `profile` keyword as
 follows:
 ```
@@ -1403,7 +1823,7 @@ following rules:
   profile—then that profile name overrides the profile name value from
   that point in the import tree onward, recursively.
 
-### TOSCA Simple Profile
+### 6.7.2 TOSCA Simple Profile
 
 Version 1.x of the TOSCA specification included a collection of
 normative type definitions for building cloud applications. This
@@ -1433,7 +1853,7 @@ Service Descriptors (NSDs) and a Physical Network Function Descriptors
 
 > We should give a couple of additional examples.
 
-### Profile Versions
+### 6.7.3 Profile Versions
 
 TOSCA Profiles are likely to evolve over time and profile designers will
 release different versions of their profiles. For example, the TOSCA
@@ -1553,64 +1973,7 @@ in a TOSCA service.
 > discussed. Grammar extensions will be included in this document one they
 > are agreed upon.
 
-## Repositories
-
-A repository definition defines an external *repository* that contains
-TOSCA files and/or artifacts that are referenced or imported by this
-TOSCA file. Repositories are defined using the optional `repositories`
-keyname as follows:
-```
-repositories:
-   <repository_definition_1>
-   ...
-   <repository_definition_n>
-```
-The following is the list of recognized keynames for a TOSCA repository
-definition:
-
-|Keyname|Mandatory|Type|Description|
-| :---- | :------ | :---- | :------ |
-|description|no|string|Declares a description for the repository being defined.|
-|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the repository being defined.|
-|url|yes|string|The URL or network address used to access the repository.|
-
-These keynames can be used to define a repository using a multi-line
-grammar as follows:
-```
-<repository_name>:
-  description: <repository_description>
-  metadata:
-    <metadata_definitions>
-  url: <repository_address>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- repository_name: represents the mandatory symbolic name of the
-  repository as a string
-- repository_description: contains an optional description of the
-  repository.
-- metadata_definitions: contains an optional map of metadata using
-  YAML types
-- repository_address: represents the mandatory URL to access the
-  repository as a string.
-
-If only the `url` needs to be specified, repository definitions can
-also use a single-line grammar as follows:
-```
-<repository_name>: <repository_address>
-```
-The following example show repository definitions using both
-multi-line as well as single-line grammars.
-```
-repositories:
-  my_code_repo:
-    description: My project’s code repository in GitHub
-    url: https://github.com/my-project/
-  external_repo: https://foo.bar
-```
-
-## Imports and Namespaces
+## 6.8 Imports and Namespaces
 
 Modern software projects typically use *modular designs* that divide
 large systems into smaller subsystems (*modules*) that together
@@ -1629,7 +1992,7 @@ the second file. This mechanism provides an effective way for
 companies and organizations to define domain-specific types and/or
 describe their software applications for reuse in other TOSCA files.
 
-### Import Definitions
+### 6.8.1 Import Definitions
 <!----
 {"id": "350", "author": "Calin Curescu", "date": "2019-01-30T15:54:00Z", "comment": "It would be good to allow also the import of specific types (via their fully qualified names) and also entire namespaces (i.e. types from entire namespaces) from a/the catalogue. That is, in addition to importing from a file: Globally well-known Local catalog File", "target": "Import definition"}-->
 
@@ -1700,11 +2063,11 @@ imports:
   - <file_uri_1>
   - <file_uri_2>
 ```
-### Import Processing Rules 
+### 6.8.2 Import Processing Rules 
 
 TOSCA processors and tooling MUST handle import statements as follows:
 
-#### Importing Profiles
+#### 6.8.2.1 Importing Profiles
 
 If the `profile` keyname is used in the import definition, then the
 TOSCA processor SHOULD attempt to import the profile by name:
@@ -1715,7 +2078,7 @@ TOSCA processor SHOULD attempt to import the profile by name:
 - If <profile_name> is not known, the import SHOULD be considered a
   failure.
 
-#### Importing TOSCA File
+#### 6.8.2.2 Importing TOSCA File
 
 If the `url` keyname is used, the TOSCA processor SHOULD attempt to
 import the file referenced by <file_uri> as follows:
@@ -1756,7 +2119,7 @@ import the file referenced by <file_uri> as follows:
 - If \<file_uri\> does not reference a valid TOSCA file file, then the
   import SHOULD be considered a failure.
 
-### Examples
+### 6.8.3 Examples
 
 The first example shows how to use an import definition import a
 well-known profile by name:
@@ -1815,7 +2178,7 @@ imports:
 - url: types/mytypes.yaml
   repository: my_repository
 ```
-### Namespaces
+### 6.8.4 Namespaces
 <!----
 {"id": "373", "author": "Chris Lauwers", "date": "2020-09-01T00:19:00Z", "comment": "I recommend removing this entire section and rewriting any parts that are still relevant inside the \u201cimports\u201d section.", "target": "Namespace"}-->
 
@@ -1976,443 +2339,34 @@ definitions:
   - Group Types (`group_types`)
   - Function definitions (`functions`)
 
-## Additional information definitions
-
-### Description definition
-<!----
-{"id": "394", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:16:00Z", "comment": "Description is already described in 4.2.1.3.6", "target": "Description definition"}-->
-
-This optional element provides a means include single or multiline
-descriptions within a TOSCA file as a scalar string value.
-
-#### Keyname
-
-The following keyname is used to provide a description within the TOSCA
-specification:
-```
-description 
-```
-#### Grammar
-
-Description definitions have the following grammar:
-```
-description: <[description_string](#TYPE_YAML_STRING)> 
-```
-
-#### Examples
-
-Simple descriptions are treated as a single literal that includes the
-entire contents of the line that immediately follows the description
-key:
-```
-description: This is an example of a single line description (no folding). 
-```
-The YAML “folded” style may also be used for multi-line descriptions
-which “folds” line breaks as space characters.
-```
-description: >
-  This is an example of a multi-line description using YAML. It permits for line        
-  breaks for easier readability...
-
-  if needed.  However, (multiple) line breaks are folded into a single space   
-  character when processed into a single string value.
-```
-#### Notes
-
-- Use of “folded” style is discouraged for the YAML string type apart
-  from when used with the description keyname.
-
-<!----
-{"id": "403", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:13:00Z", "comment": "Can\u2019t I just use a double quoted string\n  for multi-line ?", "target": ""}-->
-
-### Metadata
-<!----
-{"id": "409", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:17:00Z", "comment": "Also covered by 4.2.1.3.2", "target": "Metadata"}-->
-
-This optional element provides a means to include optional metadata as a
-map of strings.
-
-#### Keyname
-
-The following keyname is used to provide metadata within the TOSCA
-specification:
-```
-metadata 
-```
-#### Grammar
-
-Metadata definitions have the following grammar:
-```
-metadata: 
-  map of <string>
-```
-#### Examples
-```
-metadata:
-  foo1: bar1
-  foo2: bar2
-  ...
-```
-#### Notes
-
-- Data provided within metadata, wherever it appears, MAY be ignored by
-  TOSCA Orchestrators and SHOULD NOT affect runtime behavior.
-
-## Type definitions
-
-TOSCA provides a type system to describe reusable building blocks to
-construct a service template (i.e. for the nodes, relationship, group
-and policy templates, and the data, capabilities, interfaces, and
-artifacts used in the node and relationship templates). TOSCA types are
-reusable TOSCA entities and are defined in their specific sections in
-the TOSCA file.
-
-In this section, we present the definitions of common keynames that
-are used by all TOSCA type definitions. Type-specific definitions for the
-different TOSCA type entities are presented further in the document:
-
-> Cross references need to be updated later
-
-- Node Type in Section 4.3.1 Node Type.
-- Relationship Type in Section 4.3.3 Relationship Type.
-- Interface Type in Section 4.3.6.1 Interface Type.
-- Capability Type in Section 4.3.5.1 Capability Type.
-- Data Type in Section 4.4.4 Data Type.
-- Artifact Type in Section 4.3.7.1 Artifact Type.
-- Group Type in Section 4.6.1 Group Type.
-- Policy Type in Section 4.6.3 Policy Type.
-
-### Common Keynames in Type Definitions
-
-The following keynames are used by all TOSCA type entities in the same
-way. This section serves to define them at once.
-|Keyname|Mandatory|Type|Description|
-| :---- | :------ | :---- | :------ |
-|derived_from|no|string|An optional parent type name from which this type derives.|
-|version|no|version|An optional version for the type definition.|
-|metadata|no|map|Defines a section used to declare additional metadata information.|
-|description|no|string|An optional description for the type.|
-
-The common keynames in type definitions have the following grammar:
-```
-<type_name>:
-  derived_from: <parent_type_name>
-  version: <version_number>
-  metadata: 
-    <metadata_map>
-  description: <type_description>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- parent_type_name: represents the optional parent type name.
-
-- version_number: represents the optional TOSCA version number for the
-  type.
-
-- entity_description: represents the optional description string for the
-  type.
-
-- metadata_map: represents the optional metadata map of string.
-
-### Type Derivation
-To simplify type creation and to promote type extensibility TOSCA allows
-the definition of a new type (the derived type) based on another type
-(the parent type). The derivation process can be applied recursively,
-where a type may be derived from a long list of ancestor types (the
-parent, the parent of the parent, etc).
-
-### General derivation and refinement rules
-Unless specifically stated in the derivation rules, when deriving new
-types from parent types the keyname definitions are inherited from the
-parent type. Moreover, the inherited definitions may be refined
-according to the derivation rules of that particular type entity.
-
-For definitions that are not inherited, a new definition **MUST** be
-provided (if the keyname is mandatory) or **MAY** be provided (if the
-keyname is not mandatory). If not provided, the keyname remains
-undefined. For definitions that are inherited, a refinement of the
-inherited definition is not mandatory even for mandatory keynames (since
-it has been inherited). A definition refinement that is exactly the same
-as the definition in the parent type does not change in any way the
-inherited definition. While unnecessary, it is not wrong.
-
-The following are some generic derivation rules used during type
-derivation (the specific rules of each TOSCA type entity are presented
-in their respective sections):
-
-- If not refined, usually a keyname/entity definition, is inherited
-  unchanged from the parent type, unless explicitly specified in the
-  rules that it is “not inherited”.
-
-- New entities (such as properties, attributes, capabilities,
-  requirements, interfaces, operations, notification, parameters) may be
-  added during derivation.
-
-- Already defined entities that have a type may be redefined to have a
-  type derived from the original type.
-  
-<!----
-{"id": "427", "author": "Mike Rehder", "date": "2020-12-14T14:25:00Z", "comment": "New term \u201credefined\u201d. The sentence is\n  confusing \u2013 what is it trying to say? Is it saying that you can change\n  the type of a derived_from type (how?)?", "target": "redefined\n  "}-->
-
-- New validation clauses are added to already defined
-  keynames/entities (i.e. the defined validation clauses do not
-  replace the validation clause defined in the parent type but are
-  added to it).
-
-- Some definitions must be totally flexible, so they will overwrite
-  the definition in the parent type.
-
-<!----
-{"id": "428", "author": "Mike Rehder", "date": "2020-12-14T14:29:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201care treated as a new declaration and\u201d?", "target": "must be totally\n  flexible"}-->
-
-- Some definitions must not be changed at all once defined (i.e. they
-  represent some sort of “signature” fundamental to the type).
-
-<!----
-{"id": "429", "author": "Mike Rehder", "date": "2020-12-14T14:28:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201ccannot\u201d?", "target": "must "}-->
-
-#### Derivation Rules for Common Keynames
-
-During type derivation the common keyname definitions use the following
-rules:
-
-- derived_from: obviously, the definition is not inherited from the
-  parent type. If not defined, it remains undefined and this type does
-  not derive from another type. If defined, then this type derives from
-  another type, and all its keyname definitions must respect the
-  derivation rules of the type entity.
-- version: the definition is not inherited from the parent type. If
-  undefined, it remains undefined.
-- metadata: the definition is not inherited from the parent type. If
-  undefined, it remains undefined.
-- description: the definition is not inherited from the parent type. If
-  undefined, it remains undefined.
-
-### Types of Types
-TOSCA supports eight different *types of types*. These types can
-be defined in a TOSCA file using the grammars described in this
-section.
-
-#### Artifact Types
-Artifact types can be defined in a TOSCA file using the optional
-`artifact_types` keyword using the following grammar:
-```
-artifact_types:
-  <artifact_type_defn_1>
-  ...
-  <artifact type_defn_n>
-```
-The following code snippet shows an example artifact type definition:
-```
-artifact_types:
-  mycompany.artifacttypes.myFileType:
-    derived_from: tosca.artifacts.File
-```
-A detailed description of the artifact type definition grammar is
-provided in Section XXX.
-
-#### Data Types
-Data types can be defined in a TOSCA file using the optional
-`data_types` keyword using the following grammar:
-```
-data_types:
-   <tosca_datatype_def_1>
-   ...
-   <tosca_datatype_def_n>
-```
-The following code snippet shows example data type definitions:
-```
-data_types:
-  # A complex datatype definition
-  simple_contactinfo_type:
-    properties:
-      name:
-        type: string
-      email:
-        type: string
-      phone:
-        type: string
-  # datatype definition derived from an existing type
-  full_contact_info:
-    derived_from: simple_contact_info
-    properties:
-      street_address:
-        type: string
-      city: 
-        type: string
-      state:
-        type: string
-      postalcode:
-        type: string
-```
-A detailed description of the data type definition grammar is
-provided in Section XXX.
-#### Capability Types
-Capability types can be defined in a TOSCA file using the optional
-`capability_types` keyword using the following grammar:
-```
-capability_types:
-  <capability_type_defn_1>
-  ...
-  <capability type_defn_n>
-```
-The following code snippet shows example capability type definitions:
-```
-capability_types:
-  mycompany.mytypes.myCustomEndpoint:
-    derived_from: tosca.capabilities.Endpoint
-    properties:
-      # more details ...
-  mycompany.mytypes.myCustomFeature:
-    derived_from: tosca.capabilities.Feature
-    properties:
-      # more details ...
-```
-A detailed description of the capability type definition grammar is
-provided in Section XXX.
-#### Interface Types
-Interface types can be defined in a TOSCA file using the optional
-`interface_types` keyword using the following grammar:
-```
-interface_types:
-  <interface_type_defn_1>
-  ...
-  <interface type_defn_n>
-```
-The following code snippet shows an example interface type definition:
-```
-interface_types:
-  mycompany.interfaces.service.Signal:
-    operations:
-      signal_begin_receive:
-        description: Operation to signal start of some message processing.
-      signal_end_receive:
-        description: Operation to signal end of some message processed.
-```
-A detailed description of the interface type definition grammar is
-provided in Section XXX.
-#### Relationship Types
-Relationship types can be defined in a TOSCA file using the optional
-`relationship_types` keyword using the following grammar:
-```
-relationship_types:
-  <relationship_type_defn_1>
-  ...
-  <relationship type_defn_n>
-```
-The following code snippet shows example relationship type definitions:
-```
-relationship_types:
-  mycompany.mytypes.myCustomClientServerType:
-    derived_from: tosca.relationships.HostedOn
-    properties:
-      # more details ...
-  mycompany.mytypes.myCustomConnectionType:
-    derived_from: tosca.relationships.ConnectsTo
-    properties:
-      # more details ...
-```
-A detailed description of the relationship type definition grammar is
-provided in Section XXX.
-#### Node Types
-Node types can be defined in a TOSCA file using the optional
-`node_types` keyword using the following grammar:
-```
-node_types:
-  <node_type_defn_1>
-  ...
-  <node_type_defn_n>
-```
-The following code snippet shows example node type definitions:
-```
-node_types:
-  my_webapp_node_type:
-    derived_from: WebApplication
-    properties:
-      my_port:
-        type: integer
-  my_database_node_type:
-    derived_from: Database
-    capabilities:
-      mytypes.myfeatures.transactSQL
-```
-A detailed description of the node type definition grammar is
-provided in Section XXX.
-#### Group Types
-Group types can be defined in a TOSCA file using the optional
-`group_types` keyword using the following grammar:
-```
-group_types:
-  <group_type_defn_1>
-  ...
-  <group type_defn_n>
-
-```
-The following code snippet shows an example group type definition:
-```
-group_types:
-  mycompany.mytypes.myScalingGroup:
-    derived_from: tosca.groups.Root
-```
-A detailed description of the group type definition grammar is
-provided in Section XXX.
-#### Policy Types
-Policy types can be defined in a TOSCA file using the optional
-`policy_types` keyword using the following grammar:
-```
-policy_types:
-  <policy_type_defn_1>
-  ...
-  <policy type_defn_n>
-```
-The following code snippet shows an example policy type definition:
-<!----
-{"id": "327", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:48:00Z", "comment": "There should be a second policy definition in the example or it is just a repeat of the policy type definition example", "target": "Example"}-->
-```
-policy_types:
-  mycompany.mytypes.myScalingPolicy:
-    derived_from: tosca.policies.Scaling
-```
-A detailed description of the policy type definition grammar is
-provided in Section XXX.
-
-## Service template definition
+## 6.9 Service Template Definition
 
 This section defines the service template of a TOSCA file. The main
 ingredients of the service template are node templates representing
 components of the application and relationship templates representing
 links between the components. These elements are defined in the nested
-node_templates section and the nested relationship_templates sections,
-respectively. Furthermore, a service template allows for defining input
-parameters, output parameters as well as grouping of node templates.
+`node_templates` section and the nested `relationship_templates`
+sections, respectively. Furthermore, a service template allows for
+defining input parameters, output parameters, workflows as well as
+grouping of node templates and associated policies.
 
-### Keynames
+### 6.9.1 Service Template Grammar
 
 The following is the list of recognized keynames for a TOSCA service
 template:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in the TOSCA file |
-|profile|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
-|metadata|no|map of YAML values|Defines a section used to declare additional metadata information.  Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations. |
-|description|no|string|Declares a description for this TOSCA file and its contents.|
-|dsl_definitions|no |N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout the TOSCA file.|
-|repositories|no|map of Repository definitions|Declares the map of external repositories that contain artifacts that are referenced in the TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
-|imports|no|list of Import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
-|artifact_types|no|map of Artifact Types|This section contains a map of artifact type definitions for use in the TOSCA file and/or external TOSCA files.|
-|data_types|no|map of Data Types|Declares a map of TOSCA Data Type definitions for use in the TOSCA file and/or external TOSCA files.|
-|capability_types|no|map of Capability Types|This section contains a map of capability type definitions for use in the TOSCA file and/or external TOSCA files.|
-|interface_types|no|map of Interface Types|This section contains a map of interface type definitions for use in the TOSCA file and/or external TOSCA files.|
-|relationship_types|no|map of Relationship Types|This section contains a map of relationship type definitions for use in the TOSCA file and/or external TOSCA files.|
-|node_types|no|map of Node Types|This section contains a map of node type definitions for use in the TOSCA file and/or external TOSCA files.|
-|group_types|no|map of Group Types|This section contains a map of group type definitions for use in the TOSCA file and/or external TOSCA files.|
-|policy_types|no|map of Policy Types|This section contains a map of policy type definitions for use in the TOSCA file and/or external TOSCA files.|
-|service_template|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application’s or service’s components, as well as relationship templates representing relations between these components.|
-|Functions|no|map of function definitions|This section contains a map of function definitions for use in the TOSCA file and/or external TOSCA files.|
-
-### Grammar
+|description|no|string|The optional description for the service template.|
+|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about this service template.|
+|inputs|no|map of parameter definitions|An optional map of input parameters (i.e., as parameter definitions) for the service template.|
+|node_templates|yes|map of node templates|A mandatory map of node template definitions for the service template.|
+|relationship_templates|no|map of relationship templates|An optional map of relationship templates for the service template.|
+|groups|no|map of group definitions|An optional map of Group definitions whose members are node templates defined within this same service template.|
+|workflows|no|map of workflow definitions|An optional map of workflow definitions for the service template.|
+|policies|no|list of policy definitions|An optional list of policy definitions for the service template.|
+|outputs|no|map of parameter definitions|An optional map of output parameters (i.e., as parameter definitions) for the service template.|
+|substitution_mappings|no|substitution_mapping|An optional declaration that exports the service template as an implementation of a Node type. This also includes the mappings between the external node type's capabilities and requirements to existing implementations of those capabilities and requirements on node templates declared within the service template.|
 
 The overall grammar of the service_template section is shown
 below. Detailed grammar definitions are provided in subsequent
@@ -2420,24 +2374,20 @@ subsections.
 ```
 service_template:
   description: <template_description>
+  metadata: <metadata definition>
   inputs: <input_parameters>
   outputs: <output_parameters>
   node_templates: <node_templates>
   relationship_templates: <relationship_templates>
+  workflows : <workflow_definitions>
   groups: <group_definitions>
   policies: 
     - <policy_definition_list>
-  workflows: <workflows>
-  # Optional declaration that exports the service template 
-  # as an implementation of a Node Type.
   substitution_mappings:
     <substitution_mappings>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-
-- template_description: represents the optional
-  [description](#TYPE_YAML_STRING) string for service template.
 
 - input_parameters: represents the optional map of input parameter
   definitions for the service template.
@@ -2445,66 +2395,61 @@ have the following meaning:
 - output_parameters: represents the optional map of output parameter
   definitions for the service template.
 
-- group_definitions: represents the optional map of [group
-  definitions](#group-definition) whose members are node templates that
-  also are defined within this service template.
+- group_definitions: represents the optional map of group definitions
+  whose members are node templates that also are defined within this
+  service template.
 
-- policy_definition_list: represents the optional list of sequenced
+- policy_definition_list: represents the optional ordered list of
   policy definitions for the service template.
 
-- workflows: represents the optional map of imperative workflow
+- workflow_definitions: represents the optional map of imperative
+  workflow definitions for the service template.
+
+- node_templates: represents the mandatory map of node template
   definitions for the service template.
 
-- node_templates: represents the mandatory map of [node
-  template](#node-template) definitions for the service template.
+- relationship_templates: represents the optional map of relationship
+  templates for the service template.
 
-- relationship_templates: represents the optional map of [relationship
-  templates](#relationship-template) for the service template.
+- substitution_mappings: defines how services created from this
+  template can substitute other nodes.
 
-- node_type_name: represents the optional name of a [Node
-  Type](#node-type) that the service template implements as part of the
-  substitution_mappings.
+Note that duplicate template names within a service template SHALL be
+considered an error. These include, but are not limited to duplicate
+names found for the following template types:
 
-- map_of_capability_mappings_to_expose: represents the mappings that
-  expose internal capabilities from node templates (within the service
-  template) as capabilities of the Node Type definition that is declared
-  as part of the substitution_mappings.
-
-- map_of_requirement_mappings_to_expose: represents the mappings of link
-  requirements of the Node Type definition that is declared as part of
-  the substitution_mappings to internal requirements implementations
-  within node templates (declared within the service template).
+- Node Templates (node_templates)
+- Relationship Templates (relationship_templates)
+- Inputs (inputs)
+- Outputs (outputs)
+- Workflows (workflows)
+- Policies (policies)
+- Groups (groups)
 
 More detailed explanations for each of the service template grammar’s
 keynames appears in the sections below.
 
-#### inputs
+### 6.9.2 Input Parameters
 
-The inputs section provides a means to define parameters using TOSCA
-parameter definitions, their allowed values via validation clauses and
-default values within a TOSCA template. Input parameters defined in the
-inputs section of a service template can be mapped to properties of node
-templates or relationship templates within the same service template and
-can thus be used for parameterizing the instantiation of the service
-template.
+The `inputs` section of a service template provides a means to define
+parameters using TOSCA parameter definitions, their allowed values via
+validation clauses and default values within a TOSCA service
+template. Input parameters defined in the inputs section of a service
+template can be mapped to properties of node templates or relationship
+templates within the same service template and can thus be used for
+parameterizing the instantiation of the service template.
 
 When deploying a service from the service template, values must be
 provided for all mandatory input parameters that have no default value
 defined. If no input is provided, then the default value is used.
-
-##### Grammar
 
 The grammar of the inputs section is as follows:
 ```
 inputs:
   <parameter_definitions>
 ```
-##### Examples
-
-This section provides a set of examples for the single elements of a
-service template.
-
-Simple inputs example without any validation clauses:
+The following code snippet shows a simple inputs example without any
+validation clauses:
 ```
 inputs:
   fooName:
@@ -2512,7 +2457,8 @@ inputs:
     description: Simple string parameter without a validation clause.
     default: bar
 ```
-Example of inputs with a validation clause:
+The following is an example of input parameter definitions with a
+validation clause:
 ```
 inputs:
   SiteName:
@@ -2521,12 +2467,11 @@ inputs:
     default: My Site
     validation: { $min_length: [ $value, 9 ] }
 ```
-#### node_templates
+### 6.9.3 Node Templates
 
-The node_templates section lists the Node Templates that describe the
-(software) components that are used to compose cloud applications.
-
-##### grammar
+The `node_templates` section of a service template lists the node
+templates that describe the components that are used to compose cloud
+applications.
 
 The grammar of the node_templates section is a follows:
 ```
@@ -2535,9 +2480,7 @@ node_templates:
   ...
   <node_template_defn_n>
 ```
-##### Example
-
-Example of node_templates section:
+The following code snippet shows an example of a node_templates section:
 ```
 node_templates:
   my_webapp_node_template:
@@ -2546,18 +2489,14 @@ node_templates:
   my_database_node_template:
     type: Database
 ```
-#### relationship_templates
+### 6.9.4 Relationship Templates
 
-The relationship_templates section lists the Relationship Templates that
-describe the relations between components that are used to compose cloud
-applications.
-
-Note that in TOSCA, the explicit definition of relationship templates as
-it was required in TOSCA v1.0 is optional, since relationships between
-nodes get implicitly defined by referencing other node templates in the
-requirements sections of node templates.
-
-##### Grammar
+The `relationship_templates` section of a service template lists the
+relationship templates that describe the relations between components
+that are used to compose cloud applications.  Note that the explicit
+definition of relationship templatesis optional, since relationships
+between nodes get implicitly defined by referencing other node
+templates in the `requirements` sections of node templates.
 
 The grammar of the relationship_templates section is as follows:
 ```
@@ -2566,48 +2505,62 @@ relationship_templates:
   ...
   <relationship_template_defn_n>
 ```
-##### Example
-
-Example of relationship_templates section:
+The following code snippet shows an example of a relationship_templates section:
 ```
 relationship_templates:
   my_connectsto_relationship:
-    type: tosca.relationships.ConnectsTo
+    type: ConnectsTo
     interfaces:
       Configure:
         inputs:
           speed: { $$get_attribute: [ SELF, SOURCE, connect_speed ] }      
 ```
-#### outputs
+### 6.9.5 Output Parameters
 
-The outputs section provides a means to define the output parameters
-that are available from a TOSCA service template. It allows for exposing
-attributes of node templates or relationship templates within the
-containing service_template to users of a service.
-
-##### Grammar
+The `outputs` section of a service template provides a means to define
+the output parameters that are available from a deployed TOSCA
+service. It allows for exposing attributes defined in node templates
+or relationship templates within the containing service_template to
+users of a service.
 
 The grammar of the outputs section is as follows:
 ```
 outputs:
   <parameter_definitions>
 ```
-##### Example
-
-Example of the outputs section:
+The following code snippet shows an example of the outputs section:
 ```
 outputs:
   server_address:
     description: The first private IP address for the provisioned server.
     value: { $get_attribute: [ node5, networks, private, addresses, 0 ] }
 ```
-#### groups
+### 6.9.6 Workflow Definitions
 
-The groups section allows for grouping one or more node templates within
-a TOSCA Service Template and for assigning special attributes like
-policies to the group.
+The `workflows` section of a service template allows for declaring
+imperative workflows that can operate on entities in the service
+template.
 
-##### Grammar
+The grammar of the workflows section is as follows:
+```
+workflows:
+  <workflow_defn_1>
+  ...
+  <workflow_defn_n>
+```
+The following example shows the definition of a workflow
+```
+workflows:
+  scaling_workflow:
+    steps:
+      TO BE PROVIDED
+```
+### 6.9.7 Group Definitions
+
+The `groups` section of a service template allows for grouping node
+representations created from one or more node templates within a TOSCA
+service template. This grouping can then be used to apply policies to
+the group.
 
 The grammar of the groups section is as follows:
 ```
@@ -2616,37 +2569,30 @@ groups:
   ...
   <group_defn_n>
 ```
-##### Example
-
 The following example shows the definition of three Compute nodes in the
 node_templates section of a service_template as well as the grouping of
 two of the Compute nodes in a group server_group_1.
 ```
 node_templates:
   server1:
-    type: tosca.nodes.Compute
+    type: Compute
     # more details ...
-
   server2:
-    type: tosca.nodes.Compute
+    type: Compute
     # more details ...
-
   server3:
-    type: tosca.nodes.Compute
+    type: Compute
     # more details ...
-
 groups:
   # server2 and server3 are part of the same group
   server_group_1:
-    type: tosca.groups.Root
+    type: Root
     members: [ server2, server3 ]
 ```
-#### policies
+### 6.9.8 Policy Definitions
 
-The policies section allows for declaring policies that can be applied
-to entities in the service template.
-
-##### Grammar
+The `policies` section of a service template allows for declaring
+policies that can be applied to entities in the service template.
 
 The grammar of the policies section is as follows:
 ```
@@ -2655,78 +2601,38 @@ policies:
   - ...
   - <policy_defn_n>
 ```
-##### Example
-
 The following example shows the definition of a placement policy.
 ```
 policies:
   - my_placement_policy:
-      type: mycompany.mytypes.policy.placement
+      type: mycompany.placement
 ```
-#### substitution_mapping
+### 6.9.10 Substitution Mapping
 
-##### requirement_mapping
+The `substitution_mappings`section of a service template declares this
+service template as a candidate for substituting nodes marked with the
+`substitute` directive in other service templates.
 
-The grammar of a requirement_mapping is as follows:
+The grammar of a substitution_mapping is as follows:
 ```
-<requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
+substitution_mappings>:
+  <substitution_mapping>
 ```
-The multi-line grammar is as follows :
-```
-<requirement_name>: 
-  mapping: [ <node_template_name>, <node_template_capability_name> ]
-  properties:
-    <property_name>: <property_value>
-```
-- requirement_name: represents the name of the requirement as it appears
-  in the Node Type definition for the Node Type (name) that is declared
-  as the value for on the substitution_mappings’ “node_type” key.
-
-- node_template_name: represents a valid name of a Node Template
-  definition (within the same service_template declaration as the
-  substitution_mapping is declared).
-
-- node_template_requirement_name: represents a valid name of a
-  requirement definition within the \<node_template_name\> declared in
-  this mapping.
-
-##### Example
-<!----
-{"id": "489", "author": "Calin Curescu", "date": "2020-06-17T18:23:00Z", "comment": "\\### need to revisit this. Example is wrong !!!", "target": "Example"}-->
-
-The following example shows a substitution mapping.
+The following code snippet shows an example substitution mapping.
 ```
 service_template:
-inputs:
+  inputs:
    cpus: 
      type: integer
-     validation: { $less_than: [ $value, 2 ] } # OR use “defaults” key
-
-substitution_mappings:
+     validation: { $less_than: [ $value, 5 ] }
+  substitution_mappings:
     node_type: MyService
-    properties:  # Do not care if running or matching (e.g., Compute node)
-      # get from outside?  Get from contsraint?
-      num_cpus: cpus # Implied “PUSH”
-      # get from some node in the topology…
-      num_cpus: [ <node>, <cap>, <property> ]
-      # 1) Running 
-      architecture: 
-        # a) Explicit
-        value: { $get_property: [some_service, architecture] }
-        # b) implicit
-        value: [ some_service, <req | cap name>, <property name> architecture ] 
-        default: “amd”
-        # c) INPUT mapping?
-        ???
-      # 2) Catalog (Matching)
-      architecture: 
-         contraints: equals: “x86”
- 
+    properties:  
+      num_cpus: cpus
     capabilities:
       bar: [ some_service, bar ]
     requirements:
       foo: [ some_service, foo ]
-
   node_templates:
     some_service:
       type: MyService
@@ -2739,45 +2645,7 @@ substitution_mappings:
         - foo: 
             ...
 ```
-#### Additional Requirements
-- Duplicate Template names within a Service Template SHALL be considered
-  an error. These include, but are not limited to duplicate names found
-  for the following template types:
-
-  - Node Templates (node_templates)
-
-  - Relationship Templates (relationship_templates)
-
-  - Inputs (inputs)
-
-  - Outputs (outputs)
-
-- Duplicate names for the following keynames within Types or Templates
-  SHALL be considered an error. These include, but are not limited to
-  duplicate names found for the following keynames:
-
-  - Properties (properties)
-
-  - Attributes (attributes)
-
-  - Artifacts (artifacts)
-
-  - R<span class="comment-start" id="376"
-    author="Matt Rutkowski" date="2015-08-25T21:52:00Z">MUSTFIX: Verify
-    duplicates are NOT allowed!!</span>equirements
-    (requirements)
-<!----
-{"id": "375", "author": "Calin Curescu", "date": "2020-06-08T18:24:00Z", "comment": "But requirements assignments support\n  duplicates!", "target": "R<span class=\"comment-start\" id=\"376\"\n  author=\"Matt Rutkowski\" date=\"2015-08-25T21:52:00Z\">MUSTFIX: Verify\n  duplicates are NOT allowed!!</span>equirements\n  (requirements)"}-->
-
-  - Capabilities (capabilities)<span class="comment-end" id="376"></span>
-
-  - Interfaces (interfaces)
-
-  - Policies (policies)
-
-  - Groups (groups)
-
-# Nodes and Relationships
+# 7 Nodes and Relationships
 
 ## Node Type
 
