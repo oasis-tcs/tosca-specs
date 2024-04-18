@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 06
 
-## 27 March 2024
+## 17 April 2024
 
 #### This stage:
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.md (Authoritative) \
