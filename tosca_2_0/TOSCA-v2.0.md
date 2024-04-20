@@ -2647,18 +2647,17 @@ service_template:
 ```
 # 7 Nodes and Relationships
 
-## Node Type
+## 7.1 Node Type
 
-A Node Type is a reusable entity that defines the type of one or more
-Node Templates. As such, a Node Type defines the structure of observable
-properties and attributes, the capabilities and requirements of the node
-as well as its supported interfaces and the artifacts it uses.
+A *node type* is a reusable entity that defines the structure of
+observable properties and attributes of a node, the capabilities and
+requirements of that node, as well as its supported interfaces and the
+artifacts it uses.
 
-### Keynames
-
-The Node Type is a TOSCA type entity and has the common keynames listed
-in Section 4.2.5.2 Common keynames in type definitions. In addition, the
-Node Type has the following recognized keynames:
+A node type definition is a type of TOSCA type definition and as a
+result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+node type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
@@ -2669,9 +2668,7 @@ Node Type has the following recognized keynames:
 |interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Node Type.|
 |artifacts|no|map of artifact definitions|An optional map of artifact definitions for the Node Type.|
 
-### Grammar 
-
-Node Types have following grammar:
+These keynames can be used according to the following grammar:
 ```
 <node_type_name>:  
   derived_from: <parent_node_type_name> 
@@ -2695,39 +2692,40 @@ Node Types have following grammar:
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- node_type_name: represents the mandatory symbolic name of the Node
-  Type being declared.
+- node_type_name: represents the mandatory symbolic name of the node
+  type being declared.
 
-- parent_node_type_name: represents the name (string) of the Node Type
-  this Node Type definition derives from (i.e. its parent type).
+- parent_node_type_name: represents the name (string) of the node type
+  from which this node type definition derives (i.e. its parent
+  type). Parent node types names can be qualified using a namespace
+  prefix.
 
 - version_number: represents the optional TOSCA version number for the
-  Node Type.
-
-- node_type_description: represents the optional description string for
-  the corresponding node_type_name.
+  node type.
 
 - property_definitions: represents the optional map of property
-  definitions for the Node Type.
+  definitions for the node type.
 
 - attribute_definitions: represents the optional map of attribute
-  definitions for the Node Type.
+  definitions for the node type.
 
 - capability_definitions: represents the optional map of capability
-  definitions for the Node Type.
+  definitions for the node type.
 
 - requirement_definitions: represents the optional list of requirement
-  definitions for the Node Type.
+  definitions for the node type. Note that requirements are
+  intentionally expressed as a list of TOSCA Requirement definitions
+  that **SHOULD** be resolved (processed) in sequence by TOSCA
+  processors. Requirement names must be unique within the context of a
+  node type definition.
 
-- interface_definitions: represents the optional map of one or more
-  interface definitions supported by the Node Type.
+- interface_definitions: represents the optional map of interface
+  definitions supported by the Node Type.
 
 - artifact_definitions: represents the optional map of artifact
   definitions for the Node Type
 
-### Derivation rules
-
-During Node Type derivation the keyname definitions follow these rules:
+During node type derivation, the keynames follow these rules:
 
 - properties: existing property definitions may be refined; new property
   definitions may be added.
@@ -2757,16 +2755,10 @@ During Node Type derivation the keyname definitions follow these rules:
     completely redefined; thus, an existing artifact definition is not
     refined, but completely overwritten.
 
-### Additional Requirements
-
-- Requirements are intentionally expressed as a list of TOSCA
-  [Requirement definitions](#requirement-definition) which **SHOULD** be
-  resolved (processed) in sequence by TOSCA Orchestrators.
-
-### Example
+The following code snippet shows an example node type definition:
 ```
-my_company.my_types.my_app_node_type:
-  derived_from: tosca.nodes.SoftwareComponent
+my_app_node_type:
+  derived_from: SoftwareComponent
   description: My company’s custom applicaton
   properties:
     my_app_password:
@@ -2786,35 +2778,32 @@ my_company.my_types.my_app_node_type:
         node: Database    
         relationship: ConnectsTo
 ```
-## Node Template
+## 7.2 Node Template
 
-A Node Template specifies the occurrence of a manageable component as
-part of an application’s topology model which is defined in a TOSCA
-Service Template. A Node Template is an instance of a specified Node
-Type and can provide customized properties, relationships, or interfaces
-that complement and change the defaults provided by its Node Type.
+A *node template* specifies the occurrence of one or more instances of
+a component of a given type in an application or service. A node
+template defines application-specific values for the properties,
+relationships, or interfaces defined by its node type.
 
-### Keynames
-
-The following is the list of recognized keynames for a TOSCA Node
-Template definition:
+The following is the list of recognized keynames for a TOSCA node
+template definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|type|yes|string|The mandatory name of the Node Type the Node Template is based upon.|
-|description|no|string|An optional description for the Node Template.|
+|type|yes|string|The mandatory name of the node type on which the node template is based.|
+|description|no|string|An optional description for the node template.|
 |metadata|no|map of string|Defines a section used to declare additional metadata information. |
 |directives|no|list of string|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
-|properties|no|map of property assignments|An optional map of property value assignments for the Node Template.|
-|attributes|no|map of attribute assignments|An optional map of attribute value assignments for the Node Template.|
-|requirements|no|list of requirement assignments|An optional list of requirement assignments for the Node Template.|
-|capabilities|no|map of capability assignments|An optional map of capability assignments for the Node Template.|
-|interfaces|no|map of interface assignments|An optional map of interface assignments for the Node Template.|
-|artifacts|no|map of  artifact definitions|An optional map of artifact definitions for the Node Template.|
-|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select the correct target node.  |
-|copy|no|string|The optional (symbolic) name of another node template to copy into (all keynames and values) and use as a basis for this node template.|
+|properties|no|map of property assignments|An optional map of property value assignments for the node template.|
+|attributes|no|map of attribute assignments|An optional map of attribute value assignments for the node template.|
+|requirements|no|list of requirement assignments|An optional list of requirement assignments for the node template.|
+|capabilities|no|map of capability assignments|An optional map of capability assignments for the node template.|
+|interfaces|no|map of interface assignments|An optional map of interface assignments for the node template.|
+|artifacts|no|map of  artifact definitions|An optional map of artifact definitions for the node template.|
+|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select an already existing node if this node template is marked with the `select` directive.|
+|copy|no|string|The optional (symbolic) name of another node template from which to copy all keynames and values into this node template.|
 
-### Grammar 
+These keynames can be used according to the following grammar:
 ```
 <node_template_name>: 
   type: <node_type_name>
@@ -2841,61 +2830,57 @@ Template definition:
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- node_template_name: represents the mandatory symbolic name of the Node
-  Template being declared.
+- node_template_name: represents the mandatory symbolic name of the node
+  template being defined.
 
-- node_type_name: represents the name of the Node Type the Node Template
-  is based upon.
-
-- node_template_description: represents the optional description string
-  for Node Template.
+- node_type_name: represents the name of the node type on which the
+  node template is based.
 
 - directives: represents the optional list of processing instruction
-  keywords (as strings) for use by tooling and orchestrators.
+  keywords (as strings) for use by tooling and orchestrators. Valid
+  directives supported by this version of the standard are `create`,
+  `select`, and `substitute`. If no directives are specified, `create`
+  is used as the default value.
 
 - property_assignments: represents the optional map of property
-  assignments for the Node Template that provide values for properties
-  defined in its declared Node Type.
+  assignments for the node template that provide values for properties
+  defined in its declared node type.
 
 - attribute_assignments: represents the optional map of attribute
-  assignments for the Node Template that provide values for attributes
-  defined in its declared Node Type.
+  assignments for the node template that provide values for attributes
+  defined in its declared node type.
 
 - requirement_assignments: represents the optional list of requirement
-  assignments for the Node Template for requirement definitions provided
-  in its declared Node Type.
+  assignments for the node template for requirement definitions provided
+  in its declared node type.
 
 - capability_assignments: represents the optional map of capability
-  assignments for the Node Template for capability definitions provided
-  in its declared Node Type.
+  assignments for the node template for capability definitions provided
+  in its declared node type.
 
 - interface_assignments: represents the optional map of interface
-  assignments for the Node Template interface definitions provided in
-  its declared Node Type.
+  assignments for the node template interface definitions provided in
+  its declared node type.
 
 - artifact_definitions: represents the optional map of artifact
-  definitions for the Node Template that augment those provided by its
-  declared Node Type.
+  definitions for the node template that augment or replace those
+  provided by its declared node type.
 
 - node_filter_definition: represents the optional node filter TOSCA
   orchestrators will use for selecting a matching node template.
 
-- source_node_template_name: represents the optional (symbolic) name of
-  another node template to copy into (all keynames and values) and use
-  as a basis for this node template.
+- source_node_template_name: represents the optional (symbolic) name
+  of another node template from which to copy all keynames and values
+  into this node template. Note that he source node template provided
+  as a value on the copy keyname **MUST NOT** itself use the copy
+  keyname (i.e., it must itself be a complete node template
+  description and not copied from another node template).
 
-### Additional requirements
-
-- The source node template provided as a value on the copy keyname
-  **MUST** **NOT** itself use the copy keyname (i.e., it must itself be
-  a complete node template description and not copied from another node
-  template).
-
-### Example
+The following code snippet shows and example node template definition:
 ```
 node_templates:
   mysql:
-    type: tosca.nodes.DBMS.MySQL
+    type: DBMS.MySQL
     properties:
       root_password: { $get_input: my_mysql_rootpw }
       port: { $get_input: my_mysql_port }
@@ -2906,7 +2891,7 @@ node_templates:
         operations:
           configure: scripts/my_own_configure.sh
 ```
-## Relationship Type
+## 7.3 Relationship Type
 <!----
 {"id": "520", "author": "Michael Rehder", "date": "2020-12-15T13:33:00Z", "comment": "I still think this is simply a Requirement Type \u2013 I can\u2019t see why it isn\u2019t and what advantage there is in calling it something else.", "target": "Relationship Type"}-->
 
