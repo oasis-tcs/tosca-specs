@@ -2700,9 +2700,6 @@ have the following meaning:
   type). Parent node types names can be qualified using a namespace
   prefix.
 
-- version_number: represents the optional TOSCA version number for the
-  node type.
-
 - property_definitions: represents the optional map of property
   definitions for the node type.
 
@@ -2800,6 +2797,7 @@ template definition:
 |capabilities|no|map of capability assignments|An optional map of capability assignments for the node template.|
 |interfaces|no|map of interface assignments|An optional map of interface assignments for the node template.|
 |artifacts|no|map of  artifact definitions|An optional map of artifact definitions for the node template.|
+|count|no|non-negative integer|An optional keyname that specifies how many node representations must be created from this node template. If not defined, the assumed count value is 1.|
 |node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select an already existing node if this node template is marked with the `select` directive.|
 |copy|no|string|The optional (symbolic) name of another node template from which to copy all keynames and values into this node template.|
 
@@ -2823,6 +2821,7 @@ These keynames can be used according to the following grammar:
     <interface_assignments>
   artifacts:
     <artifact_definitions>
+  copy: <node_count_value>
   node_filter:
     <node_filter_definition>
   copy: <source_node_template_name>
@@ -2866,6 +2865,9 @@ have the following meaning:
   definitions for the node template that augment or replace those
   provided by its declared node type.
 
+- node_count_value: represents the number of node representations that
+  must be created from this node template. If not specified, a default
+  value of 1 is used.
 - node_filter_definition: represents the optional node filter TOSCA
   orchestrators will use for selecting a matching node template.
 
@@ -2876,7 +2878,7 @@ have the following meaning:
   keyname (i.e., it must itself be a complete node template
   description and not copied from another node template).
 
-The following code snippet shows and example node template definition:
+The following code snippet shows an example node template definition:
 ```
 node_templates:
   mysql:
@@ -2892,32 +2894,31 @@ node_templates:
           configure: scripts/my_own_configure.sh
 ```
 ## 7.3 Relationship Type
+
+A *relationship type* is a reusable entity that defines the structure
+of observable properties and attributes of a relationship as well as
+its supported interfaces.
+
+A relationship type definition is a type of TOSCA type definition and
+as a result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+relationship type definition has the following recognized keynames:
+
 <!----
 {"id": "520", "author": "Michael Rehder", "date": "2020-12-15T13:33:00Z", "comment": "I still think this is simply a Requirement Type \u2013 I can\u2019t see why it isn\u2019t and what advantage there is in calling it something else.", "target": "Relationship Type"}-->
-
-A Relationship Type is a reusable entity that defines the type of one or
-more relationships between Node Types or Node Templates
 <!----
 {"id": "521", "author": "Michael Rehder", "date": "2020-12-15T12:12:00Z", "comment": "There is no\nrelationship type in a node template so why is this stated\nhere?", "target": "Node Templates"}-->
 
-### Keynames
-
-The Relationship Type is a TOSCA type entity and has the common keynames
-listed in Section 4.2.5.2 Common keynames in type definitions. In
-addition, the Relationship Type has the following recognized keynames:
-
 |Keyname|Mandatory|Definition/Type|Description|
 | :---- | :------ | :---- | :------ |
-|properties|no|map of property definitions|An optional map of property definitions for the Relationship Type.|
-|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Relationship Type.|
-|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Relationship Type.|
-|valid_capability_types|no|list of string|An optional list of one or more names of Capability Types that are valid targets for this relationship. If undefined, all Capability Types are valid.|
-|valid_target_node_types|no|list of string|An optional list of one or more names of Node Types that are valid targets for this relationship. If undefined, all Node Types are valid targets.|
-|valid_source_node_types|no|list of string|An optional list of one or more names of Node Types that are valid sources for this relationship. If undefined, all Node Types are valid sources.|
+|properties|no|map of property definitions|An optional map of property definitions for the relationship type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the relationship type.|
+|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the relationship type.|
+|valid_capability_types|no|list of string|An optional list of one or more names of capability types that are valid targets for this relationship. If undefined, all capability types are valid.|
+|valid_target_node_types|no|list of string|An optional list of one or more names of node types that are valid targets for this relationship. If undefined, all node types are valid targets.|
+|valid_source_node_types|no|list of string|An optional list of one or more names of node types that are valid sources for this relationship. If undefined, all node types are valid sources.|
 
-### Grammar
-
-Relationship Types have following grammar:
+These keynames can be used according to the following grammar:
 ```
 <relationship_type_name>:
   derived_from: <parent_relationship_type_name>
@@ -2939,43 +2940,39 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - relationship_type_name: represents the mandatory symbolic name of the
-  Relationship Type being declared as a string.
+  relationship type being declared as a string.
 
 - parent_relationship_type_name: represents the name (string) of the
-  Relationship Type this Relationship Type definition derives from
-  (i.e., its “parent” type).
-
-- relationship_description: represents the optional description string
-  for the corresponding relationship_type_name.
-
-- version_number: represents the optional TOSCA version number for the
-  Relationship Type.
+  relationship type from which this relationship type definition
+  derives (i.e., its “parent” type). Parent node type names can be
+  qualified using a namespace prefix.
 
 - property_definitions: represents the optional map of property
-  definitions for the Relationship Type.
+  definitions for the relationship type.
 
 - attribute_definitions: represents the optional map of attribute
-  definitions for the Relationship Type.
+  definitions for the relationship type.
 
 - interface_definitions: represents the optional map of interface
-  definitions supported by the Relationship Type.
+  definitions supported by the relationship type.
 
 - capability_type_names: represents the optional list of valid target
-  Capability Types for the relationship; if undefined, the valid target
-  types are not restricted at all (i.e., all Capability Types are
-  valid).
+  capability types for the relationship. Target capability type names
+  can be qualified using a namespace prefix. If undefined, the valid
+  target types are not restricted at all (i.e., all capability types
+  are valid).
 
 - target_node_type_names: represents the optional list of valid target
-  Node Types for the relationship; if undefined, the valid types are not
-  restricted at all (i.e., all Node Types are valid).
+  node types for the relationship. Target node type names can be
+  qualified using a namespace prefix. If undefined, the valid types
+  are not restricted at all (i.e., all Node Types are valid).
 
 - source_node_type_names: represents the optional list of valid source
-  Node Types for the relationship; if undefined, the valid types are not
-  restricted at all (i.e., all Node Types are valid).
+  node types for the relationship. Source node type names canbe
+  qualified using a namespace prefix. If undefined, the valid types
+  are not restricted at all (i.e., all Node Types are valid).
 
-### Derivation rules
-
-During Relationship Type derivation the keyname definitions follow these
+During relationship type derivation the keyname definitions follow these
 rules:
 
 - properties: existing property definitions may be refined; new property
@@ -2987,11 +2984,13 @@ rules:
 - interfaces: existing interface definitions may be refined; new
   interface definitions may be added.
 
-- valid_capability_types: if valid_capability_types is defined in the
-  parent type, each element in this list must either be in the parent
-  type list or derived from an element in the parent type list; if
-  valid_target_types is not defined in the parent type then no
-  restrictions are applied.
+- valid_capability_types: A derived type is only allowed to further
+  restrict the list of valid capability types, not to expand it. This
+  means that if valid_capability_types is defined in the parent type,
+  each element in the derived type's list of valid capability types
+  must either be in the parent type list or derived from an element in
+  the parent type list; if valid_target_types is not defined in the
+  parent type then no derivation restrictions need to be applied.
 
 - valid_target_node_types: same derivation rules as for
   valid_capability_types
@@ -2999,55 +2998,49 @@ rules:
 - valid_source_node_types: same derivation rules as for
   valid_capability_types
 
-### Examples
+The following code snippet shows an example relationship type definition:
 ```
 mycompanytypes.myrelationships.AppDependency:
   derived_from: tosca.relationships.DependsOn
   valid_capability_types: [ mycompanytypes.mycapabilities.SomeAppCapability ]
 ```
-## Relationship Template
+## 7.4 Relationship Template
 
-A Relationship Template
-specifies the occurrence of a manageable relationship between node
-templates as part of an application’s topology model that is defined in
-a TOSCA Service Template. A Relationship template is an instance of a
-specified Relationship Type and can provide customized properties, or
-operations that complement and change the defaults provided by its
-Relationship Type and its implementations.
+A *relationship template* specifies the occurrence of a relationship
+of a given type between nodes in an application or service.  A
+relationship template defines application-specific values for the
+properties, relationships, or interfaces defined by its relationship
+type.
+
 <!----
 {"id": "532", "author": "Michael Rehder", "date": "2020-12-15T13:23:00Z", "comment": "My understanding is that this is an\nalternative to relations defined within node templates.  \nIt\u2019s not clear why this option would be chosen over the node-template\noption.  \nIf both relations in node-templates and Relationship Templates are used,\nhow are they combined together?  \nOr is this not recommended?  \nI can imagine that combination rules would be very difficult to define\nbut if it is possible, it must be defined", "target": "A Relationship Template\nspecifies the occurrence of a manageable relationship between node\ntemplates as part of an application\u2019s topology model that is defined in\na TOSCA Service Template. A Relationship template is an instance of a\nspecified Relationship Type and can provide customized properties, or\noperations that complement and change the defaults provided by its\nRelationship Type and its implementations."}-->
 
-Relations between Node Templates can be defined either using
-Relationship Templates or Requirements and Capability definitions within
-Node Types. Use of Relationship Templates decouples relationship
-definitions from Node Type definitions, allowing Node Type definitions
-to be more “generic” for use in a wider set of service templates which
-have varying relation definition requirements. The Relationship
-Templates are local within a service template and so have a limited
-scope. Requirements and Capabilities defined in Node Types have a wider
-scope, exposed within any service template which contains a Node
-Template of the Node Type.
+TOSCA allows relationships between nodes to be defined *inline* using
+requirement assignments within node templates or *out-of-band* using
+relationship templates as defined in this section. While the use of
+requirement assignments is more common, the use of relationship
+templates decouples relationship definitions from specific node
+templates, allowing reuse of these relationship templates by multiple
+node templates. Relationship templates are local within a service
+template and so have a limited scope.
 
-Note that using the relationship templates is underspecified currently
-and can be used only as a further template for relationships in
-requirements definition. This topic needs further work.
-
-### Keynames
+Note that relationship template grammar is underspecified currently
+and needs further work.
 
 The following is the list of recognized keynames for a TOSCA
-Relationship Template definition:
+relationship template definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|type|yes|string|The mandatory name of the Relationship Type the Relationship Template is based upon.|
+|type|yes|string|The mandatory name of the relationship type on which the relationship template is based.|
 |description|no|string|An optional description for the Relationship Template.|
 |metadata|no|map of string|Defines a section used to declare additional metadata information. |
 |properties|no|map of property assignments|An optional map of property assignments for the Relationship Template.|
 |attributes|no|map of attribute assignments|An optional map of attribute assignments for the Relationship Template.|
 |interfaces|no|map of interface assignments|An optional map of interface assignments for the relationship template.|
-|copy|no|string|The optional (symbolic) name of another relationship template to copy into (all keynames and values) and use as a basis for this relationship template.|
+|copy|no|string|The optional (symbolic) name of another relationship template from which to copy all keynames and values into this relationship template.|
 
-### Grammar
+These keynames can be used according to the following grammar:
 ```
 <relationship_template_name>: 
   type: <relationship_type_name>
@@ -3091,14 +3084,15 @@ have the following meaning:
   name of another relationship template to copy into (all keynames and
   values) and use as a basis for this relationship template.
 
-### Additional requirements
+- source_relationship_template_name: represents the optional
+  (symbolic) name of another relationship template from which to copy
+  all keynames and values into this relationship template. Note that
+  he source relationship template provided as a value on the copy
+  keyname **MUST NOT** itself use the copy keyname (i.e., it must
+  itself be a complete relationship template description and not
+  copied from another relationship template).
 
-- The source relationship template provided as a value on the copy
-  keyname MUST NOT itself use the copy keyname (i.e., it must itself be
-  a complete relationship template description and not copied from
-  another relationship template).
-
-### Example
+The following code snippet shows an example relationship template definition.
 ```
 relationship_templates:
   storage_attachment:
