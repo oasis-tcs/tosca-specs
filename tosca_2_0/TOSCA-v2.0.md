@@ -3605,6 +3605,8 @@ requirement assignments with the same symbolic name MUST be within the
 range of count_range specified by the corresponding requirement
 definition.
 
+### 8.7.1 Supported Keynames
+
 The following is the list of recognized keynames for a TOSCA requirement
 assignment:
 
@@ -3612,18 +3614,18 @@ assignment:
 | :---- | :------ | :---- | :------ |
 |node|no|string|The optional keyname used to identify the target node of the requirement. This can either be the name of a target node template or the name of a target node type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
 |capability|no|string|The optional keyname used to identify the target capability of the requirement. This can either be the name of a capability defined within a target node or the name of a target capability type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
-|relationship|conditional|relationship assignment|The conditional keyname used to provide values for the relationship definition in the corresponding requirement definition. This keyname can also be overloaded to reference a relationship template defined elsewhere in the service template.|
+|relationship|conditional|relationship assignment or string|The conditional keyname used to provide values for the relationship definition in the corresponding requirement definition. This keyname can also be overloaded to define a symbolic name that references a relationship template defined elsewhere in the service template.|
 |allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent *allocations* from the property with the same name in the target capability. The allocation acts as a *capacity filter* for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
-|count|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships to be established from this requirement assignment. If not defined, the default count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name. The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
+|count|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships must be established from this requirement assignment. If not defined, the default count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name. The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
 |node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill the requirement at runtime.|
 |directives|no|list of string|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
 |optional|no|boolean|Describes if the fulfillment of this requirement assignment is optional (true) or not (false).  If not specified, the requirement assignment must be fulfilled, i.e. the default value is false.  Note also, that non-optional requirements have precedence, thus during a service deployment, the optional requirements for all nodes should be resolved only after the non-optional requirements for all nodes have been resolved.|
 
-The `relationship` keyname in a requirement assignment specifies a
-*relationship assignment* that provides information needed by TOSCA
-Orchestrators to construct a relationship to the TOSCA node that is
-the target of the requirement. Relationship assignments support the
-following keynames:
+The `relationship` keyname in a requirement assignment typically
+specifies a *relationship assignment* that provides information needed
+by TOSCA Orchestrators to construct a relationship to the TOSCA node
+that is the target of the requirement. Relationship assignments
+support the following keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
@@ -3632,15 +3634,16 @@ following keynames:
 |attributes|no|map of attribute assignments|An optional map of attribute assignments for the relationship.|
 |interfaces|no|map of interface assignments|An optional map of interface assignments for the corresponding interface definitions in the relationship type.|
 
+### 8.7.2 Requirement Assignment Grammar
+
 The keynames supported by requirement assignments and relationship
 assignments can be used according to the following grammar:
-
 ```
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
   node: <node_template_name> | <node_type_name>
   relationship:
-    type: <relationship_type_name> | <relationship_template_name>
+    type: <relationship_type_name>
     properties: <property_assignments>
     attributes: <attribute_assignments>
     interfaces: <interface_assignments>
@@ -3650,10 +3653,30 @@ assignments can be used according to the following grammar:
   optional: <is_optional>
   allocation: <allocation_property_assignments>
 ```
-The `relationship` keyname in a requirement assignment can also be
-used to specify the name of a relationship template to use for
-creating the relationship to the target node when fulfilling the
-requirement, in which case the following grammar is used:
+In some cases, a relationship assignment only needs to refine the type
+of the relationship and does not need to assign properties,
+attributes, or interfaces. In that case, a single-line relationship
+assignment grammar can be used where the value of the `relationship`
+keyname in the requirement assignment refers to the symbolic name of
+the type of the relationship. This single-line relationship grammar is
+shown here:
+```
+<requirement_name>:
+  capability: <capability_symbolic_name> | <capability_type_name>
+  node: <node_template_name> | <node_type_name>
+  relationship: <relationship_type_name>
+  node_filter: <node_filter_definition>
+  count: <count_value>
+  directives: <directives_list>
+  optional: <is_optional>
+  allocation: <allocation_property_assignments>
+```
+As stated in the description of the supported keynames,
+the `relationship` keyname in a requirement assignment can also be
+overloaded to specify the symbolic name of a relationship template to
+use for creating the relationship to the target node when fulfilling
+the requirement. In that case, the following single-line relationship
+grammar is used:
 ```
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
@@ -3665,58 +3688,18 @@ requirement, in which case the following grammar is used:
   optional: <is_optional>
   allocation: <allocation_property_assignments>
 ```
+When single-line relationship grammar is used, TOSCA Processors MUST
+first try to resolve the value of the `relationship` keyword as the
+symbolic name of a relationship type. If no relationship type with
+that name is found, the Processor MUST then try to find a relationship
+template with that name. If no such relationship template is found,
+the grammar must be determined to be in error.
 
-
-|directives|no|list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this requirement assignment should use relationships with target nodes created within this template (“internal”) or should use target nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which directive should be attempted first. If no directives are defined, the default value is left to the particular implementation."|
-
-
-
-
-The following single-line grammar may be used if only a concrete node
-template for the target node needs to be assigned in the requirement:
+And finally, to simplify requirement assignment grammar, the following
+single-line grammar may be used if only a concrete node template for
+the target node needs to be assigned:
 ```
-<[requirement_name](#TYPE_YAML_STRING)>: <[node_template_name](#TYPE_YAML_STRING)> 
-```
-
-#### Extended grammar with Property Assignments and Interface Assignments for the relationship
-
-The following additional multi-line grammar is provided for the
-relationship keyname in order to provide new Property assignments and
-Interface assignments for the created relationship of the declared
-Relationship.
-```
-<requirement_name>:
-  # Other keynames omitted for brevity
-  relationship: 
-    type: <relationship_template_name> | <relationship_type_name>
-    properties: <property_assignments>
-    interfaces: <interface_assignments>
-```
-#### Extended grammar with capacity allocation 
-
-The following additional multi-line grammar is provided for capacity
-allocation in the target capability. The property assignments under the
-allocation keyname represent “allocations” from the property with the
-same name in the target capability.
-
-- The sum of all the allocations for all requirements assignments for a
-  property in a target capability cannot exceed the value of that
-  property.
-
-- This means that during the deployment time of a certain service
-  template – as a certain requirement assignment is resolved – a
-  capability in a node is a valid target if
-
-- for each property of the target capability
-
-- the sum of all existing allocations plus the current allocation is
-  less_or_equal to the property value
-
-- Of course, allocations can be defined only for integer, float, or
-  scalar property types.
-```
-<requirement_name>:
-  # Other keynames omitted for brevity
+<requirement_name>: <node_template_name>
 ```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -3725,73 +3708,71 @@ have the following meaning:
   assignment as a string.
 
 - capability_symbolic_name: represents the optional name of the
-  Capability definition within the target Node Type or node template;
+  capability definition within the target node type or node template;
 
-  - if the capability in the Requirement definition was specified using
-    the symbolic name of a capability definition in a target node type,
-    then the capability keyname definition
+  - if the capability in the requirement definition was specified
+    using the symbolic name of a capability definition in a target
+    node type, then the capability keyname definition MUST remain
+    unchanged in any subsequent refinements or during assignment.
 
-  - MUST remain unchanged in any subsequent refinements or during
-    assignment.
+  - if the capability in the requirement definition was specified
+    using the name of a capability type, then the capability
+    definition referred here by the capability_symbolic_name must be
+    of a type that is the same as or derived from the said capability
+    type in the requirement definition.
 
-  - if the capability in the Requirement definition was specified using
-    the name of a Capability Type, then the Capability definition
-    referred here by the capability_symbolic_name must be of a type that
-    is the same as or derived from the said Capability Type in the
-    Requirement definition.
-
-- capability_type_name: represents the optional name of a Capability
-  Type definition within the target Node Type or node template this
+- capability_type_name: represents the optional name of a capability
+  type definition within the target node type or node template this
   requirement needs to form a relationship with;
 
-  - may not be used if the capability in the Requirement definition was
+  - may not be used if the capability in the requirement definition was
     specified using the symbolic name of a capability definition in a
     target node type.
 
   - otherwise the capability_type_name must be of a type that is the same
     as or derived from the type defined by the capability keyname in the
-    Requirement definition.
+    requirement definition.
 
 - node_template_name: represents the optional name of a node template
-  that contains the capability this requirement will be fulfilled by;
+  that contains the capability that fulfills this requirement;
 
-  - in addition, the Node Type of the node template must be of a type that
+  - in addition, the node type of the node template must be of a type that
     is the same as or derived from the type defined by the node keyname
-    (if the node keyname is defined) in the Requirement definition,
+    (if the node keyname is defined) in the requirement definition,
 
   - in addition, the node template must fulfill the node filter
     requirements of the node_filter (if a node_filter is defined) in the
     Requirement definition.
 
-- node_type_name: represents the optional name of a Node Type that
-  contains the capability this Requirement will be fulfilled by;
+- node_type_name: represents the optional name of a node type that
+  contains the capability that fulfills this requirement;
 
   - in addition, the node_type_name must be of a type that is the same as
     or derived from the type defined by the node keyname (if the node
-    keyname is defined) in the Requirement definition.
+    keyname is defined) in the requirement definition.
 
 - relationship_template_name: represents the optional name of a
-  Relationship Template to be used when relating the Requirement to the
-  Capability in the target node.
+  relationship template to be used when relating the requirement to the
+  capability in the target node.
 
-  - in addition, the Relationship Type of the Relationship Template must
+  - in addition, the relationship type of the relationship template must
     be of a type that is the same as or derived from the type defined by
     the relationship keyname (if the relationship keyname is defined) in
-    the Requirement definition.
+    the requirement definition.
 
-- relationship_type_name: represents the optional name of a Relationship
-  Type that is compatible with the Capability Type in the target node;
-  the TOSCA orchestrator will create a relationship of the Relationship
-  Type when relating the Requirement to the Capability in the target
-  node.
+- relationship_type_name: represents the optional name of a relationship
+  type that is compatible with the capability type in the target node;
 
-  - in addition, the relationship_type_name must be of a type that is the
-    same as or derived from the type defined by the relationship keyname
-    (if the relationship keyname is defined) in the Requirement
-    definition.
+  - in addition, the relationship_type_name must be of a type that is
+    the same as or derived from the type defined by the relationship
+    keyname in the requirement definition.
 
 - property_assignments: within the relationship declaration, it
   represents the optional map of property assignments for the declared
+  relationship.
+
+- attribute_assignments: within the relationship declaration, it
+  represents the optional map of attribute assignments for the declared
   relationship.
 
 - interface_assignments: represents the optional map of interface
@@ -3801,27 +3782,9 @@ have the following meaning:
 
 - allocation_property_assignments: within the allocation declaration, it
   represents the optional map of property assignments that semantically
-  represent “allocations” from the property with the same name in the
+  represent *allocations* from the property with the same name in the
   target capability. Syntactically their form is the same as for a
   normal property assignments.
-
-  - The allocation acts as a “capacity filter” for the target capability
-    in the target node. When the requirement is resolved, a capability
-    in a node is a valid target for the requirement relationship if for
-    each property of the target capability, the sum of all existing
-    allocations plus the current allocation is less_or_equal to the
-    property value.
-
-    - Intuitively, the sum of “allocations” from all the incoming
-      relationships for a certain capability property cannot exceed the
-      value of the property.
-
-    - If the “allocation” refers (via its name) to a property that does not
-      exist in a capability, then that capability cannot be a valid
-      target.
-
-    - Of course, allocations can be defined only for integer, float, or
-      scalar property types.
 
 - node_filter_definition: represents the optional node filter TOSCA
   orchestrators will use to fulfill the requirement for selecting a
@@ -3830,43 +3793,33 @@ have the following meaning:
   template fulfills the node filter.
 
   - this node_filter does not replace the node_filter definition in the
-    Requirement definition, it is applied in addition to that.
+    requirement definition, it is applied in addition to that.
 
 - count_value: represents the optional cardinality of this requirement
   assignment, that is how many relationships are to be established from
   this requirement assignment specification.
 
-  - If count is not defined, the assumed count_value for an assignment is
+  - If count is not defined, the default count_value for an assignment is
     1.
 
-  - Note that there can be multiple requirement assignments for a
-    requirement with a specific symbolic name.
+- directives_list: represents the optional list of strings that
+  defines if this requirement needs to be fulfilled using target nodes
+  created within this service template only, target nodes created
+  outside this service template only, or both. Valid values for the
+  strings are as follows:
 
-  - The sum of all count values of assignments for a requirement with a
-    specific symbolic name must be within the count_range defined in the
-    requirement definition.
+  - `internal`: this requirement is fulfilled using target nodes
+    created within this template.
 
-  - Moreover, the sum of all count values of non-optional assignments for
-    a requirement with a specific symbolic name must also be within the
-    count_range defined in the requirement definition.
+  - `external`: this requirement is fulfilled using target nodes
+     created outside this template as available to the TOSCA
+     environment.
 
-- directives: represents the optional list of strings that defines
-  directives for this requirement assignment:
+  The order of the strings in the list defines which directive should
+  be attempted first when fulfilling the assignment.
 
-  - valid values for the strings:
-
-    - “internal” – relationship created by this requirement assignment use
-       target nodes created within this template.
-
-    - “external” – relationship created by this requirement assignment use
-       target nodes created outside this template as available to the TOSCA
-       environment.
-
-  - the order of the strings in the list defines which directive should be
-    attempted first when fulfilling the assignment.
-
-  - If no directives are defined, the default value is left to the
-    particular implementation.
+  If no directives are defined, the default value is left to the
+  particular implementation.
 
 - is_optional: represents the optional boolean value specifying if this
   requirement assignment is optional or not.
@@ -3878,186 +3831,155 @@ have the following meaning:
 
   - The default value for is_optional is false.
 
-### Notes
+  Non-optional requirements have precedence, thus during a service
+  deployment, the optional requirements for all nodes should be
+  fulfilled only after the non-optional requirements for all nodes
+  have been fulfilled.
 
-- If no explicit requirement assignment for a requirement with symbolic
-  name is defined, a default requirement assignment with keynames:
-  capability, node, relationship, node_filter having the same values as
-  in the requirement definition in the corresponding node type is
-  assumed.
+The following code snippet shows an example requirement assignment. It
+defines a web application node template named
+‘my_application_node_template’ of type `WebApplication` that declares
+a requirement named `host` that needs to be fulfilled by any node that
+derives from the node type `WebServer`:
 
+```yaml
+service_template:
+  node_templates:
+    my_application_node_template:
+      type: WebApplication
+      requirements:
+        - host: 
+            node: WebServer
+```
+In this case, the `WebApplication` type defines a `host` requirement
+that uses relationship type `HostedOn` relate to the target node. The
+`host` requirement also specifies a capability type of `Container` to
+be the specific target of the requirement in the target node.
+
+The following example shows a requirement named `database` that
+describes a requirement for a connection to a capability of type
+`Endpoint.Database` in a node template called `my_database`. However,
+the connection requires a custom relationship type
+(my.types.CustomDbConnection’) declared on the keyname ‘relationship’.
+```yaml
+service_template:
+  node_templates:
+    my_application_node_template:
+      requirements:
+        - database: 
+            node: my_database
+            capability: Endpoint.Database
+            relationship: my.types.CustomDbConnection
+```
+
+### 8.7.4 Requirement Count
+
+A node template may include multiple requirement assignments with the
+same symbolic requirement name. In addition, each of these requirement
+assignments may define their own count value, and some requirement
+assignments may be marked as optional. This section specifies rules
+for handling requirement counts:
+
+- The sum of all count values for requirement assignments with a
+  specific symbolic name MUST be within the count_range defined in the
+  corresponding requirement definition.
+
+- Moreover, the sum of all count values for non-optional requirement
+  assignments with a specific symbolic name MUST also be within the
+  count_range defined in the requirement definition.
+
+- If a node template does not define an explicit requirement
+  assignment for a requirement defined in its corresponding node type,
+  an *implicit* requirement assignment will be created automatically
+  if the lower bound of the count_range in the requirement definition
+  is greater than zero
+
+  - The automatically created requirement assignments use the same
+    values for the capability, node, relationship, and node_filter
+    keynames as defined in the corresponding requirement definition.
   - Additionally, the count_value is assumed to be equal to the min_count
     value of the requirement definition in the corresponding node type.
 
-- For all explicit requirement assignments with the same symbolic name:
-
-  - the sum of the count_value must be within the count_range specified in
-    the corresponding requirement definition.
-
-  - the sum of the count_value for all non-optional requirements
-    assignments must be within the count_range specified in the
-    corresponding requirement definition.
-
-- Non-optional requirements have precedence, thus during a service
-  deployment, the optional requirements for all nodes should be resolved
-  only after the non-optional requirements for all nodes have been
-  resolved.
-
-### Examples
-
-Examples of uses for the extended requirement assignment grammar
-include:
-
-- The need to allow runtime selection of the target node a Node Type
-  rather than a node template. This may include use of the node_filter
-  keyname to provide node and capability filtering information to find
-  the “best match” of a node at runtime.
-
-- The need to further specify the Relationship Template or Relationship
-  Type to use when relating the source node’s requirement to the target
-  node’s capability.
-
-- The need to further specify the capability (symbolic) name or
-  Capability Type in the target node to form a relationship between.
-
-- The need to specify the number of counts the requirement assigns (when
-  greater than 1).
-
-#### Example 1 – Hosting requirement on a Node Type
-
-A web application node template named ‘my_application_node_template’ of
-type WebApplication declares a requirement named ‘host’ that needs to be
-fulfilled by any node that derives from the node type WebServer.
+The following example shows a requirement assignment where the
+requirement definition has the count_range that is different from the
+default [0,UNBOUNDED]. In this case the redundant_database requirement
+has count_range of [2,2]. The requirement definition is not presented
+here for brevity. In the requirement assignment we use the short
+notation. Note that the count keyname for each assignment is not
+declared (i.e. the default value of 1 is used) and that the sum of the
+count values of both assignments is 2 which is in the range of [2,2]
+as specified in the requirement definition.
+```yaml
+service_template:
+  node_templates:
+    my_critical_application_node_template:
+      requirements:
+        - redundant_database: database1
+        - redundant_database: database2
 ```
-# Example of a requirement fulfilled by a specific web server node template
-node_templates:
-  my_application_node_template:
-    type: tosca.nodes.WebApplication
-    ...
-    requirements:
-      - host: 
-          node: tosca.nodes.WebServer
-```
-In this case, the node template’s type is WebApplication which already
-declares the Relationship Type HostedOn to use to relate to the target
-node and the Capability Type of Container to be the specific target of
-the requirement in the target node.
 
-#### Example 2 - Requirement with node template and a custom Relationship Type
+### 8.7.5 Capability Allocation
 
-This example is similar to the previous example; however, the
-requirement named ‘database’ describes a requirement for a connection to
-a database endpoint (Endpoint.Database) Capability Type in a node
-template (my_database). However, the connection requires a custom
-Relationship Type (my.types.CustomDbConnection’) declared on the keyname
-‘relationship’.
-```
-# Example of a (database) requirement that is fulfilled by a node template named 
-# “my_database”, but also requires a custom database connection relationship
-my_application_node_template:
-  requirements:
-    - database: 
-        node: my_database
-        capability: Endpoint.Database
-        relationship: my.types.CustomDbConnection
-```
-#### Example 3 - Requirement for a Compute node with additional selection criteria (filter) 
+The value of the `allocation` keyword in a requirement assignment acts
+as a *capacity filter* for the target capability in the target
+node. When the requirement is fulfilled, a capability in a node is a
+valid target for the requirement if for each property of the target
+capability, the sum of all existing allocations plus the current
+allocation is less than or equal to the property value.
 
-This example shows how to extend an abstract ‘host’ requirement for a
-Compute node with a filter definition that further constrains TOSCA
-orchestrators to include additional properties and capabilities on the
-target node when fulfilling the requirement.
-```
-node_templates:
-  mysql:
-   type: tosca.nodes.DBMS.MySQL
-    properties:
-      # omitted here for brevity
-    requirements:
-      - host:
-          node: tosca.nodes.Compute
-          node_filter:
-            capabilities:
-              - host:
-                  properties:
-                    - num_cpus: { in_range: [ 1, 4 ] }
-                    - mem_size: { greater_or_equal: 512 MB }
-              - os:
-                  properties:
-                    - architecture: { equal: x86_64 }
-                    - type: { equal: linux }
-                    - distribution: { equal: ubuntu }
-              - mytypes.capabilities.compute.encryption:
-                  properties:
-                    - algorithm: { equal: aes }
-                    - keylength: { valid_values: [ 128, 256 ] }
-```
-#### Example 4 - Requirement assignment for definition with count_range: \[2,2\]
+The following allocation rules apply:
 
-This example shows how the assignments can look if the Requirement
-definition has the count_range different from the default \[1,1\]. In
-this case the redundant_database requirement has count_range: \[2,2\].
-The Requirement definition is not presented here for brevity. In the
-Requirement assignment we use the short notation. Note that the count
-keyname for each assignment is not declared (i.e. the default value of 1
-is used) and that the sum of the count values of both assignments is 2
-which is in the range of \[2,2\] as specified in the Requirement
-definition.
-```
-# Example of a (redundant_database) requirement that is fulfilled by 
-# two node templates named “database1” and “database1
-my_critical_application_node_template:
-  requirements:
-    - redundant_database: database1
-    - redundant_database: database2
-```
-#### Example 5 - Requirement assignment for definition with capacity allocation
+- The sum of allocations from all the incoming relationships for a
+  certain capability property cannot exceed the value of the property.
 
-This example shows how the assignment can look if the requirement is
-assuming a “capacity allocation” on the properties of the target
-capability (in this case a capability of type
-“tosca.capabilities.Compute”). When this requirement is resolved, a node
-is a valid target and a relationship is created only if both the
-capacity allocations for num_cpu and mem_size are fulfilled, that is the
-sum of the capacity allocations from all established relationships +
-current allocation is less or equal to the value of each respective
-property in the target capability.
+- If the allocation refers (via its name) to a property that does not
+  exist in a capability, then the allocation statement is invalid.
+
+Of course, allocations can be defined only for integer, float, or
+scalar property types.
+
+The following example shows a *capacity allocation* on the properties
+of a target capability of type `Compute`. When this requirement is
+fulfilled, a node is a valid target and a relationship is created only
+if both the capacity allocations for num_cpu and mem_size are
+fulfilled, that is if the sum of the capacity allocations from all
+established relationships + current allocation is less or equal to the
+value of each respective property in the target capability.
 
 So assuming that num_cpu property in the target capability of a
 candidate node has value 4 and the sum of capacity allocations of the
-other resolved requirements to that capability for num_cpu is 1 then
-then there is enough “remaining capacity” (4 – 1 = 3) to fulfill the
+other fulfilled requirements to that capability for num_cpu is 1 then
+then there is enough *remaining capacity* (4 – 1 = 3) to fulfill the
 current allocation (2), and a relationship to that node is established.
 Another node with num_cpu with value 2 could not be a valid target since
 1 (existing) + 2 (current) = 3, and that is larger than the property
 value which is 2. Of course, similar calculations must be done for the
 mem_size allocation.
+```yaml
+service_template:
+  node_templates:
+    my_critical_application_node_template:
+      requirements:
+        - host:
+            node: Compute
+            allocation:
+              num_cpu: 2
+              mem_size: 128 MB
 ```
-# Example of a (redundant_database) requirement that is fulfilled by 
-# two node templates named “database1” and “database1
-my_critical_application_node_template:
-  requirements:
-    - host:
-        node: tosca.nodes.Compute
-        allocation:
-          properties:
-            num_cpu: 2
-            mem_size: 128 MB
-```
+
 ## 8.8 Node Filter definition
 
 In addition to the node, relationship and capability types, a filter,
-with the keyname node_filter, may be provided to constrain the allowed
-set of potential target nodes based upon their properties and their
+with the keyname node_filter, may be provided in requirement
+definitions and requirement assignments to constrain the allowed set
+of potential target nodes based upon their properties and their
 capabilities’ properties. This allows TOSCA orchestrators to help find
-the “best fit” when selecting among multiple potential target nodes for
-the expressed requirements. Also, if a node template was specified
+the *best fit* when selecting among multiple potential target nodes
+for the expressed requirements. Also, if a node template was specified
 during requirement assignment it allows TOSCA orchestrators to verify
 that the specified node template fulfills the requirement.
 
-### Grammar
-
-Node filters are defines using condition clauses as shown in the
+Node filters are defined using condition clauses as shown in the
 following grammar:
 ```
 node_filter: <condition_clause> 
@@ -4080,26 +4002,27 @@ filter. TOSCA orchestrators use node filters are follows:
   of fulfilling the requirement. Specifically, this means that the SELF
   keyword in any TOSCA Path expressions refer to that relationship.
 
-### Example
-
-The following example is a filter that will be used to select a Compute
-node based upon the values of its defined capabilities. Specifically,
-this filter will select Compute nodes that support a specific range of
-CPUs (i.e., num_cpus value between 1 and 4) and memory size (i.e.,
-mem_size of 2 or greater) from its declared “host” capability.
+The following example shows a node filter that will be used to select
+a Compute node based upon the values of its defined
+capabilities. Specifically, this filter will select Compute nodes that
+support a specific range of CPUs (i.e., num_cpus value between 1 and
+4) and memory size (i.e., mem_size of 2 or greater) from its declared
+`host` capability. 
 ```
-my_node_template:
-  # other details omitted for brevity
-  requirements:
-    - host:
-        node_filter:
-          $and:
-            - $in_range:
-              - $get_property: [ SELF, CAPABILITY, num_cpus ]
-              - [ 1, 4 ]
-            - $greater_or_equal:
-              - $get_property: [ SELF, CAPABILITY, mem_size ]
-              - 512 MB 
+service_template:
+  node_templates:
+    my_node_template:
+      # other details omitted for brevity
+      requirements:
+	- host:
+	    node_filter:
+	      $and:
+		- $in_range:
+		  - $get_property: [ SELF, CAPABILITY, num_cpus ]
+		  - [ 1, 4 ]
+		- $greater_or_equal:
+		  - $get_property: [ SELF, CAPABILITY, mem_size ]
+		  - 512 MB 
 ```
 # Creating Representations from Templates
 
