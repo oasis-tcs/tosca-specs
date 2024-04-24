@@ -3596,81 +3596,103 @@ following refinement rules for the supported keynames:
 - count_range: the new range MUST be within the range defined in the
   requirement definition in the parent node type definition.
 
-## 8.7 Requirement assignment
+## 8.7 Requirement Assignment
 
-A Requirement assignment allows node template authors to provide
-assignments for the corresponding Requirement definition (i.e. having
-the same symbolic name) in the Node Type definition.
+A *requirement assignment* is used by node template authors to provide
+assignments for the corresponding requirement definition in the node
+template's node type. This includes specifying target nodes, either by
+providing symbolic names of target nodes or by providing selection
+criteria for TOSCA orchestrators to find candidate nodes that can be
+used to fulfill the requirement. In addition, requirement assignments
+must uniquely identify the specific target capability in the target
+node for the requirement. Requirement assignments must also assign
+values to properties and attributes defined in the relationship
+definition that is part of the requirement definition, and provide
+values for the input parameters defined by the relationship
+definition's interfaces.
 
-A Requirement assignment provides either names of node templates or
-selection criteria for TOSCA orchestrators to find matching TOSCA nodes
-that are used to fulfill the requirement’s declared Capability Type
-and/or Node Type. A Requirement assignment also provides either names of
-Relationship Templates (to use) or the name of Relationship Types (to
-create relationships) for relating the source node (containing the
-Requirement) to the target node (containing the Capability).
-
-Note that several Requirement assignments in the node template
-definition can have the same symbolic name, each referring to different
-counts of the Requirement definition. To how many counts a particular
-assignment allows is set via the count_range keyname. Nevertheless, the
-sum of the count values for all of the Requirement assignments with the
-same symbolic name MUST be within the range of count_range specified by
-the corresponding Requirement definition.
-
-### Keynames
+Note that several requirement assignments in a node template can have
+the same symbolic name, each referring to different counts of the
+corresponding requirement definition. The number of instances a
+particular assignment allows is set via the `count`
+keyname. Nevertheless, the sum of the count values for all of the
+requirement assignments with the same symbolic name MUST be within the
+range of count_range specified by the corresponding requirement
+definition.
 
 The following is the list of recognized keynames for a TOSCA requirement
 assignment:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|capability|no|string|The optional keyname used to provide either the: · symbolic name of a Capability definition within a target node that can fulfill the requirement. · name of a Capability Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
-|node|no|string|The optional keyname used to identify the target node of a relationship; specifically, it is used to provide either the: · name of a node template that can fulfill the target node requirement. · name of a Node Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
-|relationship|conditional|string|The conditional keyname used to provide either the: · name of a Relationship Template to use to relate this node to the target node when fulfilling the requirement. · name of a Relationship Type that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. · Details of a Relationship Type and its property and interface assignments that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. The relationship definition is mandatory either in the requirement definition of in the requirement assignment.|
-|allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent “allocations” from the property with the same name in the target capability.  · The allocation acts as a “capacity filter” for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
+|node|no|string|The optional keyname used to identify the target node of the requirement. This can either be the name of a target node template or the name of a target node type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
+|capability|no|string|The optional keyname used to identify the target capability of the requirement. This can either be the name of a capability defined within a target node or the name of a target capability type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
+|relationship|conditional|relationship assignment|The conditional keyname used to provide values for the relationship definition in the corresponding requirement definition. This keyname can also be overloaded to reference a relationship template defined elsewhere in the service template.|
+|allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent *allocations* from the property with the same name in the target capability. The allocation acts as a *capacity filter* for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
+|count|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships to be established from this requirement assignment. If not defined, the default count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name. The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
 |node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill the requirement at runtime.|
-|count|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships to be established from this requirement assignment specification. If not defined, the assumed count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name.  · The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. · Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
-|directives|no|list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this requirement assignment should use relationships with target nodes created within this template (“internal”) or should use target nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which directive should be attempted first. If no directives are defined, the default value is left to the particular implementation."|
-|optional|no. default: FALSE|boolean|Describes if the fulfillment of this requirement assignment is optional (true) or not (false).  If not specified, the requirement assignment must be fulfilled, i.e. the default value is false.  Note also, that non-optional requirements have precedence, thus during a service deployment, the optional requirements for all nodes should be resolved only after the non-optional requirements for all nodes have been resolved.|
+|directives|no|list of string|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
+|optional|no|boolean|Describes if the fulfillment of this requirement assignment is optional (true) or not (false).  If not specified, the requirement assignment must be fulfilled, i.e. the default value is false.  Note also, that non-optional requirements have precedence, thus during a service deployment, the optional requirements for all nodes should be resolved only after the non-optional requirements for all nodes have been resolved.|
 
-The following is the list of recognized keynames for a TOSCA requirement
-assignment’s relationship keyname which is used when property
-assignments or interface assignments (for e.g. changing the
-implementation keyname or declare additional parameter definitions to be
-used as inputs/outputs) need to be provided:
+The `relationship` keyname in a requirement assignment specifies a
+*relationship assignment* that provides information needed by TOSCA
+Orchestrators to construct a relationship to the TOSCA node that is
+the target of the requirement. Relationship assignments support the
+following keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|type|no|string|The optional keyname used to provide the name of the Relationship Type for the Requirement assignment’s relationship.|
-|properties|no|map of property assignments|An optional keyname providing property assignments for the relationship.|
-|interfaces|no|map of interface assignments|The optional keyname providing Interface assignments for the corresponding Interface definitions in the Relationship Type.|
+|type|no|string|The optional keyname used to provide the name of the relationship type for the requirement assignment’s relationship.|
+|properties|no|map of property assignments|An optional map of property assignments for the relationship.|
+|attributes|no|map of attribute assignments|An optional map of attribute assignments for the relationship.|
+|interfaces|no|map of interface assignments|An optional map of interface assignments for the corresponding interface definitions in the relationship type.|
 
-### Grammar
+The keynames supported by requirement assignments and relationship
+assignments can be used according to the following grammar:
 
-Requirement assignments have one of the following grammars:
-
-#### Short notation:
-
-The following single-line grammar may be used if only a concrete Node
-Template for the target node needs to be declared in the requirement:
-```
-<[requirement_name](#TYPE_YAML_STRING)>: <[node_template_name](#TYPE_YAML_STRING)> 
-```
-#### Extended notation:
-
-The following grammar should be used if the requirement assignment needs
-to provide more information than just the node template name:
 ```
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
   node: <node_template_name> | <node_type_name>
-  relationship: <relationship_template_name> | <relationship_type_name>
+  relationship:
+    type: <relationship_type_name> | <relationship_template_name>
+    properties: <property_assignments>
+    attributes: <attribute_assignments>
+    interfaces: <interface_assignments>
   node_filter: <node_filter_definition>
   count: <count_value>
   directives: <directives_list>
   optional: <is_optional>
+  allocation: <allocation_property_assignments>
 ```
+The `relationship` keyname in a requirement assignment can also be
+used to specify the name of a relationship template to use for
+creating the relationship to the target node when fulfilling the
+requirement, in which case the following grammar is used:
+```
+<requirement_name>:
+  capability: <capability_symbolic_name> | <capability_type_name>
+  node: <node_template_name> | <node_type_name>
+  relationship: <relationship_template_name>
+  node_filter: <node_filter_definition>
+  count: <count_value>
+  directives: <directives_list>
+  optional: <is_optional>
+  allocation: <allocation_property_assignments>
+```
+
+
+|directives|no|list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this requirement assignment should use relationships with target nodes created within this template (“internal”) or should use target nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which directive should be attempted first. If no directives are defined, the default value is left to the particular implementation."|
+
+
+
+
+The following single-line grammar may be used if only a concrete node
+template for the target node needs to be assigned in the requirement:
+```
+<[requirement_name](#TYPE_YAML_STRING)>: <[node_template_name](#TYPE_YAML_STRING)> 
+```
+
 #### Extended grammar with Property Assignments and Interface Assignments for the relationship
 
 The following additional multi-line grammar is provided for the
@@ -3710,8 +3732,6 @@ same name in the target capability.
 ```
 <requirement_name>:
   # Other keynames omitted for brevity
-  allocation: 
-    properties: <allocation_property_assignments>
 ```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
