@@ -112,12 +112,12 @@ This version of the specification includes significant changes from TOSCA 1.3. I
 - Greater support for functions
 
 - Constraints are now expressed as boolean functions
-- A new TOSCA path syntax allows a defined traversal of an arbitary graph of nodes and relationships to an attribute or property  
+- A new TOSCA path syntax allows a defined traversal of an arbitrary graph of nodes and relationships to an attribute or property  
 - The version type is defined
-- Additipnal built-in functions
+- Additional built-in functions
 - Custom defined functions
 - The service template is renamed TOSCA file and service template is redefined
-- Relationship type defintion now operates in the same way as other entities
+- Relationship type definition now operates in the same way as other entities
 - Short notation for entry_schema and key_schema
 - Other syntax clarifications
 
@@ -150,9 +150,9 @@ Defined in this document
 - CSAR  Cloud Service Archive A file format defined by OASIS TOSCA to contain TOSCA files
 
 Used by this specification
-- YAML  Yet Another Markup Language The Languange TOSCA uses for files
+- YAML  Yet Another Markup Language The Language TOSCA uses for files
 - MACD  Moves, Adds, Changes, and Deletions
-- DSL  Domian Specific Language
+- DSL  Domain Specific Language
 
 Used as examples
 - DBMS  Database Management System
@@ -184,7 +184,7 @@ Large systems such a cloud applications, telecommunications networks,
 and software services are becoming increasingly more difficult to
 manage. This challenge is the result of a recent technology trends
 such as the adoption of cloud-native architectures that build systems
-as collections of microservices, the disaggreation of large hardware
+as collections of microservices, the disaggregation of large hardware
 appliances, the decoupling of hardware and software, and the adoption
 of edge deployments that move application functionality closer to the
 end-user.
@@ -213,7 +213,7 @@ language that is agnostic to specific technological and commercial
 ecosystems and that supports the design and operation of large systems
 without being tied to specific technologies or specific vendors. This
 enables a uniform management approach that can be used for all parts
-of the system and can integrate components accross all layers of the
+of the system and can integrate components across all layers of the
 technology stack.
 
 The capabilities offered by TOSCA will facilitate higher service
@@ -280,7 +280,7 @@ Declarative management is often also referred to as *desired state* or
 
 TOSCA models are based on *service templates* that are created by
 service designers. Service templates consist of node templates and
-relationship templates that have associated node types and relationshp
+relationship templates that have associated node types and relationship
 types. Types in TOSCA represent reusable components that are the
 building blocks from which services can be constructed, thereby
 promoting modularity and reuse.
@@ -355,7 +355,7 @@ specific.
 
 A model-driven management system must include a component that is
 responsible for keeping the *representations* and the *external
-implementations* syncchronized. In the context of this specification, we
+implementations* synchronized. In the context of this specification, we
 will refer to this component as the **orchestrator**. An orchestrator
 may perform this synchronization task based on workflows, policies, or
 other mechanisms that are defined using statements expressed in the
@@ -443,9 +443,9 @@ Figure : TOSCA Types and TOSCA Templates
 
 The use of types in TOSCA also provides the additional benefits of
 abstraction, information hiding, and reuse. TOSCA types can be
-organized in a *type hierarcy* where one or more type definitions can inherit from another type, each derived type may then be refined. This promotes reuse. The base type may be abstract and the derived types may be concrete which promotes abstraction.  **TOSCA node types*
+organized in a *type hierarchy* where one or more type definitions can inherit from another type, each derived type may then be refined. This promotes reuse. The base type may be abstract and the derived types may be concrete which promotes abstraction.  **TOSCA node types*
 and **TOSCA relationship types** define an externally visible
-*management façade* for entitities of that type while hiding internal
+*management façade* for entities of that type while hiding internal
 implementation details. This management façade defines interfaces that
 can be used by an orchestrator to interact with the external
 implementations represented by the entity. When node types and
@@ -580,7 +580,7 @@ We discussed earlier how relationship templates are used to link node
 templates together into a service topology graph. However, it may not
 always be possible to define all node templates for a given service
 topology within a single service template. For example, modular design
-practices may dictate that different service subcomponents be modelled
+practices may dictate that different service sub-components be modelled
 using separate service templates. This may result in relationships
 that need to be established across multiple service
 templates. Additionally, relationships may need to target components
@@ -615,7 +615,7 @@ from which these representations were created. TOSCA processors can
 take representations created from multiple service templates into
 account when fulfilling requirements, or they can attempt to use
 representations for external resources managed in an inventory. Either
-way, requirement fulfilment results in relationships that are
+way, requirement fulfillment results in relationships that are
 established across service template boundaries.
 
 Requirements and capabilities are modelled by annotating node types
@@ -880,13 +880,13 @@ A resolver performs the following functions
 
 ##### Creating Relationships connecting Node Representations
 
-- Relationships are created by Requirement Fulfilment
+- Relationships are created by Requirement Fulfillment
     - If a requirement uses a node_filter that refers to uninitialized properties
-      or attributes, then the fulfilment of this requirement is postponed until
+      or attributes, then the fulfillment of this requirement is postponed until
       all referred properties or attributes are initialized.
     - A circular dependency signifies a erroneous template and shall report an error
     - After a relationship is created, properties and attributes that depend on it
-      to be initialized will be initialized. 
+      to be initialized will be initialized.
 - In the end all requirements are satisfied and all relationships are added to the
   representation graph.
     - An unsatisfied non-optional requirement results in an error.
@@ -1006,20 +1006,17 @@ derivation and entity refinement.
 
 ### 5.1.1 Type Definitions and Entity Definitions
 
-TOSCA adopts a model-driven management approach where management
-actions are performed using models maintained by the management
-system. These models are created from *templates* defined in TOSCA
-files and expressed using the TOSCA language. All TOSCA templates are
-*typed* using TOSCA types that are also defined in TOSCA files and
-expressed in the TOSCA language. Not only do types promote reuse, they
-also simplify the design of TOSCA templates by allowing relevant TOSCA
-entities to use and/or modify definitions already specified in the
-types.
+TOSCA *templates* are defined in TOSCA files and expressed using the TOSCA
+language. All TOSCA templates are *typed* using TOSCA types that are also
+defined in TOSCA files and expressed in the TOSCA language. Not only do types
+promote reuse, they also simplify the design of TOSCA templates by allowing
+relevant TOSCA entities to use and/or modify definitions already specified in
+the types.
 
 **Type definitions** consist of pairs keynames and associated values
 that specify information relevant to the type. While all TOSCA types
 share a number of common keynames, each type definition has its own
-syntax, semantics, and set of keynames, TOSCA supports *node types*,
+syntax, semantics, and set of keynames. TOSCA supports *node types*,
 *relationship types*, *capability types*, *interface types*, *artifact
 types*, *policy types*, *group types*, and *data types*.
 
@@ -1037,7 +1034,7 @@ keynames and values. Each entity definition has it own syntax,
 semantics and set of keynames, but all entity definitions share a
 `type` keyname that references the TOSCA type of the entity being
 defined. Other keynames in entity definitions are used to further
-define and/or modify definitions already specified in the
+define or refine definitions already specified in the
 corresponding entity type. TOSCA supports *capability definitions*,
 *requirement definitions*, *interface definitions*, *policy
 definitions*, *group definitions*, *property definitions*, *attribute
@@ -1045,28 +1042,24 @@ definitions*, and *parameter definitions*.
 
 ### 5.1.2 Templates and Entity Assignments
 
-TOSCA-based management systems use models to describe systems and
-services under management. These system models are created from
-service templates that are defined in TOSCA files and expressed using
+The 
+service templates introduced in Section 2 are defined in TOSCA files and expressed using
 statements in the TOSCA language. Service templates are directed
 graphs that consist of *node templates* and *requirements*. Node
-templates are defined using pairs of keynames and associated values
-that specify additional information for the definitions specified in
-the corresponding node types. Service templates may include other
+templates specify a particular node type and then add additional information using pairs of keynames and associated values. Service templates may include other
 templates as well such as relationship templates, groups, policies
 etc.
 
-Many of the keynames used in node templates specify additional
-information for the entity definitions in the corresponding node
-types. Such informationis referred to as an **entity assigment**.  For
+Node types specified in node templates will typically include definition of entities, many node templates will use keynames to specify additional
+information for those entity definitions. Such information is referred to as an **entity assignment**.  In general for
 each entity definition in the type of a template, the template can
 include a corresponding entity assignment that provides
 template-specific information about the entity. For example, node
 templates can include property assignments that assign
 template-specific values for the properties defined using *property
-definitions* in the *node type*. Property assigements can be provided
-as fixed values, but more often they will be specified using TOSCA
-functions that retrieve template input values or that retrieve
+definitions* in the *node type*. Property assignments can be provided
+as fixed values, but more often they will be specified using a TOSCA
+function that retrieve input values or that retrieve
 property or attribute values from other entities in a service
 representation graph. Entity assignments make sure that the service
 template can be used to generate a complete representation of the
@@ -1087,12 +1080,12 @@ of the abstract types.
 The TOSCA specification includes *type derivation rules* that describe
 which keyname definitions are inherited from the parent type and which
 definitions are *intrinsic* to the type declaration and are not
-inherited. For example, all type definitions include a `version`
-keyword, the value of which is never inherited from a parent type.
+inherited. An example of an intrinsic definition is version, all type definitions include a `version`
+keyword the value of which is never inherited from a parent type.
 
 Except for keynames that are explicitly flagged as *intrinsic* to each
 type definition, derived types inherit all the definitions of their
-parent type. Specifically, derived types inherite all *entity
+parent type. Specifically, derived types inherit all *entity
 definitions* from their parent. In addition, these entity definitions
 can be expanded or modified.
 
@@ -1129,9 +1122,8 @@ TOSCA templates:
   decomposed by a service created simultaneously from a substituting
   template.
 
-It is relevant to emphasize the cross-template usage, as only in this
-case we deal with templates defined at different design time-points,
-with potentially different editing and maintenance restrictions.
+### 5.1.4 Template reuse
+A single TOSCA template may be reused by including it in one or more other TOSCA templates. Each template may be separately maintained and use it's own naming scheme. The resolution of naming scheme conflicts is discussed later in this document.
 
 ## 5.2 Mandatory Keynames
 
@@ -1148,9 +1140,7 @@ keywords in the definition. In that case, the keyword will be marked as
 **conditional** and the condition will be explained in the description
 column. Note that in the context of type definitions, types may be used
 to derive other types, and keyname definitions **MAY** be inherited from
-parent types (according to the derivation rules of that type entity). If
-a keyname definition is inherited, the derived type does not have to
-provide such definition.
+parent types (according to the derivation rules of that type entity). A derived type does not have to provide a keyname definition if this has already been defined in a parent type.
 
 ## 5.3 Common Keynames
 
