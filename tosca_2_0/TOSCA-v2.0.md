@@ -104,22 +104,51 @@ TOSCA specification promotes a model-driven approach, whereby
 information embedded in the model structure (the dependencies,
 connections, compositions) drives the automated processes.
 
-## 1.1 Changes from earlier Versions
+## 1.1 Changes from Earlier Versions
 
-This version of the specification includes significant changes from TOSCA 1.3. In particular:
-- There is improved support for the use of TOSCA for in-life operation of a service
-- The role of the representation model is clarified
-- Greater support for functions
+This version of the specification includes significant changes from
+TOSCA 1.3. In particular:
 
-- Constraints are now expressed as boolean functions
-- A new TOSCA path syntax allows a defined traversal of an arbitrary graph of nodes and relationships to an attribute or property  
-- The version type is defined
-- Additional built-in functions
-- Custom defined functions
-- The service template is renamed TOSCA file and service template is redefined
-- Relationship type definition now operates in the same way as other entities
-- Short notation for entry_schema and key_schema
-- Other syntax clarifications
+1. TOSCA v2.0 removes the *Simple Profile* type definitions from the
+   standard. These type definitions are now managed as an open source
+   project in the
+   [tosca-community-contributions](https://github.com/oasis-open/tosca-community-contributions)
+   github repository.
+2. Instead of bundling Profiles with the TOSCA standard, TOSCA v2.0
+   provides support for user-defined domain-specific profiles:
+   - It allows collections of type definitions to be bundled together
+     into named profiles.
+   - It supports importing profiles using their profile name.
+3. TOSCA v2.0 formalizes support for in-life operation of a running
+   service.
+   - It formalizes the role of a representation model and clarifies
+     how to create representation models from service templates.
+   - It documents how to create multiple node representations from the
+     same node template and multiple relationships from the same
+     requirement assignment.
+   - It defines an operational model that provides guidance for
+     updating and/or upgrading a running service and for responding to
+     notifications about state changes or errors.
+4. TOSCA v2.0 addresses shortcomings of the v1.3 substitution mapping
+   grammar.
+5. TOSCA v2.0 introduces a new TOSCA Path syntax that allows a defined
+   traversal of an arbitary graph of nodes and relationships to an
+   attribute or property.
+6. TOSCA v2.0 significantly enhances support for functions. It
+   formalizes function syntax, it extends the set of built-in
+   functions, and it introduces support for user-defined custom
+   functions.
+7. TOSCA v2.0 harmonizes constraint syntax, filter syntax, and
+   condition syntax using boolean functions. 
+8. TOSCA v2.0 simplifies and extends the CSAR file format.
+9. TOSCA v2.0 includes a broad set of syntax clarifications,
+   including but not limited to:
+   - The service template is renamed TOSCA file and service template
+     is redefined.
+   - Grammar for relationship types, requirement definitions, and
+     requirement assignments has been extended and clarified.
+   - Short notation for entry_schema and key_schema has been
+     documented
 
 ## 1.2 Document conventions
 
@@ -2632,31 +2661,28 @@ service_template:
 ```
 # 7 Nodes and Relationships
 
-## Node Type
+## 7.1 Node Type
 
-A Node Type is a reusable entity that defines the type of one or more
-Node Templates. As such, a Node Type defines the structure of observable
-properties and attributes, the capabilities and requirements of the node
-as well as its supported interfaces and the artifacts it uses.
+A *node type* is a reusable entity that defines the structure of
+observable properties and attributes of a node, the capabilities and
+requirements of that node, as well as its supported interfaces and the
+artifacts it uses.
 
-### Keynames
-
-The Node Type is a TOSCA type entity and has the common keynames listed
-in Section 4.2.5.2 Common keynames in type definitions. In addition, the
-Node Type has the following recognized keynames:
+A node type definition is a type of TOSCA type definition and as a
+result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+node type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|properties|no|map of property definitions|An optional map of property definitions for the Node Type.|
-|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Node Type.|
-|capabilities|no|map of capability definitions|An optional map of capability definitions for the Node Type.|
-|requirements|no|list of requirement definitions|An optional list of requirement definitions for the Node Type.|
-|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Node Type.|
-|artifacts|no|map of artifact definitions|An optional map of artifact definitions for the Node Type.|
+|properties|no|map of property definitions|An optional map of property definitions for the node type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the node type.|
+|capabilities|no|map of capability definitions|An optional map of capability definitions for the node type.|
+|requirements|no|list of requirement definitions|An optional list of requirement definitions for the node type.|
+|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the node type.|
+|artifacts|no|map of artifact definitions|An optional map of artifact definitions for the node type.|
 
-### Grammar 
-
-Node Types have following grammar:
+These keynames can be used according to the following grammar:
 ```
 <node_type_name>:  
   derived_from: <parent_node_type_name> 
@@ -2680,39 +2706,37 @@ Node Types have following grammar:
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- node_type_name: represents the mandatory symbolic name of the Node
-  Type being declared.
+- node_type_name: represents the mandatory symbolic name of the node
+  type being declared.
 
-- parent_node_type_name: represents the name (string) of the Node Type
-  this Node Type definition derives from (i.e. its parent type).
-
-- version_number: represents the optional TOSCA version number for the
-  Node Type.
-
-- node_type_description: represents the optional description string for
-  the corresponding node_type_name.
+- parent_node_type_name: represents the name (string) of the node type
+  from which this node type definition derives (i.e. its parent
+  type). Parent node types names can be qualified using a namespace
+  prefix.
 
 - property_definitions: represents the optional map of property
-  definitions for the Node Type.
+  definitions for the node type.
 
 - attribute_definitions: represents the optional map of attribute
-  definitions for the Node Type.
+  definitions for the node type.
 
 - capability_definitions: represents the optional map of capability
-  definitions for the Node Type.
+  definitions for the node type.
 
 - requirement_definitions: represents the optional list of requirement
-  definitions for the Node Type.
+  definitions for the node type. Note that requirements are
+  intentionally expressed as a list of TOSCA Requirement definitions
+  that **SHOULD** be resolved (processed) in sequence by TOSCA
+  processors. Requirement names must be unique within the context of a
+  node type definition.
 
-- interface_definitions: represents the optional map of one or more
-  interface definitions supported by the Node Type.
+- interface_definitions: represents the optional map of interface
+  definitions supported by the node type.
 
 - artifact_definitions: represents the optional map of artifact
-  definitions for the Node Type
+  definitions for the node type
 
-### Derivation rules
-
-During Node Type derivation the keyname definitions follow these rules:
+During node type derivation, the keynames follow these rules:
 
 - properties: existing property definitions may be refined; new property
   definitions may be added.
@@ -2742,16 +2766,10 @@ During Node Type derivation the keyname definitions follow these rules:
     completely redefined; thus, an existing artifact definition is not
     refined, but completely overwritten.
 
-### Additional Requirements
-
-- Requirements are intentionally expressed as a list of TOSCA
-  [Requirement definitions](#requirement-definition) which **SHOULD** be
-  resolved (processed) in sequence by TOSCA Orchestrators.
-
-### Example
+The following code snippet shows an example node type definition:
 ```
-my_company.my_types.my_app_node_type:
-  derived_from: tosca.nodes.SoftwareComponent
+my_app_node_type:
+  derived_from: SoftwareComponent
   description: My company’s custom applicaton
   properties:
     my_app_password:
@@ -2771,35 +2789,33 @@ my_company.my_types.my_app_node_type:
         node: Database    
         relationship: ConnectsTo
 ```
-## Node Template
+## 7.2 Node Template
 
-A Node Template specifies the occurrence of a manageable component as
-part of an application’s topology model which is defined in a TOSCA
-Service Template. A Node Template is an instance of a specified Node
-Type and can provide customized properties, relationships, or interfaces
-that complement and change the defaults provided by its Node Type.
+A *node template* specifies the occurrence of one or more instances of
+a component of a given type in an application or service. A node
+template defines application-specific values for the properties,
+relationships, or interfaces defined by its node type.
 
-### Keynames
-
-The following is the list of recognized keynames for a TOSCA Node
-Template definition:
+The following is the list of recognized keynames for a TOSCA node
+template definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|type|yes|string|The mandatory name of the Node Type the Node Template is based upon.|
-|description|no|string|An optional description for the Node Template.|
+|type|yes|string|The mandatory name of the node type on which the node template is based.|
+|description|no|string|An optional description for the node template.|
 |metadata|no|map of string|Defines a section used to declare additional metadata information. |
 |directives|no|list of string|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
-|properties|no|map of property assignments|An optional map of property value assignments for the Node Template.|
-|attributes|no|map of attribute assignments|An optional map of attribute value assignments for the Node Template.|
-|requirements|no|list of requirement assignments|An optional list of requirement assignments for the Node Template.|
-|capabilities|no|map of capability assignments|An optional map of capability assignments for the Node Template.|
-|interfaces|no|map of interface assignments|An optional map of interface assignments for the Node Template.|
-|artifacts|no|map of  artifact definitions|An optional map of artifact definitions for the Node Template.|
-|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select the correct target node.  |
-|copy|no|string|The optional (symbolic) name of another node template to copy into (all keynames and values) and use as a basis for this node template.|
+|properties|no|map of property assignments|An optional map of property value assignments for the node template.|
+|attributes|no|map of attribute assignments|An optional map of attribute value assignments for the node template.|
+|requirements|no|list of requirement assignments|An optional list of requirement assignments for the node template.|
+|capabilities|no|map of capability assignments|An optional map of capability assignments for the node template.|
+|interfaces|no|map of interface assignments|An optional map of interface assignments for the node template.|
+|artifacts|no|map of  artifact definitions|An optional map of artifact definitions for the node template.|
+|count|no|non-negative integer|An optional keyname that specifies how many node representations must be created from this node template. If not defined, the assumed count value is 1.|
+|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select an already existing node if this node template is marked with the `select` directive.|
+|copy|no|string|The optional (symbolic) name of another node template from which to copy all keynames and values into this node template.|
 
-### Grammar 
+These keynames can be used according to the following grammar:
 ```
 <node_template_name>: 
   type: <node_type_name>
@@ -2819,6 +2835,7 @@ Template definition:
     <interface_assignments>
   artifacts:
     <artifact_definitions>
+  copy: <node_count_value>
   node_filter:
     <node_filter_definition>
   copy: <source_node_template_name>
@@ -2826,61 +2843,60 @@ Template definition:
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- node_template_name: represents the mandatory symbolic name of the Node
-  Template being declared.
+- node_template_name: represents the mandatory symbolic name of the node
+  template being defined.
 
-- node_type_name: represents the name of the Node Type the Node Template
-  is based upon.
-
-- node_template_description: represents the optional description string
-  for Node Template.
+- node_type_name: represents the name of the node type on which the
+  node template is based.
 
 - directives: represents the optional list of processing instruction
-  keywords (as strings) for use by tooling and orchestrators.
+  keywords (as strings) for use by tooling and orchestrators. Valid
+  directives supported by this version of the standard are `create`,
+  `select`, and `substitute`. If no directives are specified, `create`
+  is used as the default value.
 
 - property_assignments: represents the optional map of property
-  assignments for the Node Template that provide values for properties
-  defined in its declared Node Type.
+  assignments for the node template that provide values for properties
+  defined in its declared node type.
 
 - attribute_assignments: represents the optional map of attribute
-  assignments for the Node Template that provide values for attributes
-  defined in its declared Node Type.
+  assignments for the node template that provide values for attributes
+  defined in its declared node type.
 
 - requirement_assignments: represents the optional list of requirement
-  assignments for the Node Template for requirement definitions provided
-  in its declared Node Type.
+  assignments for the node template for requirement definitions provided
+  in its declared node type.
 
 - capability_assignments: represents the optional map of capability
-  assignments for the Node Template for capability definitions provided
-  in its declared Node Type.
+  assignments for the node template for capability definitions provided
+  in its declared node type.
 
 - interface_assignments: represents the optional map of interface
-  assignments for the Node Template interface definitions provided in
-  its declared Node Type.
+  assignments for the node template interface definitions provided in
+  its declared node type.
 
 - artifact_definitions: represents the optional map of artifact
-  definitions for the Node Template that augment those provided by its
-  declared Node Type.
+  definitions for the node template that augment or replace those
+  provided by its declared node type.
 
+- node_count_value: represents the number of node representations that
+  must be created from this node template. If not specified, a default
+  value of 1 is used.
 - node_filter_definition: represents the optional node filter TOSCA
   orchestrators will use for selecting a matching node template.
 
-- source_node_template_name: represents the optional (symbolic) name of
-  another node template to copy into (all keynames and values) and use
-  as a basis for this node template.
+- source_node_template_name: represents the optional (symbolic) name
+  of another node template from which to copy all keynames and values
+  into this node template. Note that he source node template provided
+  as a value on the copy keyname **MUST NOT** itself use the copy
+  keyname (i.e., it must itself be a complete node template
+  description and not copied from another node template).
 
-### Additional requirements
-
-- The source node template provided as a value on the copy keyname
-  **MUST** **NOT** itself use the copy keyname (i.e., it must itself be
-  a complete node template description and not copied from another node
-  template).
-
-### Example
+The following code snippet shows an example node template definition:
 ```
 node_templates:
   mysql:
-    type: tosca.nodes.DBMS.MySQL
+    type: DBMS.MySQL
     properties:
       root_password: { $get_input: my_mysql_rootpw }
       port: { $get_input: my_mysql_port }
@@ -2891,33 +2907,32 @@ node_templates:
         operations:
           configure: scripts/my_own_configure.sh
 ```
-## Relationship Type
+## 7.3 Relationship Type
+
+A *relationship type* is a reusable entity that defines the structure
+of observable properties and attributes of a relationship as well as
+its supported interfaces.
+
+A relationship type definition is a type of TOSCA type definition and
+as a result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+relationship type definition has the following recognized keynames:
+
 <!----
 {"id": "520", "author": "Michael Rehder", "date": "2020-12-15T13:33:00Z", "comment": "I still think this is simply a Requirement Type \u2013 I can\u2019t see why it isn\u2019t and what advantage there is in calling it something else.", "target": "Relationship Type"}-->
-
-A Relationship Type is a reusable entity that defines the type of one or
-more relationships between Node Types or Node Templates
 <!----
 {"id": "521", "author": "Michael Rehder", "date": "2020-12-15T12:12:00Z", "comment": "There is no\nrelationship type in a node template so why is this stated\nhere?", "target": "Node Templates"}-->
 
-### Keynames
-
-The Relationship Type is a TOSCA type entity and has the common keynames
-listed in Section 4.2.5.2 Common keynames in type definitions. In
-addition, the Relationship Type has the following recognized keynames:
-
 |Keyname|Mandatory|Definition/Type|Description|
 | :---- | :------ | :---- | :------ |
-|properties|no|map of property definitions|An optional map of property definitions for the Relationship Type.|
-|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Relationship Type.|
-|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the Relationship Type.|
-|valid_capability_types|no|list of string|An optional list of one or more names of Capability Types that are valid targets for this relationship. If undefined, all Capability Types are valid.|
-|valid_target_node_types|no|list of string|An optional list of one or more names of Node Types that are valid targets for this relationship. If undefined, all Node Types are valid targets.|
-|valid_source_node_types|no|list of string|An optional list of one or more names of Node Types that are valid sources for this relationship. If undefined, all Node Types are valid sources.|
+|properties|no|map of property definitions|An optional map of property definitions for the relationship type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the relationship type.|
+|interfaces|no|map of interface definitions|An optional map of interface definitions supported by the relationship type.|
+|valid_capability_types|no|list of string|An optional list of one or more names of capability types that are valid targets for this relationship. If undefined, all capability types are valid.|
+|valid_target_node_types|no|list of string|An optional list of one or more names of node types that are valid targets for this relationship. If undefined, all node types are valid targets.|
+|valid_source_node_types|no|list of string|An optional list of one or more names of node types that are valid sources for this relationship. If undefined, all node types are valid sources.|
 
-### Grammar
-
-Relationship Types have following grammar:
+These keynames can be used according to the following grammar:
 ```
 <relationship_type_name>:
   derived_from: <parent_relationship_type_name>
@@ -2939,43 +2954,39 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - relationship_type_name: represents the mandatory symbolic name of the
-  Relationship Type being declared as a string.
+  relationship type being declared as a string.
 
 - parent_relationship_type_name: represents the name (string) of the
-  Relationship Type this Relationship Type definition derives from
-  (i.e., its “parent” type).
-
-- relationship_description: represents the optional description string
-  for the corresponding relationship_type_name.
-
-- version_number: represents the optional TOSCA version number for the
-  Relationship Type.
+  relationship type from which this relationship type definition
+  derives (i.e., its “parent” type). Parent node type names can be
+  qualified using a namespace prefix.
 
 - property_definitions: represents the optional map of property
-  definitions for the Relationship Type.
+  definitions for the relationship type.
 
 - attribute_definitions: represents the optional map of attribute
-  definitions for the Relationship Type.
+  definitions for the relationship type.
 
 - interface_definitions: represents the optional map of interface
-  definitions supported by the Relationship Type.
+  definitions supported by the relationship type.
 
 - capability_type_names: represents the optional list of valid target
-  Capability Types for the relationship; if undefined, the valid target
-  types are not restricted at all (i.e., all Capability Types are
-  valid).
+  capability types for the relationship. Target capability type names
+  can be qualified using a namespace prefix. If undefined, the valid
+  target types are not restricted at all (i.e., all capability types
+  are valid).
 
 - target_node_type_names: represents the optional list of valid target
-  Node Types for the relationship; if undefined, the valid types are not
-  restricted at all (i.e., all Node Types are valid).
+  node types for the relationship. Target node type names can be
+  qualified using a namespace prefix. If undefined, the valid types
+  are not restricted at all (i.e., all node types are valid).
 
 - source_node_type_names: represents the optional list of valid source
-  Node Types for the relationship; if undefined, the valid types are not
-  restricted at all (i.e., all Node Types are valid).
+  node types for the relationship. Source node type names canbe
+  qualified using a namespace prefix. If undefined, the valid types
+  are not restricted at all (i.e., all node types are valid).
 
-### Derivation rules
-
-During Relationship Type derivation the keyname definitions follow these
+During relationship type derivation the keyname definitions follow these
 rules:
 
 - properties: existing property definitions may be refined; new property
@@ -2987,11 +2998,13 @@ rules:
 - interfaces: existing interface definitions may be refined; new
   interface definitions may be added.
 
-- valid_capability_types: if valid_capability_types is defined in the
-  parent type, each element in this list must either be in the parent
-  type list or derived from an element in the parent type list; if
-  valid_target_types is not defined in the parent type then no
-  restrictions are applied.
+- valid_capability_types: A derived type is only allowed to further
+  restrict the list of valid capability types, not to expand it. This
+  means that if valid_capability_types is defined in the parent type,
+  each element in the derived type's list of valid capability types
+  must either be in the parent type list or derived from an element in
+  the parent type list; if valid_target_types is not defined in the
+  parent type then no derivation restrictions need to be applied.
 
 - valid_target_node_types: same derivation rules as for
   valid_capability_types
@@ -2999,55 +3012,49 @@ rules:
 - valid_source_node_types: same derivation rules as for
   valid_capability_types
 
-### Examples
+The following code snippet shows an example relationship type definition:
 ```
 mycompanytypes.myrelationships.AppDependency:
   derived_from: tosca.relationships.DependsOn
   valid_capability_types: [ mycompanytypes.mycapabilities.SomeAppCapability ]
 ```
-## Relationship Template
+## 7.4 Relationship Template
 
-A Relationship Template
-specifies the occurrence of a manageable relationship between node
-templates as part of an application’s topology model that is defined in
-a TOSCA Service Template. A Relationship template is an instance of a
-specified Relationship Type and can provide customized properties, or
-operations that complement and change the defaults provided by its
-Relationship Type and its implementations.
+A *relationship template* specifies the occurrence of a relationship
+of a given type between nodes in an application or service.  A
+relationship template defines application-specific values for the
+properties, relationships, or interfaces defined by its relationship
+type.
+
 <!----
 {"id": "532", "author": "Michael Rehder", "date": "2020-12-15T13:23:00Z", "comment": "My understanding is that this is an\nalternative to relations defined within node templates.  \nIt\u2019s not clear why this option would be chosen over the node-template\noption.  \nIf both relations in node-templates and Relationship Templates are used,\nhow are they combined together?  \nOr is this not recommended?  \nI can imagine that combination rules would be very difficult to define\nbut if it is possible, it must be defined", "target": "A Relationship Template\nspecifies the occurrence of a manageable relationship between node\ntemplates as part of an application\u2019s topology model that is defined in\na TOSCA Service Template. A Relationship template is an instance of a\nspecified Relationship Type and can provide customized properties, or\noperations that complement and change the defaults provided by its\nRelationship Type and its implementations."}-->
 
-Relations between Node Templates can be defined either using
-Relationship Templates or Requirements and Capability definitions within
-Node Types. Use of Relationship Templates decouples relationship
-definitions from Node Type definitions, allowing Node Type definitions
-to be more “generic” for use in a wider set of service templates which
-have varying relation definition requirements. The Relationship
-Templates are local within a service template and so have a limited
-scope. Requirements and Capabilities defined in Node Types have a wider
-scope, exposed within any service template which contains a Node
-Template of the Node Type.
+TOSCA allows relationships between nodes to be defined *inline* using
+requirement assignments within node templates or *out-of-band* using
+relationship templates as defined in this section. While the use of
+requirement assignments is more common, the use of relationship
+templates decouples relationship definitions from specific node
+templates, allowing reuse of these relationship templates by multiple
+node templates. Relationship templates are local within a service
+template and so have a limited scope.
 
-Note that using the relationship templates is underspecified currently
-and can be used only as a further template for relationships in
-requirements definition. This topic needs further work.
-
-### Keynames
+Note that relationship template grammar is underspecified currently
+and needs further work.
 
 The following is the list of recognized keynames for a TOSCA
-Relationship Template definition:
+relationship template definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|type|yes|string|The mandatory name of the Relationship Type the Relationship Template is based upon.|
+|type|yes|string|The mandatory name of the relationship type on which the relationship template is based.|
 |description|no|string|An optional description for the Relationship Template.|
 |metadata|no|map of string|Defines a section used to declare additional metadata information. |
 |properties|no|map of property assignments|An optional map of property assignments for the Relationship Template.|
 |attributes|no|map of attribute assignments|An optional map of attribute assignments for the Relationship Template.|
 |interfaces|no|map of interface assignments|An optional map of interface assignments for the relationship template.|
-|copy|no|string|The optional (symbolic) name of another relationship template to copy into (all keynames and values) and use as a basis for this relationship template.|
+|copy|no|string|The optional (symbolic) name of another relationship template from which to copy all keynames and values into this relationship template.|
 
-### Grammar
+These keynames can be used according to the following grammar:
 ```
 <relationship_template_name>: 
   type: <relationship_type_name>
@@ -3091,14 +3098,15 @@ have the following meaning:
   name of another relationship template to copy into (all keynames and
   values) and use as a basis for this relationship template.
 
-### Additional requirements
+- source_relationship_template_name: represents the optional
+  (symbolic) name of another relationship template from which to copy
+  all keynames and values into this relationship template. Note that
+  he source relationship template provided as a value on the copy
+  keyname **MUST NOT** itself use the copy keyname (i.e., it must
+  itself be a complete relationship template description and not
+  copied from another relationship template).
 
-- The source relationship template provided as a value on the copy
-  keyname MUST NOT itself use the copy keyname (i.e., it must itself be
-  a complete relationship template description and not copied from
-  another relationship template).
-
-### Example
+The following code snippet shows an example relationship template definition.
 ```
 relationship_templates:
   storage_attachment:
@@ -3106,36 +3114,34 @@ relationship_templates:
     properties:
       location: /my_mount_point
 ```
-## Capabilities and Requirements
+# 8 Capabilities and Requirements
 
-### Capability Type
+## 8.1 Capability Type
 
-A Capability Type is a reusable entity that describes a kind of
-capability that a Node Type can declare to expose. Requirements
-(implicit or explicit) that are declared as part of one node can be
-matched to (i.e., fulfilled by) the Capabilities declared by another
-node.
+A *capability type* is a reusable entity that describes the properties
+and attributes of a capability that a node type can declare to
+expose. Requirements that are declared as part of one node can be
+fulfilled by the capabilities declared by another node.
 
-#### Keynames
-
-The Capability Type is a TOSCA type entity and has the common keynames
-listed in Section 4.2.5.2 Common keynames in type definitions. In
-addition, the Capability Type has the following recognized keynames:
+A capability type definition is a type of TOSCA type definition and as
+a result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+capability type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|properties|no|map of property definitions|An optional map of property definitions for the Capability Type.|
-|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Capability Type.|
-|valid_source_node_types|no|list of string|An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability Type. If undefined, all Node Types are valid sources.|
-|valid_relationship_types|no|list of string|An optional list of one or more valid names of Relationship Types that are supported as valid types of any relationship established to the declared Capability Type. If undefined, all Relationship Types are valid.|
+|properties|no|map of property definitions|An optional map of property definitions for the capability type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the capability type.|
+|valid_source_node_types|no|list of string|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources.|
+|valid_relationship_types|no|list of string|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid.|
 
-#### Grammar
-
-Capability Types have following grammar:
+These keynames can be used according to the following grammar:
 ```
 <capability_type_name>:
   derived_from: <parent_capability_type_name>
   version: <version_number>
+  metadata: 
+    <map of string>
   description: <capability_description>
   properties:
     <property_definitions>
@@ -3147,40 +3153,31 @@ Capability Types have following grammar:
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- capability_type_name: represents the mandatory name of the Capability
-  Type being declared as a string.
+- capability_type_name: represents the mandatory name of the capability
+  type being declared as a string.
 
-- parent_capability_type_name: represents the name of the Capability
-  Type this Capability Type definition derives from (i.e., its “parent”
-  type).
-
-- version_number: represents the optional TOSCA version number for the
-  Capability Type.
-
-- capability_description: represents the optional description string for
-  the Capability Type.
+- parent_capability_type_name: represents the name of the capability
+  type from which this capability type derives (i.e., its parent
+  type). Parent capability type names can be qualified using a
+  namespace prefix.
 
 - property_definitions: represents the optional map of property
-  definitions for the Capability Type.
+  definitions for the capability type.
 
 - attribute_definitions: represents the optional map of attribute
-  definitions for the Capability Type.
+  definitions for the capability type.
 
-- node_type_names: represents the optional list of one or more names of
-  Node Types that the Capability Type supports as valid sources for a
-  successful relationship to be established to a capability of this
-  Capability Type; if undefined, the valid source types are not
-  restricted at all (i.e. all Node Types are valid).
+- node_type_names: represents the optional list of one or more type
+  names for nodes that are allowed to establish a relationship to a
+  capability of this capability type; if undefined, the valid source
+  types are not restricted at all (i.e. all node types are valid).
 
 - relationship_type_names: represents the optional list of one or more
-  names of Relationship Types that the Capability Type supports as valid
-  types for a successful relationship to be established to a capability
-  of this Capability Type; if undefined, the valid types are not
-  restricted at all (i.e. all Relationship Types are valid).
+  type names for relationship that are allowed to be established to a
+  capability of this capability type; if undefined, the valid types
+  are not restricted at all (i.e. all relationship types are valid).
 
-#### Derivation rules
-
-During Capability Type derivation the keyname definitions follow these
+During capability type derivation the keyname definitions follow these
 rules:
 
 - properties: existing property definitions may be refined; new property
@@ -3189,19 +3186,22 @@ rules:
 - attributes: existing attribute definitions may be refined; new
   attribute definitions may be added.
 
-- valid_source_node_types: if valid_source_types is defined in the
-  parent type, each element in this list must either be in the parent
-  type list or derived from an element in the parent type list; if
-  valid_source_types is not defined in the parent type then no
-  restrictions are applied.
+- valid_source_node_types: A derived type is only allowed to further
+  restrict the list of valid source node types, not to expand it. This
+  means that if valid_source_node_types is defined in the parent type,
+  each element in the derived type's list of valid source node types
+  must either be in the parent type list or derived from an element in
+  the parent type list; if valid_source_node_types is not defined in
+  the parent type then no derivation restrictions need to be applied.
 
 - valid_relationship_types: same derivations rules as for
   valid_source_node_types.
 
-#### Example
+The following code snippet shows an example capability type
+definition:
 ```
-mycompany.mytypes.myapplication.MyFeature:
-  derived_from: tosca.capabilities.Root
+MyFeature:
+  derived_from: Root
   description: a custom feature of my company’s application
   properties:
     my_feature_setting:
@@ -3209,43 +3209,35 @@ mycompany.mytypes.myapplication.MyFeature:
     my_feature_value:
       type: integer
 ```
-### Capability definition
+## 8.2 Capability Definition
 
-A Capability definition defines a typed set of data that a node can
-expose and is used to describe a relevant feature of the component
-described by the node. A Capability is defined part of a Node Type
-definition and may be refined during Node Type derivation.
-
-#### Keynames
+A *capability definition* defines a typed set of data that a node can
+expose and that is used to describe a relevant feature of the
+component described by the node that can be used to *fulfill* a
+requirement exposed by another node. A capability is defined as part
+of a node type definition and may be refined during node type
+derivation.
 
 The following is the list of recognized keynames for a TOSCA capability
 definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|type|yes|string|The mandatory name of the Capability Type this capability definition is based upon.|
+|type|yes|string|The mandatory name of the capability type on which this capability definition is based.|
 |description|no|string|The optional description of the Capability definition.|
-|properties|no|map of property refinements|An optional map of property refinements for the Capability definition. The referred properties must have been defined in the Capability Type definition referred by the type keyword. New properties may not be added.|
-|attributes|no|map of attribute refinements|An optional map of attribute refinements for the Capability definition. The referred attributes must have been defined in the Capability Type definition referred by the type keyword. New attributes may not be added.|
-|valid_source_node_types|no|list of string|An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability Type. If undefined, all node types are valid sources. If valid_source_node_types is defined in the Capability Type, each element in this list must either be or derived from an element in the list defined in the type.|
-|valid_relationship_types|no|list of string|An optional list of one or more valid names of Relationship Types that are supported as valid types of any relationship established to the declared Capability Type. If undefined, all Relationship Types are valid. If valid_relationship_types is defined in the Capability Type, each element in this list must either be or derived from an element in the list defined in the type.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|properties|no|map of property refinements|An optional map of property refinements for the capability definition. The referred properties must have been defined in the capability type definition referred by the type keyword. New properties may not be added.|
+|attributes|no|map of attribute refinements|An optional map of attribute refinements for the capability definition. The referred attributes must have been defined in the capability type definition referred by the type keyword. New attributes may not be added.|
+|valid_source_node_types|no|list of string|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources. If valid_source_node_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
+|valid_relationship_types|no|list of string|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid. If valid_relationship_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
 
-#### Grammar
+Note that the `occurrences` keyname is deprecated in TOSCA 2.0. By
+default, the number of occurrences is UNBOUNDED, i.e. any number of
+relationships can be created with a certain capability as a target. To
+constrain the creation of a relationship to a target capability, the
+new `allocation` keyname is used within a requirement assignment.
 
-Capability definitions have one of the following grammars:
-
-##### Short notation
-
-The following single-line grammar may be used when only the capability
-type needs to be declared, without further refinement of the definitions
-in the capability type:
-```
-<[capability_definition_name](#TYPE_YAML_STRING)>: <[capability_type](#capability-type)> 
-```
-##### Extended notation
-
-The following multi-line grammar may be used when additional information
-on the capability definition is needed:
+These keynames can be used according to the following grammar:
 ```
 <capability_definition_name>:
   type: <capability_type>
@@ -3257,29 +3249,28 @@ on the capability definition is needed:
   valid_source_node_types: [ <node_type_names> ]
   valid_relationship_types: [ <relationship_type_names> ]
 ```
-In the above grammars, the pseudo values that appear in angle brackets
+In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- capability_definition_name**:** represents the symbolic name of the
-  capability as a string.
+- capability_definition_name: represents the symbolic name of the
+  capability as a string. Capability symbolic names SHALL be unique;
+  it is an error if a capability name is found to occur more than
+  once.
 
 - capability_type: represents the mandatory name of a capability type
-  the capability definition is based upon.
-
-- capability_description: represents the optional description of the
-  capability definition.
+  on which the capability definition is based.
 
 - property_refinements: represents the optional map of property
-  definitions refinements for properties already defined in the
-  capability type; new properties may not be added.
+  refinements for properties already defined in the capability type;
+  new properties may not be added.
 
 - attribute_refinements: represents the optional map of attribute
-  definitions refinements for attributes already defined in the
-  capability type; new attributes may not be added.
+  refinements for attributes already defined in the capability type;
+  new attributes may not be added.
 
-- node_type_names: represents the optional list of one or more names of
-  node types that the capability definition supports as valid sources
-  for a successful relationship to be established to said capability
+- node_type_names: represents the optional list of one or more node
+  type names for nodes that are allowed to establish a relationship to
+  this capability.
 
   - if valid_source_node_types is defined in the capability type, each
     element in this list MUST either be in that list or derived from an
@@ -3287,21 +3278,45 @@ have the following meaning:
     capability type then no restrictions are applied.
 
 - relationship_type_names: represents the optional list of one or more
-  names of relationship types that the capability definition supports as
-  valid type for a successful relationship to be established to said
-  capability
+  relationship type names for relationships that are allowed to be
+  established to this capability
 
   - if valid_relationship_types is defined in the capability type, each
     element in this list MUST either be in that list or derived from an
     element in that list; if valid_source_types is not defined in the
     capability type then no restrictions are applied.
 
-#### Refinement rules
+The following single-line grammar may be used when only the capability
+type needs to be declared, without further refinement of the definitions
+in the capability type:
+```
+<capability_definition_name>: <capability_type> 
+```
+The following code snippet shows an example capability definition:
+```
+some_capability: 
+  type: MyCapabilityTypeName
+  properties:
+    limit: 
+      default: 100
+```
+The following shows a capability definition using single-line grammar:
+```
+some_capability: MyCapabilityTypeName
+```
 
-A capability definition within a node type uses the following definition
-refinement rules when the containing node type is derived:
+## 8.3 Capability Refinement
 
-- type: must be derived from (or the same as) the type in the capability
+If a node type defines a capability with the same name as a capability
+that is already defined in one of its parent node types, then that
+capability definition is considered a *capability refinement* rather
+than a capability definition. Capability refinements adhere to the
+following refinement rules for the supported keynames:
+
+- type: in a capability refinement, the type keyname is no longer
+  mandatory. If the type is omitted, the type of the refined
+  capability definition will be used. If the type is specified, it
+  must be derived from (or the same as) the type in the capability
   definition in the parent node type definition.
 
 - description: a new definition is unrestricted and will overwrite the
@@ -3324,59 +3339,30 @@ refinement rules when the containing node type is derived:
   parent node type but to the definitions in the capability type
   referred by the type keyname (see grammar above for the rules).
 
-#### Examples
-
-The following examples show capability definitions in both simple and
-full forms:
-
-##### Simple notation example
-```
-# Simple notation, no properties need to be refined
-some_capability: mytypes.mycapabilities.MyCapabilityTypeName
-```
-##### Full notation example
-```
-# Full notation, refining properties
-some_capability: 
-  type: mytypes.mycapabilities.MyCapabilityTypeName
-  properties:
-    limit: 
-      default: 100
-```
-#### Additional requirements
-
-- Capability symbolic names SHALL be unique; it is an error if a
-  capability name is found to occur more than once.
-
-#### Note
-
-- The occurrences keyname is deprecated in TOSCA 2.0. By default, the
-  number of “occurrences” is UNBOUNDED, i.e. any number of relationships
-  can be created with a certain capability as a target. To constrain the
-  creation of a relationship to a target capability, the new
-  “allocation” keyname is used within a requirement assignment.
-
-### Capability assignment
+## 8.4 Capability Assignment
 
 A capability assignment allows node template authors to assign values to
 properties and attributes for a capability definition that is part of
-the node templates’ respective type definition, and also to set the
-capability occurrences.
-
-#### Keynames
+the node template’s type definition.
 
 The following is the list of recognized keynames for a TOSCA capability
 assignment:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|properties|no|map of  property assignments|An optional map of property assignments for the Capability definition.|
-|attributes|no|map of attribute assignments|An optional map of attribute assignments for the Capability definition.|
-|directives|no default: [internal, external] |list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this capability assignment should use relationships with source nodes created within this template (“internal”) or should use source nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which scope should be attempted first. If no scope is defined, the default value is [internal, external]. If no directives are defined, the default value is left to the particular implementation."|
+|properties|no|map of  property assignments|An optional map of property assignments for the capability definition.|
+|attributes|no|map of attribute assignments|An optional map of attribute assignments for the capability definition.|
+|directives|no|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
 
-#### Grammar
 
-Capability assignments have one of the following grammars:
+Note that the occurrences keyname is deprecated in TOSCA 2.0. By
+default, the number of “occurrences” is UNBOUNDED, i.e. any number of
+relationships can be created with a certain capability as a target. To
+constrain the creation of a relationship to a target capability, the
+new `allocation` keyname is used within a requirement assignment.
+
+Thes capability definition keynames can be used according to the
+following grammar:
 ```
 <capability_definition_name>:
   properties:
@@ -3399,29 +3385,27 @@ have the following meaning:
   assignments that provide values for attributes defined in the
   Capability definition.
 
-- directives_list: represents the optional list of strings that defines
-  directives for this capability:
+- directives_list: represents the optional list of strings that
+  defines if this capability allows relationships from source nodes
+  created within this service template (*internal*) or from source
+  nodes created outside this service template as available to the
+  TOSCA environment (*external*) or if it should use a combination of
+  the above. Valid values for the strings are as follows:
 
-  - valid values for the strings:
+  - `internal`: relationships to this capability can be created from
+    source nodes created within this template.
 
-    - “internal” – relationships to this capability can be created from
-      source nodes created within this template.
+  - `external`: relationships to this capability can be created from
+    source nodes created outside this template as available to the
+    TOSCA environment.
 
-    - “external” – relationships to this capability can be created from
-      source nodes created outside this template as available to the TOSCA
-      environment.
+  The order of the strings in the list defines which scope should be
+  attempted first when fulfilling the assignment.
 
-  - the order of the strings in the list defines which scope should be
-    attempted first when fulfilling the assignment.
+  If no directives are defined, the default value is left to the
+  particular implementation.
 
-  - If no directives are defined, the default value is left to the
-    particular implementation.
-
-#### Example
-
-The following example shows a capability assignment:
-
-##### Notation example
+The following code snippet shows an example capability assignment:
 ```
 node_templates:
   some_node_template:
@@ -3430,72 +3414,60 @@ node_templates:
         properties:
           limit: 100
 ```
-#### Note
+## 8.5 Requirement Definition
 
-- The occurrences keyname is deprecated in TOSCA 2.0. By default, the
-  number of “occurrences” is UNBOUNDED, i.e. any number of relationships
-  can be created with a certain capability as a target. To constrain the
-  creation of a relationship to a target capability, the new
-  “allocation” keyname is used within a requirement assignment.
+The *requirement definition* describes a requirement of a TOSCA node
+that needs to be fulfilled by a matching capability declared by
+another TOSCA node. A requirement is defined as part of a node type
+definition and may be refined during node type derivation.
 
-### Requirement Type 
-<!----
-{"id": "591", "author": "Chris Lauwers", "date": "2022-06-22T20:47:00Z", "comment": "It seems to me that the only reason this section is here is to point out a difference with the XML spec. I recommend removing it.", "target": "Requirement"}-->
-Requirement types are not defined in TOSCA. TOSCA seeks to simplify the
-modeling by not declaring specific Requirement Types with nodes
-declaring their features sets using TOSCA Capability Types. So, it
-suffices that capabilities are advertised a-priory by Capability Types,
-while requirement definitions can be directly created during Node Type
-design.
-
-### Requirement definition
-
-The Requirement definition describes a requirement (dependency) of a
-TOSCA node which needs to be fulfilled by a matching Capability
-definition declared by another TOSCA node. A Requirement is defined as
-part of a Node Type definition and may be refined during Node Type
-derivation.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA requirement
-definition:
+The following is the list of recognized keynames for a TOSCA
+requirement definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|description|no|string|The optional description of the Requirement definition.|
-|capability|yes|string|The mandatory keyname used to provide either the: ·         symbolic name of a Capability definition within a target Node Type that can fulfill the requirement. ·         name of a Capability Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
-|node|conditional|string|The optional keyname used to provide the name of a valid Node Type that contains the capability definition that can be used to fulfill the requirement.  If a symbolic name of a Capability definition has been used for the capability keyname, then the node keyname is mandatory.|
-|relationship|conditional|string|The optional keyname used to provide the name of a valid Relationship Type to construct a relationship when fulfilling the requirement.  The relationship definition is mandatory either in the requirement definition of in the requirement assignment.|
-|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill the associated abstract requirement at runtime.|
+|description|no|string|The optional description of the requirement definition.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|relationship|yes|relationship definition|The mandatory keyname used to define the relationship created as a result of fulfilling the requirement.|
+|node|no|string|The optional keyname used to provide the name of a valid node type that contains the capability definition that can be used to fulfill the requirement.|
+|capability|yes|string|The mandatory keyname used to specify the capability type for capabilities that can be used to fulfill this requirement. If the requirement definition defines a target node type, the capability keyname can also be used instead to specify the symbolic name of a capability defined by that target node type.|
+|node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill this requirement at runtime.|
 |count_range|no|range of integer|The optional minimum required and maximum allowed number of relationships created by the requirement. If this key is not specified, the implied default of [0, UNBOUNDED] will be used. Note: the keyword UNBOUNDED is also supported to represent any positive integer.|
 
-##### Additional keynames for multi-line relationship grammar
+The `relationship` keyname in a requirement definition specifies a
+*relationship definition* that provides information needed by TOSCA
+Orchestrators to construct a relationship to the TOSCA node that
+contains the matching target capability. Relationship definitions
+support the following keynames:
 
-The Requirement definition contains the Relationship Type information
-needed by TOSCA Orchestrators to construct relationships to other TOSCA
-nodes with matching capabilities; however, it is sometimes recognized
-that additional parameters may need to be passed to the relationship
-(perhaps for configuration). In these cases, additional grammar is
-provided so that the requirement definition may declare interface
-refinements (e.g. changing the implementation definition or declaring
-additional parameter definitions to be used as inputs/outputs).
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory keyname used to provide the name of the relationship type used for the relationship.|
+|description|no|string|The optional description of the relationship definition.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|properties|no|map of property refinements|An optional map of property refinements for the relationship definition. The referred properties must have been defined in the relationship type definition referred by the type keyword. New properties may not be added.|
+|attributes|no|map of attribute refinements|An optional map of attribute refinements for the relationship definition. The referred attributes must have been defined in the relationship type definition referred by the type keyword. New attributes may not be added.|
+|interfaces|no|map of interface refinements|The optional keyname used to define interface refinements for interfaces defined by the relationship type.|
 
-| Keyname    | Mandatory | Type                                                  | Description                                                                                                                  |
-|------------|-----------|-------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
-| type       | yes       | string                           | The optional keyname used to provide the name of the Relationship Type as part of the relationship keyname definition.       |
-| interfaces | no        | map of [interface refinements](#interface-definition) | The optional keyname used to reference declared interface definitions on the corresponding Relationship Type for refinement. |
-
-#### Grammar
-
-Requirement definitions have one of the following grammars:
-
-##### Simple grammar (Capability Type only)
+The keynames supported by requirement definitions and relationship
+definitions can be used according to the following grammar:
 ```
-<[requirement_definition_name](#TYPE_YAML_STRING)>: <[capability_type_name](#TYPE_YAML_STRING)> 
+<requirement_definition_name>: 
+  description: <requirement_description>
+  capability: <capability_type_name> | <capability_symbolic_name>
+  node: <node_type_name>
+  relationship: 
+    type: <relationship_type_name>
+    properties: <property_refinements>
+    attributes: <attribute_refinements>
+    interfaces: <interface_refinements>
+  node_filter: <node_filter_definition>
+  count_range: [ <min_count>, <max_count> ]
 ```
 
-##### Extended grammar (with Node and Relationship Types)
+If the relationship definition only needs to specify the relationship
+type without refining properties, attributes, or interfaces then as a
+convenience the following short-hand grammar can also be used:
 ```
 <requirement_definition_name>: 
   description: <requirement_description>
@@ -3505,44 +3477,48 @@ Requirement definitions have one of the following grammars:
   node_filter: <node_filter_definition>
   count_range: [ <min_count>, <max_count> ]
 ```
-##### Extended grammar for declaring Parameter Definitions on the relationship’s Interfaces
-
-The following additional multi-line grammar is provided for the
-relationship keyname in order to declare new parameter definitions for
-inputs/outputs of known Interface definitions of the declared
-Relationship Type.
-```
-<requirement_definition_name>: 
-  # Other keynames omitted for brevity
-  relationship:
-    type: <relationship_type_name>
-    interfaces: <interface_refinements>
-```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- requirement_definition_name: represents the mandatory symbolic name of
-  the requirement definition as a string.
+- requirement_definition_name: represents the mandatory symbolic name
+  of the requirement definition as a string. Requirement definition
+  names SHALL be unique within a node type definition; it is an error
+  if the same requirement name occurs more than once.
 
-- requirement_description: represents the optional description of the
-  requirement definition.
+- capability_type_name: represents the mandatory name of a capability
+  type that can be used to fulfill the requirement.
 
 - capability_symbolic_name: represents the mandatory symbolic name of
-  the Capability definition within the target Node Type.
+  the capability definition within the target node type; a
+  capability_symbolic_name is only allowed if a node_type_name is
+  provided.
 
-- capability_type_name: represents the mandatory name of a Capability
-  Type that can be used to fulfill the requirement.
+- node_type_name: represents the optional name of a node type that contains
+  either a capability of type <capability_type_name> or a capability
+  named <capability_symbolic_name> that can be used to fulfill the
+  requirement.
 
-- node_type_name: represents the name of a Node Type that contains
-  either the Capability Type or the Capability definition the
-  requirement can be fulfilled by; the node_type_name is mandatory if
-  the capability_symbolic_name was used, and is optional if the
-  capability_type_name was used.
+- relationship_type_name: represents the mandatory name of a
+  relationship type to be used to construct a relationship from this
+  requirement definition (i.e. in the source node) to a matching
+  capability definition (in a target node).
 
-- relationship_type_name: represents the optional name of a Relationship
-  Type to be used to construct a relationship between this requirement
-  definition (i.e. in the source node) to a matching capability
-  definition (in a target node).
+- interface_refinements: represents refinements for one or more already
+  declared interface definitions in the Relationship Type (as declared
+  on the type keyname)
+
+  - allowing for the declaration of new parameter definitions for these
+    interfaces or for specific operation or notification definitions of
+    these interfaces or for the change of the description or
+    implementation definitions.
+
+- property_refinements: represents the optional map of property
+  refinements for properties already defined in the relationship type;
+  new properties may not be added.
+
+- attribute_refinements: represents the optional map of attribute
+  refinements for attributes already defined in the relationship type;
+  new attributes may not be added.
 
 - node_filter_definition: represents the optional node filter TOSCA
   orchestrators will use to fulfill the requirement when selecting a
@@ -3557,23 +3533,19 @@ have the following meaning:
     towards target capabilities (in target nodes) are created, and that
     number MUST be within the range specified here.
 
-  - by default (i.e. if count_range is undefined here), a requirement
-    shall form exactly one relationship ( \[1, 1\] i.e. allowed at least
-    one, and at most one).
+  - If the count_range keyname is not present, then a default declaration
+    will be assumed as follows:
+```
+count_range: [0, UNBOUNDED]
+```
 
-- interface_refinements: represents refinements for one or more already
-  declared interface definitions in the Relationship Type (as declared
-  on the type keyname)
+## 8.6 Requirement Refinement
 
-  - allowing for the declaration of new parameter definitions for these
-    interfaces or for specific operation or notification definitions of
-    these interfaces or for the change of the description or
-    implementation definitions.
-
-#### Refinement rules
-
-A requirement definition within a node type uses the following
-definition refinement rules when the containing node type is derived:
+If a node type defines a requirement with the same name as a requirement
+that is already defined in one of its parent node types, then that
+requirement definition is considered a *requirement refinement* rather
+than a requirement definition. Requirement refinements adhere to the
+following refinement rules for the supported keynames:
 
 - description: a new definition is unrestricted and will overwrite the
   one inherited from the requirement definition in the parent node type
@@ -3609,166 +3581,125 @@ definition refinement rules when the containing node type is derived:
 - count_range: the new range MUST be within the range defined in the
   requirement definition in the parent node type definition.
 
-#### Additional requirements
+## 8.7 Requirement Assignment
 
-- Requirement symbolic names SHALL be unique; it is an error if a
-  requirement name is found to occur more than once.
+A *requirement assignment* is used by node template authors to provide
+assignments for the corresponding requirement definition in the node
+template's node type. This includes specifying target nodes, either by
+providing symbolic names of target nodes or by providing selection
+criteria for TOSCA orchestrators to find candidate nodes that can be
+used to fulfill the requirement. In addition, requirement assignments
+must uniquely identify the specific target capability in the target
+node for the requirement. Requirement assignments must also assign
+values to properties and attributes defined in the relationship
+definition that is part of the requirement definition, and provide
+values for the input parameters defined by the relationship
+definition's interfaces.
 
-- If the count_range keyname is not present, then a default declaration
-  as follows will be assumed:
+Note that several requirement assignments in a node template can have
+the same symbolic name, each referring to different counts of the
+corresponding requirement definition. The number of instances a
+particular assignment allows is set via the `count`
+keyname. Nevertheless, the sum of the count values for all of the
+requirement assignments with the same symbolic name MUST be within the
+range of count_range specified by the corresponding requirement
+definition.
 
-  count_range: \[0, UNBOUNDED\]
-
-#### Notes
-
-- The requirement symbolic name is used for identification of the
-  requirement definition only and not relied upon for establishing any
-  relationships in the topology.
-
-#### Requirement definition is a tuple with a filter 
-
-A requirement definition allows type designers to govern which types are
-allowed (valid) for fulfillment using three levels of specificity with
-only the Capability definition or Capability Type being mandatory.
-
-1.  Node Type (mandatory/optional)
-2.  Relationship Type (optional)
-3.  Capability definition or Capability Type (mandatory)
-
-The first level allows selection, as shown in both the simple or complex
-grammar, simply providing the node’s type using the node keyname. The
-second level allows specification of the relationship type to use when
-connecting the requirement to the capability using the relationship
-keyname. Finally, the specific Capability definition or Capability Type
-on the target node is provided using the capability keyname. Note that
-if a Capability definition is used, the Node Type definition is
-mandatory (as it refers to a Capability definition in that Node Type).
-
-In addition to the node, relationship and capability types, a filter,
-with the keyname node_filter, may be provided to constrain the allowed
-set of potential target nodes based upon their properties and their
-capabilities’ properties. This allows TOSCA orchestrators to help find
-the “best fit” when selecting among multiple potential target nodes for
-the expressed requirements. Also, if a Node Template was specified
-during requirement assignment it allows TOSCA orchestrators to verify
-that the specified node template fulfills the requirement.
-
-### Requirement assignment
-
-A Requirement assignment allows Node Template authors to provide
-assignments for the corresponding Requirement definition (i.e. having
-the same symbolic name) in the Node Type definition.
-
-A Requirement assignment provides either names of Node Templates or
-selection criteria for TOSCA orchestrators to find matching TOSCA nodes
-that are used to fulfill the requirement’s declared Capability Type
-and/or Node Type. A Requirement assignment also provides either names of
-Relationship Templates (to use) or the name of Relationship Types (to
-create relationships) for relating the source node (containing the
-Requirement) to the target node (containing the Capability).
-
-Note that several Requirement assignments in the Node Template
-definition can have the same symbolic name, each referring to different
-counts of the Requirement definition. To how many counts a particular
-assignment allows is set via the count_range keyname. Nevertheless, the
-sum of the count values for all of the Requirement assignments with the
-same symbolic name MUST be within the range of count_range specified by
-the corresponding Requirement definition.
-
-#### Keynames
+### 8.7.1 Supported Keynames
 
 The following is the list of recognized keynames for a TOSCA requirement
 assignment:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|capability|no|string|The optional keyname used to provide either the: ·         symbolic name of a Capability definition within a target node that can fulfill the requirement. ·         name of a Capability Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
-|node|no|string|The optional keyname used to identify the target node of a relationship; specifically, it is used to provide either the: ·         name of a Node Template that can fulfill the target node requirement. ·         name of a Node Type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
-|relationship|conditional|string|The conditional keyname used to provide either the: ·         name of a Relationship Template to use to relate this node to the target node when fulfilling the requirement. ·         name of a Relationship Type that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. ·         Details of a Relationship Type and its property and interface assignments that the TOSCA orchestrator will use to create a relationship to relate this node to the target node when fulfilling the requirement. The relationship definition is mandatory either in the requirement definition of in the requirement assignment.|
-|allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent “allocations” from the property with the same name in the target capability.  ·         The allocation acts as a “capacity filter” for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
+|node|no|string|The optional keyname used to identify the target node of the requirement. This can either be the name of a target node template or the name of a target node type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
+|capability|no|string|The optional keyname used to identify the target capability of the requirement. This can either be the name of a capability defined within a target node or the name of a target capability type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
+|relationship|conditional|relationship assignment or string|The conditional keyname used to provide values for the relationship definition in the corresponding requirement definition. This keyname can also be overloaded to define a symbolic name that references a relationship template defined elsewhere in the service template.|
+|allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent *allocations* from the property with the same name in the target capability. The allocation acts as a *capacity filter* for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
+|count|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships must be established from this requirement assignment. If not defined, the default count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name. The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
 |node_filter|no|node filter|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill the requirement at runtime.|
-|count|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships to be established from this requirement assignment specification. If not defined, the assumed count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name.  ·         The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. ·         Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
-|directives|no|list of string valid string values: “internal”, “external”|"Describes if the fulfillment of this requirement assignment should use relationships with target nodes created within this template (“internal”) or should use target nodes created outside this template as available to the TOSCA environment (""external”) or if it should use a combination of the above. If so, the order of the strings in the list defines which directive should be attempted first. If no directives are defined, the default value is left to the particular implementation."|
-|optional|no. default: FALSE|boolean|Describes if the fulfillment of this requirement assignment is optional (true) or not (false).  If not specified, the requirement assignment must be fulfilled, i.e. the default value is false.  Note also, that non-optional requirements have precedence, thus during a service deployment, the optional requirements for all nodes should be resolved only after the non-optional requirements for all nodes have been resolved.|
+|directives|no|list of string|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
+|optional|no|boolean|Describes if the fulfillment of this requirement assignment is optional (true) or not (false).  If not specified, the requirement assignment must be fulfilled, i.e. the default value is false.  Note also, that non-optional requirements have precedence, thus during a service deployment, the optional requirements for all nodes should be resolved only after the non-optional requirements for all nodes have been resolved.|
 
-The following is the list of recognized keynames for a TOSCA requirement
-assignment’s relationship keyname which is used when property
-assignments or interface assignments (for e.g. changing the
-implementation keyname or declare additional parameter definitions to be
-used as inputs/outputs) need to be provided:
+The `relationship` keyname in a requirement assignment typically
+specifies a *relationship assignment* that provides information needed
+by TOSCA Orchestrators to construct a relationship to the TOSCA node
+that is the target of the requirement. Relationship assignments
+support the following keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|type|no|string|The optional keyname used to provide the name of the Relationship Type for the Requirement assignment’s relationship.|
-|properties|no|map of property assignments|An optional keyname providing property assignments for the relationship.|
-|interfaces|no|map of interface assignments|The optional keyname providing Interface assignments for the corresponding Interface definitions in the Relationship Type.|
+|type|no|string|The optional keyname used to provide the name of the relationship type for the requirement assignment’s relationship.|
+|properties|no|map of property assignments|An optional map of property assignments for the relationship.|
+|attributes|no|map of attribute assignments|An optional map of attribute assignments for the relationship.|
+|interfaces|no|map of interface assignments|An optional map of interface assignments for the corresponding interface definitions in the relationship type.|
 
-#### Grammar
+### 8.7.2 Requirement Assignment Grammar
 
-Requirement assignments have one of the following grammars:
-
-##### Short notation:
-
-The following single-line grammar may be used if only a concrete Node
-Template for the target node needs to be declared in the requirement:
-```
-<[requirement_name](#TYPE_YAML_STRING)>: <[node_template_name](#TYPE_YAML_STRING)> 
-```
-##### Extended notation:
-
-The following grammar should be used if the requirement assignment needs
-to provide more information than just the Node Template name:
+The keynames supported by requirement assignments and relationship
+assignments can be used according to the following grammar:
 ```
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
   node: <node_template_name> | <node_type_name>
-  relationship: <relationship_template_name> | <relationship_type_name>
+  relationship:
+    type: <relationship_type_name>
+    properties: <property_assignments>
+    attributes: <attribute_assignments>
+    interfaces: <interface_assignments>
   node_filter: <node_filter_definition>
   count: <count_value>
   directives: <directives_list>
   optional: <is_optional>
+  allocation: <allocation_property_assignments>
 ```
-##### Extended grammar with Property Assignments and Interface Assignments for the relationship
-
-The following additional multi-line grammar is provided for the
-relationship keyname in order to provide new Property assignments and
-Interface assignments for the created relationship of the declared
-Relationship.
-```
-<requirement_name>:
-  # Other keynames omitted for brevity
-  relationship: 
-    type: <relationship_template_name> | <relationship_type_name>
-    properties: <property_assignments>
-    interfaces: <interface_assignments>
-```
-##### Extended grammar with capacity allocation 
-
-The following additional multi-line grammar is provided for capacity
-allocation in the target capability. The property assignments under the
-allocation keyname represent “allocations” from the property with the
-same name in the target capability.
-
-- The sum of all the allocations for all requirements assignments for a
-  property in a target capability cannot exceed the value of that
-  property.
-
-- This means that during the deployment time of a certain service
-  template – as a certain requirement assignment is resolved – a
-  capability in a node is a valid target if
-
-- for each property of the target capability
-
-- the sum of all existing allocations plus the current allocation is
-  less_or_equal to the property value
-
-- Of course, allocations can be defined only for integer, float, or
-  scalar property types.
+In some cases, a relationship assignment only needs to refine the type
+of the relationship and does not need to assign properties,
+attributes, or interfaces. In that case, a single-line relationship
+assignment grammar can be used where the value of the `relationship`
+keyname in the requirement assignment refers to the symbolic name of
+the type of the relationship. This single-line relationship grammar is
+shown here:
 ```
 <requirement_name>:
-  # Other keynames omitted for brevity
-  allocation: 
-    properties: <allocation_property_assignments>
+  capability: <capability_symbolic_name> | <capability_type_name>
+  node: <node_template_name> | <node_type_name>
+  relationship: <relationship_type_name>
+  node_filter: <node_filter_definition>
+  count: <count_value>
+  directives: <directives_list>
+  optional: <is_optional>
+  allocation: <allocation_property_assignments>
+```
+As stated in the description of the supported keynames,
+the `relationship` keyname in a requirement assignment can also be
+overloaded to specify the symbolic name of a relationship template to
+use for creating the relationship to the target node when fulfilling
+the requirement. In that case, the following single-line relationship
+grammar is used:
+```
+<requirement_name>:
+  capability: <capability_symbolic_name> | <capability_type_name>
+  node: <node_template_name> | <node_type_name>
+  relationship: <relationship_template_name>
+  node_filter: <node_filter_definition>
+  count: <count_value>
+  directives: <directives_list>
+  optional: <is_optional>
+  allocation: <allocation_property_assignments>
+```
+When single-line relationship grammar is used, TOSCA Processors MUST
+first try to resolve the value of the `relationship` keyword as the
+symbolic name of a relationship type. If no relationship type with
+that name is found, the Processor MUST then try to find a relationship
+template with that name. If no such relationship template is found,
+the grammar must be determined to be in error.
+
+And finally, to simplify requirement assignment grammar, the following
+single-line grammar may be used if only a concrete node template for
+the target node needs to be assigned:
+```
+<requirement_name>: <node_template_name>
 ```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -3777,73 +3708,71 @@ have the following meaning:
   assignment as a string.
 
 - capability_symbolic_name: represents the optional name of the
-  Capability definition within the target Node Type or Node Template;
+  capability definition within the target node type or node template;
 
-  - if the capability in the Requirement definition was specified using
-    the symbolic name of a capability definition in a target node type,
-    then the capability keyname definition
+  - if the capability in the requirement definition was specified
+    using the symbolic name of a capability definition in a target
+    node type, then the capability keyname definition MUST remain
+    unchanged in any subsequent refinements or during assignment.
 
-  - MUST remain unchanged in any subsequent refinements or during
-    assignment.
+  - if the capability in the requirement definition was specified
+    using the name of a capability type, then the capability
+    definition referred here by the capability_symbolic_name must be
+    of a type that is the same as or derived from the said capability
+    type in the requirement definition.
 
-  - if the capability in the Requirement definition was specified using
-    the name of a Capability Type, then the Capability definition
-    referred here by the capability_symbolic_name must be of a type that
-    is the same as or derived from the said Capability Type in the
-    Requirement definition.
-
-- capability_type_name: represents the optional name of a Capability
-  Type definition within the target Node Type or Node Template this
+- capability_type_name: represents the optional name of a capability
+  type definition within the target node type or node template this
   requirement needs to form a relationship with;
 
-  - may not be used if the capability in the Requirement definition was
+  - may not be used if the capability in the requirement definition was
     specified using the symbolic name of a capability definition in a
     target node type.
 
   - otherwise the capability_type_name must be of a type that is the same
     as or derived from the type defined by the capability keyname in the
-    Requirement definition.
+    requirement definition.
 
-- node_template_name: represents the optional name of a Node Template
-  that contains the capability this requirement will be fulfilled by;
+- node_template_name: represents the optional name of a node template
+  that contains the capability that fulfills this requirement;
 
-  - in addition, the Node Type of the Node Template must be of a type that
+  - in addition, the node type of the node template must be of a type that
     is the same as or derived from the type defined by the node keyname
-    (if the node keyname is defined) in the Requirement definition,
+    (if the node keyname is defined) in the requirement definition,
 
-  - in addition, the Node Template must fulfill the node filter
+  - in addition, the node template must fulfill the node filter
     requirements of the node_filter (if a node_filter is defined) in the
     Requirement definition.
 
-- node_type_name: represents the optional name of a Node Type that
-  contains the capability this Requirement will be fulfilled by;
+- node_type_name: represents the optional name of a node type that
+  contains the capability that fulfills this requirement;
 
   - in addition, the node_type_name must be of a type that is the same as
     or derived from the type defined by the node keyname (if the node
-    keyname is defined) in the Requirement definition.
+    keyname is defined) in the requirement definition.
 
 - relationship_template_name: represents the optional name of a
-  Relationship Template to be used when relating the Requirement to the
-  Capability in the target node.
+  relationship template to be used when relating the requirement to the
+  capability in the target node.
 
-  - in addition, the Relationship Type of the Relationship Template must
+  - in addition, the relationship type of the relationship template must
     be of a type that is the same as or derived from the type defined by
     the relationship keyname (if the relationship keyname is defined) in
-    the Requirement definition.
+    the requirement definition.
 
-- relationship_type_name: represents the optional name of a Relationship
-  Type that is compatible with the Capability Type in the target node;
-  the TOSCA orchestrator will create a relationship of the Relationship
-  Type when relating the Requirement to the Capability in the target
-  node.
+- relationship_type_name: represents the optional name of a relationship
+  type that is compatible with the capability type in the target node;
 
-  - in addition, the relationship_type_name must be of a type that is the
-    same as or derived from the type defined by the relationship keyname
-    (if the relationship keyname is defined) in the Requirement
-    definition.
+  - in addition, the relationship_type_name must be of a type that is
+    the same as or derived from the type defined by the relationship
+    keyname in the requirement definition.
 
 - property_assignments: within the relationship declaration, it
   represents the optional map of property assignments for the declared
+  relationship.
+
+- attribute_assignments: within the relationship declaration, it
+  represents the optional map of attribute assignments for the declared
   relationship.
 
 - interface_assignments: represents the optional map of interface
@@ -3853,27 +3782,9 @@ have the following meaning:
 
 - allocation_property_assignments: within the allocation declaration, it
   represents the optional map of property assignments that semantically
-  represent “allocations” from the property with the same name in the
+  represent *allocations* from the property with the same name in the
   target capability. Syntactically their form is the same as for a
   normal property assignments.
-
-  - The allocation acts as a “capacity filter” for the target capability
-    in the target node. When the requirement is resolved, a capability
-    in a node is a valid target for the requirement relationship if for
-    each property of the target capability, the sum of all existing
-    allocations plus the current allocation is less_or_equal to the
-    property value.
-
-    - Intuitively, the sum of “allocations” from all the incoming
-      relationships for a certain capability property cannot exceed the
-      value of the property.
-
-    - If the “allocation” refers (via its name) to a property that does not
-      exist in a capability, then that capability cannot be a valid
-      target.
-
-    - Of course, allocations can be defined only for integer, float, or
-      scalar property types.
 
 - node_filter_definition: represents the optional node filter TOSCA
   orchestrators will use to fulfill the requirement for selecting a
@@ -3882,43 +3793,33 @@ have the following meaning:
   template fulfills the node filter.
 
   - this node_filter does not replace the node_filter definition in the
-    Requirement definition, it is applied in addition to that.
+    requirement definition, it is applied in addition to that.
 
 - count_value: represents the optional cardinality of this requirement
   assignment, that is how many relationships are to be established from
   this requirement assignment specification.
 
-  - If count is not defined, the assumed count_value for an assignment is
+  - If count is not defined, the default count_value for an assignment is
     1.
 
-  - Note that there can be multiple requirement assignments for a
-    requirement with a specific symbolic name.
+- directives_list: represents the optional list of strings that
+  defines if this requirement needs to be fulfilled using target nodes
+  created within this service template only, target nodes created
+  outside this service template only, or both. Valid values for the
+  strings are as follows:
 
-  - The sum of all count values of assignments for a requirement with a
-    specific symbolic name must be within the count_range defined in the
-    requirement definition.
+  - `internal`: this requirement is fulfilled using target nodes
+    created within this template.
 
-  - Moreover, the sum of all count values of non-optional assignments for
-    a requirement with a specific symbolic name must also be within the
-    count_range defined in the requirement definition.
+  - `external`: this requirement is fulfilled using target nodes
+     created outside this template as available to the TOSCA
+     environment.
 
-- directives: represents the optional list of strings that defines
-  directives for this requirement assignment:
+  The order of the strings in the list defines which directive should
+  be attempted first when fulfilling the assignment.
 
-  - valid values for the strings:
-
-    - “internal” – relationship created by this requirement assignment use
-       target nodes created within this template.
-
-    - “external” – relationship created by this requirement assignment use
-       target nodes created outside this template as available to the TOSCA
-       environment.
-
-  - the order of the strings in the list defines which directive should be
-    attempted first when fulfilling the assignment.
-
-  - If no directives are defined, the default value is left to the
-    particular implementation.
+  If no directives are defined, the default value is left to the
+  particular implementation.
 
 - is_optional: represents the optional boolean value specifying if this
   requirement assignment is optional or not.
@@ -3930,177 +3831,155 @@ have the following meaning:
 
   - The default value for is_optional is false.
 
-#### Notes
+  Non-optional requirements have precedence, thus during a service
+  deployment, the optional requirements for all nodes should be
+  fulfilled only after the non-optional requirements for all nodes
+  have been fulfilled.
 
-- If no explicit requirement assignment for a requirement with symbolic
-  name is defined, a default requirement assignment with keynames:
-  capability, node, relationship, node_filter having the same values as
-  in the requirement definition in the corresponding node type is
-  assumed.
+The following code snippet shows an example requirement assignment. It
+defines a web application node template named
+‘my_application_node_template’ of type `WebApplication` that declares
+a requirement named `host` that needs to be fulfilled by any node that
+derives from the node type `WebServer`:
 
+```yaml
+service_template:
+  node_templates:
+    my_application_node_template:
+      type: WebApplication
+      requirements:
+        - host: 
+            node: WebServer
+```
+In this case, the `WebApplication` type defines a `host` requirement
+that uses relationship type `HostedOn` relate to the target node. The
+`host` requirement also specifies a capability type of `Container` to
+be the specific target of the requirement in the target node.
+
+The following example shows a requirement named `database` that
+describes a requirement for a connection to a capability of type
+`Endpoint.Database` in a node template called `my_database`. However,
+the connection requires a custom relationship type
+(my.types.CustomDbConnection’) declared on the keyname ‘relationship’.
+```yaml
+service_template:
+  node_templates:
+    my_application_node_template:
+      requirements:
+        - database: 
+            node: my_database
+            capability: Endpoint.Database
+            relationship: my.types.CustomDbConnection
+```
+
+### 8.7.4 Requirement Count
+
+A node template may include multiple requirement assignments with the
+same symbolic requirement name. In addition, each of these requirement
+assignments may define their own count value, and some requirement
+assignments may be marked as optional. This section specifies rules
+for handling requirement counts:
+
+- The sum of all count values for requirement assignments with a
+  specific symbolic name MUST be within the count_range defined in the
+  corresponding requirement definition.
+
+- Moreover, the sum of all count values for non-optional requirement
+  assignments with a specific symbolic name MUST also be within the
+  count_range defined in the requirement definition.
+
+- If a node template does not define an explicit requirement
+  assignment for a requirement defined in its corresponding node type,
+  an *implicit* requirement assignment will be created automatically
+  if the lower bound of the count_range in the requirement definition
+  is greater than zero
+
+  - The automatically created requirement assignments use the same
+    values for the capability, node, relationship, and node_filter
+    keynames as defined in the corresponding requirement definition.
   - Additionally, the count_value is assumed to be equal to the min_count
     value of the requirement definition in the corresponding node type.
 
-- For all explicit requirement assignments with the same symbolic name:
-
-  - the sum of the count_value must be within the count_range specified in
-    the corresponding requirement definition.
-
-  - the sum of the count_value for all non-optional requirements
-    assignments must be within the count_range specified in the
-    corresponding requirement definition.
-
-- Non-optional requirements have precedence, thus during a service
-  deployment, the optional requirements for all nodes should be resolved
-  only after the non-optional requirements for all nodes have been
-  resolved.
-
-#### Examples
-
-Examples of uses for the extended requirement assignment grammar
-include:
-
-- The need to allow runtime selection of the target node a Node Type
-  rather than a Node Template. This may include use of the node_filter
-  keyname to provide node and capability filtering information to find
-  the “best match” of a node at runtime.
-
-- The need to further specify the Relationship Template or Relationship
-  Type to use when relating the source node’s requirement to the target
-  node’s capability.
-
-- The need to further specify the capability (symbolic) name or
-  Capability Type in the target node to form a relationship between.
-
-- The need to specify the number of counts the requirement assigns (when
-  greater than 1).
-
-##### Example 1 – Hosting requirement on a Node Type
-
-A web application node template named ‘my_application_node_template’ of
-type WebApplication declares a requirement named ‘host’ that needs to be
-fulfilled by any node that derives from the node type WebServer.
+The following example shows a requirement assignment where the
+requirement definition has the count_range that is different from the
+default [0,UNBOUNDED]. In this case the redundant_database requirement
+has count_range of [2,2]. The requirement definition is not presented
+here for brevity. In the requirement assignment we use the short
+notation. Note that the count keyname for each assignment is not
+declared (i.e. the default value of 1 is used) and that the sum of the
+count values of both assignments is 2 which is in the range of [2,2]
+as specified in the requirement definition.
+```yaml
+service_template:
+  node_templates:
+    my_critical_application_node_template:
+      requirements:
+        - redundant_database: database1
+        - redundant_database: database2
 ```
-# Example of a requirement fulfilled by a specific web server node template
-node_templates:
-  my_application_node_template:
-    type: tosca.nodes.WebApplication
-    ...
-    requirements:
-      - host: 
-          node: tosca.nodes.WebServer
-```
-In this case, the node template’s type is WebApplication which already
-declares the Relationship Type HostedOn to use to relate to the target
-node and the Capability Type of Container to be the specific target of
-the requirement in the target node.
 
-##### Example 2 - Requirement with Node Template and a custom Relationship Type
+### 8.7.5 Capability Allocation
 
-This example is similar to the previous example; however, the
-requirement named ‘database’ describes a requirement for a connection to
-a database endpoint (Endpoint.Database) Capability Type in a node
-template (my_database). However, the connection requires a custom
-Relationship Type (my.types.CustomDbConnection’) declared on the keyname
-‘relationship’.
-```
-# Example of a (database) requirement that is fulfilled by a node template named 
-# “my_database”, but also requires a custom database connection relationship
-my_application_node_template:
-  requirements:
-    - database: 
-        node: my_database
-        capability: Endpoint.Database
-        relationship: my.types.CustomDbConnection
-```
-##### Example 3 - Requirement for a Compute node with additional selection criteria (filter) 
+The value of the `allocation` keyword in a requirement assignment acts
+as a *capacity filter* for the target capability in the target
+node. When the requirement is fulfilled, a capability in a node is a
+valid target for the requirement if for each property of the target
+capability, the sum of all existing allocations plus the current
+allocation is less than or equal to the property value.
 
-This example shows how to extend an abstract ‘host’ requirement for a
-Compute node with a filter definition that further constrains TOSCA
-orchestrators to include additional properties and capabilities on the
-target node when fulfilling the requirement.
-```
-node_templates:
-  mysql:
-   type: tosca.nodes.DBMS.MySQL
-    properties:
-      # omitted here for brevity
-    requirements:
-      - host:
-          node: tosca.nodes.Compute
-          node_filter:
-            capabilities:
-              - host:
-                  properties:
-                    - num_cpus: { in_range: [ 1, 4 ] }
-                    - mem_size: { greater_or_equal: 512 MB }
-              - os:
-                  properties:
-                    - architecture: { equal: x86_64 }
-                    - type: { equal: linux }
-                    - distribution: { equal: ubuntu }
-              - mytypes.capabilities.compute.encryption:
-                  properties:
-                    - algorithm: { equal: aes }
-                    - keylength: { valid_values: [ 128, 256 ] }
-```
-##### Example 4 - Requirement assignment for definition with count_range: \[2,2\]
+The following allocation rules apply:
 
-This example shows how the assignments can look if the Requirement
-definition has the count_range different from the default \[1,1\]. In
-this case the redundant_database requirement has count_range: \[2,2\].
-The Requirement definition is not presented here for brevity. In the
-Requirement assignment we use the short notation. Note that the count
-keyname for each assignment is not declared (i.e. the default value of 1
-is used) and that the sum of the count values of both assignments is 2
-which is in the range of \[2,2\] as specified in the Requirement
-definition.
-```
-# Example of a (redundant_database) requirement that is fulfilled by 
-# two node templates named “database1” and “database1
-my_critical_application_node_template:
-  requirements:
-    - redundant_database: database1
-    - redundant_database: database2
-```
-##### Example 5 - Requirement assignment for definition with capacity allocation
+- The sum of allocations from all the incoming relationships for a
+  certain capability property cannot exceed the value of the property.
 
-This example shows how the assignment can look if the requirement is
-assuming a “capacity allocation” on the properties of the target
-capability (in this case a capability of type
-“tosca.capabilities.Compute”). When this requirement is resolved, a node
-is a valid target and a relationship is created only if both the
-capacity allocations for num_cpu and mem_size are fulfilled, that is the
-sum of the capacity allocations from all established relationships +
-current allocation is less or equal to the value of each respective
-property in the target capability.
+- If the allocation refers (via its name) to a property that does not
+  exist in a capability, then the allocation statement is invalid.
+
+Of course, allocations can be defined only for integer, float, or
+scalar property types.
+
+The following example shows a *capacity allocation* on the properties
+of a target capability of type `Compute`. When this requirement is
+fulfilled, a node is a valid target and a relationship is created only
+if both the capacity allocations for num_cpu and mem_size are
+fulfilled, that is if the sum of the capacity allocations from all
+established relationships + current allocation is less or equal to the
+value of each respective property in the target capability.
 
 So assuming that num_cpu property in the target capability of a
 candidate node has value 4 and the sum of capacity allocations of the
-other resolved requirements to that capability for num_cpu is 1 then
-then there is enough “remaining capacity” (4 – 1 = 3) to fulfill the
+other fulfilled requirements to that capability for num_cpu is 1 then
+then there is enough *remaining capacity* (4 – 1 = 3) to fulfill the
 current allocation (2), and a relationship to that node is established.
 Another node with num_cpu with value 2 could not be a valid target since
 1 (existing) + 2 (current) = 3, and that is larger than the property
 value which is 2. Of course, similar calculations must be done for the
 mem_size allocation.
+```yaml
+service_template:
+  node_templates:
+    my_critical_application_node_template:
+      requirements:
+        - host:
+            node: Compute
+            allocation:
+              num_cpu: 2
+              mem_size: 128 MB
 ```
-# Example of a (redundant_database) requirement that is fulfilled by 
-# two node templates named “database1” and “database1
-my_critical_application_node_template:
-  requirements:
-    - host:
-        node: tosca.nodes.Compute
-        allocation:
-          properties:
-            num_cpu: 2
-            mem_size: 128 MB
-```
-### Node Filter definition
 
-#### Grammar
+## 8.8 Node Filter definition
 
-Node filters are defines using condition clauses as shown in the
+In addition to the node, relationship and capability types, a filter,
+with the keyname node_filter, may be provided in requirement
+definitions and requirement assignments to constrain the allowed set
+of potential target nodes based upon their properties and their
+capabilities’ properties. This allows TOSCA orchestrators to help find
+the *best fit* when selecting among multiple potential target nodes
+for the expressed requirements. Also, if a node template was specified
+during requirement assignment it allows TOSCA orchestrators to verify
+that the specified node template fulfills the requirement.
+
+Node filters are defined using condition clauses as shown in the
 following grammar:
 ```
 node_filter: <condition_clause> 
@@ -4123,28 +4002,29 @@ filter. TOSCA orchestrators use node filters are follows:
   of fulfilling the requirement. Specifically, this means that the SELF
   keyword in any TOSCA Path expressions refer to that relationship.
 
-#### Example
-
-The following example is a filter that will be used to select a Compute
-node based upon the values of its defined capabilities. Specifically,
-this filter will select Compute nodes that support a specific range of
-CPUs (i.e., num_cpus value between 1 and 4) and memory size (i.e.,
-mem_size of 2 or greater) from its declared “host” capability.
+The following example shows a node filter that will be used to select
+a Compute node based upon the values of its defined
+capabilities. Specifically, this filter will select Compute nodes that
+support a specific range of CPUs (i.e., num_cpus value between 1 and
+4) and memory size (i.e., mem_size of 2 or greater) from its declared
+`host` capability. 
 ```
-my_node_template:
-  # other details omitted for brevity
-  requirements:
-    - host:
-        node_filter:
-          $and:
-            - $in_range:
-              - $get_property: [ SELF, CAPABILITY, num_cpus ]
-              - [ 1, 4 ]
-            - $greater_or_equal:
-              - $get_property: [ SELF, CAPABILITY, mem_size ]
-              - 512 MB 
+service_template:
+  node_templates:
+    my_node_template:
+      # other details omitted for brevity
+      requirements:
+	- host:
+	    node_filter:
+	      $and:
+		- $in_range:
+		  - $get_property: [ SELF, CAPABILITY, num_cpus ]
+		  - [ 1, 4 ]
+		- $greater_or_equal:
+		  - $get_property: [ SELF, CAPABILITY, mem_size ]
+		  - 512 MB 
 ```
-## Creating Multiple Node Representations from the Same Node Template
+# Creating Representations from Templates
 
 TOSCA service templates specify a set of nodes that need to be
 *instantiated* at service deployment time. Some service templates may
@@ -4217,7 +4097,7 @@ service templates must be created, one for each possible number of
 SD-WAN sites. This leads to undesirable template proliferation. The
 next section presents an alternative.
 
-### Specifying Number of Node Representations
+## Specifying Number of Node Representations
 
 To avoid the need for multiple service templates, TOSCA allows all VPN
 Site nodes to be created from the same Site node template in the
@@ -4292,7 +4172,7 @@ keyword is as follows:
 
 | Keyword     | Valid Contexts | Description                                                                                                                                |
 |-------------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| NODE_INDEX | Node Representation | A TOSCA orchestrator will interpret this keyword as the runtime index in the list of node representations created from a single Node Template. |
+| NODE_INDEX | Node Representation | A TOSCA orchestrator will interpret this keyword as the runtime index in the list of node representations created from a single node template. |
 
 The `NODE_INDEX` for a node representation is immutable: it never
 changes during the lifetime of that node representation, even if node
@@ -4939,7 +4819,7 @@ An Interface assignment is used to specify assignments for the inputs,
 operations and notifications defined in the Interface. Interface
 assignments may be used within a Node or Relationship Template
 definition (including when Interface assignments are referenced as part
-of a Requirement assignment in a Node Template).
+of a Requirement assignment in a node template).
 
 #### Keynames
 
@@ -5699,7 +5579,7 @@ that serve different purposes:
 ### Artifact definition
 
 An artifact definition defines a named, typed file that can be
-associated with Node Type or Node Template and used by orchestration
+associated with Node Type or node template and used by orchestration
 engine to facilitate deployment and implementation of interface
 operations.
 
@@ -7280,8 +7160,8 @@ have the following meaning:
 
 - property_name: represents the name of a property that will be used to
   select a property definition with the same name within on a TOSCA
-  entity (e.g., Node Template, Relationship Template, etc.) which is
-  declared in its declared type (e.g., a Node Type, Node Template,
+  entity (e.g., node template, Relationship Template, etc.) which is
+  declared in its declared type (e.g., a Node Type, node template,
   Capability Type, etc.).
 
 - property_value, property_value_expression: represent the
@@ -7493,9 +7373,9 @@ have the following meaning:
 
 - attribute_name: represents the name of an attribute that will be used
   to select an attribute definition with the same name within on a TOSCA
-  entity (e.g., Node Template, Relationship Template, etc.) which is
+  entity (e.g., node template, Relationship Template, etc.) which is
   declared (or reflected from a Property definition) in its declared
-  type (e.g., a Node Type, Node Template, Capability Type, etc.).
+  type (e.g., a Node Type, node template, Capability Type, etc.).
 
 - attribute_value, attribute_value_expresssion: represent the
   type-compatible value to assign to the attribute. Attribute values may
@@ -8487,7 +8367,7 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 - capability_name: represents the name of the capability as it appears
   in the Node Type definition for the substituted node.
-- node_template_name: represents a valid name of a Node Template
+- node_template_name: represents a valid name of a node template
   definition within the substituting service template.
 - node_template_capability_name: represents a valid name of a
   [capability definition](#capability-definition) within the
@@ -9193,7 +9073,7 @@ have the following meaning:
   appears in the type definition for the Node Type name that is
   declared as the value for on the substitution_mappings’ `node_type`
   key.
-- node_template_name: represents a valid name of a Node Template
+- node_template_name: represents a valid name of a node template
   definition within the same substituting service template
 - node_template_requirement_name: represents a valid name of a
   requirement definition within the \<node_template_name\> declared in
@@ -9518,7 +9398,7 @@ definition:
 |description|no|string|The optional description for the policy definition.|
 |metadata|no|map of string|Defines a section used to declare additional metadata information. |
 |properties|no|map of property assignments|An optional map of property value assignments for the policy definition.|
-|targets|no|list of string|An optional list of valid Node Templates or Groups the Policy can be applied to.|
+|targets|no|list of string|An optional list of valid node templates or Groups the Policy can be applied to.|
 |triggers|no|map of trigger definitions|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
 
 ### Grammar
@@ -10168,7 +10048,7 @@ expression from v1.3 to v2.0:
 {"id": "1322", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "WD03: TODO: Need examples for returning simple types and complex/nested structures (e.g., Maps of Maps)", "target": "Examples"}-->
 
 The following example shows how to use the get_property function with an
-actual Node Template name:
+actual node template name:
 ```
 node_templates:
 
@@ -10322,7 +10202,7 @@ $get_artifact: [ <modelable_entity_name>, <artifact_name>, <location>, <remove> 
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ----- |
-|\<modelable entity name\> \| SELF \| SOURCE \| TARGET \| HOST|yes|string|The mandatory name of a modelable entity (e.g., Node Template or Relationship Template name) as declared in the service template that contains the property definition the function will return the value from. See section B.1 for valid keywords.|
+|\<modelable entity name\> \| SELF \| SOURCE \| TARGET \| HOST|yes|string|The mandatory name of a modelable entity (e.g., node template or Relationship Template name) as declared in the service template that contains the property definition the function will return the value from. See section B.1 for valid keywords.|
 |<artifact_name\>|yes|string|The name of the artifact definition the function will return the value from.|
 |\<location\> \| LOCAL_FILE|no|string|Location value must be either a valid path e.g. ‘/etc/var/my_file’ or ‘LOCAL_FILE’. If the value is LOCAL_FILE the orchestrator is responsible for providing a path as the result of the get_artifact call where the artifact file can be accessed. The orchestrator will also remove the artifact from this location at the end of the operation. If the location is a path specified by the user the orchestrator is responsible to copy the artifact to the specified location. The orchestrator will return the path as the value of the get_artifact function and leave the file here after the execution of the operation.|
 |remove|no|boolean|Boolean flag to override the orchestrator default behavior so it will remove or not the artifact at the end of the operation execution. If not specified the removal will depends of the location e.g. removes it in case of ‘LOCAL_FILE’ and keeps it in case of a path. If true the artifact will be removed by the orchestrator at the end of the operation execution, if false it will not be removed.|
@@ -10331,7 +10211,7 @@ $get_artifact: [ <modelable_entity_name>, <artifact_name>, <location>, <remove> 
 
 The following example uses a snippet of a WordPress
 \[[WordPress](#CIT_WORDPRESS)\] web application to show how to use the
-get_artifact function with an actual Node Template name:
+get_artifact function with an actual node template name:
 
 ##### Example: Retrieving artifact without specified location
 ```
