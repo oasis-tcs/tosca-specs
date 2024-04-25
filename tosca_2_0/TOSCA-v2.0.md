@@ -4051,27 +4051,11 @@ specify a default value.
 |bytes|scalar-unit.bitrate||
 |nil|version|
 
-> Important notes:
-
-> YAML map keys can be any value, not just strings. TOSCA metadata grammar
-> allows that full YAML expressiveness and does not add additional
-> restrictions beyond requiring correct YAML syntax.
-
-> YAML does not specify the bit width of integers and floats but suggests
-> that 32 bits should be acceptable.
-> 
-> Users should be careful about the difference between parsing floats and
-> integers. If they explicitly want a float, they should add ".0".
-
-> Users should be careful with version strings being parsed as floats.
-> E.g., "3.2" is a float but "3.2.1" is a string,
-
 ### 9.1.1 Primitive Types
 
-The TOSCA primitive types have been specified to allow for the broadest
-possible support for implementations.
-
-Guiding principles:
+The TOSCA primitive types have been specified to allow for the
+broadest possible support for implementations. TOSCA types use the
+following guiding principles:
 
 1.  Because TOSCA files are written in YAML they must support all the
     literal primitives in YAML. However, it is important to also allow
@@ -4085,41 +4069,42 @@ Guiding principles:
     types. Thus, care should be taken to use the correct YAML notation
     for that type. Details will be provided below.
 
-### string
+#### 9.1.1.1 string
 
-An array of Unicode runes. (For storing an arbitrary array of bytes see
-the “bytes” type, below.)
+A TOSCA *string* is an array of Unicode runes. (For storing an
+arbitrary array of bytes see the *bytes* type, below.)
 
-Because we adhere to 64-bit precision, the minimum length of strings is
-0 and the maximum length of strings is 4,294,967,295.
+Because TOSCA adheres to 64-bit precision, the minimum length of
+strings is 0 and the maximum length of strings is 4,294,967,295.
 
 TOSCA *does not* specify a character encoding. For example, a string
-could be encoded as UTF-8 or UTF-16. The exact encoding used depends on
-the implementation.
+could be encoded as UTF-8 or UTF-16. The exact encoding used depends
+on the implementation.
 
 Be aware that YAML parsers will attempt to parse unquoted character
 sequences as other types (booleans, integers, floats, etc.) *before*
 falling back to the !!string type. For example, the unquoted sequence
-“0.1” would be interpreted as a YAML !!float. Likewise, the unquoted
-sequence “nan” would become the !!float value of not-a-number. However,
-in TOSCA a string value *must* be specified in YAML as a !!string.
+`0.1` would be interpreted as a YAML !!float. Likewise, the unquoted
+sequence `nan` would become the !!float value of
+not-a-number. However, in TOSCA a string value *must* be specified in
+YAML as a !!string.
 
 A TOSCA parser *shall not* attempt to convert other primitive types to
 strings if a string type is required. This requirement is necessary for
 ensuring portability, because there is no single, standard
 representation for the other types, e.g. scientific notations for
-decimals, the words “true” vs. “True” for booleans, etc. In YAML users
+decimals, the words `true` vs. `True` for booleans, etc. In YAML users
 should thus add quotation marks around literal strings that YAML would
 otherwise interpret as other types.
 
 This following example would be invalid if there were no quotation marks
-around “0.1”:
-```
+around `0.1`:
+```yaml
 node_types:
   Node:
-  properties:
-    name:
-    type: string
+    properties:
+      name:
+        type: string
 
 service_template:
   node_templates:
@@ -4128,10 +4113,7 @@ service_template:
       properties:
         name: "0.1"
 ```
-#### Notes
-<!----
-{"id": "807", "author": "Chris Lauwers", "date": "2020-08-18T23:01:00Z", "comment": "(From Tal): Do we want the comparison constraints to work for strings? E.g. should \"greater_than\" do a sorting-based comparison? I'll just point that it is non-trivial to sort Unicode strings. The most common way is to use the Unicode Collation Algorithm, which involves a database of information. There is a reference implementation in [ICU](webSettings.xml). Good and proper Unicode libraries will support it (e.g. [here is Go's](footnotes.xml)), but I do imagine it may be a burden for some implementations. I suggest we discuss this in the ad hoc and consider the pros and cons.", "target": "Notes"}-->
-
+Please note:
 1.  There are various ways to specify literal !!string data in YAML for
     handling indentation, newlines, as well as convenient support for
     line folding for multiline strings. All may be used in TOSCA. A
@@ -4139,17 +4121,17 @@ service_template:
     trimming of whitespace or newlines. [\[YAML 1.2 chapter
     6\]](https://yaml.org/spec/1.2/spec.html#Basic)
 
-2.  The TOSCA functions “concat”, “join”, “token”, “length”,
-    “min_length”, “max_length”, and “pattern” are all Unicode-aware.
+2.  The TOSCA functions *concat*, *join*, *token*, *length*,
+    min_length*, *max_length*, and *pattern* are all Unicode-aware.
     Specifically, the length of a string is a count of its runes, not
     the length of the byte array, which may differ according to the
     encoding. \[See XXX\]
 
-3.  The TOSCA functions that check for equality, “equal” and
-    “valid_values”, should work regardless of the Unicode encoding. For
-    example, comparing two strings that are “!”, one of which is in
-    UTF-8 and is encoded as “0x21”, the other which is in UTF-16 and is
-    encoded as “0x0021”, would result in equality.  For simplicity,
+3.  The TOSCA functions that check for equality, *equal* and
+    *valid_values*, should work regardless of the Unicode encoding. For
+    example, comparing two strings that are `!`, one of which is in
+    UTF-8 and is encoded as `0x21`, the other which is in UTF-16 and is
+    encoded as `0x0021`, would result in equality. For simplicity,
     implementations may standardize on a single encoding, e.g., UTF-8,
     and convert all other encodings to it. \[See XXX\]
 
@@ -4164,7 +4146,7 @@ service_template:
     may prefer to convert all strings to a single encoding.
 
 5.  TOSCA strings *cannot* be the null value but *can* be empty strings
-    (a string with length zero). \[See “nil”, below\]
+    (a string with length zero). \[See *nil*, below\]
 
 6.  YAML is a streaming format, but TOSCA strings are explicitly *not*
     streams and thus do have a size limit. Thus, TOSCA implementations
@@ -4174,9 +4156,9 @@ service_template:
 > for various primitive types. Some won’t work on all types, e.g. “length”
 > should not work on integers.
 
-### integer
+#### 9.1.1.2 integer
 
-A 64-bit signed integer.
+A TOSCA *integer* is a 64-bit signed integer.
 
 For simplicity, TOSCA does not have integers of other bit widths, nor
 does it have an unsigned integer type. However, it is possible to
@@ -4191,28 +4173,29 @@ data_types:
     derived_from: integer
     validation: { $in_range: [ $value, [ 0, 0xFFFF ] ] }
 ```
-#### Notes
 
 YAML allows for the standard decimal notation as well as hexadecimal and
 octal notations \[[YAML 1.2 example
 2.19](https://yaml.org/spec/1.2/spec.html#id2761509)\]. In the above
 example we indeed used the hexadecimal notation.
 
-1.  The JSON schema for YAML 1.2 [\[YAML 1.2 chapter
-    10.2\]](https://yaml.org/spec/1.2/spec.html#id2803231) allows for
-    compatibility with JSON, such that YAML would be a superset of JSON.
-    However, note that the JSON format does not distinguish between
-    integers and floats, and thus many JSON implementations use floats
-    instead of integers.
+Please note:
 
-2.  TOSCA does not specify the endianness of integers and indeed makes
-    no requirements for data representation.
+1. The JSON schema for YAML 1.2 [\[YAML 1.2 chapter
+   10.2\]](https://yaml.org/spec/1.2/spec.html#id2803231) allows for
+   compatibility with JSON, such that YAML would be a superset of JSON.
+   However, note that the JSON format does not distinguish between
+   integers and floats, and thus many JSON implementations use floats
+   instead of integers.
 
-### float
+2. TOSCA does not specify the endianness of integers and indeed makes
+   no requirements for data representation.
 
-A 64-bit (double-precision) floating-point number \[IEEE 754\],
-including the standard values for negative infinity, positive infinity,
-and not-a-number.
+#### 9.1.1.3 float
+
+A TOSCA *float* is a 64-bit (double-precision) floating-point number
+\[IEEE 754\], including the standard values for negative infinity,
+positive infinity, and not-a-number.
 
 Be aware that YAML parsers will parse numbers with a decimal point as
 !!float even if they *could* be represented as !!int, and likewise
@@ -4226,7 +4209,7 @@ specify “0” for a zero integer and “0.0” for a zero float.
 
 This following example would be invalid if there were no “.0” suffix
 added to “10”:
-```
+```yaml
 node_types:
   Node:
     properties:
@@ -4240,7 +4223,7 @@ service_template:
       properties:
         velocity: 10.0
 ```
-#### Notes
+Please note:
 
 1.  In addition to decimal, YAML also allows for specifying floats using
     scientific notation as well as special unquoted words for negative
@@ -4253,9 +4236,9 @@ service_template:
 3.  TOSCA does not specify the endianness of floats and indeed makes no
     requirements for data representation.
 
-### boolean
+#### 9.1.1.4 boolean
 
-A single bit.
+A TOSCA *boolean* is a single bit.
 
 Note that in YAML literal booleans can be *only* either the unquoted
 all-lowercase words “true” or “false”.
@@ -4266,11 +4249,11 @@ shall it attempt to convert integer values (such as 1 and 0) to
 booleans. This requirement is necessary for ensuring portability as well
 as clarity.
 
-### bytes
+#### 9.1.1.5 bytes
 
-An array of arbitrary bytes. Because we adhere to 64-bit precision, the
-minimum length of bytes is 0 and the maximum length of bytes is
-4,294,967,295.
+TOSCA *bytes* are an array of arbitrary bytes. Because we adhere to
+64-bit precision, the minimum length of bytes is 0 and the maximum
+length of bytes is 4,294,967,295.
 
 To specify literal bytes in YAML you *must* use a Base64-encoded
 !!string \[RFC 2045 section 6.8\]. There exist many free tools to help
@@ -4295,7 +4278,7 @@ OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\
 +f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC\
 AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
 ```
-#### Notes
+Please note:
 
 1.  There is no standard way to represent literal bytes in YAML 1.2.
     Though some YAML implementations may support the [!!binary type
@@ -4309,16 +4292,16 @@ AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
 3.  TOSCA bytes values *cannot* be the null value but *can* be empty
     arrays (a bytes value with length zero). \[See “nil”, below\]
 
-### nil
+#### 9.1.1.6 nil
 
-The nil type always has the same singleton value. No other type can have
+The TOSCA *nil* type always has the same singleton value. No other type can have
 this value.
 
 This value is provided literally in YAML via the unquoted all-lowercase
 word “null”.
 
 Example:
-```
+```yaml
 node_types:
   Node:
     properties:
@@ -4339,7 +4322,7 @@ value is obvious. Thus, the above example would be invalid if we did not
 specify the null value for the property at the node template.
 
 Following is a valid example of *not* assigning a value:
-```
+```yaml
 node_types:
   Node:
     properties:
@@ -4353,100 +4336,11 @@ service_template:
       type: Node
 ```
 ### 9.1.2 Special Types
-<!----
-{"id": "817", "author": "Chris Lauwers", "date": "2020-08-04T16:22:00Z", "comment": "Need to add timestamp type", "target": "Special"}-->
 
-### TOSCA version
-<!----
-{"id": "821", "author": "Chris Lauwers", "date": "2020-08-18T23:03:00Z", "comment": "Tal suggests removing this.", "target": "version"}-->
-A TOSCA version string.
+#### 9.1.2.1 timestamp
 
-TOSCA supports the concept of “reuse” of type definitions, as well as
-template definitions which could be versioned and change over time. It
-is important to provide a reliable, normative means to represent a
-version string which enables the comparison and management of types and
-templates over time.
-
-#### Grammar
-
-TOSCA version strings have the following grammar:
-```
-<major_version>.<minor_version>[.<fix_version>[.<qualifier>[-<build_version>] ] ] 
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- major_version: is a mandatory integer value greater than or equal to 0
-  (zero)
-
-- minor_version: is a mandatory integer value greater than or equal to 0
-  (zero).
-
-- fix_version: is an optional integer value greater than or equal to 0
-  (zero).
-
-- qualifier: is an optional string that indicates a named, pre-release
-  version of the associated code that has been derived from the version
-  of the code identified by the combination major_version, minor_version
-  and fix_version numbers.
-
-- build_version: is an optional integer value greater than or equal to 0
-  (zero) that can be used to further qualify different build versions of
-  the code that has the same qualifer_string.
-
-#### Version Comparison
-
-- When specifying a version string that contains just a major and a
-  minor version number, the version string must be enclosed in quotes to
-  prevent the YAML parser from treating the version as a floating point
-  value.
-
-- When comparing TOSCA versions, all component versions (i.e., *major*,
-  *minor* and *fix*) are compared in sequence from left to right.
-
-- TOSCA versions that include the optional qualifier are considered
-  older than those without a qualifier.
-
-- TOSCA versions with the same major, minor, and fix versions and have
-  the same qualifier string, but with different build versions can be
-  compared based upon the build version.
-
-- Qualifier strings are considered domain-specific. Therefore, this
-  specification makes no recommendation on how to compare TOSCA versions
-  with the same major, minor and fix versions, but with different
-  qualifiers strings and simply considers them different branches
-  derived from the same code.
-
-#### Examples
-
-Examples of valid TOSCA version strings:
-```
-# basic version strings
-‘6.1’
-2.0.1
-
-# version string with optional qualifier
-3.1.0.beta
-
-# version string with optional qualifier and build version
-1.0.0.alpha-10
-```
-#### Notes
-
-- \[[Maven-Version](#CIT_MAVEN_VERSION)\] The TOSCA version type is
-  compatible with the Apache Maven versioning policy.
-
-#### Additional Requirements
-
-- A version value of zero (i.e., ‘0.0’, or ‘0.0.0’) SHALL indicate there
-  no version provided.
-
-- A version value of zero used with any qualifiers SHALL NOT be valid.
-
-### TOSCA timestamp type
-
-A local instant in time containing two elements: the local notation plus
-the time zone offset.
+The TOSCA *timestamp* type represents a local instant in time
+containing two elements: the local notation plus the time zone offset.
 
 TOSCA timestamps are represented as strings following \[[RFC
 3339](https://tools.ietf.org/html/rfc3339)\], which in turn uses a
@@ -4463,7 +4357,7 @@ timestamps with unknown time zones cannot be converted to UTC, making it
 impossible to apply comparison functions. If this feature is required,
 it can be supported via a custom data type (see XXX).
 
-#### Notes
+Please note:
 
 - It is strongly recommended that all literal YAML timestamps be
   enclosed in quotation marks to ensure that they are parsed as strings.
@@ -4493,12 +4387,10 @@ it can be supported via a custom data type (see XXX).
 - TOSCA does not specify a canonical representation for timestamps. The
   only requirement is that representations adhere to RFC 3339.
 
-### TOSCA scalar-unit type
+#### 9.1.2.2 scalar-unit
 
-The scalar-unit type can be used to define scalar values along with a
-unit from the list of recognized units provided below.
-
-#### Grammar
+The TOSCA *scalar-unit* types can be used to define scalar values
+along with a unit from the list of recognized units provided below.
 
 TOSCA scalar-unit typed values have the following grammar:
 ```
@@ -4512,52 +4404,23 @@ have the following meaning:
 - unit: is a mandatory unit value. The unit value MUST be
   type-compatible with the scalar.
 
-#### Additional requirements
+The following additional requirements apply:
 
-- **Whitespace**: any number of spaces (including zero or none)
-  SHALL be allowed between the scalar value and the unit value.
+- Any number of spaces (including zero or none) SHALL be allowed
+  between the scalar value and the unit value.
 
 - It SHALL be considered an error if either the scalar or unit portion
   is missing on a property or attribute declaration derived from any
   scalar-unit type.
 
-- When performing validation clause evaluation on values of the
-  scalar-unit type, both the scalar value portion and unit value portion
-  **SHALL** be compared together (i.e., both are treated as a single
-  value). For example, if we have a property called storage_size (which
-  is of type scalar-unit) a valid range constraint would appear as
-  follows:
+The scalar-unit type is abstract and has the following recognized concrete
+types in TOSCA:
 
-- storage_size: in_range \[ 4 GB, 20 GB \]
+##### 9.1.2.2.1 scalar-unit.size
 
-where storage_size’s range will be evaluated using both the numeric and
-unit values (combined together), in this case ‘4 GB’ and ’20 GB’.
-
-#### Concrete Types
-
-The scalar-unit type grammar is abstract and has four recognized
-concrete types in TOSCA:
-
-- **scalar-unit.size** – used to define properties that have scalar
-  values measured in size units.
-
-- **scalar-unit.time** – used to define properties that have scalar
-  values measured in size units.
-
-- **scalar-unit.frequency** – used to define properties that have scalar
-  values measured in units per second.
-
-- **scalar**-**unit.bitrate** – used to define properties that have
-  scalar values measured in bits or bytes per second
-
-These types and their allowed unit values are defined below.
-
-#### scalar-unit.size
-<!----
-{"id": "839", "author": "Chris Lauwers", "date": "2020-07-27T18:39:00Z", "comment": "What don\u2019t we allow multiples of bits", "target": "size"}-->
-
-
-##### Recognized Units
+The TOSCA *scalar-unit.size* type is used to define properties that
+have scalar values measured in size units. It supports the units shown
+in the following table:
 
 | Unit | Usage | Description                    |
 |------|-------|--------------------------------|
@@ -4571,34 +4434,29 @@ These types and their allowed unit values are defined below.
 | TB   | size  | terabyte (1000000000000 bytes) |
 | TiB  | size  | tebibyte (1099511627776 bytes) |
 
-##### Examples
+These units are a subset of those defined by GNU at
+<http://www.gnu.org/software/parted/manual/html_node/unit.html>, which
+is a non-normative reference to this specification.
+
+TOSCA treats these unit values as *case-insensitive* (e.g., a value of
+‘kB’, ‘KB’ or ‘kb’ is equivalent), but it is considered best practice
+to use the case of these units as prescribed by GNU.
+
+<!----
+{"id": "843", "author": "Chris Lauwers", "date": "2020-07-20T18:40:00Z", "comment": "Bitrate units are case sensitive. We\n  should make this consistent.", "target": "GNU"}-->
+
+The following shown an example property of type scalar-unit.size:
 ```
 # Storage size in Gigabytes
 properties:
   storage_size: 10 GB
 ```
-##### Notes
 
-- The unit values recognized by TOSCA for size-type units are based upon
-  a subset of those defined by GNU at
-  <http://www.gnu.org/software/parted/manual/html_node/unit.html>, which
-  is a non-normative reference to this specification.
+##### 9.1.2.2.2 scalar-unit.time
 
-- TOSCA treats these unit values as case-insensitive (e.g., a value of
-  ‘kB’, ‘KB’ or ‘kb’ is equivalent), but it is considered best practice
-  to use the case of these units as prescribed by
-  GNU.
-<!----
-{"id": "843", "author": "Chris Lauwers", "date": "2020-07-20T18:40:00Z", "comment": "Bitrate units are case sensitive. We\n  should make this consistent.", "target": "GNU"}-->
-
-- Some cloud providers may not support byte-level granularity for
-  storage size allocations. In those cases, these values could be
-  treated as desired sizes and actual allocations will be based upon
-  individual provider capabilities.
-
-#### scalar-unit.time
-
-##### Recognized Units
+The TOSCA *scalar-unit.time* type is used to define properties that have scalar
+values measured in time units. It supports the units shown
+in the following table:
 
 | Unit | Usage | Description  |
 |------|-------|--------------|
@@ -4610,27 +4468,31 @@ properties:
 | us   | time  | microseconds |
 | ns   | time  | nanoseconds  |
 
-##### Examples
+The unit values recognized by TOSCA for scalar-unit.time types are
+based upon a subset of those defined by International System of Units
+whose recognized abbreviations are defined within the following
+reference:
+<http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>. This
+document is a non-normative reference to this specification and
+intended for publications or grammars enabled for Latin characters
+which are not accessible in typical programming languages
+
+TOSCA treats these unit values as *case-insensitive* (e.g., a value of
+‘ms’, ‘mS’ or ‘MS’ is equivalent), but it is considered best practice
+to use the case of these units as described by this document.
+
+The following shown an example property of type scalar-unit.time:
 ```
 # Response time in milliseconds
 properties:
   respone_time: 10 ms
 ```
-##### Notes
 
-- The unit values recognized by TOSCA for time-type units are based upon
-  a subset of those defined by International System of Units whose
-  recognized abbreviations are defined within the following reference:
+##### 9.1.2.2.3  scalar-unit.frequency
 
-  - <http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>
-
-  - This document is a non-normative reference to this specification and
-    intended for publications or grammars enabled for Latin characters
-    which are not accessible in typical programming languages
-
-#### scalar-unit.frequency
-
-##### Recognized Units
+The TOSCA *scalar-unit.frequency* type is used to define properties
+that have scalar values measured in units per second. It supports the units shown
+in the following table:
 
 | Unit | Usage     | Description                                                                       |
 |------|-----------|-----------------------------------------------------------------------------------|
@@ -4639,24 +4501,28 @@ properties:
 | MHz  | frequency | Megahertz, or MHz, equals to 1,000,000 Hertz or 1,000 kHz                         |
 | GHz  | frequency | Gigahertz, or GHz, equals to 1,000,000,000 Hertz, or 1,000,000 kHz, or 1,000 MHz. |
 
-##### Examples
+The value for Hertz (Hz) is the International Standard Unit (ISU) as
+described by the Bureau International des Poids et Mesures (BIPM) in
+the “*SI Brochure: The International System of Units (SI) \[8th
+edition, 2006; updated in 2014\]*”,
+<http://www.bipm.org/en/publications/si-brochure/>
+
+TOSCA treats these unit values as *case-insensitive* (e.g., a value of
+‘khz’, ‘kHz’ or ‘KHZ’ is equivalent), but it is considered best practice
+to use the case of these units as described by this document.
+
+The following shown an example property of type scalar-unit.frequence:
 ```
 # Processor raw clock rate
 properties:
   clock_rate: 2.4 GHz
 ```
 
-##### Notes
+##### 9.1.2.2.4 scalar-unit.bitrate
 
-- The value for Hertz (Hz) is the International Standard Unit (ISU) as
-  described by the Bureau International des Poids et Mesures (BIPM) in
-  the “*SI Brochure: The International System of Units (SI) \[8th
-  edition, 2006; updated in 2014\]*”,
-  <http://www.bipm.org/en/publications/si-brochure/>
-
-#### scalar-unit.bitrate
-
-##### Recognized Units
+The TOSCA *scalar-unit.bitrate* type is used to define properties that
+have scalar values measured in bits per second. It supports the units shown
+in the following table:
 
 | Unit  | Usage   | Description                              |
 |-------|---------|------------------------------------------|
@@ -4670,7 +4536,11 @@ properties:
 | Tbps  | bitrate | terabit (1000000000000 bits) per second  |
 | Tibps | bitrate | tebibits (1099511627776 bits) per second |
 
-##### Examples
+TOSCA treats these unit values as *case-insensitive* (e.g., a value of
+‘bps’, ‘BPS’ or ‘Bps’ is equivalent), but it is considered best practice
+to use the case of these units as described by this document.
+
+The following shown an example property of type scalar-unit.bitrate:
 ```
 # Somewhere in a node template definition
 requirements:
@@ -4682,21 +4552,93 @@ requirements:
                 bitrate:
                  - greater_or_equal: 10 Kbps # 10 * 1000 bits per second at least
 ```
+#### 9.1.2.3 version
+
+The TOSCA *version* type represents a version string.
+
+TOSCA versions provide a normative means to represent a version string
+which enables the comparison and management of version information
+over time.
+
+TOSCA version strings have the following grammar:
+```
+<major_version>.<minor_version>[.<fix_version>[.<qualifier>[-<build_version>] ] ] 
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- major_version: is a mandatory integer value greater than or equal to 0
+  (zero)
+
+- minor_version: is a mandatory integer value greater than or equal to 0
+  (zero).
+
+- fix_version: is an optional integer value greater than or equal to 0
+  (zero).
+
+- qualifier: is an optional string that indicates a named, pre-release
+  version of the associated code that has been derived from the version
+  of the code identified by the combination major_version, minor_version
+  and fix_version numbers.
+
+- build_version: is an optional integer value greater than or equal to 0
+  (zero) that can be used to further qualify different build versions of
+  the code that has the same qualifer_string.
+
+A version value of zero (i.e., ‘0.0’, or ‘0.0.0’) SHALL indicate there
+no version provided.
+
+When specifying a version string that contains just a major and a
+minor version number, the version string must be enclosed in quotes to
+prevent the YAML parser from treating the version as a floating point
+value.
+
+The TOSCA version type is compatible with the Apache Maven versioning
+policy \[[Maven-Version](#CIT_MAVEN_VERSION)\]. It supports version
+comparison as follows:
+
+- When comparing TOSCA versions, all component versions (i.e., *major*,
+  *minor* and *fix*) are compared in sequence from left to right.
+
+- TOSCA versions that include the optional qualifier are considered
+  older than those without a qualifier.
+
+- TOSCA versions with the same major, minor, and fix versions and have
+  the same qualifier string, but with different build versions can be
+  compared based upon the build version.
+
+- Qualifier strings are considered domain-specific. Therefore, this
+  specification makes no recommendation on how to compare TOSCA versions
+  with the same major, minor and fix versions, but with different
+  qualifiers strings and simply considers them different branches
+  derived from the same code.
+
+The following are examples of valid TOSCA version strings:
+```
+# basic version strings
+‘6.1’
+2.0.1
+
+# version string with optional qualifier
+3.1.0.beta
+
+# version string with optional qualifier and build version
+1.0.0.alpha-10
+```
 ### 9.1.3 Collection Types
 
-### TOSCA list type
+#### 9.1.3.1 list
 
-The list type allows for specifying multiple values for a
-a parameter of
-property
+The TOSCA *list* type allows for specifying multiple values for a a
+parameter or property. For example, if an application allows for being
+configured to listen on multiple ports, a list of ports could be
+configured using the list data type.
+
 <!----
 {"id": "859", "author": "Mike Rehder", "date": "2020-12-14T14:56:00Z", "comment": "What is a \u201cparameter of property\u201d?  \nShould just say \u201cfor a property\u201d.", "target": "a parameter of\nproperty"}-->
-. For example, if an
-application allows for being configured to listen on multiple ports, a
-list of ports could be configured using the list data type.
 
-Note that entries in a list must be of the same type. The type (for
-simple entries) or schema (for complex entries) is defined by the
+Note that all entries in a list must be of the same type. The type
+(for simple entries) or schema (for complex entries) is defined by the
 mandatory entry_schema attribute of the respective [property
 definition](#_Schema_Definition), [attribute
 definitions](#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition),
@@ -4704,16 +4646,12 @@ or input or output [parameter definitions](#parameter-definition).
 Schema definitions can be arbitrarily complex (they may themselves
 define a list).
 
-#### Grammar
-
-TOSCA lists are essentially normal YAML lists with the following
-grammars:
-
-#####  Square bracket notation
+TOSCA list values are essentially normal YAML lists. They support the
+square bracket notation as follows:
 ```
 [ <list_entry_1>, <list_entry_2>, ... ] 
 ```
-##### Bulleted list notation
+TOSCA list values also support bulleted list notation as follows:
 ```
 - <list_entry_1>
 - ...
@@ -4722,12 +4660,21 @@ grammars:
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- \<list_entry\_\*\>: represents one entry of the list.
+- <list_entry_*>: represents one entry of the list.
 
-#### Declaration Examples
+The following example shows a list assignment using the square bracket
+notation:
+```
+  listen_ports: [ 80, 8080 ]
+```
+The following example shows the same list assignment using the
+bulleted list notation:
 
-##### List declaration using a simple type
-
+```
+listen_ports:
+  - 80
+  - 8080
+```
 The following example shows a list declaration with an entry schema
 based upon a simple integer type (which has an additional validation
 clause):
@@ -4742,9 +4689,6 @@ clause):
         type: integer
         validation: { $max_length: [ $value, 128 ] }
 ```
-
-##### List declaration using a complex type
-
 The following example shows a list declaration with an entry schema
 based upon a complex type:
 ```
@@ -4758,38 +4702,17 @@ based upon a complex type:
         type: ProductInfo
 ```
 
-#### Definition Examples
+#### 9.1.3.2 map
 
-These examples show two notation options for defining lists:
-
-- A single-line option which is useful for only short lists with simple
-  entries.
-
-- A multi-line option where each list entry is on a separate line; this
-  option is typically useful or more readable if there is a large number
-  of entries, or if the entries are complex.
-
-##### Square bracket notation
-```
-  listen_ports: [ 80, 8080 ]
-```
-##### Bulleted list notation
-```
-listen_ports:
-  - 80
-  - 8080
-```
-### TOSCA map type
-
-The map type allows for specifying multiple values for a parameter of
+The TOSCA *map* type allows for specifying multiple values for a parameter of
 property as a map. In contrast to the list type, where each entry can
 only be addressed by its index in the list, entries in a map are named
 elements that can be addressed by their keys.
 
-Note that entries in a map for one property or parameter must be of the
-same type. The type (for simple entries) or schema (for complex entries)
-is defined by the entry_schema attribute of the respective [property
-definition](#_Schema_Definition), [attribute
+Note that entries in a map for one property or parameter must be of
+the same type. The type (for simple entries) or schema (for complex
+entries) is defined by the entry_schema attribute of the respective
+[property definition](#_Schema_Definition), [attribute
 definition](#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition),
 or input or output [parameter definition](#parameter-definition). In
 addition, the keys that identify entries in a map must be of the same
@@ -4798,15 +4721,13 @@ attribute of the respective property_definition, attribute_definition,
 or input or output parameter_definition. If the key_schema is not
 specified, keys are assumed to be of type string.
 
-#### Grammar
-
-TOSCA maps are normal YAML dictionaries with following grammar:
-
-##### Single-line grammar
+TOSCA maps are normal YAML dictionaries. They support the following
+single-line grammar:
 ```
 { <entry_key_1>: <entry_value_1>, ..., <entry_key_n>: <entry_value_n> }
 ```
-##### Multi-line grammar
+
+In addition, TOSCA maps also support the following multi-line grammar:
 ```
 <entry_key_1>: <entry_value_1>
 ...
@@ -4815,17 +4736,31 @@ TOSCA maps are normal YAML dictionaries with following grammar:
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- entry_key\_\*: is the mandatory key for an entry in the map
+- entry_key_*: the mandatory key for an entry in the map. While YAML
+  allows arbitrary data to be used as dictionary keys, TOSCA map keys
+  must be strings.
 
-- entry_value\_\*: is the value of the respective entry in the map
+- entry_value_*: is the value of the respective entry in the map
 
-#### Declaration Examples
+The following example shows the single-line option which is useful
+for only short maps with simple entries:
+```
+# notation option for shorter maps
+user_name_to_id_map: { user1: 1001, user2: 1002 }
+```
+The next example shows the multi-line option where each map entry is
+on a separate line; this option is typically useful or more readable
+if there is a large number of entries, or if the entries are complex.
+```
+# notation for longer maps
+user_name_to_id_map:
+  user1: 1001
+  user2: 1002
+```
+The following example shows a declaration of a property of type map
+with an entry schema definition based upon the built-in string type
+(which has an additional validation clause):
 
-##### Map declaration using a simple type
-
-The following example shows a map with an entry schema definition based
-upon an existing string type (which has an additional validation
-clause):
 ```
 <some_entity>:
   ...
@@ -4837,9 +4772,8 @@ clause):
         type: string
         validation: { $max_length: [ $value, 128 ] }
 ```
-##### Map declaration using a complex type
 
-The following example shows a map with an entry schema definition for
+The next example shows a map with an entry schema definition for
 contact information:
 ```
 <some_entity>:
@@ -4851,29 +4785,7 @@ contact information:
         description: simple contact information
         type: ContactInfo
 ```
-#### Definition Examples
 
-These examples show two notation options for defining maps:
-
-- A single-line option which is useful for only short maps with simple
-  entries.
-
-- A multi-line option where each map entry is on a separate line; this
-  option is typically useful or more readable if there is a large number
-  of entries, or if the entries are complex.
-
-##### Single-line notation
-```
-# notation option for shorter maps
-user_name_to_id_map: { user1: 1001, user2: 1002 }
-```
-##### Multi-line notation
-```
-# notation for longer maps
-user_name_to_id_map:
-  user1: 1001
-  user2: 1002
-```
 ## 9.2 Custom Data Types
 
 A Data Type definition defines the schema for new datatypes in TOSCA.
@@ -6699,11 +6611,32 @@ The following is the list of recognized comparison functions.
 <!----
 {"id": "1333", "author": "Calin Curescu", "date": "2023-01-04T16:19:00Z", "comment": "TODO explanation on how versions are\n  compared!!!", "target": "TODO explanation on how versions are\n  compared!!\\!"}-->
 
+<!----
+{"id": "807", "author": "Chris Lauwers", "date": "2020-08-18T23:01:00Z", "comment": "(From Tal): Do we want the comparison constraints to work for strings? E.g. should \"greater_than\" do a sorting-based comparison? I'll just point that it is non-trivial to sort Unicode strings. The most common way is to use the Unicode Collation Algorithm, which involves a database of information. There is a reference implementation in [ICU](webSettings.xml). Good and proper Unicode libraries will support it (e.g. [here is Go's](footnotes.xml)), but I do imagine it may be a burden for some implementations. I suggest we discuss this in the ad hoc and consider the pros and cons.", "target": "Notes"}-->
+
+
 #### equal
 
 The function takes two arguments of any type. It evaluates to true if
 the arguments are equal (that is in both type and value) and evaluates
 to false otherwise.
+
+- When performing validation clause evaluation on values of the
+  scalar-unit type, both the scalar value portion and unit value portion
+  **SHALL** be compared together (i.e., both are treated as a single
+  value). For example, if we have a property called storage_size (which
+  is of type scalar-unit) a valid range constraint would appear as
+  follows:
+```
+storage_size:
+  validation:
+    $in_range: [$value, [4 GB, 20 GB]]
+```
+
+  where storage_size’s range will be evaluated using both the numeric
+  and unit values (combined together), in this case ‘4 GB’ and ’20
+  GB’.
+
 
 ##### Grammar 
 ```
