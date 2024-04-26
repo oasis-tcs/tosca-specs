@@ -5729,30 +5729,30 @@ node_types:
 TOSCA supports the use of functions for providing dynamic service data
 values at runtime. The syntax of a function has two representations:
 
-- Any function can be represented by a YAML map with a single key, where
-  the key is a string starting with a \$ (dollar sign) character and
-  where the remainder of the string represents the function name. If
-  present, the value in the key-value pair represents the function
-  arguments.
+- Any function can be represented by a YAML map with a single key,
+  where the key is a string starting with a `$` (dollar sign)
+  character and where the remainder of the string represents the
+  function name. If present, the value in the key-value pair
+  represents the function arguments.
 
 - A function without arguments can alternatively be represented by a
-  YAML string value, where the string starts with a \$ (dollar sign)
+  YAML string value, where the string starts with a `$` (dollar sign)
   character and where the remainder of the string represents the
   function name. This representation cannot be used in map keys.
 
-- Function names may not contain the \$ character as it will conflict
-  with the escape mechanisms described below.
+- Function names may not contain the `$` character as it will
+  conflict with the escape mechanisms described below.
 
-Therefore, any string starting with a \$ (dollar sign) character will be
-interpreted as a function call. To allow for strings starting with \$
-character to be specified, the \$ character at the start of the string
-needs to be escaped by using \$\$ (two dollar signs) characters instead.
-For example:
+Therefore, any string starting with a `$` (dollar sign) character
+will be interpreted as a function call. To allow for strings starting
+with `\$` character to be specified, the `$` character at the start of
+the string needs to be escaped by using `$$`(two dollar signs)
+characters instead.  For example:
 
-- \$\$name will represent the literal string \$name
+- `$$name` will represent the literal string `$name`
 
-- \$\$\$item will represent the literal string \$\$item, as only the
-  first \$ character is escaped.
+- `$$$item` will represent the literal string `$$item`, as only
+  the first `$` character is escaped.
 
 As we could have function calls that return values to be used as keys in
 a map, hypothetically it is possible that we use the same function call
@@ -5795,9 +5795,7 @@ be passed as an argument to the outer function:
 properties:
   nested: {$outer_func: [{$inner_func: [iarg1, iarg2]}, oarg2]}
 ```
-To allow for strings that are not function names to start with \$, the
-dollar sign can be escaped by using \$\$ (two consecutive dollar
-characters). The following snippet shows escaped strings in a map that
+The following snippet shows escaped strings in a map that
 do not represent function calls:
 ```
 properties:
@@ -5813,16 +5811,14 @@ designers can optionally define custom function signatures definitions
 for function arguments and function return values as specified in
 section 5.4.15.
 
-### Parsing rule
-
 When parsing TOSCA files, TOSCA parsers MUST identify functions wherever
 values are specified using the following algorithm:
 
-- Does the YAML string start with \$?
+- Does the YAML string start with `$`?
 
-  - If yes, is the second character \$?
+  - If yes, is the second character `$`?
 
-    - If yes, discard the first \$ and stop here (escape).
+    - If yes, discard the first `$` and stop here (escape).
 
     - If no, is this a key in a YAML map?
 
@@ -5836,16 +5832,13 @@ values are specified using the following algorithm:
 
 ## 10.2 TOSCA Built-In Functions
 
-## Representation graph query functions
-<!----
-{"id": "1316", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-146](media/image1.png): WD02: Need to include grammar and examples for each function.", "target": "Representation graph query functions"}-->
+### 10.2.1  Representation graph query functions
 
-### get_input 
+#### 10.2.1.1 get_input 
 
-The get_input function is used to retrieve the values of parameters
-declared within the inputs section of a TOSCA Service Template.
+The *$get_input* function is used to retrieve the values of parameters
+declared within the inputs section of a TOSCA service template. It uses the following grammars
 
-#### Grammar 
 ```
 $get_input: <input_parameter_name>
 ```
@@ -5853,24 +5846,23 @@ or
 ```
 $get_input: [ <input_parameter_name>, <nested_input_parameter_name_or_index_1>, ..., <nested_input_parameter_name_or_index_n> ]
 ```
-Note that the first signature does not conform to the custom function
-definition, but it does not have to as it is a TOSCA built-in function.
 
-#### Arguments
+Note that the signature shown in the first grammar does not conform to
+the custom function definition, but it does not have to as it is a
+TOSCA built-in function.
+
+The *$get_input* function takes the following arguments:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
 |\<input_parameter_name\>|yes|string|The name of the parameter as defined in the inputs section of the service template.|
 |\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
-#### Examples
-
 The following snippet shows an example of the simple get_input grammar:
-```
+```yaml
 inputs:
   cpus:
     type: integer
-
 node_templates:
   my_server:
     type: tosca.nodes.Compute
@@ -5883,7 +5875,7 @@ The following template shows an example of the nested get_input grammar.
 The template expects two input values, each of which has a complex data
 type. The get_input function is used to retrieve individual fields from
 the complex input data.
-```
+```yaml
 data_types:
   NetworkInfo:
     derived_from: tosca.Data.Root
@@ -5892,7 +5884,6 @@ data_types:
         type: string
       gateway:
         type: string
-        
   RouterInfo:
     derived_from: tosca.Data.Root
     properties:
@@ -5900,14 +5891,12 @@ data_types:
         type: string
       external:
         type: string
-
 service_template:
   inputs:
     management_network:
       type: NetworkInfo
     router:
       type: RouterInfo
-      
   node_templates:
     Bono_Main:
       type: vRouter.Cisco
@@ -5923,114 +5912,28 @@ service_template:
             capability: virtualBind
         - mgmt_net: mgmt_net
 ```
-### get_property
+#### 10.2.1.2 get_property
 
-The get_property function is used to retrieve property values of
+The *$get_property* function is used to retrieve property values of
 modelable entities in the representation graph. Note that the
 get_property function may only retrieve the static values of parameter
 or property definitions of a TOSCA application as defined in the TOSCA
-Service Template. The get_attribute function
-should be used to retrieve values for attribute definitions (or property
-definitions reflected as attribute definitions) from the representation
-graph of the TOSCA application (as realized by the TOSCA orchestrator).
+service template. The *$get_attribute* function should be used to
+retrieve values for attribute definitions (or property definitions
+reflected as attribute definitions) from the representation graph of
+the TOSCA application (as realized by the TOSCA orchestrator).
 
-#### Grammar 
-<!----
-{"id": "1321", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-169](comments.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.", "target": "Grammar "}-->
+The get_property function uses the following grammar:
 ```
 $get_property: [ <tosca_traversal_path>, <property_name>, <nested_property_name_or_index_1>, ..., <nested_property_name_or_index_n> ]
 ```
-#### Arguments
+The *$get_property* function takes the following arguments:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
 |\< tosca_traversal_path \>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. In the following subsection the specification of the \<tosca_traversal_path\> is explicated.|
-|\<property_name\>|yes|The name of the property definition the function will return the value from.|
+|\<property_name\>|yes|The name of the property definition from which the function will return the value.|
 |\<nested_property_name_or_index_*\> |no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
-
-##### The simplified TOSCA_PATH definition in BNF format
-```
-<tosca_path> ::=         <initial_context>, <node_context> |
-                         <initial_context>, <rel_context>
-<initial_context> ::=    <node_symbolic_name> | 
-                         <relationship_symbolic_name> |
-                         SELF 
-<rel_context> ::=        SOURCE, <node_context> | 
-                         TARGET, <node_context> | 
-                         CAPABILITY |
-                         <empty>
-<node_context> ::=       RELATIONSHIP, <requirement_name>, <id_of_outgoing_rel>, <rel_context> |
-                         CAPABILITY, <capability_name>, RELATIONSHIP, <id_of_incoming_rel>, <rel_context> |
-                         CAPABILITY, <capability_name> |
-                         <empty>
-<id_of_outgoing_rel> ::= <integer_index> | 
-                         ALL | 
-                         <empty>
-<id_of_incoming_rel> ::= <integer_index> |
-                         ALL | 
-                         <empty>
-```
-The initial context (if we refer to a node or relationship) determines
-if the next context is a relationship context or a node context. Then,
-each *\<node_context\>* can further resolve to a *\<rel_context\>* and
-vice versa, thus building additional traversal steps. In the end we
-reach either a node context, a relationship context, or a capability
-context as presented above.
-
-A *\<rel_context\>* can
-
-- further lead to the source node of the current relationship
-
-- further lead to the target node of the current relationship
-
-- end within the target capability of the current relationship
-
-- end within the current relationship via the \<empty\> resolution
-
-A *\<node_context\>* can
-
-- further lead to the relationship with index \<idx_of_out_rel_in_req\>
-  defined by requirement with symbolic name \<requirement_name\> of the
-  current node
-
-- further lead to the relationship with index \<idx_of_incoming_rel\>
-  that has as target the capability with symbolic name
-  \<capability_name\> of the current node
-
-- end within the capability with symbolic name \<capability_name\> in
-  the current node
-
-- end within the current node via the \<empty\> resolution
-
-Note that both the indexes can either be a non-negative integer, the
-keyword ALL, or missing. If it is a non-negative integer, 0 represents
-the first index and so on incrementally. If the index is missing, the
-semantic meaning is that the first index (index with value 0) is used.
-If it is the keyword ALL, then we return the result for all possible
-indices (further resolved separately) as a list. If the there are
-multiple ALL keywords in the definition, then all the results shall be
-merged into a single list.
-
-#### Note
-
-We further list the changes from the get_property and get_attribute
-expression from v1.3 to v2.0:
-
-- Added multi-step traversal of the representation graph
-
-- Added the backward traversal from capabilities to incoming
-  relationships
-
-- Added the target capability of a relationship as a possible traversal
-
-- Added the specification of indexes and allowing traversal of
-  multi-count requirements
-
-- Changed the following syntax to work better in multi-step traversal:
-
-  - The initial SOURCE, … becomes SELF, SOURCE, …
-
-  - The initial TARGET, … becomes SELF, TARGET, …
 
 #### Examples
 <!----
@@ -6146,7 +6049,7 @@ node_templates:
 ```
 > TODO: An example of second index (i.e. 1) and index ALL !!!
 
-### get_attribute
+#### 10.2.1.3 get_attribute
 
 The **get_attribute** function is used within a representation graph to
 obtain attribute values from nodes and relationships that have been
@@ -6178,8 +6081,7 @@ with “get_attribute” function name.
 <!----
 {"id": "1327", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "Is this always true?", "target": "The attribute\nfunctions are used in the same way as the equivalent Property functions\ndescribed above. Please see their examples and replace \u201cget_property\u201d\nwith \u201cget_attribute\u201d function name."}-->
 
-
-### get_artifact
+#### 10.2.1.4 get_artifact
 
 The get_artifact function is used to retrieve artifact location between modelable entities defined in the same service template.
 
@@ -6280,7 +6182,7 @@ In such implementation the TOSCA orchestrator must provide the
 wordpress.zip archive as a local path (example: C:/wpdata/wp.zip ) and
 **will let it** after the operation is completed.
 
-### value
+#### 10.2.1.5 value
 
 This function is used as an argument inside validation functions. It
 returns the value of the property, attribute, or parameter for which the
@@ -6296,10 +6198,7 @@ $value: [<nested_value_name_or_index>, ... ]
 | ----- | ------- | ----- | 
 |<nested_value_name_or_index\> |no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
-Boolean Functions
------------------
-<!----
-{"id": "1332", "author": "Calin Curescu", "date": "2022-12-06T16:00:00Z", "comment": "I would not call them condition functions since they can appear also outside conditions.", "target": " Functions"}-->
+### 10.2.2 Boolean Functions
 
 TOSCA includes a number of functions that return Boolean values. These
 functions are used in validation expressions and in condition clauses in
@@ -6307,7 +6206,7 @@ workflow definitions and policy definitions. They are also used as node
 filters in requirement definitions and requirement templates and as
 substitution filters in substitution mappings.
 
-### Boolean Logic Functions
+#### 10.2.2.1 Boolean Logic Functions
 
 #### and
 
@@ -6361,7 +6260,7 @@ false, and evaluates to true otherwise.
 ```
 $xor: [ <boolean_arg1>, <boolean_arg2> ]
 ```
-### Comparison Functions
+#### 10.2.2.2 Comparison Functions
 
 The following is the list of recognized comparison functions.
 
@@ -6488,7 +6387,7 @@ regular expression must start with a caret ^ and end with a \$.
 !!! Check for new lines and maybe add a third argument – e.g. as in
 <https://www.pcre.org/> !!!
 
-### Boolean list, map and string functions
+#### 10.2.2.3 Boolean List, Map and String Functions
 
 #### has_suffix
 
@@ -6596,11 +6495,7 @@ second argument which is equal to a key in the first argument.
 ```
 $has_any_key: [ <map_type_arg1>, <list_type_arg2> ]
 ```
-## String, list, and map functions
-<!----
-{"id": "1334", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-212](commentsIds.xml) \u2013 Concat intrinsic function", "target": ""}-->
-<span class="comment-start" id="1335" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1335"></span>
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+### 10.2.3 String, List, and Map Functions
 
 ### length
 
@@ -6698,8 +6593,7 @@ outputs:
                        ‘:’,
                        1 ] }
 ```
-Set functions
--------------
+### 10.2.4 Set Functions
 
 !!!Note: We should discuss order!!!!
 
@@ -6739,10 +6633,7 @@ The intersection applied to only one list will return a result where all
 the duplicate entries of the argument list are eliminated. Note also
 that the order of the elements in the result list is not specified.
 
-## Arithmetic functions
-------------------------
-<!----
-{"id": "1343", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-212](https://www.oasis-open.org/committees/tosca/) \u2013 Concat intrinsic function", "target": ""}-->
+### 10.2.5 Arithmetic Functions
 
 ### sum
 
@@ -6843,7 +6734,92 @@ argument.
 ```
 $ceil: [ <float_type_arg> ]
 ```
-## 10.3 Function definitions
+## 10.3 TOSCA Path
+##### The simplified TOSCA_PATH definition in BNF format
+```
+<tosca_path> ::=         <initial_context>, <node_context> |
+                         <initial_context>, <rel_context>
+<initial_context> ::=    <node_symbolic_name> | 
+                         <relationship_symbolic_name> |
+                         SELF 
+<rel_context> ::=        SOURCE, <node_context> | 
+                         TARGET, <node_context> | 
+                         CAPABILITY |
+                         <empty>
+<node_context> ::=       RELATIONSHIP, <requirement_name>, <id_of_outgoing_rel>, <rel_context> |
+                         CAPABILITY, <capability_name>, RELATIONSHIP, <id_of_incoming_rel>, <rel_context> |
+                         CAPABILITY, <capability_name> |
+                         <empty>
+<id_of_outgoing_rel> ::= <integer_index> | 
+                         ALL | 
+                         <empty>
+<id_of_incoming_rel> ::= <integer_index> |
+                         ALL | 
+                         <empty>
+```
+The initial context (if we refer to a node or relationship) determines
+if the next context is a relationship context or a node context. Then,
+each *\<node_context\>* can further resolve to a *\<rel_context\>* and
+vice versa, thus building additional traversal steps. In the end we
+reach either a node context, a relationship context, or a capability
+context as presented above.
+
+A *\<rel_context\>* can
+
+- further lead to the source node of the current relationship
+
+- further lead to the target node of the current relationship
+
+- end within the target capability of the current relationship
+
+- end within the current relationship via the \<empty\> resolution
+
+A *\<node_context\>* can
+
+- further lead to the relationship with index \<idx_of_out_rel_in_req\>
+  defined by requirement with symbolic name \<requirement_name\> of the
+  current node
+
+- further lead to the relationship with index \<idx_of_incoming_rel\>
+  that has as target the capability with symbolic name
+  \<capability_name\> of the current node
+
+- end within the capability with symbolic name \<capability_name\> in
+  the current node
+
+- end within the current node via the \<empty\> resolution
+
+Note that both the indexes can either be a non-negative integer, the
+keyword ALL, or missing. If it is a non-negative integer, 0 represents
+the first index and so on incrementally. If the index is missing, the
+semantic meaning is that the first index (index with value 0) is used.
+If it is the keyword ALL, then we return the result for all possible
+indices (further resolved separately) as a list. If the there are
+multiple ALL keywords in the definition, then all the results shall be
+merged into a single list.
+
+#### Note
+
+We further list the changes from the get_property and get_attribute
+expression from v1.3 to v2.0:
+
+- Added multi-step traversal of the representation graph
+
+- Added the backward traversal from capabilities to incoming
+  relationships
+
+- Added the target capability of a relationship as a possible traversal
+
+- Added the specification of indexes and allowing traversal of
+  multi-count requirements
+
+- Changed the following syntax to work better in multi-step traversal:
+
+  - The initial SOURCE, … becomes SELF, SOURCE, …
+
+  - The initial TARGET, … becomes SELF, TARGET, …
+
+## 10.3 Function Definitions
 
 TOSCA includes grammar for defining function signatures and associated
 implementation artifacts in TOSCA profiles or in TOSCA service
