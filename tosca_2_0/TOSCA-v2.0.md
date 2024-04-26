@@ -4030,11 +4030,11 @@ This section presents how data are handled in TOSCA via properties,
 attributes, and parameters. As with other entities in TOSCA, all data
 are *typed*. TOSCA data types can be divided into built-in data types
 and user-defined types. Built-in types comprise primitive types,
-special types that are extensions of the primitive types, and
-collection types. Custom (*user-defined*) types can be user-defined
-refinements of the built-in types as well as complex data types.
+special types, and collection types. Custom (*user-defined*) types can
+be user-defined refinements of the built-in types as well as complex
+data types.
 
-## 9.1 TOSCA Built-In Data Types
+## 9.1 TOSCA Built-In Types
 
 The following table summarizes the TOSCA built-in data types. All of
 these type names are reserved and cannot be used for custom data
@@ -4786,41 +4786,39 @@ contact information:
         type: ContactInfo
 ```
 
-## 9.2 Custom Data Types
+## 9.2 Data Type
 
-A Data Type definition defines the schema for new datatypes in TOSCA.
+A *data type* defines the schema for user-defined data types in
+TOSCA. User-defined data types comprise *derived types* that derive
+from from the TOSCA built-in types and *complex types* that define
+collections of properties that each have their own data types.
 
-### Keynames
-
-The Data Type is a TOSCA type entity and has the common keynames listed
-in Section 4.2.5.2 Common keynames in type definitions. In addition, the
-Data Type has the following recognized keynames:
+A data type definition is a type of TOSCA type definition and as a
+result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+data type definition has the following recognized keynames:
 
 <!----
 {"id": "904", "author": "Chris Lauwers", "date": "2021-01-26T03:12:00Z", "comment": "Edit suggested by Mike Rehder: Not valid for a type derived from a complex type (parent has property definitions) or a type with property, key_schema or entry_schema definitions.", "target": "Type"}-->
 <!----
 {"id": "905", "author": "Chris Lauwers", "date": "2021-01-26T03:13:00Z", "comment": "Edit suggested by Mike Rehder: Not valid for a type derived from a simple type (parent has no property definitions) or a type with constraint definitions.", "target": "TOSCA"}-->
 
-| Keyname      | Mandatory                     | Type                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                                                                    |
-|--------------|-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| validation   | no                            | [validation clause](#this-should-have-its-own-refinement-rule-section-to-explain-how-conflicts-are-resolved-if-at-all.-for-example-if-there-is-range-0..10-and-greated_than-15-what-happensvalidation-clause-definition) | The optional validation clause that must evaluate to True for values of this Data Type to be valid. |
-| properties   | no                            | map of [property definitions](#_Schema_Definition)                                                                                                                                                                       | The optional map property definitions that comprise the schema for a complex Data Type in TOSCA.                            |
-| key_schema   | conditional (default: string) | [schema definition](#schema-definition)                                                                                                                                                                                  | For data types that derive from the TOSCA map data type, the optional schema definition for the keys used to identify entries in properties of this data type. If not specified, the key_schema defaults to string. For data types that do not derive from the TOSCA map data type, the key_schema is not allowed.                                                                                                             |
-| entry_schema | conditional                   | [schema definition](#schema-definition)                                                                                                                                                                                  | For data types that derive from the TOSCA map or list data types, the mandatory schema definition for the entries in properties of this data type. For data types that do not derive from the TOSCA list or map data type, the entry_schema is not allowed.                                                                                                                                                                    |
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|validation|no|validation clause|The optional validation clause that must evaluate to True for values of this data type to be valid.|
+|properties|no|map of property definitions|The optional map property definitions that comprise the schema for a complex data type in TOSCA. |
+|key_schema|conditional|schema definition|For data types that derive from the TOSCA map data type, the optional schema definition for the keys used to identify entries in properties of this data type. If not specified, the key_schema defaults to string. If present, the key_schema must derive from string. For data types that do not derive from the TOSCA map data type, the key_schema is not allowed.|
+|entry_schema|conditional|schema definition|For data types that derive from the TOSCA map or list data types, the mandatory schema definition for the entries in properties of this data type. For data types that do not derive from the TOSCA list or map data type, the entry_schema is not allowed.|
 
-### Grammar
-
-Data Types have the following grammar:
+These keynames can be used according to the following grammar:
 ```
 <data_type_name>: 
   derived_from: <existing_type_name>
   version: <version_number>
-  metadata: 
-    <map of string>
+  metadata: <map of yaml_values>
   description: <datatype_description>
   validation: <validation_clause>
-  properties:
-    <property_definitions>
+  properties: <property_definitions>
   key_schema: <key_schema_definition>
   entry_schema: <entry_schema_definition>
 ```
@@ -4830,14 +4828,8 @@ have the following meaning:
 - data_type_name: represents the mandatory symbolic name of the data
   type as a string.
 
-- version_number: represents the optional TOSCA version number for the
-  data type.
-
-- datatype_description: represents the optional description for the data
-  type.
-
 - existing_type_name: represents the optional name of a valid TOSCA
-  primitive type or data type this new data type derives from.
+  built-in type or data type from which this new data type derives.
 
 - validation_clause: represents the optional validation clause that must
   evaluate to True for values of this data type to be valid.
@@ -4845,8 +4837,9 @@ have the following meaning:
 - property_definitions: represents the optional map of one or more
   property definitions that provide the schema for the data type
 
-  - property_definitions may not be added to data types derived_from TOSCA
-    primitive types.
+  - property_definitions are only allowed for complex type definitions
+    and MAY NOT be added to custom data types derived_from TOSCA
+    built-in types.
 
 - key_schema_definition: if the data type derives from the TOSCA map
   type (i.e existing_type_name is a map or derives from a map), it
@@ -4858,9 +4851,18 @@ have the following meaning:
   from a map or list), it represents the mandatory schema definition for
   the entries in properties of this type.
 
-### Derivation rules
+The following requirements apply:
 
-During Data Type derivation the keyname definitions follow these rules:
+- A valid datatype definition **MUST** have either a valid
+  derived_from declaration or at least one valid property definition.
+
+- Any validation clauses **SHALL** be type-compatible with the type
+  declared by the derived_from keyname.
+
+- If a properties keyname is provided, it **SHALL** contain one or more
+  valid property definitions.
+
+During data type derivation the keyname definitions follow these rules:
 
 - validation: a new validation clause may be defined; this validation
   clause does not replace the validation clause defined in the parent
@@ -4875,33 +4877,16 @@ During Data Type derivation the keyname definitions follow these rules:
 - entry_schema: the entry_schema definition may be refined according to
   schema refinement rules.
 
-### Additional Requirements
-
-- A valid datatype
-  definition **MUST** have either a valid derived_from declaration or at
-  least one valid property definition.
-<!----
-{"id": "910", "author": "Mike Rehder", "date": "2020-12-14T15:10:00Z", "comment": "This implies that type is optional.\n  However it is listed as required \u2013 which is it?", "target": "A valid datatype\n  definition **MUST** have either a valid derived_from declaration or at\n  least one valid property definition."}-->
-
-- Any validation clauses **SHALL** be type-compatible with the type
-  declared by the derived_from keyname.
-
-- If a properties keyname is provided, it **SHALL** contain one or more
-  valid property definitions.
-
-- Property definitions may not be added to data types derived from TOSCA
-  primitive types.
-
-### Examples
-
-The following example represents a Data Type definition based upon an
-existing string type:
-
-#### Defining a complex datatype
+The following code snippet shows an example data type definition that
+derives from the built-in string type:
 ```
-# define a new complex datatype
-mytypes.phonenumber:
-  description: my phone number datatype
+ShortString:
+  derived_from: string
+  validation: { $max_length: [ $value, 16 ] }
+```
+The next example defines a complex data type that represents a phone number:
+```
+PhoneNumber:
   properties:
     countrycode:
       type: integer
@@ -4910,28 +4895,24 @@ mytypes.phonenumber:
     number:
       type: integer
 ```
-#### Defining a datatype derived from an existing datatype
+The following example shows a complex data type that derives from and
+extends a previously defined complex data type:
 ```
-# define a new datatype that derives from existing type and extends it
-mytypes.phonenumber.extended:
-  derived_from: mytypes.phonenumber
-  description: custom phone number type that extends the basic phonenumber type
+ExtendPhoneNumber:
+  derived_from: PhoneNumber
   properties:
     phone_description:
       type: string
       validation: { $max_length: [ $value, 128 ] }
 ```
-## Schema definition
+## 9.3 Schema Definition
 
-All entries in a map or list for one property or
-parameter must be of the same type. Similarly, all keys for map entries
-for one property or parameter must be of the same type as well.
-
-<!----
-{"id": "920", "author": "Mike Rehder", "date": "2020-12-14T15:12:00Z", "comment": "Repeats from the map and list primitive\nsection.", "target": "All entries in a map or list for one property or\nparameter must be of the same type. Similarly, all keys for map entries\nfor one property or parameter must be of the same type as well.\n"}-->
-A TOSCA schema definition
-specifies the type (for simple entries) or schema (for complex entries)
-for keys and entries in TOSCA set types such as the TOSCA list or map.
+All entries in a map or list for one property or parameter must be of
+the same type. Similarly, all keys for map entries for one property or
+parameter must be of the same type as well. A TOSCA schema definition
+must be used to specify the type (for simple entries) or schema (for
+complex entries) for keys and entries in TOSCA set types such as the
+TOSCA list or map.
 
 If the schema definition specifies a map key, the type of the key schema
 must be derived originally from the string type (which basically ensures
@@ -4944,8 +4925,6 @@ Schema definitions appear in data type definitions when derived_from a
 map or list type or in parameter, property, or attribute definitions of
 a map or list type.
 
-### Keynames
-
 The following is the list of recognized keynames for a TOSCA schema
 definition:
 
@@ -4954,31 +4933,25 @@ definition:
 |type|yes|string|The mandatory data type for the key or entry. If this schema definition is for a map key, then the referred type must be derived originally from string.|
 |description|no|string|The optional description for the schema.|
 |validation|no|validation clauses|The optional validation clause that must evaluate to True for the property.|
-|key_schema|no (default: string)|schema definition|When the schema itself is of type map, the optional schema definition that is used to specify the type of the keys of that map’s entries (if key_schema is not defined it is assumed to be “string” by default). For other schema types, the key_schema must not be defined.|
+|key_schema|no|schema definition|When the schema itself is of type map, the optional schema definition that is used to specify the type of the keys of that map’s entries (if key_schema is not defined it is assumed to be “string” by default). For other schema types, the key_schema must not be defined.|
 |entry_schema|conditional|schema definition|When the schema itself is of type map or list, the schema definition is mandatory and is used to specify the type of the entries in that map or list. For other schema types, the entry_schema must not be defined.|
 
-### Grammar
-
-#### Short notation
-
+These keynames can be used according to the following grammar:
+```
+<schema_definition>:
+  type: <schema_type> 
+  description: <schema_description>
+  metadata: <map_of_yaml_values>
+  validation: <schema_validation_clause>
+  key_schema: <key_schema_definition>
+  entry_schema: <entry_schema_definition>
+```
 The following single-line grammar may be used when only the schema type
 needs to be declared:
 ```
 <schema_definition>: <schema_type>
 ```
-#### Extended Notation
-
-The following multi-line grammar may be used when additional information
-on the schema definition is needed:
-```
-<schema_definition>:
-  type: <schema_type> 
-  description: <schema_description>
-  validation: <schema_validation_clause>
-  key_schema: <key_schema_definition>
-  entry_schema: <entry_schema_definition>
-```
-In the above grammar, the pseudo values that appear in angle brackets
+In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - schema_type: represents the mandatory type name for entries of the
@@ -4986,9 +4959,6 @@ have the following meaning:
 
   - if this schema definition is for a map key, then the schema_type must
     be derived originally from string.
-
-- schema_description: represents the optional description of the schema
-  definition
 
 - schema_validation_clause: represents the optional validation clause
   for entries of the specified schema.
@@ -4999,8 +4969,6 @@ have the following meaning:
 - entry_schema_definition: if the schema_type is map or list, it
   represents the mandatory schema definition for the entries in that map
   or list.
-
-### Refinement rules
 
 A schema definition uses the following definition refinement rules when
 the containing entity type is derived:
@@ -5020,116 +4988,19 @@ the containing entity type is derived:
 - key_schema: may be refined (recursively) according to schema
   refinement rules.
 
-- entry_schema: may be refined (recursively) according
-  to schema refinement rules.
-<!----
-{"id": "930", "author": "Mike Rehder", "date": "2020-12-14T14:45:00Z", "comment": "What if the derived_from type is a list\n  with a complex data type entry_schema? What are the rules about\n  refinement/augmentation of that complex\n  definition?", "target": "entry_schema: may be refined (recursively) according\n  to schema refinement rules."}-->
+- entry_schema: may be refined (recursively) according to schema
+  refinement rules.
 
-
-## Validation clause definition
-<!----
-{"id": "939", "author": "Mike Rehder", "date": "2020-12-14T14:40:00Z", "comment": "This should have its own refinement rule section to explain how conflicts are resolved, if at all. For example, if there is \u201crange 0..10\u201d and \u201cgreated_than 15\u201d what happens?", "target": "Validation clause definition"}-->
-
-A validation clause that must evaluate to True if the value for the
-entity it references is considered valid.
-
-### Grammar
-
-Validation clauses have the following grammar:
-```
-validation: < validation_clause>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- validation_clause: represents a Boolean expression that must evaluate
-  to True in order for values to be valid. Any Boolean expression can be
-  used with any function with any degree of nesting.
-
-### The \$value Function
-
-The Boolean expression used as a validation clause must have a mechanism
-for referencing the value to which the expression applies. A
-special-purpose function is introduced for this purpose. This function
-is named **\$value** and refers to the value used for the data type or
-the parameter definition that contains the validation clause.
-
-### Examples
-
-The following shows an example of validation clauses used in data type
-definitions:
-```
-data_types:
-
-  # Full function syntax for the $value function
-  Count1:
-    derived_from: integer
-    validation: { $greater_or_equal: [ { $value: [] }, 0 ] }
-
-  # Simple function syntax for the $value function
-  Count2:
-    derived_from: integer
-    validation: { $greater_or_equal: [ $value, 0 ] }
-
-  # Full function syntax with arguments
-  FrequencyRange:
-    properties:
-      low:
-        type: scalar-unit.frequency
-      high:
-        type: scalar-unit.frequency
-    validation:
-      $greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] } ]
-```
-<span id="_Schema_Definition" class="anchor"></span>The following shows
-an example of validation clauses used in property definitions:
-```
-node_types:
-
-  Scalable:
-    properties:
-      minimum_instances:
-        type: integer
-        validation: { $greater_or_equal: [ $value,  0 ] }  # positive integer
-      maximum_instances:
-        type: integer
-        validation: 
-          $greater_or_equal:
-            - $value
-            - $get_property: [ SELF, minimum_instances ]
-      default_instances:
-        type: integer
-        validation:
-          $and:
-            - $greater_or_equal: 
-              - $value
-              - $get_property: [ SELF, minimum_instances ]
-            - $less_or_equal: 
-              - $value
-              - $get_property: [ SELF, maximum_instances ]
-        required: false
-```
 ## 9.3 Property Definition
 
-A property definition defines a named, typed value and related data that
-can be associated with an entity defined in this specification (e.g.,
-Node Types, Relationship Types, Capability Types, etc.). Properties are
-used by template authors to provide input values to TOSCA entities which
-indicate their “desired state” when they are instantiated. The value of
-a property can be retrieved using the get_property function within TOSCA
-Service Templates.
-
-### Attribute and Property reflection 
-
-The actual state of the entity, at any point in its lifecycle once
-instantiated, is reflected by an attribute. TOSCA orchestrators
-automatically create an attribute for every declared property (with the
-same symbolic name) to allow introspection of both the desired state
-(property) and actual state (attribute). If an attribute is reflected
-from a property, its initial value is the value of the reflected
-property.
-
-### Keynames
+A property definition defines a named, typed value and related data
+that can be associated with an entity defined in this specification
+(e.g., node types, relationship types, capability types,
+etc.). Properties are used by template authors to provide
+configuration values to TOSCA entities that indicate their *desired
+state* when they are instantiated. The value of a property can be
+retrieved using the `$get_property` function within TOSCA Service
+Templates.
 
 The following is the list of recognized keynames for a TOSCA property
 definition:
@@ -5138,28 +5009,13 @@ definition:
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory data type for the property.|
 |description|no|string|The optional description for the property.|
-|required|No (default: true)|boolean|An optional key that declares a property as required (true) or not (false). Defaults to true.|
+|metadata|no|map of yaml values|Defines a section used to declare additional metadata information. |
+|required|no|boolean|An optional key that declares a property as required (true) or not (false). Defaults to true.|
 |default|no|\<must match property type\>|An optional key that may provide a value to be used as a default if not provided by another means.  The default keyname SHALL NOT be defined when property is not required (i.e. the value of the required keyname is false).|
 |value|no|\<see below\>|An optional key that may provide a fixed value to be used. A property that has a fixed value provided (as part of a definition or refinement) cannot be subject to a further refinement or assignment. That is, a fixed value cannot be changed.|
-|status|No (default: supported)|string|The optional status of the property relative to the specification or implementation. See table below for valid values. Defaults to supported.|
 |validation|no|validation clause|The optional validation clause for the property.|
-|key_schema|conditional (default: string)|schema definition|The schema definition for the keys used to identify entries in properties of type TOSCA map (or types that derive from map). If not specified, the key_schema defaults to string. For properties of type other than map, the key_schema is not allowed. |
+|key_schema|conditional|schema definition|The schema definition for the keys used to identify entries in properties of type TOSCA map (or types that derive from map). If not specified, the key_schema defaults to string. For properties of type other than map, the key_schema is not allowed. |
 |entry_schema|conditional|schema definition|The schema definition for the entries in properties of TOSCA collection types such as list, map, or types that derive from list or map) If the property type is a collection type, the entry schema is mandatory. For other types, the entry_schema is not allowed.|
-|external-schema|no|string|The optional key that contains a schema definition that TOSCA Orchestrators MAY use for validation when the “type” key’s value indicates an External schema (e.g., “json”). See section “External schema” below for further explanation and usage.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
-
-### Status values
-
-The following property status values are supported:
-
-| Value            | Description                                                                                      |
-|------------------|--------------------------------------------------------------------------------------------------|
-| **supported**    | Indicates the property is supported. This is the **default** value for all property definitions. |
-| **unsupported**  | Indicates the property is not supported.                                                         |
-| **experimental** | Indicates the property is experimental and has no official standing.                             |
-| **deprecated**   | Indicates the property has been deprecated by a new specification version.                       |
-
-### Grammar
 
 Property definitions have the following grammar:
 ```
@@ -5168,7 +5024,7 @@ Property definitions have the following grammar:
   description: <property_description>
   required: <property_required>
   default: <default_value>
-  value: <property_value> | { <property_value_expression> }
+  value: <property_value> | <property_value_expression>
   status: <status_value>
   validation: <validation_clause>
   key_schema: <key_schema_definition>
@@ -5179,12 +5035,12 @@ Property definitions have the following grammar:
 The following single-line grammar is supported when only a fixed value
 or fixed value expression needs to be provided to a property:
 ```
-<property_name>: <property_value> | { <property_value_expression> }
+<property_name>: <property_value> | <property_value_expression>
 ```
 This single-line grammar is equivalent to the following:
 ```
 <property_name>:
-    value: <property_value> | { <property_value_expression> }
+    value: <property_value> | <property_value_expression>
 ```
 Note that the short form can be used only during a refinement (i.e. the
 property has been previously defined).
@@ -5194,9 +5050,6 @@ have the following meaning:
 
 - property_name: represents the mandatory symbolic name of the property
   as a string.
-
-- property_description: represents the optional description of the
-  property.
 
 - property_type: represents the mandatory data type of the property.
 
@@ -5213,33 +5066,25 @@ have the following meaning:
     required (i.e. property_required is “false”) as they will stay
     undefined.
 
-- \<property_value\> \| { \<property_value_expression\> }: contains a
+- <property_value> or <property_value_expression>: contains a
   type-compatible value or value expression that may be defined during
-  property definition or refinement to set and fix the value definition
-  of the property
+  property definition or refinement to set and fix the value
+  definition of the property.
 
   - note that a value definition cannot be changed; once defined, the
     property cannot be further refined or assigned. Thus, value
     definitions should be avoided in data_type definitions.
 
-- status_value: a string that contains a keyword that indicates the
-  status of the property relative to the specification or
-  implementation.
-
 - validation_clause: represents the optional Boolean expression that
   must evaluate to true for a value of this property to be valid.
 
-- key_schema_definition: if the property_type is map, represents the
-  optional schema definition for the keys used to identify entries in
-  that map.
+- key_schema_definition: if the property_type is map or derives from
+  map, represents the optional schema definition for the keys used to
+  identify entries in that map.
 
-- entry_schema_definition: if the property_type is map or list,
-  represents the mandatory schema definition for the entries in that map
-  or list.
-
-- metadata_map: represents the optional map of string.
-
-### Refinement rules
+- entry_schema_definition: if the property_type is map or list, or
+  derives from map or list, represents the mandatory schema definition
+  for the entries in that map or list.
 
 A property definition within data, capability, node, relationship,
 group, policy, and artifact types (including capability definitions in
@@ -5250,11 +5095,9 @@ definitions together:
 - type: must be derived from (or the same as) the type in the property
   definition in the parent entity type definition.
 
-- description: a new definition is unrestricted
-  and will overwrite the one inherited from the property definition in
-  the parent entity type definition.
-<!----
-{"id": "966", "author": "Mike Rehder", "date": "2020-12-14T14:49:00Z", "comment": "Section 4.2.5.2.3 says that description\n  isn\u2019t inherited", "target": "description: a new definition is unrestricted\n  and will overwrite the one inherited from the property definition in\n  the parent entity type definition."}-->
+- description: a new definition is unrestricted and will overwrite the
+  one inherited from the property definition in the parent entity type
+  definition.
 
 - required: if defined to “false” in the property definition parent
   entity type it may be redefined to “true”; note that if undefined it
@@ -5269,12 +5112,6 @@ definitions together:
   type, it may be defined to any type-compatible value; once defined,
   the property cannot be further refined or assigned.
 
-- status: a new definition is unrestricted and will overwrite
-  the one inherited from the property definition in the parent entity
-  type definition.
-<!----
-{"id": "967", "author": "Mike Rehder", "date": "2020-12-14T14:50:00Z", "comment": "I don\u2019t see how this is feasible. If\n  deprecated in the parent, how can a child make it active?  \n  I don\u2019t think this should be allowed to be refined at\n  all.", "target": "status: a new definition is unrestricted and will overwrite\n  the one inherited from the property definition in the parent entity\n  type definition."}-->
-
 - validation: a new definition is unrestricted; this validation clause
   does not replace the validation clause defined in the property
   definition in the parent entity type but is considered in addition to
@@ -5286,37 +5123,7 @@ definitions together:
 - entry_schema: if defined in the property definition in the parent
   entity type it may be refined according to schema refinement rules.
 
-- metadata: a new definition is unrestricted and will overwrite the one
-  inherited from the property definition in the parent entity type
-  definition.
-
-### Additional Requirements
-
-- Implementations of TOSCA **SHALL** automatically reflect (i.e., make
-  available) any property defined on an entity as an attribute of the
-  entity with the same name as the property.
-
-- A property **SHALL** be considered <u>required by default</u> (i.e.,
-  as if the required keyname on the definition is set to true) unless
-  the definition’s required keyname is explicitly set to false.
-
-- The value provided on a property definition’s default keyname SHALL be
-  type compatible with the type declared on the definition’s type
-  keyname.
-
-- If a key_schema or entry_schema keyname is provided, its value
-  (string) MUST represent a valid schema definition that matches the
-  property type (i.e. the property type as defined by the type keyword
-  must be the same as or derived originally from map (for key_schema) or
-  map or list (for entry_schema).
-
-- TOSCA Orchestrators MAY choose to validate the value of the ‘schema’
-  keyname in accordance with the corresponding schema specification for
-  any recognized external types.
-
-### Examples
-
-The following represents an example of a property definition with a
+The following code snippet shows an example property definition with a
 validation clause:
 ```
 properties:
@@ -5325,13 +5132,13 @@ properties:
     description: Number of CPUs requested for a software node instance.
     default: 1
     required: true
-    validation; { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
+    validation: { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
 ```
 The following shows an example of a property refinement. Consider the
 definition of an Endpoint capability type:
 ```
-tosca.capabilities.Endpoint:
-  derived_from: tosca.capabilities.Root
+Endpoint:
+  derived_from: Root
   properties:
     protocol:
       type: string
@@ -5344,57 +5151,43 @@ tosca.capabilities.Endpoint:
       type: boolean
       required: false
       default: false
-    # Other property definitions omitted for brevity
 ```
 The Endpoint.Admin capability type refines the secure property of the
 Endpoint capability type from which it derives by forcing its value to
 always be true:
 ```
-tosca.capabilities.Endpoint.Admin:
-  derived_from: tosca.capabilities.Endpoint
+Endpoint.Admin:
+  derived_from: Endpoint
   # Change Endpoint secure indicator to true from its default of false
   properties:
     secure: true
 ```
 
-## 9.4 Property assignment
+## 9.4 Property Assignment
 
-This section defines the grammar for assigning values to properties
-within TOSCA templates.
+A property assignment is used to assign a value to a property within a
+TOSCA template. A TOSCA property assignment has no keynames. Property
+assignments have the following grammar:
 
-### Keynames
-
-The TOSCA property assignment has no keynames.
-
-### Grammar
-
-Property assignments have the following grammar:
-
-#### Short notation:
-
-The following single-line grammar may be used when a simple value
-assignment is needed:
 ```
-<property_name>: <property_value> | { <property_value_expression> }
+<property_name>: <property_value> | <property_value_expression>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - property_name: represents the name of a property that will be used to
   select a property definition with the same name within on a TOSCA
-  entity (e.g., node template, Relationship Template, etc.) which is
-  declared in its declared type (e.g., a Node Type, node template,
-  Capability Type, etc.).
+  entity (e.g., node template, relationship template, etc.) which is
+  declared in its declared type (e.g., a node type, node template,
+  capability type, etc.).
 
 - property_value, property_value_expression: represent the
   type-compatible value to assign to the property. Property values may
   be provided as the result of the evaluation of
   an expression or a
   function.
-<!----
-{"id": "983", "author": "Chris Lauwers", "date": "2022-11-21T11:36:00Z", "comment": "What is the difference between an\n  expression and a function", "target": "an expression or a\n  function"}-->
 
-### Additional Requirements
+The following requirements apply:
 
 - Properties that have a (fixed) value defined during their definition
   or during a subsequent refinement may not be assigned (as their value
@@ -5403,36 +5196,40 @@ have the following meaning:
 - If a required property has no value defined or assigned, its default
   value is assigned
 
-- A non-required property that is not assigned it stays undefined, thus
+- A non-required property that is not assigned stays undefined, thus
   the default keyname is irrelevant for a non-required property.
 
 ## 9.5 Attribute Definition
 <!----
 {"id": "990", "author": "Calin Curescu", "date": "2020-05-07T23:14:00Z", "comment": "%%% !!! To implement this, throughout the specification. Default can have also value_expression! I think we might need also an attribute \u201cvalue_expresssion\u201d keyname that allows to define an attribute as a function of a different attribute (of the same entity), that we can define when creating node/relationship types, even before template design time.", "target": "Attribute definition"}-->
 
-
 An attribute definition defines a named, typed value that can be
-associated with an entity defined in this specification (e.g., a Node,
-Relationship or Capability Type). Specifically, it is used to expose the
-“actual state” of some property of a TOSCA entity after it has been
-deployed and instantiated (as set by the TOSCA orchestrator). Attribute
-values can be retrieved via the get_attribute function from the instance
-model and used as values to other entities within TOSCA Service
-Templates.
-<!----
-{"id": "991", "author": "Chris Lauwers", "date": "2022-11-21T11:36:00Z", "comment": "Can also be set using operation\noutputs", "target": "Templates"}-->
+associated with an entity defined in this specification (e.g., a node,
+relationship or capability type). Specifically, it is used to expose
+the *actual state* of some a TOSCA entity after it has been deployed
+and instantiated (as set by the TOSCA orchestrator).
 
-### Attribute and Property reflection 
-
-The actual state of the entity, at any point in its lifecycle once
-instantiated, is reflected by an attribute. TOSCA orchestrators
-automatically create an attribute for every declared property (with the
-same symbolic name) to allow introspection of both the desired state
+Attribute definitions are very similar to property definitions;
+however, properties of entities reflect a configuration value that
+carries the template author’s requested or desired value (i.e.,
+desired state) which the orchestrator (attempts to) use when
+instantiating the entity. Attributes on the other hand reflect the
+actual value (i.e., actual state) that provides the actual
+instantiated value. For example, a property can be used to request the
+IP address of a node using a property (setting); however, the actual
+IP address after the node is instantiated may by different and made
+available by an attribute. To allow both the desired state and the
+actual state to be tracked, TOSCA orchestrators **MUST** automatically
+create an attribute for every declared property (with the same
+symbolic name) to allow introspection of both the desired state
 (property) and actual state (attribute). If an attribute is reflected
 from a property, its initial value is the value of the reflected
 property.
 
-### Keynames
+Attribute values can be retrieved via the `$get_attribute` function
+from the representation model and used as values to other entities
+within TOSCA service templates. Attribute values an also be set by
+output mappings defined in interface operations.
 
 The following is the list of recognized keynames for a TOSCA attribute
 definition:
@@ -5441,14 +5238,11 @@ definition:
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory data type for the attribute.|
 |description|no|string|The optional description for the attribute.|
-|default|no|\<any\>|An optional key that may provide a value to be used as a default if not provided by another means.  This value SHALL be type compatible with the type declared by the attribute definition’s type keyname.|
-|status|no|string|The optional status of the attribute relative to the specification or implementation.  See supported status values . Defaults to supported.|
+|metadata|no|map of yaml data|Defines a section used to declare additional metadata information. |
+|default|no|\<must match attribute type\>|An optional key that may provide a value to be used as a default if not provided by another means. This value SHALL be type compatible with the type declared by the attribute definition’s type keyname.|
 |validation|no|validation clause|The optional validation clause for the attribute.|
-|key_schema|conditional (default: string)|schema definition|The schema definition for the keys used to identify entries in attributes of type TOSCA map (or types that derive from map). If not specified, the key_schema defaults to string. For attributes of type other than map, the key_schema is not allowed. |
+|key_schema|conditional|schema definition|The schema definition for the keys used to identify entries in attributes of type TOSCA map (or types that derive from map). If not specified, the key_schema defaults to string. For attributes of type other than map, the key_schema is not allowed. |
 |entry_schema|conditional|schema definition|The schema definition for the entries in attributes of TOSCA collection types such as list, map, or types that derive from list or map) If the attribute type is a collection type, the entry schema is mandatory. For other types, the entry_schema is not allowed.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
-
-### Grammar
 
 Attribute definitions have the following grammar:
 ```
@@ -5456,13 +5250,11 @@ attributes:
   <attribute_name>:
     type: <attribute_type>
     description: <attribute_description>
+    metadata: <metadata_map>
     default: <default_value> 
-    status: <status_value>
     validation: <attribute_validation_clause>
     key_schema: <key_schema_definition>
     entry_schema: <entry_schema_definition>
-    metadata:
-      <metadata_map>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -5472,20 +5264,16 @@ have the following meaning:
 
 - attribute_type: represents the mandatory data type of the attribute.
 
-- attribute_description: represents the optional description of the
-  attribute.
+- default_value: contains a type-compatible value that may be used as
+  a default if not provided by another means. Values for the default
+  keyname **MUST** be derived or calculated from other attribute or
+  operation output values (that reflect the actual state of the
+  instance of the corresponding resource) and not hard-coded or
+  derived from a property settings or inputs (i.e., desired state).
 
-- default_value: contains a type-compatible value that may be used as a
-  default if not provided by another means.
-
-- status_value: contains a value indicating the attribute’s status
-  relative to the specification version (e.g., supported, deprecated,
-  etc.); supported status values for this keyname are defined in the
-  property definition section.
-
-- attribute_validation_clause: represents the optional [validation
-  clause](#validation-clause-definition) that must evaluate to True for
-  values for the defined attribute to be valid.
+- attribute_validation_clause: represents the optional validation
+  clause that must evaluate to True for values for the defined
+  attribute to be valid.
 
 - key_schema_definition: if the attribute_type is map, represents the
   optional schema definition for the keys used to identify entries in
@@ -5494,10 +5282,6 @@ have the following meaning:
 - entry_schema_definition: if the attribute_type is map or list,
   represents the mandatory schema definition for the entries in that map
   or list.
-
-- metadata_map: represents the optional map of string.
-
-### Refinement rules
 
 An attribute definition within data, capability, node, relationship, and
 group types (including capability definitions in node types) uses the
@@ -5514,10 +5298,6 @@ following refinement rules when the containing entity type is derived:
   inherited from the attribute definition in the parent entity type
   definition.
 
-- status: a new definition is unrestricted and will overwrite the one
-  inherited from the attribute definition in the parent entity type
-  definition.
-
 - validation: a new definition is unrestricted; this validation clause
   does not replace the validation clause defined in the attribute
   definition in the parent entity type but is considered in addition to
@@ -5529,41 +5309,6 @@ following refinement rules when the containing entity type is derived:
 - entry_schema: if defined in the attribute definition in the parent
   entity type it may be refined according to schema refinement rules.
 
-- metadata: a new definition is unrestricted and will overwrite the one
-  inherited from the attribute definition in the parent entity type
-  definition
-
-### Additional Requirements
-
-- In addition to any explicitly defined attributes on a TOSCA entity
-  (e.g., Node Type, Relationship Type, etc.), implementations of TOSCA
-  **MUST** automatically reflect (i.e., make available) any property
-  defined on an entity as an attribute of the entity with the same name
-  as the property.
-
-- Values for the default keyname **MUST** be derived or calculated from
-  other attribute or operation output values (that reflect the actual
-  state of the instance of the corresponding resource) and not
-  hard-coded or derived from a property settings or inputs (i.e.,
-  desired state).
-
-### Notes
-
-- Attribute definitions are very similar to [Property
-  definitions](#_Schema_Definition); however, properties of entities
-  reflect an input that carries the template author’s requested or
-  desired value (i.e., desired state) which the orchestrator (attempts
-  to) use when instantiating the entity whereas attributes reflect the
-  actual value (i.e., actual state) that provides the actual
-  instantiated value.
-
-  - For example, a property can be used to request the IP address of a
-    node using a property (setting); however, the actual IP address after
-    the node is instantiated may by different and made available by an
-    attribute.
-
-### Example
-
 The following represents a mandatory attribute definition:
 ```
 actual_cpus:
@@ -5572,23 +5317,12 @@ actual_cpus:
 ```
 ## 9.6 Attribute Assignment
 
-This section defines the grammar for assigning values to attributes
-within TOSCA templates.
+An attribute assignment is used to assign a value to an attribute
+within a TOSCA template.  A TOSCA attribute assignment has no
+keynames.  Attribute assignments have the following grammar:
 
-### Keynames
-
-The TOSCA attribute assignment has no keynames.
-
-### Grammar
-
-Attribute assignments have the following grammar:
-
-#### Short notation:
-
-The following single-line grammar may be used when a simple value
-assignment is needed:
 ```
-<attribute_name>: <attribute_value> | { <attribute_value_expression> }
+<attribute_name>: <attribute_value> |  <attribute_value_expression> 
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -5604,14 +5338,13 @@ have the following meaning:
   be provided as the result from the evaluation of an expression or a
   function.
 
-### Additional requirements
+Note that attributes that are the target of a parameter mapping
+assignment cannot also be assigned a value using an attribute
+assignment.
 
-- Attributes that are the target of a parameter mapping assignment
-  cannot also be assigned a value using an attribute assignment.
+## 9.7 Parameter Definition
 
-## 9.7 Parameter definition
-
-A parameter definition defines a named, typed value and related data and
+A parameter definition defines a named, typed value and related data that
 may be used to exchange values between the TOSCA orchestrator and the
 external world. Such values may be
 
@@ -5622,8 +5355,8 @@ external world. Such values may be
 - inputs and outputs of service templates
 
 From the perspective of the TOSCA orchestrator such parameters are
-either “incoming” (i.e. transferring a value from the external world to
-the orchestrator) or “outgoing” (transferring a value from the
+either *incoming* (i.e. transferring a value from the external world
+to the orchestrator) or *outgoing* (transferring a value from the
 orchestrator to the external world). Thus:
 
 - outgoing parameters are:
@@ -5648,55 +5381,53 @@ orchestrator to the external world). Thus:
 
   - notification outputs
 
-An “outgoing” parameter definition is essentially the same as a TOSCA
+An *outgoing* parameter definition is essentially the same as a TOSCA
 property definition, however it may optionally inherit the data type of
 the value assigned to it rather than have an explicit data type defined.
 
-An “incoming” parameter definition may define an attribute mapping of
+An “*incoming* parameter definition may define an attribute mapping of
 the parameter value to an attribute of a node. Optionally, it may
 inherit the data type of the attribute it is mapped to, rather than have
 an explicit data type defined for it.
-
-### Keynames
 
 The TOSCA parameter definition has all the keynames of a TOSCA property
 definition with the following additional or changed keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|type|no|string|The data type of the parameter. Note: This keyname is mandatory for a TOSCA Property definition but is not mandatory for a TOSCA Parameter definition.|
-|value|no|\<any\>|The type-compatible value to assign to the parameter.  Parameter values may be provided as the result from the evaluation of an expression or a function. May only be defined for outgoing parameters. Mutually exclusive with the “mapping” keyname.|
-|mapping|no|attribute selection format|A mapping that specifies the node or relationship attribute into which the returned output value must be stored. May only be defined for incoming parameters. Mutually exclusive with the “value” keyname.|
-
-### Grammar
+|type|no|string|The data type of the parameter. While this keyname is mandatory for a TOSCA Property definition, it is not mandatory for a TOSCA parameter definition.|
+|value|no|\<must match parameter type\>|The type-compatible value to assign to the parameter.  Parameter values may be provided as the result from the evaluation of an expression or a function. May only be defined for outgoing parameters. Mutually exclusive with the *mapping* keyname.|
+|mapping|no|attribute selection format|A mapping that specifies the node or relationship attribute into which the returned output value must be stored. May only be defined for incoming parameters. Mutually exclusive with the *value* keyname.|
 
 Parameter definitions have the following grammar:
 ```
 <parameter_name>:
   type: <parameter_type> 
   description: <parameter_description>
-  value: <parameter_value> | { <parameter_value_expression> }
+  metadata: <metadata_map>
+  value: <parameter_value> | <parameter_value_expression> 
+  mapping: <attribute_selection_form>
   required: <parameter_required>
   default: <parameter_default_value>
-  status: <status_value>
   validation: <parameter_validation_clause>
   key_schema: <key_schema_definition>
   entry_schema: <entry_schema_definition>
-  mapping: <attribute_selection_form>
 ```
 
-The following single-line grammar is supported when only a fixed value
-needs to be provided provided to an outgoing parameter:
+The following single-line grammar is supported for *outgoing*
+parameter definitions when only a fixed value needs to be provided:
 ```
-<parameter_name>: <parameter_value> | { <parameter_value_expression> }
+<parameter_name>: <parameter_value> |  <parameter_value_expression> 
 ```
 This single-line grammar is equivalent to the following:
 ```
 <parameter_name>:
-    value: <parameter_value> | { <parameter_value_expression> }
+    value: <parameter_value> |  <parameter_value_expression> 
 ```
-The following single-line grammar is supported when only a parameter to
-attribute mapping needs to be provided to an incoming parameter:
+
+The following single-line grammar is supported for *incoming*
+parameter definitions when only a parameter to attribute mapping needs
+to be provided:
 ```
 <parameter_name>: <attribute_selection_form>
 ```
@@ -5714,9 +5445,6 @@ have the following meaning:
 - parameter_name: represents the mandatory symbolic name of the
   parameter as a string.
 
-- parameter_description: represents the optional
-  [description](#TYPE_YAML_STRING) of the parameter.
-
 - parameter_type: represents the optional data type of the parameter.
   Note, this keyname is mandatory for a TOSCA Property definition, but
   is not for a TOSCA Parameter definition.
@@ -5729,15 +5457,14 @@ have the following meaning:
   - once the value keyname is defined, the parameter cannot be further
     refined or assigned.
 
-  - the value keyname is relevant only for “outgoing” parameter
-    definitions and SHOULD NOT be defined in “incoming” parameter
+  - the value keyname is relevant only for *outgoing* parameter
+    definitions and SHOULD NOT be defined in *incoming* parameter
     definitions.
 
-- parameter_required: represents an optional
-  [boolean](#TYPE_YAML_BOOLEAN) value (true or false) indicating whether
-  or not the parameter is required. If this keyname is not present on a
-  parameter definition, then the parameter SHALL be considered required
-  (i.e., true) by default.
+- parameter_required: represents an optional boolean value (true or
+  false) indicating whether or not the parameter is required. If this
+  keyname is not present on a parameter definition, then the parameter
+  SHALL be considered required (i.e., true) by default.
 
 - default_value: contains a type-compatible value that may be used as a
   default if not provided by other means.
@@ -5746,12 +5473,8 @@ have the following meaning:
     required (i.e. parameter_required is “false”) as they will stay
     undefined.
 
-- status_value: a string that contains a keyword
-  that indicates the status of the parameter relative to the
-  specification or implementation.
-
-- parameter_validation_clause: represents the optional [validation
-  clause](#validation-clause-definition) on the parameter definition.
+- parameter_validation_clause: represents the optional validation
+  clause on the parameter definition.
 
 - key_schema_definition: if the parameter_type is map, represents the
   optional schema definition for the keys used to identify entries in
@@ -5766,11 +5489,9 @@ have the following meaning:
   attribute_selection_format; the parameter is mapped onto an attribute
   of the containing entity
 
-  - the mapping keyname is relevant only for “incoming” parameter
-    definitions and SHOULD NOT be defined in “outgoing” parameter
+  - the mapping keyname is relevant only for *incoming* parameter
+    definitions and SHOULD NOT be defined in *outgoing* parameter
     definitions.
-
-### Refinement rules
 
 A parameter definition within interface types, interface definitions in
 node and relationship types, uses the following refinement rules when
@@ -5823,18 +5544,6 @@ the containing entity type is derived:
   inherited from the parameter definition in the parent entity type
   definition.
 
-### Additional requirements
-
-- A parameter **SHALL** be considered <u>required by default</u> (i.e.,
-  as if the required keyname on the definition is set to true) unless
-  the definition’s required keyname is explicitly set to false.
-
-- The value provided on a parameter definition’s default keyname
-  **SHALL** be type compatible with the type declared on the
-  definition’s type keyname.
-
-### Example
-
 The following represents an example of an input parameter definition
 with a validation clause:
 ```
@@ -5855,18 +5564,13 @@ outputs:
 
 ## 9.8 Parameter Value Assignment
 
-This section defines the grammar for assigning values to “outgoing”
-parameters in TOSCA templates.
+A parameter value assignment is used to assing a value to an
+*outgoing* parameter within a TOSCA template.  A TOSCA parameter value
+assignment has no keynames.  Parameter value assignments have the
+following grammar:
 
-### Keynames
-
-The TOSCA parameter value assignment has no keynames.
-
-### Grammar
-
-Parameter value assignments have the following grammar:
 ```
-<parameter_name>: <parameter_value> | { <parameter_value_expression> }
+<parameter_name>: <parameter_value> | <parameter_value_expression> 
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -5881,7 +5585,7 @@ have the following meaning:
   be provided as the result from the evaluation of an expression or a
   function.
 
-### Additional requirements
+The following requirements apply:
 
 - Parameters that have a (fixed) value defined during their definition
   or during a subsequent refinement may not be assigned (as their value
@@ -5896,21 +5600,14 @@ have the following meaning:
 
 ## 9.9 Parameter Mapping Assignment
 
-A parameter to attribute mapping defines an “incoming” parameter value
-(e.g. an output value that is expected to be returned by an operation
-implementation) and a mapping that specifies the node or relationship
-attribute into which the returned “incoming” parameter value must be
-stored.
-
-### Keynames
-
-The TOSCA parameter mapping assignment has no keynames.
-
-### Grammar
-
-Parameter mapping assignments have the following grammar:
+A parameter mapping assignment is used to define the mapping of an
+*incoming* parameter value (e.g. an output value that is expected to
+be returned by an operation implementation) to an attribute into which
+the returned *incoming* parameter value must be stored.  A TOSCA
+parameter value assignment has no keynames.  Parameter value
+assignments have the following grammar:
 ```
-<parameter_name>: <attribute_selection_format>
+<parameter_name>: <attribute_name> | <tosca_traversal_path>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -5920,23 +5617,20 @@ have the following meaning:
   corresponding definition in the entity type of the entity containing
   them may be assigned (see e.g. inputs and outputs in interfaces).
 
-- attribute_selection_format: represents a format that is used to select
-  an attribute or a nested attribute on which to map the parameter value
-  of the incoming parameter referred by parameter_name.
+- attribute_name: represents the name of the attribute in the in the
+  local node or relationship context (i.e.,`SELF`) on which to map the
+  value of the incoming parameter referred to by parameter_name.
 
-### Attribute selection format
-
-The attribute_selection_format is a list of the following format:
-```
-[<tosca_traversal_path>, <attribute_name>, <nested_attribute_name_or_index_1>, ..., <nested_attribute_name_or_index_n> ]
-```
-The various entities in this grammar are defined as follows:
-
-|Parameter|Mandatory|Description|
-| ----- | ------- | ----- | 
-|\<tosca_traversal_path\>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to reach the attribute we need to store the output value into. The specification of the \<tosca_traversal_path\> is explicated in section 6.1.2 get_property. Note that while the \<tosca_traversal_path\> is very powerful, its usage should normally be restricted to reach attributes in the local node ore relationship (i.e. SELF) or in a local capability definition.|
-|\<attribute_name\> |yes|The name of the attribute into which the output value must be stored.|
-|\<nested_attribute_name_or_index_or_key_*\> |no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.   Some attributes represent list or map types. In these cases, an index or key may be provided to reference a specific entry in the list or map (identified by the previous parameter). |
+- tosca_traversal_path: using the \<tosca_traversal_path\> a TOSCA
+  processor can traverse the representation graph to reach the
+  attribute into which to store the output value. This grammar should
+  be used to reach nested attributes in the local node or relationship
+  (i.e. SELF) or to reach attributes in a local capability definition.
+  For example, some TOSCA attributes are complex (i.e., composed as
+  nested structures), and some attributes represent list or map
+  types. A <tosca_traversal_path> is used to dereference into the
+  names of these nested structures or to reference a specific entry in
+  the list or map.
 
 Note that it is possible for multiple operations to define outputs that
 map onto the same attribute value. For example, a *create* operation
@@ -5952,11 +5646,81 @@ operation runs that maps an output value onto that attribute, the
 orchestrator must then use the updated value, and the value specified in
 the node template will no longer be used.
 
-### Additional requirements
+Note that parameters that have a mapping defined during their
+definition or during a subsequent refinement may not be assigned (as
+their mapping is already set).
 
-- Parameters that have a mapping defined during their definition or
-  during a subsequent refinement may not be assigned (as their mapping
-  is already set).
+## 9.10 Validation Clause
+
+A validation clause is a Boolean expression that must evaluate to True
+if the value for the entity it references is considered valid.
+Validation clauses have the following grammar:
+```
+validation: < validation_clause>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- validation_clause: represents a Boolean expression that must evaluate
+  to True in order for values to be valid. Any Boolean expression can be
+  used with any function with any degree of nesting.
+
+The Boolean expression used as a validation clause must have a
+mechanism for referencing the value to which the expression applies. A
+special-purpose function is introduced for this purpose. This function
+is named `$value` and refers to the value used for the data type or
+the parameter definition that contains the validation clause.
+
+The following shows an example of validation clauses used in data type
+definitions. They also illustrate the various alternatives for the
+`$value` function syntax:
+```
+data_types:
+  # Full function syntax for the $value function
+  Count1:
+    derived_from: integer
+    validation: { $greater_or_equal: [ { $value: [] }, 0 ] }
+  # Simple function syntax for the $value function
+  Count2:
+    derived_from: integer
+    validation: { $greater_or_equal: [ $value, 0 ] }
+  # Full function syntax with arguments
+  FrequencyRange:
+    properties:
+      low:
+        type: scalar-unit.frequency
+      high:
+        type: scalar-unit.frequency
+    validation:
+      $greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] } ]
+```
+The following shows an example of validation clauses used in property
+definitions:
+```
+node_types:
+  Scalable:
+    properties:
+      minimum_instances:
+        type: integer
+        validation: { $greater_or_equal: [ $value,  0 ] } 
+      maximum_instances:
+        type: integer
+        validation: 
+          $greater_or_equal:
+            - $value
+            - $get_property: [ SELF, minimum_instances ]
+      default_instances:
+        type: integer
+        validation:
+          $and:
+            - $greater_or_equal: 
+              - $value
+              - $get_property: [ SELF, minimum_instances ]
+            - $less_or_equal: 
+              - $value
+              - $get_property: [ SELF, maximum_instances ]
+        required: false
+```
 
 # 10 TOSCA Functions 
 
