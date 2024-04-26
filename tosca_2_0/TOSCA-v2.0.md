@@ -5605,32 +5605,36 @@ A parameter mapping assignment is used to define the mapping of an
 be returned by an operation implementation) to an attribute into which
 the returned *incoming* parameter value must be stored.  A TOSCA
 parameter value assignment has no keynames.  Parameter value
-assignments have the following grammar:
+assignments use the following grammar:
+
 ```
-<parameter_name>: <attribute_name> | <tosca_traversal_path>
+<parameter_name>: <tosca_traversal_path>, <attribute_name>, <nested_attribute_name_or_index_or_key_1>, ..., <nested_attribute_name_or_index_or_key_n>
 ```
-In the above grammar, the pseudo values that appear in angle brackets
+In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- parameter_name: represents the symbolic name of the parameter to
+- parameter_name: represents the symbolic name of the parameter to assign
   assign; note that in some cases, even parameters that do not have a
   corresponding definition in the entity type of the entity containing
   them may be assigned (see e.g. inputs and outputs in interfaces).
 
-- attribute_name: represents the name of the attribute in the in the
-  local node or relationship context (i.e.,`SELF`) on which to map the
-  value of the incoming parameter referred to by parameter_name.
-
 - tosca_traversal_path: using the \<tosca_traversal_path\> a TOSCA
   processor can traverse the representation graph to reach the
-  attribute into which to store the output value. This grammar should
-  be used to reach nested attributes in the local node or relationship
-  (i.e. SELF) or to reach attributes in a local capability definition.
-  For example, some TOSCA attributes are complex (i.e., composed as
-  nested structures), and some attributes represent list or map
-  types. A <tosca_traversal_path> is used to dereference into the
-  names of these nested structures or to reference a specific entry in
-  the list or map.
+  attribute into which to store the output value. Note that while the
+  <tosca_traversal_path> is very powerful, its usage should be
+  restricted to only reach attributes in the local node or local
+  relationship or in a local capability.
+
+- attribute_name: represents the name of the attribute in the local
+  node or relationship context (i.e.,`SELF`) into which to map the
+  value of the incoming parameter referred to by parameter_name.
+
+- nested_attribute_name_or_index_or_key_*: Some TOSCA attributes are
+  complex (i.e. composed as nested structures). These parameters are
+  used to dereference into the names of these nested structures when
+  needed. Som attributes are lists or maps. In these cases, an index
+  or key may be provided to reference a specific entry in the list or
+  map (identified by the previous parameter).
 
 Note that it is possible for multiple operations to define outputs that
 map onto the same attribute value. For example, a *create* operation
@@ -5729,30 +5733,30 @@ node_types:
 TOSCA supports the use of functions for providing dynamic service data
 values at runtime. The syntax of a function has two representations:
 
-- Any function can be represented by a YAML map with a single key, where
-  the key is a string starting with a \$ (dollar sign) character and
-  where the remainder of the string represents the function name. If
-  present, the value in the key-value pair represents the function
-  arguments.
+- Any function can be represented by a YAML map with a single key,
+  where the key is a string starting with a `$` (dollar sign)
+  character and where the remainder of the string represents the
+  function name. If present, the value in the key-value pair
+  represents the function arguments.
 
 - A function without arguments can alternatively be represented by a
-  YAML string value, where the string starts with a \$ (dollar sign)
+  YAML string value, where the string starts with a `$` (dollar sign)
   character and where the remainder of the string represents the
   function name. This representation cannot be used in map keys.
 
-- Function names may not contain the \$ character as it will conflict
-  with the escape mechanisms described below.
+- Function names may not contain the `$` character as it will
+  conflict with the escape mechanisms described below.
 
-Therefore, any string starting with a \$ (dollar sign) character will be
-interpreted as a function call. To allow for strings starting with \$
-character to be specified, the \$ character at the start of the string
-needs to be escaped by using \$\$ (two dollar signs) characters instead.
-For example:
+Therefore, any string starting with a `$` (dollar sign) character
+will be interpreted as a function call. To allow for strings starting
+with `\$` character to be specified, the `$` character at the start of
+the string needs to be escaped by using `$$`(two dollar signs)
+characters instead.  For example:
 
-- \$\$name will represent the literal string \$name
+- `$$name` will represent the literal string `$name`
 
-- \$\$\$item will represent the literal string \$\$item, as only the
-  first \$ character is escaped.
+- `$$$item` will represent the literal string `$$item`, as only
+  the first `$` character is escaped.
 
 As we could have function calls that return values to be used as keys in
 a map, hypothetically it is possible that we use the same function call
@@ -5795,9 +5799,7 @@ be passed as an argument to the outer function:
 properties:
   nested: {$outer_func: [{$inner_func: [iarg1, iarg2]}, oarg2]}
 ```
-To allow for strings that are not function names to start with \$, the
-dollar sign can be escaped by using \$\$ (two consecutive dollar
-characters). The following snippet shows escaped strings in a map that
+The following snippet shows escaped strings in a map that
 do not represent function calls:
 ```
 properties:
@@ -5813,16 +5815,14 @@ designers can optionally define custom function signatures definitions
 for function arguments and function return values as specified in
 section 5.4.15.
 
-### Parsing rule
-
 When parsing TOSCA files, TOSCA parsers MUST identify functions wherever
 values are specified using the following algorithm:
 
-- Does the YAML string start with \$?
+- Does the YAML string start with `$`?
 
-  - If yes, is the second character \$?
+  - If yes, is the second character `$`?
 
-    - If yes, discard the first \$ and stop here (escape).
+    - If yes, discard the first `$` and stop here (escape).
 
     - If no, is this a key in a YAML map?
 
@@ -5836,16 +5836,13 @@ values are specified using the following algorithm:
 
 ## 10.2 TOSCA Built-In Functions
 
-## Representation graph query functions
-<!----
-{"id": "1316", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-146](media/image1.png): WD02: Need to include grammar and examples for each function.", "target": "Representation graph query functions"}-->
+### 10.2.1  Representation Graph Query Functions
 
-### get_input 
+#### 10.2.1.1 get_input 
 
-The get_input function is used to retrieve the values of parameters
-declared within the inputs section of a TOSCA Service Template.
+The *$get_input* function is used to retrieve the values of parameters
+declared within the inputs section of a TOSCA service template. It uses the following grammars
 
-#### Grammar 
 ```
 $get_input: <input_parameter_name>
 ```
@@ -5853,24 +5850,24 @@ or
 ```
 $get_input: [ <input_parameter_name>, <nested_input_parameter_name_or_index_1>, ..., <nested_input_parameter_name_or_index_n> ]
 ```
-Note that the first signature does not conform to the custom function
-definition, but it does not have to as it is a TOSCA built-in function.
 
-#### Arguments
+Note that the signature shown in the first grammar does not conform to
+the custom function definition, but it does not have to as it is a
+TOSCA built-in function.
+
+The *$get_input* function takes the arguments shown in the following
+table:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
 |\<input_parameter_name\>|yes|string|The name of the parameter as defined in the inputs section of the service template.|
 |\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
-#### Examples
-
 The following snippet shows an example of the simple get_input grammar:
-```
+```yaml
 inputs:
   cpus:
     type: integer
-
 node_templates:
   my_server:
     type: tosca.nodes.Compute
@@ -5883,7 +5880,7 @@ The following template shows an example of the nested get_input grammar.
 The template expects two input values, each of which has a complex data
 type. The get_input function is used to retrieve individual fields from
 the complex input data.
-```
+```yaml
 data_types:
   NetworkInfo:
     derived_from: tosca.Data.Root
@@ -5892,7 +5889,6 @@ data_types:
         type: string
       gateway:
         type: string
-        
   RouterInfo:
     derived_from: tosca.Data.Root
     properties:
@@ -5900,14 +5896,12 @@ data_types:
         type: string
       external:
         type: string
-
 service_template:
   inputs:
     management_network:
       type: NetworkInfo
     router:
       type: RouterInfo
-      
   node_templates:
     Bono_Main:
       type: vRouter.Cisco
@@ -5923,32 +5917,702 @@ service_template:
             capability: virtualBind
         - mgmt_net: mgmt_net
 ```
-### get_property
+#### 10.2.1.2 get_property
 
-The get_property function is used to retrieve property values of
+The *$get_property* function is used to retrieve property values of
 modelable entities in the representation graph. Note that the
 get_property function may only retrieve the static values of parameter
 or property definitions of a TOSCA application as defined in the TOSCA
-Service Template. The get_attribute function
-should be used to retrieve values for attribute definitions (or property
-definitions reflected as attribute definitions) from the representation
-graph of the TOSCA application (as realized by the TOSCA orchestrator).
+service template. The *$get_attribute* function should be used to
+retrieve values for attribute definitions (or property definitions
+reflected as attribute definitions) from the representation graph of
+the TOSCA application (as realized by the TOSCA orchestrator).
 
-#### Grammar 
-<!----
-{"id": "1321", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-169](comments.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.", "target": "Grammar "}-->
+The get_property function uses the following grammar:
 ```
 $get_property: [ <tosca_traversal_path>, <property_name>, <nested_property_name_or_index_1>, ..., <nested_property_name_or_index_n> ]
 ```
-#### Arguments
+
+The *$get_property* function takes the arguments shown in the
+following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
 |\< tosca_traversal_path \>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. In the following subsection the specification of the \<tosca_traversal_path\> is explicated.|
-|\<property_name\>|yes|The name of the property definition the function will return the value from.|
+|\<property_name\>|yes|The name of the property definition from which the function will return the value.|
 |\<nested_property_name_or_index_*\> |no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
-##### The simplified TOSCA_PATH definition in BNF format
+The following example shows how to use the get_property function with an
+actual node template name:
+```yaml
+node_templates:
+  mysql_database:
+    type: Database
+    properties:
+      name: sql_database1
+  wordpress:
+    type: WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          inputs:
+            wp_db_name: { $get_property: [ mysql_database, name ] }
+```
+The following example shows how to use the get_property function
+traversing from the relationship to its target node:
+```yaml
+relationship_templates:
+    my_connection:
+      type: ConnectsTo
+      interfaces:
+        Configure:
+          inputs: 
+            targets_value: { $get_property: [ SELF, TARGET, value ] }
+```
+The following example shows how to use the get_property function using
+the SELF keyword, and traversing from a wordpress node (via the first
+relationship of the database_endpoint requirement to the target
+capability in the target node) and accessing the port property of that
+capability:
+```
+node_templates:  
+  mysql_database:
+    type: Database
+    ...
+    capabilities:
+      database_endpoint:
+        properties:
+          port: 3306
+  wordpress:
+    type: WordPress
+    requirements:
+      ...
+      - database_endpoint: mysql_database
+    interfaces:
+      Standard:
+        create: wordpress_install.sh
+        configure: 
+          implementation: wordpress_configure.sh            
+          inputs:
+            ...
+            wp_db_port:
+              $get_property:
+               - SELF
+               - RELATIONSHIP
+               - database_endpoint
+               - 0
+               - CAPABILITY
+               - port
+```
+The following example shows how to use the get_property function to
+traverse over two requirement relationships, from the wordpress node to
+its database node and further to its DBMS host to get its
+admin_credential property:
+```yaml
+node_templates:  
+  mysql_database:
+    type: Database
+    ...
+    capabilities:
+      database_endpoint:
+        properties:
+          port: 3306
+  wordpress:
+    type: WordPress
+    requirements:
+      ...
+      - database_endpoint: mysql_database
+    interfaces:
+      Standard:
+        create: wordpress_install.sh
+        configure: 
+          implementation: wordpress_configure.sh            
+          inputs:
+            ...
+            host_dbms_admin_credential:
+              $get_property:
+               - SELF
+               - RELATIONSHIP
+               - database_endpoint
+               - TARGET
+               - RELATIONSHIP
+               - host
+               - TARGET
+               - admin_credential
+```
+> TODO: An example of second index (i.e. 1) and index ALL !!!
+
+#### 10.2.1.3 get_attribute
+
+The **get_attribute** function is used within a representation graph to
+obtain attribute values from nodes and relationships that have been
+created from an application model described in a service template. The
+nodes or relationships can be referenced by their name as assigned in
+the service template or relative to the context where they are being
+invoked.
+
+The get_attribute function uses the following grammar:
+```
+$get_attribute: [<tosca_traversal_path>, <attribute_name>, <nested_attribute_name_or_index_1>, ..., <nested_attribute_name_or_index_n> ]
+```
+The *$get_attribute* function takes the arguments shown in the
+following table:
+
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|\<tosca_traversal_path\>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The specification of the \<tosca_traversal_path\> is explicated in the get_property section.|
+|\<attribute_name\> |yes|The name of the attribute definition the function will return the value from.|
+|\<nested_attribute_name_or_index_*\> |no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
+
+The $get_attribute function is used in the same way as the equivalent
+$get_property functions described above. Please see their examples and
+replace *$get_property* with the *$get_attribute* function name.
+
+#### 10.2.1.4 get_artifact
+
+The *$get_artifact* function is used to retrieve the location of
+artifacts defined by modelable entities in a service template. It uses
+the following grammar:
+
+```
+$get_artifact: [ <tosca_traversal_path>, <artifact_name> ]
+```
+The *$get_artifact* function takes the arguments shown in the
+following table:
+
+|Argument|Mandatory|Type|Description|
+| ----- | ------- | ----- | ----- |
+|\<tosca_traversal_path\>|yes|string|Using the <tosca_traversal_path> a TOSCA processor can traverse the representation graph to the node that contains the artifact. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node.|
+|<artifact_name\>|yes|string|The name of the artifact definition for which the function will return the location.|
+
+The following example uses a snippet of a WordPress
+\[[WordPress](#CIT_WORDPRESS)\] web application to show how to use the
+get_artifact function with an actual node template name:
+
+```yaml
+node_templates:
+  wordpress:
+    type: WordPress
+    ...
+    interfaces:
+      Standard:
+        configure: 
+          create:
+            implementation: wordpress_install.sh
+            inputs
+              wp_zip: { $get_artifact: [ SELF, zip ] }
+    artifacts:
+      zip: /data/wordpress.zip
+```
+In such implementation the TOSCA orchestrator may provide the
+wordpress.zip archive as
+
+- a local URL (example:
+  [file://home/user/wordpress.zip](file:///\\home\user\wordpress.zip))
+  or
+
+- a remote one (example: <http://cloudrepo:80/files/wordpress.zip>)
+  where some orchestrator may indeed provide some global artifact
+  repository management features.
+
+#### 10.2.1.5 value
+
+This function is used as an argument inside validation functions. It
+returns the value of the property, attribute, or parameter for which the
+validation clause is defined. The $value function uses the following grammar:
+```
+$value: [<nested_value_name_or_index>, ... ]
+```
+It takes the arguments shown in the following table:
+
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|<nested_value_name_or_index\> |no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
+
+### 10.2.2 Boolean Functions
+
+TOSCA includes a number of functions that return Boolean values. These
+functions are used in validation expressions and in condition clauses in
+workflow definitions and policy definitions. They are also used as node
+filters in requirement definitions and requirement templates and as
+substitution filters in substitution mappings.
+
+#### 10.2.2.1 Boolean Logic Functions
+
+##### 10.2.2.1.1 and
+
+The *$and* function takes two or more Boolean arguments. It evaluates to
+true if all its arguments evaluate to true. It evaluates to false in all
+other cases. The $and function uses the following grammar:
+```
+$and: [ <boolean_arg1>, <boolean_arg2>, ... <boolean_argn>]
+```
+Note that the evaluation of the arguments in the $and function may stop
+as soon as a false argument is encountered, and the function may return
+immediately without evaluating the rest of the arguments.
+
+##### 10.2.2.1.2 or
+
+The *$or* function takes two or more Boolean arguments. It evaluates to
+false if all of its arguments evaluate to false. It evaluates to true in
+all other cases. The $or function uses the following grammar:
+```
+$or: [ <boolean_arg1>, <boolean_arg2>, ... <boolean_argn>]
+```
+
+Note that the evaluation of the arguments in the $or function may stop
+as soon as a true argument is encountered, and the function may return
+immediately without evaluating the rest of the arguments.
+
+##### 10.2.2.1.3 not
+
+The *$not* function takes one Boolean argument. It evaluates to true if
+its argument evaluates to false and evaluates to false if its argument
+evaluates to true. The $not function uses the following grammar:
+```
+$not: [ <boolean_arg> ]
+```
+##### 10.2.2.1.4 xor
+
+The *$xor* function takes two Boolean arguments. It evaluates to false
+if both arguments either evaluate to true or both arguments evaluate
+to false, and evaluates to true otherwise. The $xor function uses the
+following grammar:
+```
+$xor: [ <boolean_arg1>, <boolean_arg2> ]
+```
+#### 10.2.2.2 Comparison Functions
+
+This section documents the list of built-in comparison functions.
+
+- Note that some implementations may fail the evaluation if the
+  arguments are not of the same type.
+
+- Also note that Unicode string comparisons are implementation specific.
+
+- TODO explanation on how versions are compared
+
+<!----
+{"id": "807", "author": "Chris Lauwers", "date": "2020-08-18T23:01:00Z", "comment": "(From Tal): Do we want the comparison constraints to work for strings? E.g. should \"greater_than\" do a sorting-based comparison? I'll just point that it is non-trivial to sort Unicode strings. The most common way is to use the Unicode Collation Algorithm, which involves a database of information. There is a reference implementation in [ICU](webSettings.xml). Good and proper Unicode libraries will support it (e.g. [here is Go's](footnotes.xml)), but I do imagine it may be a burden for some implementations. I suggest we discuss this in the ad hoc and consider the pros and cons.", "target": "Notes"}-->
+
+##### 10.2.2.2.1 equal
+
+The *$equal* function takes two arguments that have the same type. It
+evaluates to true if the arguments are equal. An $equal function that
+uses arguments of different types SHOULD be flagged as an error. The
+$equal function uses the following grammar:
+```
+$equal: [ <any_type_arg1>, <any_type_arg2> ]
+```
+
+##### 10.2.2.2.2 greater_than
+
+The *$greater_than* function takes two arguments of integer, float,
+string, timestamp, version, any scalar type, or their derivations. It
+evaluates to true if both arguments are of the same type, and if the
+first argument is greater than the second argument and evaluates to
+false otherwise. The $greater_than function uses the following
+grammar:
+```
+$greater_than: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
+##### 10.2.2.2.3  greater_or_equal
+
+The *$greater_or_equal* function takes two arguments of integer,
+float, string, timestamp, version, any scalar type, or their
+derivations. It evaluates to true if both arguments are of the same
+type, and if the first argument is greater than or equal to the second
+argument and evaluates to false otherwise. The $greater_or_equal
+function uses the following grammar:
+```
+$greater_or_equal: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
+##### 10.2.2.2.4 less_than
+
+The *$less_than* function takes two arguments of integer, float,
+string, timestamp, version, any scalar type, or their derivations. It
+evaluates to true if both arguments are of the same type, and if the
+first argument is less than the second argument and evaluates to false
+otherwise. The $less_than function uses the following grammar:
+```
+$less_than: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
+##### 10.2.2.2.5 less_or_equal
+
+The *$less_or_equal* function takes two arguments of integer, float,
+string, timestamp, version, any scalar type, or their derivations. It
+evaluates to true if both arguments are of the same type, and if the
+first argument is less than or equal to the second argument and
+evaluates to false otherwise. The $less_or_equal function uses the
+following grammar:
+```
+$less_or_equal: [ <comparable_type_arg1>, <comparable_type_arg2> ]
+```
+##### 10.2.2.2.6 valid_values
+
+The *$valid_values* function takes two arguments. The first argument
+is of any type and the second argument is a list with any number of
+values of the same type as the first argument. It evaluates to true if
+the first argument is equal to a value in the second argument list and
+false otherwise. The $valid_values function uses the following
+grammar:
+```
+$valid_values: [ <any_type_arg1>, <any_type_list_arg2> ]
+```
+
+Note that the $valid_values function is equivalent to the $has_entry
+function, except with reversed arguments.
+
+##### 10.2.2.2.7 matches
+
+The *$matches* function takes two arguments. The first argument is a
+general string, and the second argument is a string that encodes a
+regular expression pattern. It evaluates to true if the first argument
+matches the regular expression pattern represented by the second
+argument and false otherwise. The $matches function uses the following
+grammar:
+```
+$matches: [ <string_type_arg1>, <regex_pattern_arg2> ]
+```
+Future drafts of this specification will detail the use of regular
+expressions and reference an appropriate standardized grammar.
+
+Note also that if ones means that the whole string is to be matched, the
+regular expression must start with a caret ^ and end with a \$.
+
+> Check for new lines and maybe add a third argument – e.g. as in
+> <https://www.pcre.org/> !!!
+
+#### 10.2.2.3 Boolean List, Map and String Functions
+
+##### 10.2.2.3.1 has_suffix
+
+The *$has_suffix* function takes two arguments. Both arguments are
+either of type string or of type list. It evaluates to true if the
+second argument is a suffix of the first argument. For lists this
+means that the values of the second list are the last values of the
+first list in the same order. The $has_suffix function uses the
+following grammar:
+```
+$has_suffix: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
+```
+##### 10.2.2.3.2 has_prefix
+
+The *$has_prefix* function takes two arguments. Both arguments are
+either of type string or of tpe list. It evaluates to true if the
+second argument is a prefix of the first argument. For lists this
+means that the values of the second list are the first values of the
+first list in the same order. The $has_prefix function uses the
+following grammar:
+```
+$has_prefix: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
+```
+
+##### 10.2.2.3.3 contains
+
+The *$contains* function takes two arguments. Both arguments are
+either of type string or of type list. It evaluates to true if the
+second argument is contained in the first argument. For strings that
+means that the second argument is a substring of the first
+argument. For lists this means that the values of the second list are
+contained in the first list in an uninterrupted sequence and in the
+same order. The $contains function uses the following grammar:
+```
+$contains: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
+```
+##### 10.2.2.3.4 has_entry
+
+The *$has_entry* function takes two arguments. The first argument is a
+list or a map.  The second argument is of the type matching the
+entry_schema of the first argument. It evaluates to true if the second
+argument is an entry in the first argument. For lists this means that
+the second argument is a value in the first argument list. For maps
+this means that the second argument is a value in any of the key-value
+pairs in the first argument map. The $has_entry function uses the
+following grammar:
+```
+$has_entry: [ <list_or_map_type_arg1>, <any_type_arg2> ]
+```
+##### 10.2.2.3.5 has_key
+
+The *$has_key* function takes two arguments. The first argument is a
+map. The second argument is of the type matching the key_schema of the
+first argument. It evaluates to true if the second argument is a key
+in any of the key-value pairs in the first argument map. The $has_key
+function uses the following grammar:
+```
+$has_key: [ <map_type_arg1>, <any_type_arg2> ]
+```
+##### 10.2.2.3.6 has_all_entries
+
+The *$has_all_entries* function takes two arguments. The first
+argument is a list or a map.  The second argument is a list with the
+entry_schema matching the entry_schema of the first argument. It
+evaluates to true if for all entries in the second argument there is
+an equal value entry in the first argument. The $has_all_entries
+function uses the following grammar:
+```
+$has_all_entries: [ <list_or_map_type_arg1>, <list_type_arg2> ]
+```
+##### 10.2.2.3.7 has_all_keys
+
+The *$has_all_keys* function takes two arguments. The first argument
+is a map. The second argument is a list with the entry_schema matching
+the key_schema of the first argument. It evaluates to true if for all
+entries in the second argument there is an equal value key in the
+first argument. The $has_all_keys function uses the following grammar:
+```
+$has_all_keys: [ <map_type_arg1>, <list_type_arg2> ]
+```
+##### 10.2.2.3.8 has_any_entry
+
+The *$has_any_entry* function takes two arguments. The first argument
+is a list or a map.  The second argument is a list with the
+entry_schema matching the entry_schema of the first argument. It
+evaluates to true if there is an entry in the second argument that is
+equal to an entry in the first argument. The $has_any_entry function
+uses the following grammar:
+```
+$has_any_entry: [ <list_or_map_type_arg1>, <list_type_arg2> ]
+```
+##### 10.2.2.3.9 has_any_key
+
+The *$has_any_key* function takes two arguments. The first argument is
+a map. The second argument is a list with the entry_schema matching
+the key_schema of the first argument. It evaluates to true if there is
+an entry in the second argument which is equal to a key in the first
+argument. The $has_any_key function uses the following grammar:
+```
+$has_any_key: [ <map_type_arg1>, <list_type_arg2> ]
+```
+### 10.2.3 String, List, and Map Functions
+
+#### 10.2.3.1 length
+
+The *$length* function takes an argument of type string, list, or
+map. It returns the number of nicode characters in the string, or the
+numbers of values in the list, or the number of key-values pairs in
+the map. The $length function uses the following grammar:
+```
+$length: [ <string_list_or_map_type_arg> ]
+```
+#### 10.2.3.2 concat
+
+The *$concat* function takes one or more arguments of either the type
+string or the type list with the same type of their entry_schema. In
+the case of strings, it returns a string which is the concatenation of
+the argument strings. In the case of lists, it returns a list that
+contains all the entries of all the argument lists. Order is preserved
+both for strings and lists. This function does not recurse into the
+entries of the lists. The $concat function uses the following grammar:
+```
+$concat: [<string_or_list_type_arg1>, … ]
+```
+The following code snippet shows an example of a $concat function:
+```
+outputs:
+  description: Concatenate the URL for a server from other template values
+  server_url:
+  value: { $concat: [ 'http://', 
+                     $get_attribute: [ server, public_address ],
+                     ':', 
+                     $get_attribute: [ server, port ] ] }
+```
+#### 10.2.3.3 join
+
+The *$join* function takes either one or two arguments where the first
+one is of type list of strings and the second (optional) argument is
+of type string. It returns a string that is the joining of the entries
+in the first argument while adding an optional delimiter between the
+strings. The $join function uses the following grammar:
+```
+$join: [<list_of_strings> ]
+$join: [<list of strings>, <delimiter> ]
+```
+It takes the arguments shown in the following table:
+
+Argument|Mandatory|Type|Description
+| ----- | ------- | ----- | ----- |
+|\<list of strings\>|yes|list of string or string value expressions|A list of one or more strings (or expressions that result in a list of string values) which can be joined together into a single string.|
+|\<delimiter\>|no|string|An optional delimiter used to join the string in the provided list.|
+
+The following code snippet shows example $join functions:
+```
+outputs:
+   example1:
+       # Result: prefix_1111_suffix
+       value: { $join: [ ["prefix", 1111, "suffix" ], "_" ] }
+   example2:
+       # Result: 9.12.1.10,9.12.1.20
+       value: { $join: [ { $get_input: my_IPs }, “,” ] } 
+```
+<!----
+{"id": "1336", "author": "Calin Curescu", "date": "2023-01-17T17:54:00Z", "comment": "Make a better example.", "target": "!!! Make an\nexample for concat and join where the differences are\nclear!!\\!"}-->
+#### 10.2.3.4 token
+
+The *$token* function is used within a TOSCA service template on a
+string to parse out (tokenize) substrings separated by one or more
+token characters within a larger string. The $token function uses the
+following grammar:
+```
+$token: [ <string_with_tokens>, <string_of_token_chars>, <substring_index> ]
+```
+It takes the arguments shown in the following table:
+
+Argument|Mandatory|Type|Description
+| ----- | ------- | ----- | ----- |
+|string_with_tokens|yes|string|The composite string that contains one or more substrings separated by token characters.|
+|string_of_token_chars|yes|string|The string that contains one or more token characters that separate substrings within the composite string.|
+|substring_index|yes|integer| The integer indicates the index of the substring to return from the composite string. Note that the first substring is denoted by using the ‘0’ (zero) integer value.|
+
+The following code snippet shows an example use of the $token function:
+```
+outputs:
+   webserver_port:
+     description: the port provided at the end of my server’s endpoint’s IP address
+     value: { token: [ $get_attribute: [ my_server, data_endpoint, ip_address ], 
+                       ‘:’,
+                       1 ] }
+```
+### 10.2.4 Set Functions
+
+> Note: We should discuss order
+
+#### 10.2.4.1 union
+
+The *$union* function takes one or more list arguments, all having the
+entry schema of the same type. The result is a list that contains all
+non-duplicate entries from all the argument lists. By non-duplicate is
+meant that no two entries in the result list are equal. The $union
+function uses the following grammar:
+```
+$union: [ <list_arg1>, … ]
+```
+
+The $union function applied to only one list will return a result
+where all the duplicate entries of the argument list are
+eliminated. Note also that the order of the elements in the result
+list is not specified.
+
+#### 10.2.4.2 intersection
+
+The *$intersection* function takes one or more list arguments, all
+having the entry schema of the same type. The result is a list that
+contains all entries that can be found in each of the argument
+lists. The $intersection function uses the following grammar:
+
+```
+$intersection: [ <list_arg1>, … ]
+```
+The $intersection function applied to only one list will return a
+result where all the duplicate entries of the argument list are
+eliminated. Note also that the order of the elements in the result
+list is not specified.
+
+### 10.2.5 Arithmetic Functions
+
+#### 10.2.5.1 sum
+
+The *$sum* function takes one or more arguments of either integer,
+float, or scalar type. The result is of the same type as the arguments
+and its value is the arithmetic sum of the arguments’ values. The $sum
+function uses the following grammar:
+
+```
+$sum: [ <int_float_or_scalar_type_arg1>, < int_float_or_scalar_type_arg2>, … ]
+```
+
+#### 10.2.5.2 difference
+
+The *$difference* function takes two arguments of either integer,
+float, or scalar type. The result is of the same type as the arguments
+and its value is the arithmetic subtraction of the second argument
+value from the first argument value. The $difference function uses the
+following grammar:
+
+```
+$difference: [ <int_float_scalar_type_arg1>, < int_float_scalar_type_arg2> ]
+```
+
+#### 10.2.5.3 product
+
+The *$product* function takes either:
+
+- Two arguments where the first argument is of a scalar type and the
+  second argument is of an integer or float type. The result is of the
+  same type as the first argument and its value is the arithmetic
+  product of the first argument value and the second argument value.
+
+- Any number of arguments of type integer or float. If all inputs are of
+  type integer, then the result is of type integer, otherwise it is of
+  type float. The result value is the arithmetic product of all the
+  arguments values.
+
+The $product function uses the following grammars:
+```
+$product: [ <scalar_type_arg1>, < int_or_float_type_arg2> ]
+$product: [ <int_or_float_type_arg1>, < int_or_float_type_arg2>, … ]
+```
+#### 10.2.5.4 quotient
+
+The *$quotient* function takes two arguments where the first argument
+is of an integer, float, or scalar type and the second argument is of
+an integer or float type. The result is of
+
+- A scalar type if the first argument is a scalar, and its value is the
+  arithmetic division of the first argument value by the second argument
+  value. If necessary, the result might be truncated, as decided by the
+  implementation.
+
+- A float if the first argument is an integer or a float. Note that to
+  transform the float to an integer a round or ceil or floor function
+  must be used.
+
+The $quotient function uses the following grammar:
+```
+$quotient: [ <int_float_or_scalar_type_arg1>, < int_or_float_type_arg2> ]
+```
+
+#### 10.2.5.5 remainder
+
+The *$remainder* function takes two arguments where the first argument
+is of an integer, or scalar type and the second argument is of an
+integer. The result is of the same type as the first argument and its
+value is the remainder of the division to the second argument. The
+$remainder function uses the following grammar:
+
+```
+$remainder: [ <int_or_scalar_type_arg1>, < int_type_arg2> ]
+```
+#### 10.2.5.6 round
+
+The *$round* function takes a float argument. The result is an integer
+with the closest value to the float argument. Equal value distance is
+rounded down (e.g. 3.5 is rounded down to 3, while 3.53 is rounded up
+to 4). The $round function uses the following grammar:
+```
+$round: [ <float_type_arg> ]
+```
+#### 10.2.5.7 floor
+
+The *$floor* function takes a float argument. The result is an integer
+with the closest value that is less or equal to the value of the float
+argument. The $floor function uses the following grammar:
+
+```
+$floor: [ <float_type_arg> ]
+```
+#### 10.2.5.8 ceil
+
+The *$ceil* function takes a float argument. The result is an integer
+with the closest value that is greater or equal to the value of the
+float argument. The $ceil function uses the following grammar:
+```
+$ceil: [ <float_type_arg> ]
+```
+## 10.3 TOSCA Path
+The following shows the TOSCA Path syntax in BNF format:
 ```
 <tosca_path> ::=         <initial_context>, <node_context> |
                          <initial_context>, <rel_context>
@@ -6011,8 +6675,6 @@ indices (further resolved separately) as a list. If the there are
 multiple ALL keywords in the definition, then all the results shall be
 merged into a single list.
 
-#### Note
-
 We further list the changes from the get_property and get_attribute
 expression from v1.3 to v2.0:
 
@@ -6032,859 +6694,51 @@ expression from v1.3 to v2.0:
 
   - The initial TARGET, … becomes SELF, TARGET, …
 
-#### Examples
-<!----
-{"id": "1322", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "WD03: TODO: Need examples for returning simple types and complex/nested structures (e.g., Maps of Maps)", "target": "Examples"}-->
-
-The following example shows how to use the get_property function with an
-actual node template name:
-```
-node_templates:
-
-  mysql_database:
-    type: tosca.nodes.Database
-    properties:
-      name: sql_database1
-
-  wordpress:
-    type: tosca.nodes.WebApplication.WordPress
-    ...
-    interfaces:
-      Standard:
-        configure: 
-          inputs:
-            wp_db_name: { $get_property: [ mysql_database, name ] }
-```
-The following example shows how to use the get_property function
-traversing from the relationship to its target node:
-```
-relationship_templates:
-    my_connection:
-      type: ConnectsTo
-      interfaces:
-        Configure:
-          inputs: 
-            targets_value: { $get_property: [ SELF, TARGET, value ] }
-```
-The following example shows how to use the get_property function using
-the SELF keyword, and traversing from a wordpress node (via the first
-relationship of the database_endpoint requirement to the target
-capability in the target node) and accessing the port property of that
-capability:
-```
-node_templates:  
-
-  mysql_database:
-    type: tosca.nodes.Database
-    ...
-    capabilities:
-      database_endpoint:
-        properties:
-          port: 3306
-
-  wordpress:
-    type: tosca.nodes.WebApplication.WordPress
-    requirements:
-      ...
-      - database_endpoint: mysql_database
-    interfaces:
-      Standard:
-        create: wordpress_install.sh
-        configure: 
-          implementation: wordpress_configure.sh            
-          inputs:
-            ...
-            wp_db_port:
-              $get_property:
-               - SELF
-               - RELATIONSHIP
-               - database_endpoint
-               - 0
-               - CAPABILITY
-               - port
-```
-NOTE that in the above example the index 0 is used but can also be
-omitted with the same semantic meaning.
-
-The following example shows how to use the get_property function to
-traverse over two requirement relationships, from the wordpress node to
-its database node and further to its DBMS host to get its
-admin_credential property:
-```
-node_templates:  
-
-  mysql_database:
-    type: tosca.nodes.Database
-    ...
-    capabilities:
-      database_endpoint:
-        properties:
-          port: 3306
-
-  wordpress:
-    type: tosca.nodes.WebApplication.WordPress
-    requirements:
-      ...
-      - database_endpoint: mysql_database
-    interfaces:
-      Standard:
-        create: wordpress_install.sh
-        configure: 
-          implementation: wordpress_configure.sh            
-          inputs:
-            ...
-            host_dbms_admin_credential:
-              $get_property:
-               - SELF
-               - RELATIONSHIP
-               - database_endpoint
-               - TARGET
-               - RELATIONSHIP
-               - host
-               - TARGET
-               - admin_credential
-```
-> TODO: An example of second index (i.e. 1) and index ALL !!!
-
-### get_attribute
-
-The **get_attribute** function is used within a representation graph to
-obtain attribute values from nodes and relationships that have been
-created from an application model described in a service template. The
-nodes or relationships can be referenced by their name as assigned in
-the service template or relative to the context where they are being
-invoked.
-
-#### Grammar 
-<!----
-{"id": "1326", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-169](commentsExtended.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.", "target": "Grammar "}-->
-```
-$get_attribute: [<tosca_traversal_path>, <attribute_name>, <nested_attribute_name_or_index_1>, ..., <nested_attribute_name_or_index_n> ]
-```
-#### Arguments
-
-|Argument|Mandatory|Description|
-| ----- | ------- | ----- | 
-|\<tosca_traversal_path\>|yes|Using the \<tosca_traversal_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The specification of the \<tosca_traversal_path\> is explicated in the get_property section.|
-|\<attribute_name\> |yes|The name of the attribute definition the function will return the value from.|
-|\<nested_attribute_name_or_index_*\> |no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
-
-#### Examples:
-
-The attribute
-functions are used in the same way as the equivalent Property functions
-described above. Please see their examples and replace “get_property”
-with “get_attribute” function name.
-<!----
-{"id": "1327", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "Is this always true?", "target": "The attribute\nfunctions are used in the same way as the equivalent Property functions\ndescribed above. Please see their examples and replace \u201cget_property\u201d\nwith \u201cget_attribute\u201d function name."}-->
-
-
-### get_artifact
-
-The get_artifact function is used to retrieve artifact location between modelable entities defined in the same service template.
-
-#### Grammar 
-```
-$get_artifact: [ <modelable_entity_name>, <artifact_name>, <location>, <remove> ]
-```
-#### Arguments
-
-|Argument|Mandatory|Type|Description|
-| ----- | ------- | ----- | ----- |
-|\<modelable entity name\> \| SELF \| SOURCE \| TARGET \| HOST|yes|string|The mandatory name of a modelable entity (e.g., node template or Relationship Template name) as declared in the service template that contains the property definition the function will return the value from. See section B.1 for valid keywords.|
-|<artifact_name\>|yes|string|The name of the artifact definition the function will return the value from.|
-|\<location\> \| LOCAL_FILE|no|string|Location value must be either a valid path e.g. ‘/etc/var/my_file’ or ‘LOCAL_FILE’. If the value is LOCAL_FILE the orchestrator is responsible for providing a path as the result of the get_artifact call where the artifact file can be accessed. The orchestrator will also remove the artifact from this location at the end of the operation. If the location is a path specified by the user the orchestrator is responsible to copy the artifact to the specified location. The orchestrator will return the path as the value of the get_artifact function and leave the file here after the execution of the operation.|
-|remove|no|boolean|Boolean flag to override the orchestrator default behavior so it will remove or not the artifact at the end of the operation execution. If not specified the removal will depends of the location e.g. removes it in case of ‘LOCAL_FILE’ and keeps it in case of a path. If true the artifact will be removed by the orchestrator at the end of the operation execution, if false it will not be removed.|
-
-#### Examples
-
-The following example uses a snippet of a WordPress
-\[[WordPress](#CIT_WORDPRESS)\] web application to show how to use the
-get_artifact function with an actual node template name:
-
-##### Example: Retrieving artifact without specified location
-```
-node_templates:
-
-  wordpress:
-    type: tosca.nodes.WebApplication.WordPress
-    ...
-    interfaces:
-      Standard:
-        configure: 
-          create:
-            implementation: wordpress_install.sh
-            inputs
-              wp_zip: { $get_artifact: [ SELF, zip ] }
-    artifacts:
-      zip: /data/wordpress.zip
-```
-In such implementation the TOSCA orchestrator may provide the
-wordpress.zip archive as
-
-- a local URL (example:
-  [file://home/user/wordpress.zip](file:///\\home\user\wordpress.zip))
-  or
-
-- a remote one (example: <http://cloudrepo:80/files/wordpress.zip>)
-  where some orchestrator may indeed provide some global artifact
-  repository management features.
-
-##### Example: Retrieving artifact as a local path
-
-The following example explains how to force the orchestrator to copy the
-file locally before calling the operation’s implementation script:
-```
-node_templates:
-
-  wordpress:
-    type: tosca.nodes.WebApplication.WordPress
-    ...
-    interfaces:
-      Standard:
-        configure: 
-          create:
-            implementation: wordpress_install.sh
-            inputs
-              wp_zip: { $get_artifact: [ SELF, zip, LOCAL_FILE] }
-    artifacts:
-      zip: /data/wordpress.zip
-```
-In such implementation the TOSCA orchestrator must provide the
-wordpress.zip archive as a local path (example:
-[/tmp/wordpress.zip](file:///\\home\user\wordpress.zip)) and **will
-remove it** after the operation is completed.
-
-##### Example: Retrieving artifact in a specified location
-
-The following example explains how to force the orchestrator to copy the
-file locally to a specific location before calling the operation’s
-implementation script:
-```
-node_templates:
-
-  wordpress:
-    type: tosca.nodes.WebApplication.WordPress
-    ...
-    interfaces:
-      Standard:
-        configure: 
-          create:
-            implementation: wordpress_install.sh
-            inputs
-              wp_zip: { $get_artifact: [ SELF, zip, C:/wpdata/wp.zip ] }
-    artifacts:
-      zip: /data/wordpress.zip
-```
-In such implementation the TOSCA orchestrator must provide the
-wordpress.zip archive as a local path (example: C:/wpdata/wp.zip ) and
-**will let it** after the operation is completed.
-
-### value
-
-This function is used as an argument inside validation functions. It
-returns the value of the property, attribute, or parameter for which the
-validation clause is defined.
-
-#### Grammar 
-```
-$value: [<nested_value_name_or_index>, ... ]
-```
-#### Arguments
-
-|Argument|Mandatory|Description|
-| ----- | ------- | ----- | 
-|<nested_value_name_or_index\> |no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
-
-Boolean Functions
------------------
-<!----
-{"id": "1332", "author": "Calin Curescu", "date": "2022-12-06T16:00:00Z", "comment": "I would not call them condition functions since they can appear also outside conditions.", "target": " Functions"}-->
-
-TOSCA includes a number of functions that return Boolean values. These
-functions are used in validation expressions and in condition clauses in
-workflow definitions and policy definitions. They are also used as node
-filters in requirement definitions and requirement templates and as
-substitution filters in substitution mappings.
-
-### Boolean Logic Functions
-
-#### and
-
-The \$and function takes two or more Boolean arguments. It evaluates to
-true if all its arguments evaluate to true. It evaluates to false in all
-other cases.
-
-##### Grammar 
-```
-$and: [ <boolean_arg1>, <boolean_arg2>, ... <boolean_argn>]
-```
-#####  Note
-
-Note that the evaluation of the arguments in the \$and function may stop
-as soon as a false argument is encountered, and the function may return
-immediately without evaluating the rest of the arguments.
-
-#### or
-
-The \$or function takes two or more Boolean arguments. It evaluates to
-false if all of its arguments evaluate to false. It evaluates to true in
-all other cases.
-
-##### Grammar 
-```
-$or: [ <boolean_arg1>, <boolean_arg2>, ... <boolean_argn>]
-```
-##### Note
-
-Note that the evaluation of the arguments in the \$or function may stop
-as soon as a true argument is encountered, and the function may return
-immediately without evaluating the rest of the arguments.
-
-#### not
-
-The \$not function takes one Boolean argument. It evaluates to true if
-its argument evaluates to false and evaluates to false if its argument
-evaluates to true.
-
-##### Grammar 
-```
-$not: [ <boolean_arg> ]
-```
-#### xor
-
-The \$xor function takes two Boolean arguments. It evaluates to false if
-both arguments either evaluate to true or both arguments evaluate to
-false, and evaluates to true otherwise.
-
-##### Grammar 
-```
-$xor: [ <boolean_arg1>, <boolean_arg2> ]
-```
-### Comparison Functions
-
-The following is the list of recognized comparison functions.
-
-- Note that some implementations may fail the evaluation if the
-  arguments are not of the same type.
-
-- Also note that Unicode string comparisons are implementation specific.
-
-- TODO explanation on how versions are
-  compared!!\!
-<!----
-{"id": "1333", "author": "Calin Curescu", "date": "2023-01-04T16:19:00Z", "comment": "TODO explanation on how versions are\n  compared!!!", "target": "TODO explanation on how versions are\n  compared!!\\!"}-->
-
-<!----
-{"id": "807", "author": "Chris Lauwers", "date": "2020-08-18T23:01:00Z", "comment": "(From Tal): Do we want the comparison constraints to work for strings? E.g. should \"greater_than\" do a sorting-based comparison? I'll just point that it is non-trivial to sort Unicode strings. The most common way is to use the Unicode Collation Algorithm, which involves a database of information. There is a reference implementation in [ICU](webSettings.xml). Good and proper Unicode libraries will support it (e.g. [here is Go's](footnotes.xml)), but I do imagine it may be a burden for some implementations. I suggest we discuss this in the ad hoc and consider the pros and cons.", "target": "Notes"}-->
-
-
-#### equal
-
-The function takes two arguments of any type. It evaluates to true if
-the arguments are equal (that is in both type and value) and evaluates
-to false otherwise.
-
-- When performing validation clause evaluation on values of the
-  scalar-unit type, both the scalar value portion and unit value portion
-  **SHALL** be compared together (i.e., both are treated as a single
-  value). For example, if we have a property called storage_size (which
-  is of type scalar-unit) a valid range constraint would appear as
-  follows:
-```
-storage_size:
-  validation:
-    $in_range: [$value, [4 GB, 20 GB]]
-```
-
-  where storage_size’s range will be evaluated using both the numeric
-  and unit values (combined together), in this case ‘4 GB’ and ’20
-  GB’.
-
-
-##### Grammar 
-```
-$equal: [ <any_type_arg1>, <any_type_arg2> ]
-```
-#### greater_than
-
-The function takes two arguments of integer, float, string, timestamp,
-version, any scalar type, or their derivations. It evaluates to true if
-both arguments are of the same type, and if the first argument is
-greater than the second argument and evaluates to false otherwise.
-
-##### Grammar 
-```
-$greater_than: [ <comparable_type_arg1>, <comparable_type_arg2> ]
-```
-#### greater_or_equal
-
-The function takes two arguments of integer, float, string, timestamp,
-version, any scalar type, or their derivations. It evaluates to true if
-both arguments are of the same type, and if the first argument is
-greater than or equal to the second argument and evaluates to false
-otherwise.
-
-##### Grammar 
-```
-$greater_or_equal: [ <comparable_type_arg1>, <comparable_type_arg2> ]
-```
-#### less_than
-
-The function takes two arguments of integer, float, string, timestamp,
-version, any scalar type, or their derivations. It evaluates to true if
-both arguments are of the same type, and if the first argument is less
-than the second argument and evaluates to false otherwise.
-
-##### Grammar 
-```
-$less_than: [ <comparable_type_arg1>, <comparable_type_arg2> ]
-```
-#### less_or_equal
-
-The function takes two arguments of integer, float, string, timestamp,
-version, any scalar type, or their derivations. It evaluates to true if
-both arguments are of the same type, and if the first argument is less
-than or equal to the second argument and evaluates to false otherwise.
-
-##### Grammar 
-```
-$less_or_equal: [ <comparable_type_arg1>, <comparable_type_arg2> ]
-```
-#### valid_values
-
-The function takes two arguments. The first argument is of any type and
-the second argument is a list with any number of values of any type. It
-evaluates to true if the first argument is equal to a value in the
-second argument list and false otherwise.
-
-!!! This function is equivalent to the has_entry function (with reversed
-arguments). A good candidate to remove!
-
-#####  Grammar 
-```
-$valid_values: [ <any_type_arg1>, <any_type_list_arg2> ]
-```
-#### matches
-```
-$matches: [ <string_type_arg1>, <regex_pattern_arg2> ]
-```
-The function takes two arguments. The first argument is a general
-string, and the second argument is a string that encodes a regular
-expression pattern. It evaluates to true if the first argument matches
-the regular expression pattern represented by the second argument and
-false otherwise.
-
-#####  Grammar 
-
-#####  Note
-
-Future drafts of this specification will detail the use of regular
-expressions and reference an appropriate standardized grammar.
-
-Note also that if ones means that the whole string is to be matched, the
-regular expression must start with a caret ^ and end with a \$.
-
-!!! Check for new lines and maybe add a third argument – e.g. as in
-<https://www.pcre.org/> !!!
-
-### Boolean list, map and string functions
-
-#### has_suffix
-
-The function takes two arguments. Both arguments are either of type
-string or list. It evaluates to true if the second argument is a suffix
-of the first argument. For lists this means that the values of the
-second list are the last values of the first list in the same order.
-
-#####  Grammar 
-```
-$has_suffix: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
-```
-#### has_prefix
-
-The function takes two arguments. Both arguments are either of type
-string or list. It evaluates to true if the second argument is a prefix
-of the first argument. For lists this means that the values of the
-second list are the first values of the first list in the same order.
-
-#####  Grammar 
-```
-$has_prefix: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
-```
-#### contains
-
-The function takes two arguments. Both arguments are either of type
-string or list. It evaluates to true if the second argument is contained
-in the first argument. For strings that means that the second argument
-is a substring of the first argument. For lists this means that the
-values of the second list are contained in the first list in an
-uninterrupted sequence and in the same order.
-
-#####  Grammar 
-```
-$contains: [ <string_or_list_type_arg1>, <string_or_list_type_arg2> ]
-```
-#### has_entry
-
-The function takes two arguments. The first argument is a list or a map.
-The second argument is of the type matching the entry_schema of the
-first argument. It evaluates to true if the second argument is an entry
-in the first argument. For lists this means that the second argument is
-a value in the first argument list. For maps this means that the second
-argument is a value in any of the key-value pairs in the first argument
-map.
-
-#####  Grammar 
-```
-$has_entry: [ <list_or_map_type_arg1>, <any_type_arg2> ]
-```
-#### has_key
-
-The function takes two arguments. The first argument is a map. The
-second argument is of the type matching the key_schema of the first
-argument. It evaluates to true if the second argument is a key in any of
-the key-value pairs in the first argument map.
-
-#####  Grammar 
-```
-$has_key: [ <map_type_arg1>, <any_type_arg2> ]
-```
-#### has_all_entries
-
-The function takes two arguments. The first argument is a list or a map.
-The second argument is a list with the entry_schema matching the
-entry_schema of the first argument. It evaluates to true if for all
-entries in the second argument there is an equal value entry in the
-first argument.
-
-#####  Grammar 
-```
-$has_all_entries: [ <list_or_map_type_arg1>, <list_type_arg2> ]
-```
-#### has_all_keys
-
-The function takes two arguments. The first argument is a map. The
-second argument is a list with the entry_schema matching the key_schema
-of the first argument. It evaluates to true if for all entries in the
-second argument there is an equal value key in the first argument.
-
-#####  Grammar 
-```
-$has_all_keys: [ <map_type_arg1>, <list_type_arg2> ]
-```
-#### has_any_entry
-
-The function takes two arguments. The first argument is a list or a map.
-The second argument is a list with the entry_schema matching the
-entry_schema of the first argument. It evaluates to true if there is an
-entry in the second argument that is equal to an entry in the first
-argument.
-
-#####  Grammar 
-```
-$has_any_entry: [ <list_or_map_type_arg1>, <list_type_arg2> ]
-```
-#### has_any_key
-
-The function takes two arguments. The first argument is a map. The
-second argument is a list with the entry_schema matching the key_schema
-of the first argument. It evaluates to true if there is an entry in the
-second argument which is equal to a key in the first argument.
-
-#####  Grammar 
-```
-$has_any_key: [ <map_type_arg1>, <list_type_arg2> ]
-```
-## String, list, and map functions
-<!----
-{"id": "1334", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-212](commentsIds.xml) \u2013 Concat intrinsic function", "target": ""}-->
-<span class="comment-start" id="1335" author="Chris Lauwers" date="2022-10-10T20:39:00Z">We should rename this section to String Manipulation Functions</span><span class="comment-end" id="1335"></span>
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-### length
-
-The function takes an argument of type string, list, or map. It returns
-the number of nicode characters in the string, or the numbers of values
-in the list, or the number of key-values pairs in the map.
-
-####  Grammar 
-```
-$length: [ <string_list_or_map_type_arg> ]
-```
-### concat
-
-The concat function takes one or more arguments of either the type
-string or the type list with the same type of their entry_schema. In the
-case of strings, it returns a string which is the concatenation of the
-argument strings. In the case of lists, it returns a list that contains
-all the entries of all the argument lists. Order is preserved both for
-strings and lists. This function does not recurse into the entries of
-the lists.
-
-#### Grammar 
-```
-$concat: [<string_or_list_type_arg1>, … ]
-```
-#### Examples
-```
-outputs:
-  description: Concatenate the URL for a server from other template values
-  server_url:
-  value: { $concat: [ 'http://', 
-                     $get_attribute: [ server, public_address ],
-                     ':', 
-                     $get_attribute: [ server, port ] ] }
-```
-### join
-
-The join function takes either one or two arguments where the first one
-is of type list of strings and the second (optional) argument is of type
-string. It returns a string that is the joining of the entries in the
-first argument while adding an optional delimiter between the strings.
-
-!!! Make an
-example for concat and join where the differences are
-clear!!\!
-<!----
-{"id": "1336", "author": "Calin Curescu", "date": "2023-01-17T17:54:00Z", "comment": "Make a better example.", "target": "!!! Make an\nexample for concat and join where the differences are\nclear!!\\!"}-->
-
-#### Grammar 
-```
-$join: [<list_of_strings> ]
-$join: [<list of strings>, <delimiter> ]
-```
-#### Arguments
-
-Argument|Mandatory|Type|Description
-| ----- | ------- | ----- | ----- |
-|\<list of strings\>|yes|list of string or string value expressions|A list of one or more strings (or expressions that result in a list of string values) which can be joined together into a single string.|
-|\<delimiter\>|no|string|An optional delimiter used to join the string in the provided list.|
-
-#### Examples
-```
-outputs:
-   example1:
-       # Result: prefix_1111_suffix
-       value: { $join: [ ["prefix", 1111, "suffix" ], "_" ] }
-   example2:
-       # Result: 9.12.1.10,9.12.1.20
-       value: { $join: [ { $get_input: my_IPs }, “,” ] } 
-```
-### token
-
-The token function is used within a TOSCA service template on a string
-to parse out (tokenize) substrings separated by one or more token
-characters within a larger string.
-
-#### Grammar 
-```
-$token: [ <string_with_tokens>, <string_of_token_chars>, <substring_index> ]
-```
-#### Arguments
-
-| Argument              | Mandatory | Type                          | Description                                                                                                                                                           |
-|-----------------------|-----------|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| string_with_tokens    | yes       | string   | The composite string that contains one or more substrings separated by token characters.                                                                              |
-| string_of_token_chars | yes       | string   | The string that contains one or more token characters that separate substrings within the composite string.                                                           |
-| substring_index       | yes       | [integer](#TYPE_YAML_INTEGER) | The integer indicates the index of the substring to return from the composite string. Note that the first substring is denoted by using the ‘0’ (zero) integer value. |
-
-#### Examples
-```
-outputs:
-   webserver_port:
-     description: the port provided at the end of my server’s endpoint’s IP address
-     value: { token: [ $get_attribute: [ my_server, data_endpoint, ip_address ], 
-                       ‘:’,
-                       1 ] }
-```
-Set functions
--------------
-
-!!!Note: We should discuss order!!!!
-
-### union
-
-The function takes one or more list arguments, all having the entry
-schema of the same type. The result is a list that contains all
-non-duplicate entries from all the argument lists. By non-duplicate is
-meant that no two entries in the result list are equal.
-
-#### Grammar 
-```
-$union: [ <list_arg1>, … ]
-```
-<!----
-{"id": "1342", "author": "Chris Lauwers", "date": "2022-10-10T20:39:00Z", "comment": "We should rename this section to String\nManipulation Functions", "target": ""}-->
-
-#### Note 
-
-The union applied to only one list will return a result where all the
-duplicate entries of the argument list are eliminated. Note also that
-the order of the elements in the result list is not specified.
-
-### intersection
-
-The function takes one or more list arguments, all having the entry
-schema of the same type. The result is a list that contains all entries
-that can be found in each of the argument lists.
-
-#### Grammar 
-```
-$intersection: [ <list_arg1>, … ]
-```
-#### Note 
-
-The intersection applied to only one list will return a result where all
-the duplicate entries of the argument list are eliminated. Note also
-that the order of the elements in the result list is not specified.
-
-## Arithmetic functions
-------------------------
-<!----
-{"id": "1343", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-212](https://www.oasis-open.org/committees/tosca/) \u2013 Concat intrinsic function", "target": ""}-->
-
-### sum
-
-The function takes one or more arguments of either integer, float, or
-scalar type. The result is of the same type as the arguments and its
-value is the arithmetic sum of the arguments’ values.
-
-#### Grammar 
-```
-$sum: [ <int_float_or_scalar_type_arg1>, < int_float_or_scalar_type_arg2>, … ]
-```
-### difference
-
-The function takes two arguments of either integer, float, or scalar
-type. The result is of the same type as the arguments and its value is
-the arithmetic subtraction of the second argument value from the first
-argument value.
-
-#### Grammar 
-```
-$difference: [ <int_float_scalar_type_arg1>, < int_float_scalar_type_arg2> ]
-```
-### product
-
-The function takes either:
-
-- Two arguments where the first argument is of a scalar type and the
-  second argument is of an integer or float type. The result is of the
-  same type as the first argument and its value is the arithmetic
-  product of the first argument value and the second argument value.
-
-- Any number of arguments of type integer or float. If all inputs are of
-  type integer, then the result is of type integer, otherwise it is of
-  type float. The result value is the arithmetic product of all the
-  arguments values.
-
-#### Grammar 
-```
-$product: [ <scalar_type_arg1>, < int_or_float_type_arg2> ]
-$product: [ <int_or_float_type_arg1>, < int_or_float_type_arg2>, … ]
-```
-### quotient
-
-The function takes two arguments where the first argument is of an
-integer, float, or scalar type and the second argument is of an integer
-or float type. The result is of
-
-- A scalar type if the first argument is a scalar, and its value is the
-  arithmetic division of the first argument value by the second argument
-  value. If necessary, the result might be truncated, as decided by the
-  implementation.
-
-- A float if the first argument is an integer or a float. Note that to
-  transform the float to an integer a round or ceil or floor function
-  must be used.
-
-#### Grammar 
-```
-$quotient: [ <int_float_or_scalar_type_arg1>, < int_or_float_type_arg2> ]
-```
-### remainder
-
-The function takes two arguments where the first argument is of an
-integer, or scalar type and the second argument is of an integer. The
-result is of the same type as the first argument and its value is the
-remainder of the division to the second argument.
-
-#### Grammar 
-```
-$remainder: [ <int_or_scalar_type_arg1>, < int_type_arg2> ]
-```
-### round
-
-The function takes a float argument. The result is an integer with the
-closest value to the float argument. Equal value distance is rounded
-down (e.g. 3.5 is rounded down to 3, while 3.53 is rounded up to 4).
-
-#### Grammar 
-```
-$round: [ <float_type_arg> ]
-```
-### floor
-
-The function takes a float argument. The result is an integer with the
-closest value that is less or equal to the value of the float argument.
-
-#### Grammar 
-```
-$floor: [ <float_type_arg> ]
-```
-### ceil
-
-The function takes a float argument. The result is an integer with the
-closest value that is greater or equal to the value of the float
-argument.
-
-#### Grammar 
-```
-$ceil: [ <float_type_arg> ]
-```
-## 10.3 Function definitions
-
-TOSCA includes grammar for defining function signatures and associated
-implementation artifacts in TOSCA profiles or in TOSCA service
-templates. This allows for validation of function return values and
-function arguments at design time, and the possibility to provide
-function implementation artifacts within CSARs. Note that the use of
-custom function definitions is entirely optional, service designers can
-use custom functions without defining associated function signatures and
-instead rely on support for those functions directly in the TOSCA
-orchestrator that will be used to process the TOSCA files. Of course,
-TOSCA processors may support custom functions that are not user-defined.
-
-### Keynames
-
-The following is the list of recognized keynames for TOSCA function
+## 10.4 Function Definitions
+
+TOSCA allows for the use of *custom functions* that extend the set of
+built-in functions documented in the previous section. TOSCA
+Processors use standard function parsing rules to detect the presence
+of a custom function.
+
+In addition, TOSCA also includes grammar for defining function
+signatures and associated implementation artifacts in TOSCA profiles
+or in TOSCA service templates. This allows for validation of function
+return values and function arguments at design time, and the
+possibility to provide function implementation artifacts within
+CSARs. Note that the use of custom function definitions is entirely
+optional. Service designers can use custom functions without defining
+associated function signatures and instead rely on support for those
+functions directly in the TOSCA orchestrator that will be used to
+process the TOSCA files. Of course, TOSCA processors may support
+custom functions that are not user-defined.
+
+The following is the list of recognized keynames for a TOSCA function
 definition:
 
-| Keyname     | Mandatory | Type                                             | Description                              |
-|-------------|-----------|--------------------------------------------------|------------------------------------------|
-| signatures  | yes       | map of signature definitions                     | The map of signature definitions.        |
-| description | no        | [string](#TYPE_YAML_STRING) | The description of the function.         |
-| metadata    | no        | [map](#tosca-map-type) of metadata               | Defines additional metadata information. |
+|Keyname|Mandatory|Type|Description|
+|:---- | :------ | :---- | :------ |
+|signatures|yes|map of signature definitions|The map of signature definitions.|
+|description|no|string| The description of the function.|
+|metadata|no|map of metadata|Defines additional metadata information.|
 
-The following is the list of recognized keynames for TOSCA function
+The following is the list of recognized keynames for a TOSCA function
 signature definition:
 
-| Keyname            | Mandatory           | Type                       | Description                                                                                                                                                                                                                                                |
-|--------------------|---------------------|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| arguments          | no                  | list of schema definitions | All defined arguments must be used in the function invocation (and in the order defined here). If no arguments are defined, the signature either accepts no argumats or any arguments of any form (depending on if the variadic keyname is false or true). |
-| optional_arguments | no                  | list of schema definitions | Optional arguments may be used in the function invocation after the regular arguments. Still the order defined here must be respected.                                                                                                                     |
-| variadic           | no (default: false) | boolean                    | Specifies if the last defined argument (or optional_argument if defined) may be repeated any number of times in the function invocation                                                                                                                    |
-| result             | no                  | schema definition          | Defines the type of the function result. If no result keyname is defined, then the function may return any result                                                                                                                                          |
-| implementation     | no                  | implementation definition  | Defines the implementation (e.g., artifact) for the function. The same definition as for operation/notification implementation is used.                                                                                                                    |
-
-### Grammar
+|Keyname|Mandatory|Type|Description|
+|:---- | :------ | :---- | :------ |
+|arguments|no|list of schema definitions|All defined arguments must be used in the function invocation (and in the order defined here). If no arguments are defined, the signature either accepts no argumats or any arguments of any form (depending on if the variadic keyname is false or true).|
+|optional_arguments|no|list of schema definitions|Optional arguments may be used in the function invocation after the regular arguments. Still the order defined here must be respected.|
+|variadic|no|boolean|Specifies if the last defined argument (or optional_argument if defined) may be repeated any number of times in the function invocation. If this keyword is not specified, a default of False is assumed.|
+|result|no|schema definition|Defines the type of the function result. If no result keyname is defined, then the function may return any result|
+|implementation|no|implementation definition|Defines the implementation (e.g., artifact) for the function. The same definition as for operation/notification implementation is used.|
 
 Function signatures can be defined in TOSCA profiles or TOSCA service
-templates using a YAML map under the functions keyname as follows. Note
-that this grammar allows the definition of functions that have arguments
-expressed within a YAML seq, however intrinsic functions may accept
-other argument definition syntaxes.
+templates using a YAML map under the functions keyname using the
+grammar specified below. Note that this grammar allows the definition
+of functions that have arguments expressed within a YAML seq, however
+intrinsic functions may accept other argument definition syntaxes.
+
 ```
 functions:
   <function_def>
@@ -6906,15 +6760,13 @@ list of signature definitions as follows:
     metadata: <map_of_metadata>
 ```
 Only the signatures keyname is mandatory and must provide at least one
-signature
-definition
+signature definition. Note that the signatures are tested in the order
+of their definition. The first matching implementation is used.
+
 <!----
 {"id": "1055", "author": "Calin Curescu", "date": "2022-09-20T16:21:00Z", "comment": "Put an example of an empty signature that\nmeans the function takes no parameters and my return any result. Put\nalso of this example with variadic: true.", "target": "signature\ndefinition"}-->
-. Note that the
-signatures are tested in the order of their definition. The first
-matching implementation is used.
 
-Each \<signature_def\> is a map of following keywords definitions:
+Each \<signature_def\> uses the following grammar:
 ```
 arguments:
   - <schema_def>
@@ -7030,11 +6882,10 @@ properties:
     template or outside the service template, in the latter case
     defining a global implementation.
 
-### Refinement rules
-
-Function definitions inside a service_template that are having the same
-\<function_name\> are considered a refinement of the homonymous
-definition outside the service_template.
+Function definitions inside a service_template that are having the
+same \<function_name\> are considered a refinement of the homonymous
+definition outside the service_template. They use the following
+refinement rules:
 
 - signatures: as a general function refinement rule, for an already
   defined signature only the implementation may be changed.
@@ -7051,10 +6902,6 @@ definition outside the service_template.
 
 - metadata: a new definition is unrestricted and will overwrite the one
   inherited from the function definition outside the service_template.
-
-### Examples
-
-#### Square root function with several signatures
 
 The following example shows the definition of a square root function:
 ```
@@ -7095,8 +6942,6 @@ functions:
       the argument is either integer or float and the function
       returns the suare root as a float.
 ```
-#### Function with list of arguments
-
 The following example shows a function that takes a list of arguments
 with different types:
 ```
@@ -7116,7 +6961,8 @@ with different types:
           type: MyTypeRez
         implementation: scripts/my.py
 ```
-Same as the above, but in compact notation:
+The following snippet defines the same function as the example above,
+but in compact notation:
 ```
 functions:
   my_func_with_different_argument_types:
@@ -7126,8 +6972,6 @@ functions:
         result: MyTypeRez
       implementation: scripts/my.py
 ```
-#### Function with no arguments
-
 The arguments list can be empty or completely missing. In such a case,
 when using the function the arguments will be an empty list:
 ```
@@ -7136,10 +6980,9 @@ when using the function the arguments will be an empty list:
       - result: float
         implementation: scripts/myrnd.py
 ```
-#### Function with polymorphic arguments/result inside of lists
+The following shows function signatures with polymorphic arguments and
+result lists:
 
-Function signatures with different types within the arguments and result
-lists:
 ```
 functions:
   union:
@@ -7161,8 +7004,6 @@ functions:
           entry_schema: float
         implementation: scripts/libpi.py
 ```
-#### Defining a list in a map argument
-
 The following shows the use of a argument that is a map of lists of
 MyType:
 ```
@@ -7178,7 +7019,6 @@ functions:
         result: string
         implementation: scripts/complex.py
 ```
-#### User-defined function usage
 
 The following shows more examples of function usage. Note that in the
 usage of the polymorphic union function, the TOSCA parser knows to
