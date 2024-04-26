@@ -5851,7 +5851,8 @@ Note that the signature shown in the first grammar does not conform to
 the custom function definition, but it does not have to as it is a
 TOSCA built-in function.
 
-The *$get_input* function takes the following arguments:
+The *$get_input* function takes the arguments shown in the following
+table:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
@@ -5927,7 +5928,9 @@ The get_property function uses the following grammar:
 ```
 $get_property: [ <tosca_traversal_path>, <property_name>, <nested_property_name_or_index_1>, ..., <nested_property_name_or_index_n> ]
 ```
-The *$get_property* function takes the following arguments:
+
+The *$get_property* function takes the arguments shown in the
+following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
@@ -5935,22 +5938,16 @@ The *$get_property* function takes the following arguments:
 |\<property_name\>|yes|The name of the property definition from which the function will return the value.|
 |\<nested_property_name_or_index_*\> |no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
-#### Examples
-<!----
-{"id": "1322", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "WD03: TODO: Need examples for returning simple types and complex/nested structures (e.g., Maps of Maps)", "target": "Examples"}-->
-
 The following example shows how to use the get_property function with an
 actual node template name:
-```
+```yaml
 node_templates:
-
   mysql_database:
-    type: tosca.nodes.Database
+    type: Database
     properties:
       name: sql_database1
-
   wordpress:
-    type: tosca.nodes.WebApplication.WordPress
+    type: WordPress
     ...
     interfaces:
       Standard:
@@ -5960,7 +5957,7 @@ node_templates:
 ```
 The following example shows how to use the get_property function
 traversing from the relationship to its target node:
-```
+```yaml
 relationship_templates:
     my_connection:
       type: ConnectsTo
@@ -5976,17 +5973,15 @@ capability in the target node) and accessing the port property of that
 capability:
 ```
 node_templates:  
-
   mysql_database:
-    type: tosca.nodes.Database
+    type: Database
     ...
     capabilities:
       database_endpoint:
         properties:
           port: 3306
-
   wordpress:
-    type: tosca.nodes.WebApplication.WordPress
+    type: WordPress
     requirements:
       ...
       - database_endpoint: mysql_database
@@ -6006,26 +6001,21 @@ node_templates:
                - CAPABILITY
                - port
 ```
-NOTE that in the above example the index 0 is used but can also be
-omitted with the same semantic meaning.
-
 The following example shows how to use the get_property function to
 traverse over two requirement relationships, from the wordpress node to
 its database node and further to its DBMS host to get its
 admin_credential property:
-```
+```yaml
 node_templates:  
-
   mysql_database:
-    type: tosca.nodes.Database
+    type: Database
     ...
     capabilities:
       database_endpoint:
         properties:
           port: 3306
-
   wordpress:
-    type: tosca.nodes.WebApplication.WordPress
+    type: WordPress
     requirements:
       ...
       - database_endpoint: mysql_database
@@ -6058,13 +6048,12 @@ nodes or relationships can be referenced by their name as assigned in
 the service template or relative to the context where they are being
 invoked.
 
-#### Grammar 
-<!----
-{"id": "1326", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "[TOSCA-169](commentsExtended.xml): is this always a separate service template? Can have local refs? TODO: See what remains of this JIRA issue that is not addressed by this new method.", "target": "Grammar "}-->
+The get_attribute function uses the following grammar:
 ```
 $get_attribute: [<tosca_traversal_path>, <attribute_name>, <nested_attribute_name_or_index_1>, ..., <nested_attribute_name_or_index_n> ]
 ```
-#### Arguments
+The *$get_attribute* function takes the arguments shown in the
+following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
@@ -6072,44 +6061,35 @@ $get_attribute: [<tosca_traversal_path>, <attribute_name>, <nested_attribute_nam
 |\<attribute_name\> |yes|The name of the attribute definition the function will return the value from.|
 |\<nested_attribute_name_or_index_*\> |no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
-#### Examples:
-
-The attribute
-functions are used in the same way as the equivalent Property functions
-described above. Please see their examples and replace “get_property”
-with “get_attribute” function name.
-<!----
-{"id": "1327", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "Is this always true?", "target": "The attribute\nfunctions are used in the same way as the equivalent Property functions\ndescribed above. Please see their examples and replace \u201cget_property\u201d\nwith \u201cget_attribute\u201d function name."}-->
+The $get_attribute function is used in the same way as the equivalent
+$get_property functions described above. Please see their examples and
+replace *$get_property* with the *$get_attribute* function name.
 
 #### 10.2.1.4 get_artifact
 
-The get_artifact function is used to retrieve artifact location between modelable entities defined in the same service template.
+The *$get_artifact* function is used to retrieve the location of
+artifacts defined by modelable entities in a service template. It uses
+the following grammar:
 
-#### Grammar 
 ```
-$get_artifact: [ <modelable_entity_name>, <artifact_name>, <location>, <remove> ]
+$get_artifact: [ <tosca_traversal_path>, <artifact_name> ]
 ```
-#### Arguments
+The *$get_artifact* function takes the arguments shown in the
+following table:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ----- |
-|\<modelable entity name\> \| SELF \| SOURCE \| TARGET \| HOST|yes|string|The mandatory name of a modelable entity (e.g., node template or Relationship Template name) as declared in the service template that contains the property definition the function will return the value from. See section B.1 for valid keywords.|
-|<artifact_name\>|yes|string|The name of the artifact definition the function will return the value from.|
-|\<location\> \| LOCAL_FILE|no|string|Location value must be either a valid path e.g. ‘/etc/var/my_file’ or ‘LOCAL_FILE’. If the value is LOCAL_FILE the orchestrator is responsible for providing a path as the result of the get_artifact call where the artifact file can be accessed. The orchestrator will also remove the artifact from this location at the end of the operation. If the location is a path specified by the user the orchestrator is responsible to copy the artifact to the specified location. The orchestrator will return the path as the value of the get_artifact function and leave the file here after the execution of the operation.|
-|remove|no|boolean|Boolean flag to override the orchestrator default behavior so it will remove or not the artifact at the end of the operation execution. If not specified the removal will depends of the location e.g. removes it in case of ‘LOCAL_FILE’ and keeps it in case of a path. If true the artifact will be removed by the orchestrator at the end of the operation execution, if false it will not be removed.|
-
-#### Examples
+|\<tosca_traversal_path\>|yes|string|Using the <tosca_traversal_path> a TOSCA processor can traverse the representation graph to the node that contains the artifact. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node.|
+|<artifact_name\>|yes|string|The name of the artifact definition for which the function will return the location.|
 
 The following example uses a snippet of a WordPress
 \[[WordPress](#CIT_WORDPRESS)\] web application to show how to use the
 get_artifact function with an actual node template name:
 
-##### Example: Retrieving artifact without specified location
-```
+```yaml
 node_templates:
-
   wordpress:
-    type: tosca.nodes.WebApplication.WordPress
+    type: WordPress
     ...
     interfaces:
       Standard:
@@ -6132,67 +6112,15 @@ wordpress.zip archive as
   where some orchestrator may indeed provide some global artifact
   repository management features.
 
-##### Example: Retrieving artifact as a local path
-
-The following example explains how to force the orchestrator to copy the
-file locally before calling the operation’s implementation script:
-```
-node_templates:
-
-  wordpress:
-    type: tosca.nodes.WebApplication.WordPress
-    ...
-    interfaces:
-      Standard:
-        configure: 
-          create:
-            implementation: wordpress_install.sh
-            inputs
-              wp_zip: { $get_artifact: [ SELF, zip, LOCAL_FILE] }
-    artifacts:
-      zip: /data/wordpress.zip
-```
-In such implementation the TOSCA orchestrator must provide the
-wordpress.zip archive as a local path (example:
-[/tmp/wordpress.zip](file:///\\home\user\wordpress.zip)) and **will
-remove it** after the operation is completed.
-
-##### Example: Retrieving artifact in a specified location
-
-The following example explains how to force the orchestrator to copy the
-file locally to a specific location before calling the operation’s
-implementation script:
-```
-node_templates:
-
-  wordpress:
-    type: tosca.nodes.WebApplication.WordPress
-    ...
-    interfaces:
-      Standard:
-        configure: 
-          create:
-            implementation: wordpress_install.sh
-            inputs
-              wp_zip: { $get_artifact: [ SELF, zip, C:/wpdata/wp.zip ] }
-    artifacts:
-      zip: /data/wordpress.zip
-```
-In such implementation the TOSCA orchestrator must provide the
-wordpress.zip archive as a local path (example: C:/wpdata/wp.zip ) and
-**will let it** after the operation is completed.
-
 #### 10.2.1.5 value
 
 This function is used as an argument inside validation functions. It
 returns the value of the property, attribute, or parameter for which the
-validation clause is defined.
-
-#### Grammar 
+validation clause is defined. The $value function uses the following grammar:
 ```
 $value: [<nested_value_name_or_index>, ... ]
 ```
-#### Arguments
+It takes the arguments shown in the following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
