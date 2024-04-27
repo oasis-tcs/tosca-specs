@@ -8963,8 +8963,6 @@ these values are mapped.
 
 > This *event escalation* mechanism needs to be better defined.
 
-### Keynames
-
 |Keyname|Mandatory|Type|Description|
 |---|---|---|---|
 |node_type|yes|string|The name of the Node Type of the nodes for which the service template can provide an implementation.|
