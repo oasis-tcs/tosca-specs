@@ -7044,7 +7044,7 @@ and output parameters used by those operations and notifications.
 An interface type definition is a type of TOSCA type definition and as
 a result supports the common keynames listed in [Section
 6.4.1](#641-common-keynames-in-type-definitions). In addition, the
-interfacd type definition has the following recognized keynames:
+interface type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
@@ -7742,57 +7742,48 @@ have the following meaning:
 
 # 12 Artifacts
 
-### Artifact Type
+## 12.1 Artifact Type
 
-An Artifact Type is a reusable entity that defines the type of one or
+An *artifact type* is a reusable entity that defines the type of one or
 more files that are used to define implementation or deployment
 artifacts that are referenced by nodes or relationships.
 
-#### Keynames
-
-The Artifact Type is a TOSCA type entity and has the common keynames
-listed in Section 4.2.5.2 Common keynames in type definitions. In
-addition, the Artifact Type has the following recognized keynames:
+An artifact type definition is a type of TOSCA type definition and as
+a result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+artifact type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|mime_type|no|string|The optional mime type property for the Artifact Type.|
-|file_ext|no|list of string|The optional file extension property for the Artifact Type.|
-|properties|no|map of property definitions|An optional map of property definitions for the Artifact Type.|
+| :---- | :------ | :---- | :------ |
+|mime_type|no|string|The optional mime type property for the artifact type.|
+|file_ext|no|list of string|The optional file extension property for the artifact type.|
+|properties|no|map of property definitions|An optional map of property definitions for the artifact type.|
 
-#### Grammar
-
-Artifact Types have following grammar:
 ```
 <artifact_type_name>:
   derived_from: <parent_artifact_type_name>
   version: <version_number>
-  metadata: 
-    <map of string>
+  metadata:  <map of string>
   description: <artifact_description>
   mime_type: <mime_type_string>
   file_ext: [ <file_extensions> ]
-  properties:     
-    <property_definitions>
+  properties: <property_definitions>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- artifact_type_name: represents the name of the Artifact Type being
+- artifact_type_name: represents the name of the artifact type being
   declared as a string.
 
-- parent_artifact_type_name: represents the name of the Artifact Type
-  this Artifact Type definition derives from (i.e., its “parent” type).
-
-- version_number: represents the optional TOSCA version number for the
-  Artifact Type.
-
-- artifact_description: represents the optional description string for
-  the Artifact Type.
+- parent_artifact_type_name: represents the name of the artifact type
+  this artifact type definition derives from (i.e., its “parent” type).
 
 - mime_type_string: represents the optional Multipurpose Internet Mail
   Extensions (MIME) standard string value that describes the file
-  contents for this type of Artifact Type as a string.
+  contents for this type of artifact type as a string.  The mime_type
+  keyname is meant to have values that are Apache mime types such as
+  those defined here:
+  <http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types>
 
 - file_extensions: represents the optional list of one or more
   recognized file extensions for this type of artifact type as strings.
@@ -7800,9 +7791,7 @@ have the following meaning:
 - property_definitions: represents the optional map of property
   definitions for the artifact type.
 
-#### Derivation rules
-
-During Artifact Type derivation the keyname definitions follow these
+During artifact type derivation the keyname definitions follow these
 rules:
 
 - mime_type: a new definition is unrestricted and will overwrite the one
@@ -7814,11 +7803,11 @@ rules:
 - properties: existing property definitions may be refined; new property
   definitions may be added.
 
-#### Examples
+The following shows an example artifact type definition:
 ```
 my_artifact_type:
   description: Java Archive artifact type
-  derived_from: tosca.artifact.Root
+  derived_from: Root
   mime_type: application/java-archive
   file_ext: [ jar ]
   properties:
@@ -7831,20 +7820,13 @@ my_artifact_type:
       type: string
       required: false
 ```
-#### Additional Requirements
-
-- The ‘mime_type’ keyname is meant to have values that are Apache mime
-  types such as those defined here:
-  <http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types>
-
-#### Notes
 
 Information about artifacts can be broadly classified in two categories
 that serve different purposes:
 
 - Selection of artifact processor. This category includes informational
   elements such as artifact version, checksum, checksum algorithm etc.
-  and s used by TOSCA Orchestrator to select the correct artifact
+  and is used by TOSCA Orchestrator to select the correct artifact
   processor for the artifact. These informational elements are captured
   in TOSCA as keywords for the artifact.
 
@@ -7853,65 +7835,48 @@ that serve different purposes:
   to assist with proper processing of the artifact. These informational
   elements are described through artifact properties.
 
-### Artifact definition
+## 12.2 Artifact definition
 
 An artifact definition defines a named, typed file that can be
-associated with Node Type or node template and used by orchestration
-engine to facilitate deployment and implementation of interface
+associated with a node type or node template and used by a TOSCA
+Orchestrator to facilitate deployment and implementation of interface
 operations.
 
-#### Keynames
-
 The following is the list of recognized keynames for a TOSCA artifact
-definition when using the extended notation:
+definition:
 
 |Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
+| :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory artifact type for the artifact definition.|
-|file|yes|string|The mandatory URI string (relative or absolute) which can be used to locate the artifact’s file.|
-|repository|no|string|The optional name of the repository definition which contains the location of the external repository that contains the artifact.  The artifact is expected to be referenceable by its file URI within the repository.|
+|file|yes|string|The mandatory URI string (relative or absolute) that can be used to locate the artifact’s file.|
+|repository|no|string|The optional name of the repository definition that contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.|
 |description|no|string|The optional description for the artifact definition.|
-|deploy_path|no|string|The file path the associated file will be deployed on within the target node’s container. |
+|metadata|no|map of metadata|Defines additional metadata information.|
 |artifact_version|no|string|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
 |checksum|no|string|The checksum used to validate the integrity of the artifact.|
 |checksum_algorithm|no|string|Algorithm used to calculate the artifact checksum (e.g. MD5, SHA [Ref]). Shall be specified if checksum is specified for an artifact.|
 |properties|no|map of property assignments|The optional map of property assignments associated with the artifact.|
 
-#### Grammar
+Artifact definitions have the following grammar:
 
-Artifact definitions have one of the following grammars:
-
-##### Short notation
-
-The following single-line grammar may be used when the artifact’s type
-and mime type can be inferred from the file URI:
-```
-<[artifact_name](#TYPE_YAML_STRING)>: <[artifact_file_uri](#TYPE_YAML_STRING)> 
-```
-##### Extended notation:
-
-The following multi-line grammar may be used when the artifact’s
-definition’s type and mime type need to be explicitly declared:
 ```
 <artifact_name>: 
   description: <artifact_description>
+  metadata: <map_of_metadata>
   type: <artifact_type_name>
   file: <artifact_file_uri>
   repository: <artifact_repository_name>
-  deploy_path: <file_deployment_path>
   version: <artifact _version>
   checksum: <artifact_checksum>
   checksum_algorithm: <artifact_checksum_algorithm>
   properties: <property assignments>
 ```
-In the above grammars, the pseudo values that appear in angle brackets
+
+In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - artifact_name: represents the mandatory symbolic name of the artifact
   as a string.
-
-- artifact_description: represents the optional description for the
-  artifact.
 
 - artifact_type_name: represents the mandatory artifact type the
   artifact definition is based upon.
@@ -7923,10 +7888,6 @@ have the following meaning:
   repository definition to use to retrieve the associated artifact
   (file) from.
 
-- file_deployement_path: represents the optional path the
-  artifact_file_uri will be copied into within the target node’s
-  container.
-
 - artifact_version: represents the version of artifact
 
 - artifact_checksum: represents the checksum of the Artifact
@@ -7936,8 +7897,6 @@ have the following meaning:
 
 - properties: represents an optional map of property assignments
   associated with the artifact
-
-#### Refinement rules
 
 Artifact definitions represent specific external entities. If a certain
 artifact definition cannot be reused as is, then it may be completely
@@ -7951,12 +7910,6 @@ redefined.
 - If the artifact is not redefined the complete definition is inherited
   from the parent node type.
 
-#### Examples
-
-The following represents an artifact definition:
-```
-my_file_artifact: ../my_apps_files/operation_artifact.txt 
-```
 The following example represents an artifact definition with property
 assignments:
 ```
