@@ -7930,14 +7930,19 @@ artifacts:
 ```
 # 13 Workflows
 
-## Imperative Workflow definition
+## 13.1 Declarative Workflows
+
+> State that declarative workflows are automatically
+> generated. Specific steps for how to do this is profile
+> specific. Orchestrators that support certain profiles are expected
+> to know how to create declarative workflows for those profiles.
+
+## 13.2 Imperative Workflows
 
 A workflow definition defines an imperative workflow that is associated
 with a TOSCA service. A workflow definition can either include the steps
 that make up the workflow, or it can refer to an artifact that expresses
 the workflow using an external workflow language.
-
-### Keynames
 
 The following is the list of recognized keynames for a TOSCA workflow
 definition:
@@ -7952,24 +7957,16 @@ definition:
 |implementation|no|operation implementation definition|The optional definition of an external workflow definition. This keyname is mutually exclusive with the steps keyname above.|
 |outputs|no|map of attribute mappings|The optional map of attribute mappings that specify workflow  output values and their mappings onto attributes of a node or relationship defined in the service.|
 
-### Grammar
-
 Imperative workflow definitions have the following grammar:
 ```
 <workflow_name>:
   description: <workflow_description>
-  metadata: 
-    <map of string>
-  inputs:
-    <parameter_definitions>
-  precondition:
-    <condition_clause>
-  steps:
-    <workflow_steps>
-  implementation:
-    <operation_implementation_definitions>
-  outputs:
-    <attribute_mappings>
+  metadata: <map of YAML values>
+  inputs: <parameter_definitions>
+  precondition: <condition_clause>
+  steps: <workflow_steps>
+  implementation: <operation_implementation_definitions>
+  outputs: <attribute_mappings>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -7992,24 +7989,20 @@ have the following meaning:
   implementations (i.e. artifacts) and associated mappings that specify
   the attribute into which this output value must be stored.
 
-## Workflow precondition definition
+### 13.2.1 Workflow Precondition Definition
 
 A workflow precondition defines a condition clause that checks if a
 workflow can be processed or not based on the state of the instances of
 a TOSCA service deployment. If the condition is not met, the workflow
 will not be triggered.
 
-### Examples
+> Examples TO BE PROVIDED
 
-\<\<TO BE PROVIDED\>\>
-
-## Workflow step definition
+### 13.2.2 Workflow Step Definition
 
 A workflow step allows to define one or multiple sequenced activities in
 a workflow and how they are connected to other steps in the workflow.
 They are the building blocks of a declarative workflow.
-
-### Keynames
 
 The following is the list of recognized keynames for a TOSCA workflow
 step definition:
@@ -8018,13 +8011,10 @@ step definition:
 | ----- | ------- | ----- | ------- |
 |target|yes|string|The target of the step (this can be a node template name, a group name)|
 |target_relationship|no|string|The optional name of a requirement of the target in case the step refers to a relationship rather than a node or group. Note that this is applicable only if the target is a node.|
-|operation_host|no|string|The node on which operations should be executed (for TOSCA call_operation activities). This element is mandatory only for relationships and groups target. If target is a relationship then operation_host is mandatory and valid_values are SOURCE or TARGET – referring to the relationship source or target node. If target is a group then operation_host is optional. If not specified the operation will be triggered on every node of the group. If specified the valid_value is a node_type or the name of a node template.|
 |filter|no|list of validation clauses|Filter is a list of validation clauses that allows to provide a filtering logic.|
 |activities|yes|list of activity definition|The list of sequential activities to be performed in this step.|
 |on_success|no|list of string|The optional list of step names to be performed after this one has been completed with success (all activities has been correctly processed).|
 |on_failure|no|list of string|The optional list of step names to be called after this one in case one of the step activity failed.|
-
-### Grammar
 
 Workflow step definitions have the following grammars:
 ```
@@ -8032,15 +8022,10 @@ steps:
   <step_name>
     target: <target_name>
     target_relationship: <target_requirement_name>
-    operation_host: <operation_host_name>
-    filter:
-      - <list_of_condition_clause_definition>
-    activities:
-      - <list_of_activity_definition>
-    on_success:
-      - <target_step_name>
-    on_failure:
-      - <target_step_name>
+    filter: <list_of_condition_clause_definition>
+    activities: <list_of_activity_definition>
+    on_success: <target_step_name>
+    on_failure: <target_step_name>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -8051,17 +8036,186 @@ have the following meaning:
 - target_requirement_name: represents the name of a requirement of the
   node template (in case target_name refers to a node template.
 
-- **operation_host:** the node on which the operation should be executed
+- list_of_condition_clause_definition: represents a list of
+  condition clause definitions.
 
-- **list_of_condition_clause_definition:** represents a list of
-  condition clause definition.
+- list_of_activity_definition: represents a list of activity
+  definitions.
 
-- **list_of_activity_definition**: represents a list of activity
-  definition
-
-- **target_step_name**: represents the name of another step of the
+- target_step_name: represents the name of another step of the
   workflow.
 
+### 13.2.3 Activity Definition
+
+An activity defines an operation to be performed in a TOSCA workflow
+step or in an action body of a policy trigger. Activity definitions can
+be of the following types:
+
+- Delegate workflow activity definition:
+
+  - Defines the name of the delegate workflow and optional input
+    assignments. This activity requires the target to be provided by the
+    orchestrator (no-op node or relationship).
+
+- Set state activity definition:
+
+  - Sets the state of a node.
+
+- Call operation activity definition:
+
+  - Calls an operation defined on a TOSCA interface of a node,
+    relationship or group. The operation name uses the
+    \<interface_name\>.\<operation_name\> notation. Optionally,
+    assignments for the operation inputs can also be provided. If
+    provided, they will override for this operation call the operation
+    inputs assignment in the node template.
+
+- Inline workflow activity definition:
+
+  - Inlines another workflow defined in the service (allowing
+    reusability). The definition includes the name of a workflow to be
+    inlined and optional workflow input assignments.
+
+#### 13.2.3.1 Delegate Workflow Activity Definition
+
+The following is a list of recognized keynames for a delegate activity
+definition.
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|delegate|yes|string or empty  (see grammar below)|Defines the name of the delegate workflow and optional input assignments. This activity requires the target to be provided by the orchestrator (no-op node or relationship).|
+|workflow|no|string|The name of the delegate workflow. Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the delegate workflow.|
+
+A delegate activity definition has the following grammar.
+
+```
+- delegate: 
+   workflow: <delegate_workflow_name>
+   inputs: <parameter_assignments>
+```
+
+As an optimizaton, the following short notation can be used if no
+input assignments are provided.
+```
+- delegate: <delegate_workflow_name>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- delegate_workflow_name: represents the name of the workflow of the
+  node provided by the TOSCA orchestrator.
+
+- parameter_assignments: represents the optional map of parameter
+  assignments for passing parameters as inputs to this workflow
+  delegation.
+
+#### 13.2.3.2 Set State Activity Definition
+
+This activity sets the state of the target node.
+
+The following is a list of recognized keynames for a set state activity
+definition.
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|set_state|yes|string|Value of the node state.|
+
+A set state activity definition has the following grammar.
+```
+- set_state: <new_node_state>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- new_node_state: represents the state that will be affected to the node
+  once the activity is performed.
+
+#### 13.2.3.3 Call Operation Activity Definition
+
+This activity is used to call an operation on the target node. Operation
+input assignments can be optionally provided.
+
+The following is a list of recognized keynames for a call operation
+activity definition.
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|call_operation|yes|string or empty (see grammar below)|Defines the opration call. The operation name uses the \<interface_name\>.\<operation_name\> notation. Optionally, assignments for the operation inputs can also be provided. If provided, they will override for this operation call the operation inputs assignment in the node template.|
+|operation|no|string|The name of the operation to call, using the \<interface_name\>.\<operation_name\> notation.  Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the called operation. Any provided input assignments will override the operation input assignment in the target node template for this operation call.|
+
+A call operation activity definition has the following grammar.
+```
+- call_operation: 
+   operation: <operation_name>
+   inputs: <parameter_assignments>
+```
+
+As an optimization, the following short notation can be used if no
+input assignments are provided:
+```
+- call_operation: <operation_name>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- operation_name: represents the name of the operation that will be
+  called during the workflow execution. The notation used is
+  \<interface_sub_name\>.\<operation_sub_name\>, where
+  interface_sub_name is the interface name and the operation_sub_name is
+  the name of the operation within this interface.
+
+- parameter_assignments: represents the optional map of parameter
+  assignments for passing parameters as inputs to this workflow
+  delegation.
+
+#### 13.2.3.4 Inline Workflow Activity Definition
+
+This activity is used to inline a workflow in the activities sequence.
+The definition includes the name of the inlined workflow and optional
+input assignments.
+
+The following is a list of recognized keynames for an inline workflow
+activity definition.
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|inline|yes|string or empty (see grammar below)|The definition includes the name of a workflow to be inlined and optional workflow input assignments.|
+|workflow|no|string|The name of the inlined workflow. Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the inlined workflow.|
+
+An inline workflow activity definition has the following grammar.
+```
+- inline: 
+   workflow: <inlined_workflow_name>
+   inputs:
+     <parameter_assignments>
+```
+
+As an optimization, the following short notation can be used if no
+input assignments are provided.
+```
+- inline: <inlined_workflow_name>
+```
+
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- inlined_workflow_name: represents the name of the workflow to inline.
+
+- parameter_assignments: represents the optional map of parameter
+  assignments for passing parameters as inputs to this workflow
+  delegation.
+
+The following represents a list of activity definitions (using the short
+notation):
+```
+ - delegate: deploy
+ - set_state: started
+ - call_operation: Standard.start
+ - inline: my_workflow
+```
 # 14 Creating Representations from Templates
 
 TOSCA service templates specify a set of nodes that need to be
@@ -9977,199 +10131,6 @@ have the following meaning:
   are performed in response to the event if the (optional) condition is
   met.
 
-## Activity definitions
-
-An activity defines an operation to be performed in a TOSCA workflow
-step or in an action body of a policy trigger. Activity definitions can
-be of the following types:
-
-- Delegate workflow activity definition:
-
-  - Defines the name of the delegate workflow and optional input
-    assignments. This activity requires the target to be provided by the
-    orchestrator (no-op node or relationship).
-
-- Set state activity definition:
-
-  - Sets the state of a node.
-
-- Call operation activity definition:
-
-  - Calls an operation defined on a TOSCA interface of a node,
-    relationship or group. The operation name uses the
-    \<interface_name\>.\<operation_name\> notation. Optionally,
-    assignments for the operation inputs can also be provided. If
-    provided, they will override for this operation call the operation
-    inputs assignment in the node template.
-
-- Inline workflow activity definition:
-
-  - Inlines another workflow defined in the service (allowing
-    reusability). The definition includes the name of a workflow to be
-    inlined and optional workflow input assignments.
-
-### Delegate workflow activity definition
-
-#### Keynames
-
-The following is a list of recognized keynames for a delegate activity
-definition.
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|delegate|yes|string or empty  (see grammar below)|Defines the name of the delegate workflow and optional input assignments. This activity requires the target to be provided by the orchestrator (no-op node or relationship).|
-|workflow|no|string|The name of the delegate workflow. Mandatory in the extended notation.|
-|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the delegate workflow.|
-
-#### Grammar
-
-A delegate activity definition has the following grammar. The short
-notation can be used if no input assignments are provided.
-
-####  Short notation
-```
-- delegate: <delegate_workflow_name>
-```
-####  Extended notation
-```
-- delegate: 
-   workflow: <delegate_workflow_name>
-   inputs:
-     <parameter_assignments>
-```
-
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- **delegate_workflow_name**: represents the name of the workflow of the
-  node provided by the TOSCA orchestrator.
-
-- **parameter_assignments**: represents the optional map of parameter
-  assignments for passing parameters as inputs to this workflow
-  delegation.
-
-### Set state activity definition
-
-Sets the state of the target node.
-
-#### Keynames
-
-The following is a list of recognized keynames for a set state activity
-definition.
-
-| **Keyname** | **Mandatory** | **Type**      | **Description**          |
-|-------------|---------------|---------------|--------------------------|
-| set_state   | yes           | <u>string</u> | Value of the node state. |
-
-#### Grammar
-
-A set state activity definition has the following grammar.
-```
-- set_state: <new_node_state>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- new_node_state: represents the state that will be affected to the node
-  once the activity is performed.
-
-### Call operation activity definition
-
-This activity is used to call an operation on the target node. Operation
-input assignments can be optionally provided.
-
-#### Keynames
-
-The following is a list of recognized keynames for a call operation
-activity definition.
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|call_operation|yes|string or empty (see grammar below)|Defines the opration call. The operation name uses the \<interface_name\>.\<operation_name\> notation. Optionally, assignments for the operation inputs can also be provided. If provided, they will override for this operation call the operation inputs assignment in the node template.|
-|operation|no|string|The name of the operation to call, using the \<interface_name\>.\<operation_name\> notation.  Mandatory in the extended notation.|
-|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the called operation. Any provided input assignments will override the operation input assignment in the target node template for this operation call.|
-
-#### Grammar
-
-A call operation activity definition has the following grammar. The
-short notation can be used if no input assignments are provided.
-
-####  Short notation
-```
-- call_operation: <operation_name>
-```
-####  Extended notation
-```
-- call_operation: 
-   operation: <operation_name>
-   inputs:
-     <parameter_assignments>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- operation_name: represents the name of the operation that will be
-  called during the workflow execution. The notation used is
-  \<interface_sub_name\>.\<operation_sub_name\>, where
-  interface_sub_name is the interface name and the operation_sub_name is
-  the name of the operation within this interface.
-
-- **parameter_assignments**: represents the optional map of parameter
-  assignments for passing parameters as inputs to this workflow
-  delegation.
-
-### Inline workflow activity definition
-
-This activity is used to inline a workflow in the activities sequence.
-The definition includes the name of the inlined workflow and optional
-input assignments.
-
-#### Keynames
-
-The following is a list of recognized keynames for an inline workflow
-activity definition.
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|inline|yes|string or empty (see grammar below)|The definition includes the name of a workflow to be inlined and optional workflow input assignments.|
-|workflow|no|string|The name of the inlined workflow. Mandatory in the extended notation.|
-|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the inlined workflow.|
-
-#### Grammar
-
-An inline workflow activity definition has the following grammar. The
-short notation can be used if no input assignments are provided.
-
-####  Short notation
-```
-- inline: <inlined_workflow_name>
-```
-####  Extended notation
-```
-- inline: 
-   workflow: <inlined_workflow_name>
-   inputs:
-     <parameter_assignments>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- inlined_workflow_name: represents the name of the workflow to inline.
-
-- **parameter_assignments**: represents the optional map of parameter
-  assignments for passing parameters as inputs to this workflow
-  delegation.
-
-### Example
-
-The following represents a list of activity definitions (using the short
-notation):
-```
- - delegate: deploy
- - set_state: started
- - call_operation: tosca.interfaces.node.lifecycle.Standard.start
- - inline: my_workflow
-```
 # 17 TOSCA Cloud Service Archive (CSAR) format
 
 This section defines the metadata of a cloud service archive as well as
