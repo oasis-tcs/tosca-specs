@@ -3900,23 +3900,102 @@ for handling requirement counts:
   - Additionally, the count_value is assumed to be equal to the min_count
     value of the requirement definition in the corresponding node type.
 
-The following example shows a requirement assignment where the
-requirement definition has the count_range that is different from the
-default [0,UNBOUNDED]. In this case the redundant_database requirement
-has count_range of [2,2]. The requirement definition is not presented
-here for brevity. In the requirement assignment we use the short
-notation. Note that the count keyname for each assignment is not
-declared (i.e. the default value of 1 is used) and that the sum of the
-count values of both assignments is 2 which is in the range of [2,2]
-as specified in the requirement definition.
+The following example illustrates requirement assignment count
+rules. It uses the types defined in the following code snippet:
 ```yaml
+tosca_definitions_version: tosca_2_0
+capability_types:
+  Service:
+    description: >-
+      Ability to provide service.
+relationship_types:
+  ServedBy:
+    description: >-
+      Connection to a service.
+node_types:
+  Client:
+    requirements:
+      - service:
+          capability: Service
+          relationship: ServedBy
+          node: Server
+          count_range: [ 1, 4 ]
+  Server:
+    capabilities:
+      service:
+        type: Service
+```
+In this example, the `Client` node type defines a `service`
+requirement with a `count_range` of `[1, 4]`. This means that a client
+can have up to four `service` connections to `Server` nodes, but only
+one of those is mandatory.
+
+Any service template that uses the `Client` node type must specify the
+correct number of requirement assignments, i.e, the number of
+mandatory requirements must be greater than or equal to the lower
+bound of the `count_range` and he total number of requirement
+assignments (optional as well as mandatory) must be less than or equal
+to the upper bound of the count range.
+
+The following shows a valid service template that uses `Client` and
+`Server` nodes.
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
 service_template:
   node_templates:
-    my_critical_application_node_template:
+    server1:
+      type: Server
+    server2:
+      type: Server
+    server3:
+      type: Server
+    client:
+      type: Client
+      directives: [ substitute ]
       requirements:
-        - redundant_database: database1
-        - redundant_database: database2
+        - service: server1
+        - service: server2
+        - service: server3
 ```
+In this example, the requirement assignments specify the target nodes
+directly, but it is also valid to leave requirements dangling as in
+the following example:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+service_template:
+  node_templates:
+    server1:
+      type: Server
+    server2:
+      type: Server
+    server3:
+      type: Server
+    client:
+      type: Client
+      directives: [ substitute ]
+      requirements:
+        - service: server1
+        - service:
+            optional: True
+        - service:
+            optional: True
+```
+In this example, only the first `service` assignment is mandatory. The
+next two are optional. However, after the orchestrator *fulfills* the
+dangling (optional) requirements, the resulting service topology for
+this second example will likely be identical to the service topology
+in the first example, since the orchestrator is able to fulfill both
+of the optional requirements using `server` nodes in this topology.
+
+Note that after requirements have been fulfilled, it no longer matters
+whether the requirement were mandatory or optional. All that matters
+is that if the service topology is valid, the number of established
+relationships is guaranteed to fall within the `count_range` specified
+in the corresponding requirement definition.
 
 ### 8.7.5 Capability Allocation
 
@@ -9040,6 +9119,10 @@ grammar may be used:
 ```
 <requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
 ```
+
+> If we plan to support the "convience" grammar of mapping multiple
+>requirement instances at the same time, we need to document it here.
+
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
@@ -9297,7 +9380,7 @@ service_template:
     compute:
       type: Compute
 ```
-### 15.5.2 Mapping Requirements Multiple Times
+### 15.5.2 Mapping a Requirement Multiple Times
 Imagine a scenario where nodes of type `Client` need to be hosted on
 nodes of type `Compute` as shown by the following type definitions:
 ```yaml
@@ -9401,10 +9484,29 @@ service_template:
 Using this syntax, the target of the requirement mapping is a *list*
 of target requirements rather than a single requirement.
 
-### Requirement Mapping Rules
-This section documents the rules for requirement mapping. The types
-defined in the following code snippet are used to illustrate the
-rules:
+## 15.5.3 Requirement Mapping Rules
+This section documents the rules for requirement mapping.
+
+1. Requirements from a *substituted* node can only be mapped onto
+   *dangling* requirements in the substituting template.
+2. The total number of requirements mapped onto *mandatory*
+   requirements in the substituting template must not exceed the lower
+   bound of the `count_range` in the corresponding requirement
+   definition in the substituted node's type.
+3. The total number of requirement mappings must not exceed the upper
+   bound of the `count_range` in the corresponding requirement
+   definition in the substituted node's type. Note that this is a
+   convenience rule only, since according to rule 2, any *excess*
+   mappings would have to map onto optional requirements, and as a
+   result can safely be ignored.
+
+Note that there are no constraints on the minimum number of
+requirement mappings. More specifically, the total number of
+requirement mappings is allowed to be smaller than the lower bound of
+the `count_range` in the corresponding requirement definition.
+
+The types defined in the following code snippet are used to illustrate
+these rules:
 ```yaml
 tosca_definitions_version: tosca_2_0
 capability_types:
@@ -9432,97 +9534,6 @@ In this example, the `Client` node type defines a `service`
 requirement with a `count_range` of `[1, 4]`. This means that a client
 can have up to four `service` connections to a `Server` node, but only
 one of those is mandatory.
-
-### Requirement Assignments
-
-Any service template that uses the `Client` node type must specify the
-correct number of requirement assignments, i.e, the number of
-mandatory requirements must be greater than or equal to the lower
-bound of the `count_range` and he total number of requirement
-assignments (optional as well as mandatory) must be less than or equal
-to the upper bound of the count range.
-
-The following shows a valid service template that uses `Client` and
-`Server` nodes.
-```yaml
-tosca_definitions_version: tosca_2_0
-imports:
-  - types.yaml
-service_template:
-  node_templates:
-    server1:
-      type: Server
-    server2:
-      type: Server
-    server3:
-      type: Server
-    client:
-      type: Client
-      directives: [ substitute ]
-      requirements:
-        - service: server1
-        - service: server2
-        - service: server3
-```
-In this example, the requirement assignments specify the target nodes
-directly, but it is also valid to leave requirements dangling as in
-the following example:
-```yaml
-tosca_definitions_version: tosca_2_0
-imports:
-  - types.yaml
-service_template:
-  node_templates:
-    server1:
-      type: Server
-    server2:
-      type: Server
-    server3:
-      type: Server
-    client:
-      type: Client
-      directives: [ substitute ]
-      requirements:
-        - service: server1
-        - service:
-            optional: True
-        - service:
-            optional: True
-```
-In this example, only the first `service` assignment is mandatory. The
-next two are optional. However, after the orchestrator *fulfills* the
-dangling (optional) requirements, the resulting service topology for
-this second example will likely be identical to the service topology
-in the first example, since the orchestrator is able to fulfill both
-of the optional requirements using `server` nodes in this topology.
-
-Note that after requirements have been fulfilled, it no longer matters
-whether the requirement were mandatory or optional. All that matters
-is that if the service topology is valid, the number of established
-relationships is guaranteed to fall within the `count_range` specified
-in the corresponding requirement definition.
-
-### Mapping Requirements
-This section introduces the rules for requirement mappings:
-
-1. As in earlier versions of the spec, requirements from a
-   *substituted* node can only be mapped onto *dangling* requirements
-   in the substituting template.
-2. The total number of requirements mapped onto *mandatory*
-   requirements in the substituting template must not exceed the lower
-   bound of the `count_range` in the corresponding requirement
-   definition in the substituted node's type.
-3. The total number of requirement mappings must not exceed the upper
-   bound of the `count_range` in the corresponding requirement
-   definition in the substituted node's type. Note that this is a
-   convenience rule only, since according to rule 2, any *excess*
-   mappings would have to map onto optional requirements, and as a
-   result can safely be ignored.
-
-Note that there are no constraints on the minimum number of
-requirement mappings. More specifically, the total number of
-requirement mappings is allowed to be smaller than the lower bound of
-the `count_range` in the corresponding requirement definition.
 
 The following code snippet shows a valid substituting template for the
 `client` node in the template shown above:
@@ -9712,7 +9723,7 @@ presumably will map onto optional requirements in the substituting
 template). This is done independent of the order in which the
 requirement mappings are specified.
 
-### Handling `UNBOUNDED` Count Ranges
+### 15.5.4 Handling `UNBOUNDED` Requirement Count Ranges
 *To be provided*
 
 ## 15.6 Interface Mapping
