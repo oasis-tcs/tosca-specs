@@ -8367,13 +8367,13 @@ multiple input values are required to initialize the location property
 for each of the Site node representations.
 
 To allow specific input values to be matched with specific node
-template representations, each node is assigned a unique index to
-differentiate it from other nodes created from the same node
-template. This index is accessed using the `NODE_INDEX` reserved
-keyword that references the index of the node in the context of which
-the `NODE_INDEX` keyword is used. This keyword can then can be used to
-index the list of input values. The grammar for the `NODE_INDEX`
-keyword is as follows:
+representations, each node representation is assigned a unique index
+to differentiate it from other nodes representations created from the
+same node template. This index is accessed using the `NODE_INDEX`
+reserved keyword that references the index of the node in the context
+of which the `NODE_INDEX` keyword is used. This keyword can then can
+be used to index the list of input values. The grammar for the
+`NODE_INDEX` keyword is as follows:
 
 |Keyword|Valid Contexts|Description|
 |----|----|----|
@@ -8820,6 +8820,25 @@ service_template:
         - uses: [right, {$remainder: [NODE_INDEX, {$get_input: number_of_right}]
 ```
 
+## 14. Relationship-Specific Input Values
+
+> Introduce need for RELATIONSHIP_INDEX
+
+To allow specific input values to be matched with specific
+relationship representations, each relationship representation is
+assigned a unique index to differentiate it from other relationship
+representations with the same name within the same node
+representation. This index is accessed using the
+`RELATIONSHIP_INDEX` reserved keyword that references the index of the
+relationship in the context of its source node. 
+This keyword can then can be used to index the list of input
+values. The grammar for the `RELATIONSHIP_INDEX` keyword is as
+follows:
+
+|Keyword|Valid Contexts|Description|
+|----|----|----|
+|RELATIONSHIP_INDEX|Relationship Representation|A TOSCA orchestrator will interpret this keyword as the runtime index in the list of relationship representations with the same name within a node.|
+
 # 15 Substitution
 
 The TOSCA *substitution* feature allows nodes in a service topology to
@@ -8834,7 +8853,7 @@ annotated with the `substitute` directive. Service templates advertize
 their ability to provide substituting implementations using the
 `substitution_mapping` section in the service template definition.
 
-## Substitution mapping
+## 15.1 Substitution Mapping
 
 The `substitution_mapping` section in a service template serves four
 purposes:
@@ -8877,44 +8896,35 @@ these values are mapped.
 |requirements|no|list of requirement mappings|The list of requirement mappings.|
 |interfaces|no|map of interfaces mappings|The map of interface mappings that map interface operations called on the substituted node to implementations workflows on the substituting service.|
 
-### Grammar
-
 The grammar of the substitution_mapping section is as follows:
 ```
 node_type: <node_type_name>
 substitution_filter : <substitution_filter>
-properties:
-  <property_mappings>
-attributes:
-  <attribute_mappings>
-capabilities:
-  <capability_mappings>
-requirements:
-  <requirement_mappings>
-interfaces:
-  <interface_mappings>
+properties: <property_mappings>
+attributes: <attribute_mappings>
+capabilities: <capability_mappings>
+requirements: <requirement_mappings>
+interfaces: <interface_mappings>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-- **node_type_name**: represents the Node Type name for which the
+- node_type_name: represents the node type name for which the
   Service Template can offer an implementation.
-- **substitution_filter**: represents a filter that reduces the set of
+- substitution_filter: represents a filter that reduces the set of
   abstract nodes for which this service template is an implementation
   by only substituting for those nodes whose properties and
   capabilities satisfy the condition clause specified in the filter.
-- **properties**: represents the map of *property to input* mappings.
-- **attributes**: represents the map of *output to attribute*
+- property_mappings: represents the map of *property to input* mappings.
+- attribute_mappings: represents the map of *output to attribute*
   mappings.
-- **capability_mappings**: represents the map of capability mappings.
-- **requirement_mappings**: represents the list of requirement
+- capability_mappings: represents the map of capability mappings.
+- requirement_mappings: represents the list of requirement
   mappings.
-- **interfaces:** represents the map of interface mappings.
+- interface_mappings: represents the map of interface mappings.
 
-### Examples
+> Examples to be provided
 
-> To be provided
-
-### Notes
+Please note:
 
 - The `node_type` specified in the substitution mapping SHOULD not
   provide implementations for interface operations defined in the
@@ -8924,11 +8934,10 @@ have the following meaning:
   implementation). Specifically, all the required properties of all
   its node templates must have valid property assignments.
 
-## Property mapping
+## 15.2 Property mapping
 A property mapping allows a property value of a substituted node to be
 mapped to an input value of the substituting service template.
 
-### Grammar
 The grammar of a property_mapping is as follows:
 ```
 <property_name>: <input_name> 
@@ -8936,26 +8945,25 @@ The grammar of a property_mapping is as follows:
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-- **input_name**: represents the name of an input defined for the
+- input_name: represents the name of an input defined for the
   substituting service template.
-- **property_name**: represents the name of a property of the
+- property_name: represents the name of a property of the
   substituted node (defined using a corresponding property definition
   in the specified Node Type)
-- **property_path**: represents a *TOSCA Path* expression that
+- property_path: represents a *TOSCA Path* expression that
   references a property of a capability or requirement of the
   substituted node.
 
-### Additional requirements
+The following additional requirements apply:
 - Mappings must be type-compatible (i.e., properties mapped to input
   must have the type specified in the corresponding input definition).
 - Property mappings must be defined for all *mandatory* service
   template inputs that do not define a `default` value.
 
-## Attribute mapping
+## 15.3 Attribute Mapping
 An attribute mapping allows an output value of the substituting
 service template to be mapped to an attribute of the substituted node.
 
-### Grammar
 The grammar of an attribute_mapping is as follows:
 ```
 <attribute_name>: <output_name> 
@@ -8963,26 +8971,25 @@ The grammar of an attribute_mapping is as follows:
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-- **output_name**: represents the name of an output defined in the
+- output_name: represents the name of an output defined in the
   substituting service template.
-- **attribute_name**: represents the name of an attribute of the
+- attribute_name: represents the name of an attribute of the
   substituted node (defined using a corresponding attribute definition
   in the specified Node Type)
-- **attribute_path**: represents a *TOSCA Path* expression that
+- attribute_path: represents a *TOSCA Path* expression that
   references an attribute of a capability or requirement of the
   substituted node.
 
-### Additional requirements
+The following additional requirements apply:
 - Mappings must be type-compatible (i.e., outputs mapped to attributes
   must have the type specified in the corresponding attribute
   definition).
 
-## Capability mapping
+## 15.4 Capability Mapping
 A capability mapping allows a capability of one of the nodes in the
 substituting service template to be mapped to a capability of the
 substituted node.
 
-### Grammar
 The grammar of a capability_mapping is as follows:
 ```
 <capability_name>: [ <node_template_name>, <node_template_capability_name> ]
@@ -8994,10 +9001,10 @@ have the following meaning:
 - node_template_name: represents a valid name of a node template
   definition within the substituting service template.
 - node_template_capability_name: represents a valid name of a
-  [capability definition](#capability-definition) within the
+  capability definition within the
   \<node_template_name\> declared in this mapping.
 
-## Requirement mapping
+## 15.5 Requirement Mapping
 
 A requirement mapping defines how requirements of the substituted node
 are mapped to one or more requirements of nodes in the substituting
@@ -9019,7 +9026,37 @@ To accommodate these use cases, requirement mappings are defined using
 YAML *lists* rather than *maps*. In addition, each of the mappings in
 the list may in turn identify a *list* of requirements.
 
-### Mapping Multiple Requirements with the Same Name
+The grammar for requirement mappings is as follows:
+```
+<requirement_name>:
+  - [ <node_template_name_1>, <node_template_requirement_name_1> ]
+  - ...
+  - [ <node_template_name_n>, <node_template_requirement_name_n> ]
+```
+As an optimization, if the requirement mapping defines a *one-to-one*
+mapping (i.e., a mapping of a requirement onto a single requirement of
+a single node in the substituting template), the following single-line
+grammar may be used:
+```
+<requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
+```
+In the above grammars, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- requirement_name: represents the name of the requirement as it
+  appears in the type definition for the Node Type name that is
+  declared as the value for on the substitution_mappings’ `node_type`
+  key.
+- node_template_name: represents a valid name of a node template
+  definition within the same substituting service template
+- node_template_requirement_name: represents a valid name of a
+  requirement definition within the \<node_template_name\> declared in
+  this mapping.
+
+The following subsections illustrate this grammar in the context of
+various use cases.
+
+### 15.5.1 Mapping Multiple Requirements with the Same Name
 The following example shows a `Client` node type that defines a
 `service` requirement with a `count_range` of `[2, 2]`, which means
 that nodes of type `Client` need exactly two `service` relationships
@@ -9260,7 +9297,7 @@ service_template:
     compute:
       type: Compute
 ```
-### Mapping Requirements Multiple Times
+### 15.5.2 Mapping Requirements Multiple Times
 Imagine a scenario where nodes of type `Client` need to be hosted on
 nodes of type `Compute` as shown by the following type definitions:
 ```yaml
@@ -9678,36 +9715,10 @@ requirement mappings are specified.
 ### Handling `UNBOUNDED` Count Ranges
 *To be provided*
 
-### Requirement Mappoing Grammar
-The one-to-one mapping grammar of a requirement_mapping is as follows:
-```
-<requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
-```
-The one-to-many mapping grammar of a requirement_mapping is as follows:
-```
-<requirement_name>:
-  - [ <node_template_name_1>, <node_template_requirement_name_1> ]
-  - ...
-  - [ <node_template_name_n>, <node_template_requirement_name_n> ]
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- requirement_name: represents the name of the requirement as it
-  appears in the type definition for the Node Type name that is
-  declared as the value for on the substitution_mappings’ `node_type`
-  key.
-- node_template_name: represents a valid name of a node template
-  definition within the same substituting service template
-- node_template_requirement_name: represents a valid name of a
-  requirement definition within the \<node_template_name\> declared in
-  this mapping.
-
-## Interface mapping
+## 15.6 Interface Mapping
 An interface mapping allows an interface operation on the substituted
 node to be mapped to workflow in the substituting service template.
 
-### Grammar
 <!----
 {"id": "1110", "author": "Calin Curescu [2]", "date": "2018-08-23T08:33:00Z", "comment": "This could change if we introduce the operations keyname in the interface definitions", "target": "Grammar"}-->
 <!----
@@ -9719,12 +9730,12 @@ The grammar of an interface_mapping is as follows:
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-- **interface_name:** represents the name of the interface as it appears
+- interface_name: represents the name of the interface as it appears
   in the Node Type definition for the Node Type (name) that is declared
   as the value for on the substitution_mappings’ `node_type` key.
-- **operation_name:** represents the name of the operation as it appears
+- operation_name: represents the name of the operation as it appears
   in the interface type definition for <interface_name>.
-- **workflow_name:** represents the name of a workflow defined in the
+- workflow_name: represents the name of a workflow defined in the
   substituting service template to which to map the specified
   interface operation.
 
