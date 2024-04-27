@@ -9484,7 +9484,7 @@ service_template:
 Using this syntax, the target of the requirement mapping is a *list*
 of target requirements rather than a single requirement.
 
-## 15.5.3 Requirement Mapping Rules
+### 15.5.3 Requirement Mapping Rules
 This section documents the rules for requirement mapping.
 
 1. Requirements from a *substituted* node can only be mapped onto
