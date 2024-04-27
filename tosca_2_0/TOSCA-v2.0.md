@@ -7032,42 +7032,36 @@ properties:
   rnd: {$get_random_nr: []}
 ```
 
-# 11 Interfaces, Operations, Notifications, and Artifacts
+# 11 Interfaces, Operations, and Notifications
 
-### Interface Type
+## 11.1 Interface Type
 
-An Interface Type is a reusable entity that describes a set of
-operations that can be used to interact with or to manage a node or
-relationship in a TOSCA topology.
+An *interface type* is a reusable entity that describes a set of
+operations and notifications that can be used to interact with or to
+manage a node or relationship in a TOSCA topology as well as the input
+and output parameters used by those operations and notifications.
 
-#### Keynames
+An interface type definition is a type of TOSCA type definition and as
+a result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+interfacd type definition has the following recognized keynames:
 
-The Interface Type is a TOSCA type entity and has the common keynames
-listed in Section 4.2.5.2 Common keynames in type definitions. In
-addition, the Interface Type has the following recognized keynames:
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|inputs|no|map of parameter definitions|The optional map of input parameter definitions available to all operations defined for this interface.|
+|operations|no|map of operation definitions|The optional map of operations defined for this interface.|
+|notifications|no|map of notification definitions|The optional map of notifications defined for this interface.|
 
-| Keyname       | Mandatory | Type                                                        | Description                                                                                             |
-|---------------|-----------|-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| inputs        | no        | map of [parameter definitions](#parameter-definition)       | The optional map of input parameter definitions available to all operations defined for this interface. |
-| operations    | no        | map of [operation definitions](#operation-definition)       | The optional map of operations defined for this interface.                                              |
-| notifications | no        | map of [notification definitions](#notification-definition) | The optional map of notifications defined for this interface.                                           |
-
-#### Grammar
-
-Interface Types have following grammar:
+These keynames can be used according to the following grammar:
 ```
 <interface_type_name>:
   derived_from: <parent_interface_type_name>
   version: <version_number>
-  metadata: 
-    <map of string>
+  metadata: <map of yaml values>
   description: <interface_description>
-  inputs: 
-    <parameter_definitions>
-  operations:
-    <operation_definitions>
-  notifications:
-    <Notification definition>
+  inputs: <parameter_definitions>
+  operations: <operation_definitions>
+  notifications: <notification definition>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -7075,14 +7069,9 @@ have the following meaning:
 - interface_type_name: represents the mandatory name of the interface as
   a string.
 
-- parent_interface_type_name: represents the name of the Interface Type
-  this Interface Type definition derives from (i.e. its “parent” type).
-
-- version_number: represents the optional TOSCA version number for the
-  Interface Type.
-
-- interface_description: represents the optional description for the
-  Interface Type.
+- parent_interface_type_name: represents the name of the interface
+  type from which this interface type definition derives (i.e. its
+  “parent” type).
 
 - parameter_definitions: represents the optional map of parameter
   definitions which the TOSCA orchestrator will make available (i.e., or
@@ -7094,8 +7083,6 @@ have the following meaning:
 
 - notification_definitions: represents the optional map of one or more
   notification definitions.
-
-#### Derivation rules
 
 During Interface Type derivation the keyname definitions follow these
 rules:
@@ -7109,13 +7096,15 @@ rules:
 - notifications: existing notification definitions may be refined; new
   notification definitions may be added.
 
-#### Example
+Note that interface types definitions **MUST NOT** include any
+implementations for defined operations or notifications; that is, the
+implementation keyname is invalid in this context.
 
 The following example shows a custom interface used to define multiple
 configure operations.
 ```
-mycompany.mytypes.myinterfaces.MyConfigure:
-  derived_from: tosca.interfaces.relationship.Root
+MyConfigure:
+  derived_from: Root
   description: My custom configure Interface Type
   inputs:
     mode:
@@ -7126,47 +7115,37 @@ mycompany.mytypes.myinterfaces.MyConfigure:
     post_configure_service:
       description: post-configure operation for my service
 ```
-#### Additional Requirements
 
-- Interface Types **MUST NOT** include any implementations for defined
-  operations or notifications; that is, the implementation keyname is
-  invalid in this context.
+## 11.2 Interface Definition
 
-### Interface definition
-
-An Interface definition defines an interface (containing operations and
-notifications definitions) that can be associated with (i.e. defined
-within) a Node or Relationship Type definition (including Interface
-definitions in Requirements definitions). An Interface definition may be
-refined in subsequent Node or Relationship Type derivations.
-
-#### Keynames
+An interface definition defines an interface (containing operations
+and notifications definitions) that can be associated with
+(i.e. defined within) a node or relationship type definition. An
+interface definition may be refined in subsequent node or relationship
+type derivations.
 
 The following is the list of recognized keynames for a TOSCA interface
 definition:
 
 |Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|type|yes|string|The mandatory name of the Interface Type this interface definition is based upon.|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory name of the interface type on which this interface definition is based.|
 |description|no|string|The optional description for this interface definition.|
+|metadata|no|map of metadata|Defines additional metadata information.|
 |inputs|no|map of parameter definitions and refinements|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the Interface Type definition).|
 |operations|no|map of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
 |notifications|no|map of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
 
-#### Grammar
-
-Interface definitions in Node or Relationship Type definitions have the
+Interface definitions in node or relationship type definitions have the
 following grammar:
 ```
 <interface_definition_name>:
   type: <interface_type_name>
   description: <interface_description>
-  inputs: 
-    <parameter_definitions_and_refinements>
-  operations:
-    <operation_refinements>
-  notifications:
-    <notification definition>
+  metadata: <map of yaml values>
+  inputs: <parameter_definitions_and_refinements>
+  operations: <operation_refinements>
+  notifications: <notification definition>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -7174,11 +7153,8 @@ have the following meaning:
 - interface_definition_name: represents the mandatory symbolic name of
   the interface as a string.
 
-- interface_type_name: represents the mandatory name of the Interface
-  Type for the interface definition.
-
-- interface_description: represents the optional description string for
-  the interface.
+- interface_type_name: represents the mandatory name of the interface
+  type for the interface definition.
 
 - parameter_definitions_and_refinements: represents the optional map of
   input parameters which the TOSCA orchestrator will make available
@@ -7187,7 +7163,7 @@ have the following meaning:
   scripts) associated to each operation during their execution
 
   - the map represents a mix of parameter refinements (for parameters
-    already defined in the Interface Type) and new parameter
+    already defined in the interface type) and new parameter
     definitions.
 
   - with the new parameter definitions, we can flexibly add new parameters
@@ -7196,13 +7172,11 @@ have the following meaning:
 
 - operation_refinements: represents the optional map of operation
   definition refinements for this interface; the referred operations
-  must have been previously defined in the Interface Type.
+  must have been previously defined in the interface type.
 
 - notification_refinements: represents the optional map of notification
   definition refinements for this interface; the referred notifications
-  must have been previously defined in the Interface Type.
-
-#### Refinement rules
+  must have been previously defined in the interface type.
 
 An interface definition within a node or relationship type (including
 interface definitions in requirements definitions) uses the following
@@ -7227,36 +7201,27 @@ definition refinement rules when the containing entity type is derived:
   type but to the definitions in the interface type referred by the type
   keyname (see grammar above for the rules).
 
-### Interface assignment
+## 11.3 Interface Assignment
 
-An Interface assignment is used to specify assignments for the inputs,
-operations and notifications defined in the Interface. Interface
-assignments may be used within a Node or Relationship Template
-definition (including when Interface assignments are referenced as part
-of a Requirement assignment in a node template).
-
-#### Keynames
+An interface assignment is used to specify assignments for the inputs,
+operations and notifications defined in the interface. Interface
+assignments may be used within a node or relationship template
+definition (including when interface assignments are referenced as part
+of a requirement assignment in a node template).
 
 The following is the list of recognized keynames for a TOSCA interface
 assignment:
 
-| Keyname       | Mandatory | Type                                                              | Description                                                                                                                                                                          |
-|---------------|-----------|-------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| inputs        | no        | map of [parameter value assignments](#parameter-value-assignment) | The optional map of input parameter assignments. Template authors MAY provide parameter assignments for interface inputs that are not defined in their corresponding Interface Type. |
-| operations    | no        | map of [operation assignme](#operation-definition)nts             | The optional map of operations assignments specified for this interface.                                                                                                             |
-| notifications | no        | map of [notification assignments](#notification-definition)       | The optional map of notifications assignments specified for this interface.                                                                                                          |
-
-#### Grammar
+|inputs|no|map of parameter value assignments|The optional map of input parameter assignments. Template authors MAY provide parameter assignments for interface inputs that are not defined in their corresponding interface type.|
+|operations|no|map of operation assignments|The optional map of operations assignments specified for this interface.|
+|notifications|no|map of notification assignments|The optional map of notifications assignments specified for this interface.|
 
 Interface assignments have the following grammar:
 ```
 <interface_definition_name>:
-  inputs: 
-    <parameter_value_assignments>
-  operations:
-    <operation_assignments>
-  notifications:
-    <notification_assignments>
+  inputs: <parameter_value_assignments>
+  operations:  <operation_assignments>
+  notifications: <notification_assignments>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -7269,15 +7234,15 @@ have the following meaning:
   operations
 
   - template authors MAY provide new parameter assignments for interface
-    inputs that are not defined in the Interface definition.
+    inputs that are not defined in the interface definition.
 
 - operation_assignments: represents the optional map of operation
-  assignments for operations defined in the Interface definition.
+  assignments for operations defined in the interface definition.
 
 - notification_assignments: represents the optional map of notification
-  assignments for notifications defined in the Interface definition.
+  assignments for notifications defined in the interface definition.
 
-### Operation definition
+## 11.4 Operation Definition
 
 An operation definition defines a function or procedure to which an
 operation implementation can be bound.
@@ -7293,43 +7258,31 @@ definition may not contain an operation implementation definition and it
 may not contain an attribute mapping as part of its output definition
 (as both these keynames are node/relationship specific).
 
-#### Keynames
-
 The following is the list of recognized keynames for a TOSCA operation
 definition (including definition refinement)
 
 |Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
+| :---- | :------ | :---- | :------ |
 |description|no|string|The optional description string for the associated operation.|
 |implementation|no|operation implementation definition|The optional definition of the operation implementation. May not be used in an interface type definition (i.e. where an operation is initially defined), but only during refinements. |
 |inputs|no|map of parameter definitions|The optional map of parameter definitions for operation input values.|
 |outputs|no|map of parameter definitions|The optional map of parameter definitions for operation output values. Only as part of node and relationship type definitions, the output definitions may include mappings onto attributes of the node or relationship type that contains the definition.|
 
-#### Grammar
-
 Operation definitions have the following grammar:
-
-##### Short notation
+```
+<operation_name>:
+   description: <operation_description>
+   implementation: <operation_implementation_definition>
+   inputs: <parameter_definitions>
+   outputs: <parameter_definitions>
+```
 
 The following single-line grammar may be used when the operation’s
 implementation definition is the only keyname that is needed, and when
 the operation implementation definition itself can be specified using a
 single line grammar:
 ```
-<[operation_name](#TYPE_YAML_STRING)>: <[operation_implementation_definition](# BKM_Implementation_Oper_Notif_Def)>
-```
-##### Extended notation 
-
-The following multi-line grammar may be used when additional information
-about the operation is needed:
-```
-<operation_name>:
-   description: <operation_description>
-   implementation: <operation_implementation_definition>
-   inputs: 
-     <parameter_definitions>
-   outputs:
-     <parameter_definitions>
+<operation_name>: <operation_implementation_definition>
 ```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -7347,8 +7300,6 @@ have the following meaning:
   definitions which the TOSCA orchestrator will make available as inputs
   to or receive as outputs from the corresponding implementation
   artifact during its execution.
-
-#### Refinement rules
 
 An operation definition within an interface, node, or relationship type
 (including interface definitions in requirements definitions) uses the
@@ -7368,7 +7319,7 @@ following refinement rules when the containing entity type is derived:
 - outputs: parameter definitions inherited from the parent entity type
   may be refined; new parameter definitions may be added.
 
-#### Additional requirements
+The following additional requirements apply:
 
 - The definition of implementation is not allowed in interface type
   definitions (as a node or node type context is missing at that point).
@@ -7399,15 +7350,22 @@ following refinement rules when the containing entity type is derived:
   file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
   file.
 
-#### Examples
-
-##### Single-line example
+The following code snippet shows an example operation definition:
 ```
 interfaces:
-  Standard:
-    start: scripts/start_server.sh
+  Configure:
+    pre_configure_source:
+      implementation: 
+        primary: 
+          file: scripts/pre_configure_source.sh
+          type: Bash
+          repository: my_service_catalog
+        dependencies:
+           - file : scripts/setup.sh
+             type : Bash
+             repository : my_service_catalog
 ```
-##### Multi-line example with shorthand implementation definitions
+The next example shows single-line grammar for the operation implementation:
 ```
 interfaces:
   Configure:
@@ -7419,22 +7377,14 @@ interfaces:
           - binaries/library.rpm
           - scripts/register.py
 ```
-##### Multi-line example with extended implementation definitions
+The following code snippet shows an example of the single-line grammar
+for the entire operation definitions:
 ```
 interfaces:
-  Configure:
-    pre_configure_source:
-      implementation: 
-        primary: 
-          file: scripts/pre_configure_source.sh
-          type: tosca.artifacts.Implementation.Bash
-          repository: my_service_catalog
-        dependencies:
-           - file : scripts/setup.sh
-             type : tosca.artifacts.Implementation.Bash
-             repository : my_service_catalog
+  Standard:
+    start: scripts/start_server.sh
 ```
-### Operation assignment
+## 11.5 Operation Assignment
 
 An operation assignment may be used to assign values for input
 parameters, specify attribute mappings for output parameters, and
@@ -7457,44 +7407,31 @@ is equivalent to an ad-hoc definition of a parameter, where the type is
 inferred from the assigned value (for input parameters) or from the
 attribute to map to (for output parameters).
 
-#### Keynames
-
 The following is the list of recognized keynames for an operation
 assignment:
 
 |Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|implementation|no|operation implementation definition|The optional definition of the operation implementation. Overrides implementation provided at operation definition.|
+| :---- | :------ | :---- | :------ |
+implementation|no|operation implementation definition|The optional definition of the operation implementation. Overrides implementation provided at operation definition.|
 |inputs|no|map of parameter value assignments|The optional map of parameter value assignments for assigning values to operation inputs. |
 |outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how operation outputs are mapped onto attributes of the node or relationship that contains the operation definition. |
 
-#### Grammar
-
 Operation assignments have the following grammar:
 
-##### Short notation
-
+```
+<operation_name>:
+   implementation: <operation_implementation_definition>
+   inputs: <parameter_value_assignments>
+   outputs: <parameter_mapping_assignments>
+```
 The following single-line grammar may be used when the operation’s
 implementation definition is the only keyname that is needed, and when
 the operation implementation definition itself can be specified using a
 single line grammar:
 ```
-<[operation_name](#TYPE_YAML_STRING)>: <[operation_implementation_definition](#operation-and-notification-implementation-definition)> 
+<operation_name>: <operation_implementation_definition> 
 ```
-##### Extended notation
-
-The following multi-line grammar may be used in Node or Relationship
-Template definitions when additional information about the operation is
-needed:
-```
-<operation_name>:
-   implementation: <operation_implementation_definition>
-   inputs: 
-     <parameter_value_assignments>
-   outputs:
-     <parameter_mapping_assignments>
-```
-In the above grammar, the pseudo values that appear in angle brackets
+In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - operation_name: represents the mandatory symbolic name of the
@@ -7520,7 +7457,7 @@ have the following meaning:
   - assignments for operation outputs that are not defined in the
     operation definition may be provided.
 
-#### Additional requirements
+The following additional requirements apply:
 
 - The behavior for implementation of operations SHALL be override. That
   is, implementation definitions assigned in an operation assignment
@@ -7537,23 +7474,20 @@ have the following meaning:
   file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
   file.
 
-#### Examples
-
-TBD
-
-### Notification definition
+## 11.6 Notification Definition
 
 A notification definition defines an asynchronous notification or
 incoming message that can be associated with an interface. The
-notification is a way for an external event to be transmitted to the
-TOSCA orchestrator. Values can be sent with a notification as
-notification outputs and we can map them to node/relationship attributes
-similarly to the way operation outputs are mapped to attributes. The
-artifact that the orchestrator is registering with in order to receive
-the notification is specified using the implementation keyname in a
-similar way to operations. As opposed to an operation definition, a
-notification definition does not include an inputs keyname since
-notifications are not invoked from the orchestrator.
+notification is a way for an events generated by the external
+implementations to be transmitted to the TOSCA orchestrator. Values
+can be sent with a notification as notification outputs and can be
+mapped to node/relationship attributes similarly to the way operation
+outputs are mapped to attributes. The artifact that the orchestrator
+is registering with in order to receive the notification is specified
+using the implementation keyname in a similar way to
+operations. Inputs parameters in notification definitions provide
+configuration information to the artifacts registered to receive the
+events.
 
 When the notification is received an event is generated within the
 orchestrator that can be associated to triggers in policies to call
@@ -7574,42 +7508,34 @@ definition may not contain a notification implementation definition and
 it may not contain an attribute mapping as part of its output definition
 (as both these keynames are node/relationship specific).
 
-#### Keynames
-
 The following is the list of recognized keynames for a TOSCA
 notification definition:
 
 |Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
+| :---- | :------ | :---- | :------ |
 |description|no|string|The optional description string for the associated notification.|
 |implementation|no|notification implementation definition|The optional definition of the notification implementation.|
+|inputs|no|map of parameter definitions|The optional map of parameter definitions for notification input values.|
 |outputs|no|map of parameter definitions|The optional map of parameter definitions that specify notification output values.  Only as part of node and relationship type definitions, the output definitions may include their mappings onto attributes of the node type or relationship type that contains the definition. |
-
-#### Grammar
 
 Notification definitions have the following grammar:
 
-##### Short notation
+```
+<notification_name>:
+  description: <notification_description>
+  implementation: <notification_implementation_definition>
+  inputs: <parameter_definitions>
+  outputs: <parameter_definitions>
+```
 
 The following single-line grammar may be used when the notification’s
 implementation definition is the only keyname that is needed and when
 the notification implementation definition itself can be specified using
 a single line grammar:
 ```
-<[notification_name](#TYPE_YAML_STRING)>: <[notification_implementation_definition](#operation-and-notification-implementation-definition)> 
+<notification_name>: <notification_implementation_definition> 
 ```
-##### Extended notation 
-
-The following multi-line grammar may be used when additional information
-about the notification is needed:
-```
-<notification_name>:
-  description: <notification_description>
-  implementation: <notification_implementation_definition>
-  outputs: 
-    <parameter_definitions>
-```
-In the above grammar, the pseudo values that appear in angle brackets
+In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - notification_name: represents the mandatory symbolic name of the
@@ -7623,11 +7549,9 @@ have the following meaning:
   artifact that may send notifications)
 
 - parameter_definitions: represents the optional map of parameter
-  definitions for parameters that the orchestrator will receive as
-  outputs from the corresponding implementation artifact during its
-  execution.
-
-#### Refinement rules
+  definitions for parameters that the orchestrator will make available
+  as inputs or receive as outputs from the corresponding
+  implementation artifact during its execution.
 
 A notification definition within an interface, node, or relationship
 type (including interface definitions in requirements definitions) uses
@@ -7642,10 +7566,13 @@ derived:
   the one inherited from the notification definition in the parent
   entity type definition.
 
+- inputs: parameter definitions inherited from the parent entity type
+  may be refined; new parameter definitions may be added.
+
 - outputs: parameter definitions inherited from the parent entity type
   may be refined; new parameter definitions may be added.
 
-#### Additional requirements
+The following additional requirements apply:
 
 - The definition of implementation is not allowed in interface type
   definitions (as a node or node type context is missing at that point).
@@ -7673,11 +7600,7 @@ derived:
   file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
   file.
 
-#### Examples
-
-TBD
-
-### Notification assignment
+## 11.7 Notification Assignment
 
 A notification assignment may be used to specify attribute mappings for
 output parameters and to define/redefine the implementation definition
@@ -7694,41 +7617,30 @@ defined in the operation definition. This is equivalent to an ad-hoc
 definition of an output parameter, where the type is inferred from the
 attribute to map to.
 
-#### Keynames
-
 The following is the list of recognized keynames for a TOSCA
 notification assignment:
 
 |Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
+| :---- | :------ | :---- | :------ |
 |implementation|no|notification implementation definition|The optional definition of the notification implementation. Overrides implementation provided at notification definition.|
+|inputs|no|map of parameter value assignments|The optional map of parameter value assignments for assigning values to notification inputs. |
 |outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how notification outputs values are mapped onto attributes of the node or relationship type that contains the notification definition.|
 
-#### Grammar
-
 Notification assignments have the following grammar:
-
-##### Short notation
-
+```
+<notification_name>:
+  implementation: <notification_implementation_definition>
+  inputs: <parameter_value_assignments>
+  outputs: <parameter_mapping_assignments>
+```
 The following single-line grammar may be used when the notification’s
 implementation definition is the only keyname that is needed, and when
 the notification implementation definition itself can be specified using
 a single line grammar:
 ```
-<[notification_name](#TYPE_YAML_STRING)>: <[notification_implementation_definition](#operation-and-notification-implementation-definition)> 
+<notification_name>: <notification_implementation_definition> 
 ```
-##### Extended notation
-
-The following multi-line grammar may be used in Node or Relationship
-Template definitions when additional information about the notification
-is needed:
-```
-<notification_name>:
-  implementation: <notification_implementation_definition>
-  outputs: 
-    <parameter_mapping_assignments>
-```
-In the above grammar, the pseudo values that appear in angle brackets
+In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - notification_name: represents the mandatory symbolic name of the
@@ -7741,15 +7653,21 @@ have the following meaning:
   - the implementation declared here overrides the implementation provided
     at notification definition.
 
+- parameter_value_assignments: represents the optional map of parameter
+  value assignments for passing input parameter values to notifications.
+
+  - assignments for notification inputs that are not defined in the notification
+    definition may be provided
+
 - parameter_mapping_assignments: represents the optional map of
   parameter_mapping_assignments that consists of named output values
-  returned by operation implementations (i.e. artifacts) and associated
+  returned by notification implementations (i.e. artifacts) and associated
   attributes into which this output value must be stored
 
   - assignments for notification outputs that are not defined in the
-    operation definition may be provided.
+    notification definition may be provided.
 
-#### Additional requirements
+The following additional requirements apply:
 
 - The behavior for implementation of notifications SHALL be override.
   That is, implementation definitions assigned in a notification
@@ -7764,11 +7682,7 @@ have the following meaning:
   file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
   file.
 
-#### Examples
-
-TBD
-
-### Operation and notification implementation definition
+## 11.8 Operation and Notification Implementations
 
 An operation implementation definition specifies one or more artifacts
 (e.g. scripts) to be used as the implementation for an operation in an
@@ -7783,101 +7697,50 @@ implementation definition share the same keynames and grammar, with the
 exception of the timeout keyname that has no meaning in the context of a
 notification implementation definition and should not be used in such.
 
-#### Keynames
-
 The following is the list of recognized keynames for an operation
 implementation definition or a notification implementation definition:
 
 |Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
+| :---- | :------ | :---- | :------ |
 |primary|no|artifact definition|The optional implementation artifact (i.e., the primary script file within a TOSCA CSAR file).  |
-|dependencies|no|list of  artifact definition|The optional list of one or more dependent or secondary implementation artifacts which are referenced by the primary implementation artifact (e.g., a library the script installs or a secondary script).  |
-|timeout|no|integer|Timeout value in seconds. Has no meaning and should not be used within a notification implementation definition.|
-
-#### Grammar
+|dependencies|no|list of artifact definition|The optional list of one or more dependent or secondary implementation artifacts which are referenced by the primary implementation artifact (e.g., a library the script installs or a secondary script).  |
 
 Operation implementation definitions and notification implementation
 definitions have the following grammar:
-
-##### Short notation for use with single artifact
-
+```
+implementation: 
+  primary: <primary_artifact_definition> | <primary_artifact_name>
+  dependencies: <list_of_dependent_artifacts>
+```
 The following single-line grammar may be used when only a primary
 implementation artifact name is needed:
 ```
-[implementation](#TYPE_YAML_STRING): <[primary_artifact_name](#TYPE_YAML_STRING)> 
+implementation: <primary_artifact_name> 
 ```
 This notation can be used when the primary artifact name uniquely
-identifies the artifact, either because it refers to an artifact
-specified in the artifacts section of a type or template, or because it
-represents the name of a script in the CSAR file that contains the
-definition.
+identifies the artifact because it refers to an artifact
+specified in the artifacts section of a type or template.
 
-##### Short notation for use with multiple artifacts
-
-The following multi-line short-hand grammar may be used when multiple
-artifacts are needed, but each of the artifacts can be uniquely
-identified by name as before:
-```
-  primary: <primary_artifact_name>
-  dependencies:
-    - <list_of_dependent_artifact_names>
-  timeout: 60
-```
-##### Extended notation for use with single artifact
-
-The following multi-line grammar may be used in Node or Relationship
-Type or Template definitions when only a single artifact is used but
-additional information about the primary artifact is needed (e.g. to
-specify the repository from which to obtain the artifact, or to specify
-the artifact type when it cannot be derived from the artifact file
-extension):
-```
-implementation: 
-  primary:
-    <primary_artifact_definition>
-  timeout: 100
-```
-##### Extended notation for use with multiple artifacts
-
-The following multi-line grammar may be used in Node or Relationship
-Type or Template definitions when there are multiple artifacts that may
-be needed for the operation to be implemented and additional information
-about each of the artifacts is required:
-```
-implementation: 
-  primary: 
-    <primary_artifact_definition>   
-  dependencies: 
-    - <list_of_dependent_artifact definitions>
-  timeout: 120
-```
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- primary_artifact_name: represents the optional name
-  (string) of an implementation artifact definition
-  (defined elsewhere), or the direct name of an implementation
-  artifact’s relative filename (e.g., a service template-relative,
-  path-inclusive filename or absolute file location using a URL).
+- primary_artifact_definition: represents a full inline definition of
+  an artifact that can be used as an implementation of an operation or
+  notification.
 
-- primary_artifact_definition: represents a full inline definition of an
-  implementation artifact.
+- primary_artifact_name: represents the symbolic name of an artifact
+  defined in the node type or node template that contains the
+  interface operation or notification for which the implementation is
+  defined.
 
-- list_of_dependent_artifact_names: represents the optional ordered list
-  of one or more dependent or secondary implementation artifact names
-  (as strings) which are referenced by the primary implementation
-  artifact. TOSCA orchestrators will copy these files to the same
-  location as the primary artifact on the target node so as to make them
-  accessible to the primary implementation artifact when it is executed.
+- list_of_dependent_artifacts: represents the optional ordered list of
+  one or more dependent or secondary implementation artifacts. Each of
+  these artifacts can be defined using an inline artifact definition
+  or using a symbolic name of an artifact that is defined in the node
+  type or node template that contains the interface operation or
+  notification for which the implementation is defined.
 
-- list_of_dependent_artifact_definitions: represents the ordered list of
-  one or more inline definitions of dependent or secondary
-  implementation artifacts. TOSCA orchestrators will copy these
-  artifacts to the same location as the primary artifact on the target
-  node so as to make them accessible to the primary implementation
-  artifact when it is executed.
-
-## Artifacts
+# 12 Artifacts
 
 ### Artifact Type
 
@@ -8112,7 +7975,7 @@ artifacts:
       min_disk: 1 GB
       size: 649 MB
 ```
-# 12 Workflows
+# 13 Workflows
 
 ## Imperative Workflow definition
 
@@ -8246,7 +8109,7 @@ have the following meaning:
 - **target_step_name**: represents the name of another step of the
   workflow.
 
-# 13 Creating Representations from Templates
+# 14 Creating Representations from Templates
 
 TOSCA service templates specify a set of nodes that need to be
 *instantiated* at service deployment time. Some service templates may
@@ -8840,7 +8703,7 @@ service_template:
         - uses: [right, {$remainder: [NODE_INDEX, {$get_input: number_of_right}]
 ```
 
-# 13 Substitution
+# 15 Substitution
 
 The TOSCA *substitution* feature allows nodes in a service topology to
 be *decomposed* using *substituting services* that describe the
@@ -9748,7 +9611,7 @@ have the following meaning:
   substituting service template to which to map the specified
   interface operation.
 
-# 14 Groups and Policies
+# 16 Groups and Policies
 
 ## Group Type
 
@@ -10354,8 +10217,7 @@ notation):
  - call_operation: tosca.interfaces.node.lifecycle.Standard.start
  - inline: my_workflow
 ```
-TOSCA Cloud Service Archive (CSAR) format
-=========================================
+# 17 TOSCA Cloud Service Archive (CSAR) format
 
 This section defines the metadata of a cloud service archive as well as
 its overall structure. Except for the examples, this section is
