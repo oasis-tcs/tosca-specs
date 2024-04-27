@@ -8219,15 +8219,35 @@ notation):
 # 14 Creating Representations from Templates
 
 TOSCA service templates specify a set of nodes that need to be
-*instantiated* at service deployment time. Some service templates may
-include multiple nodes that perform the same role. For example, a
-template that models an SD-WAN service might contain multiple VPN Site
-nodes, one for each location that connects to the SD-WAN. Rather than
-having to create a separate service template for each possible number
-of VPN sites, it is preferable to create a single service template
-that allows the number of VPN sites to be specified at deployment time
-as an input to the template. This section documents TOSCA language
-support for this functionality.
+*instantiated* at service deployment time. As discussed in [Chapter
+4](#4-tosca-operational-model) this occurs in two separate steps:
+
+1. A TOSCA Processor first creates a *service representation* based on
+   a service template. This representation is a graph that contains
+   node representations and relationship representations.
+
+2. An Orchestrator then creates *external implementations* based on
+   the information stored in the representation graph (e.g., by
+   running workflows that call interface operations on each of the
+   nodes and relationships in the graph).
+
+[Chapter 4](#4-tosca-operational-model) discusses how node and
+relationship representations are created by matching a service
+template with deployment-specific input values. This chapter discusses
+issues of *cardinality* that determine how many node representations
+are created from each node template and how relationships are
+established between these multiple node represenations.
+
+## 14.1 Specifying Number of Node Representations
+
+Some service templates may include multiple nodes that perform the
+same role. For example, a template that models an SD-WAN service might
+contain multiple VPN Site nodes, one for each location that connects
+to the SD-WAN. Rather than having to create a separate service
+template for each possible number of VPN sites, it is preferable to
+create a single service template that allows the number of VPN sites
+to be specified at deployment time as an input to the template. This
+section documents TOSCA language support for this functionality.
 
 The discussion in this section uses an example SD-WAN with three sites
 as shown in the following figure:
@@ -8249,9 +8269,7 @@ this service can be deployed:
 
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 description: Template for deploying SD-WAN with three sites.
-
 service_template:
   inputs:
     location1:
@@ -8289,8 +8307,6 @@ service templates must be created, one for each possible number of
 SD-WAN sites. This leads to undesirable template proliferation. The
 next section presents an alternative.
 
-## Specifying Number of Node Representations
-
 To avoid the need for multiple service templates, TOSCA allows all VPN
 Site nodes to be created from the same Site node template in the
 service template. The TOSCA node template definition grammar uses a
@@ -8300,9 +8316,9 @@ similar to the `count` keyword in requirement definitions.
 
 The grammar for the `count` keyword is as follows:
 
-| Keyname     | Required | Type    | Constraints                       | Description                                                                                                                           |
-|-------------|----------|---------|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| count       | no       | integer | when not specified, defaults to 1 | The optional number of nodes in the representation graph that will be created from this node template. If not specified,  one single node is created. |
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|count|no|integer|The optional number of nodes in the representation graph that will be created from this node template. If not specified,  one single node is created.|
 
 It is expected that the value of the `count` is provided as an input
 to the service template. This enables the creation of a simplified
@@ -8326,14 +8342,11 @@ code snippet:
 
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 description: Template for deploying SD-WAN with a variable number of sites.
-
 service_template:
   inputs:
     number_of_sites:
       type: integer
-  
   node_templates:
     sdwan:
       type: VPN
@@ -8344,7 +8357,7 @@ service_template:
         - vpn: sdwan
 ```
 
-### Node-Specific Input Values
+## 14.2 Node-Specific Input Values
 
 The service template in the previous section conveniently ignores the
 location property of the Site node. As shown earlier, the location
@@ -8362,9 +8375,9 @@ the `NODE_INDEX` keyword is used. This keyword can then can be used to
 index the list of input values. The grammar for the `NODE_INDEX`
 keyword is as follows:
 
-| Keyword     | Valid Contexts | Description                                                                                                                                |
-|-------------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| NODE_INDEX | Node Representation | A TOSCA orchestrator will interpret this keyword as the runtime index in the list of node representations created from a single node template. |
+|Keyword|Valid Contexts|Description|
+|----|----|----|
+|NODE_INDEX|Node Representation|A TOSCA orchestrator will interpret this keyword as the runtime index in the list of node representations created from a single node template.|
 
 The `NODE_INDEX` for a node representation is immutable: it never
 changes during the lifetime of that node representation, even if node
@@ -8377,9 +8390,7 @@ service template:
 
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 description: Template for deploying SD-WAN with a variable number of sites.
-
 service_template:
   inputs:
     number_of_sites:
@@ -8387,7 +8398,6 @@ service_template:
     location:
       type: list
       entry_schema: Location
-  
   node_templates:
     sdwan:
       type: VPN
@@ -8409,7 +8419,7 @@ service_template:
 > the majority will do), then we use the single value input. If the
 > occurrences are more, then we use lists.
 
-### Cardinality of Relationships
+## 14.3 Cardinality of Relationships
 
 We may also need to accommodate scenarios where a node template with
 multiple representations defines a requirement to another node
@@ -8418,7 +8428,7 @@ introduces grammar for specifying the cardinality of such
 requirements. Specific mechanisms depend on the type of the
 relationships to be established.
 
-#### Many-to-One Relationships
+### 14.3.1 Many-to-One Relationships
 
 In the SD-WAN service template above, each of the site node
 representations has a relationship to a VPN node that can only be
@@ -8445,7 +8455,7 @@ This template specifies that all four node representations created
 from the `left` node template must use the one node representation
 created from the`right` node template as their target node.
 
-#### One-to-Many Relationships
+### 14.3.2 One-to-Many Relationships
 
 An example of a *one-to-many* relationship is shown in the following
 figure:
@@ -8495,7 +8505,7 @@ requirement, it defaults to 1 and the orchestrator will only establish
 one single relationship to one of the `right` nodes. Which one of the
 `right` nodes is selected is implementation-specific.
 
-#### Full mesh
+### 14.3.3 Full mesh
 
 In a *full mesh* scenario, all nodes on the left establish
 relationships to all of the nodes on the right as shown in the
@@ -8546,7 +8556,7 @@ service_template:
             count: {$get_input: number_of_right}
 ```
 
-#### Matched Pairs
+### 14.3.4 Matched Pairs
 
 For some services, representations created from different node
 templates must remain matched up in pairs. For example, let’s extend
@@ -8611,7 +8621,7 @@ service_template:
         - uses: [right, NODE_INDEX]
 ```
 
-#### Random Pairs
+### 14.3.5 Random Pairs
 
 Some scenarios require nodes to be organized in pairs, but the
 ordering of the nodes is not important. The following figure shows and
@@ -8682,7 +8692,7 @@ This scenario works as follows:
   incoming relationships will be established. This ensures that each
   target node is only allocated once.
 
-#### Many-to-Many Relationships
+### 14.3.6 Many-to-Many Relationships
 
 The mechanisms introduced above can also be used to define more
 complex *many-to-many* scenarios. For example, a 1:2 pattern is shown
