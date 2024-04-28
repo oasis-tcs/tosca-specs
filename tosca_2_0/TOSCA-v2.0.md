@@ -3900,23 +3900,102 @@ for handling requirement counts:
   - Additionally, the count_value is assumed to be equal to the min_count
     value of the requirement definition in the corresponding node type.
 
-The following example shows a requirement assignment where the
-requirement definition has the count_range that is different from the
-default [0,UNBOUNDED]. In this case the redundant_database requirement
-has count_range of [2,2]. The requirement definition is not presented
-here for brevity. In the requirement assignment we use the short
-notation. Note that the count keyname for each assignment is not
-declared (i.e. the default value of 1 is used) and that the sum of the
-count values of both assignments is 2 which is in the range of [2,2]
-as specified in the requirement definition.
+The following example illustrates requirement assignment count
+rules. It uses the types defined in the following code snippet:
 ```yaml
+tosca_definitions_version: tosca_2_0
+capability_types:
+  Service:
+    description: >-
+      Ability to provide service.
+relationship_types:
+  ServedBy:
+    description: >-
+      Connection to a service.
+node_types:
+  Client:
+    requirements:
+      - service:
+          capability: Service
+          relationship: ServedBy
+          node: Server
+          count_range: [ 1, 4 ]
+  Server:
+    capabilities:
+      service:
+        type: Service
+```
+In this example, the `Client` node type defines a `service`
+requirement with a `count_range` of `[1, 4]`. This means that a client
+can have up to four `service` connections to `Server` nodes, but only
+one of those is mandatory.
+
+Any service template that uses the `Client` node type must specify the
+correct number of requirement assignments, i.e, the number of
+mandatory requirements must be greater than or equal to the lower
+bound of the `count_range` and he total number of requirement
+assignments (optional as well as mandatory) must be less than or equal
+to the upper bound of the count range.
+
+The following shows a valid service template that uses `Client` and
+`Server` nodes.
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
 service_template:
   node_templates:
-    my_critical_application_node_template:
+    server1:
+      type: Server
+    server2:
+      type: Server
+    server3:
+      type: Server
+    client:
+      type: Client
+      directives: [ substitute ]
       requirements:
-        - redundant_database: database1
-        - redundant_database: database2
+        - service: server1
+        - service: server2
+        - service: server3
 ```
+In this example, the requirement assignments specify the target nodes
+directly, but it is also valid to leave requirements dangling as in
+the following example:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+service_template:
+  node_templates:
+    server1:
+      type: Server
+    server2:
+      type: Server
+    server3:
+      type: Server
+    client:
+      type: Client
+      directives: [ substitute ]
+      requirements:
+        - service: server1
+        - service:
+            optional: True
+        - service:
+            optional: True
+```
+In this example, only the first `service` assignment is mandatory. The
+next two are optional. However, after the orchestrator *fulfills* the
+dangling (optional) requirements, the resulting service topology for
+this second example will likely be identical to the service topology
+in the first example, since the orchestrator is able to fulfill both
+of the optional requirements using `server` nodes in this topology.
+
+Note that after requirements have been fulfilled, it no longer matters
+whether the requirement were mandatory or optional. All that matters
+is that if the service topology is valid, the number of established
+relationships is guaranteed to fall within the `count_range` specified
+in the corresponding requirement definition.
 
 ### 8.7.5 Capability Allocation
 
@@ -7032,18 +7111,1222 @@ properties:
   rnd: {$get_random_nr: []}
 ```
 
-# Creating Representations from Templates
+# 11 Interfaces, Operations, and Notifications
+
+## 11.1 Interface Type
+
+An *interface type* is a reusable entity that describes a set of
+operations and notifications that can be used to interact with or to
+manage a node or relationship in a TOSCA topology as well as the input
+and output parameters used by those operations and notifications.
+
+An interface type definition is a type of TOSCA type definition and as
+a result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+interface type definition has the following recognized keynames:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|inputs|no|map of parameter definitions|The optional map of input parameter definitions available to all operations defined for this interface.|
+|operations|no|map of operation definitions|The optional map of operations defined for this interface.|
+|notifications|no|map of notification definitions|The optional map of notifications defined for this interface.|
+
+These keynames can be used according to the following grammar:
+```
+<interface_type_name>:
+  derived_from: <parent_interface_type_name>
+  version: <version_number>
+  metadata: <map of yaml values>
+  description: <interface_description>
+  inputs: <parameter_definitions>
+  operations: <operation_definitions>
+  notifications: <notification definition>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- interface_type_name: represents the mandatory name of the interface as
+  a string.
+
+- parent_interface_type_name: represents the name of the interface
+  type from which this interface type definition derives (i.e. its
+  “parent” type).
+
+- parameter_definitions: represents the optional map of parameter
+  definitions which the TOSCA orchestrator will make available (i.e., or
+  pass) to all implementation artifacts for operations declared on the
+  interface during their execution.
+
+- operation_definitions: represents the optional map of one or more
+  operation definitions.
+
+- notification_definitions: represents the optional map of one or more
+  notification definitions.
+
+During Interface Type derivation the keyname definitions follow these
+rules:
+
+- inputs: existing parameter definitions may be refined; new parameter
+  definitions may be added.
+
+- operations: existing operation definitions may be refined; new
+  operation definitions may be added.
+
+- notifications: existing notification definitions may be refined; new
+  notification definitions may be added.
+
+Note that interface types definitions **MUST NOT** include any
+implementations for defined operations or notifications; that is, the
+implementation keyname is invalid in this context.
+
+The following example shows a custom interface used to define multiple
+configure operations.
+```
+MyConfigure:
+  derived_from: Root
+  description: My custom configure Interface Type
+  inputs:
+    mode:
+      type: string
+  operations:
+    pre_configure_service:
+      description: pre-configure operation for my service
+    post_configure_service:
+      description: post-configure operation for my service
+```
+
+## 11.2 Interface Definition
+
+An interface definition defines an interface (containing operations
+and notifications definitions) that can be associated with
+(i.e. defined within) a node or relationship type definition. An
+interface definition may be refined in subsequent node or relationship
+type derivations.
+
+The following is the list of recognized keynames for a TOSCA interface
+definition:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory name of the interface type on which this interface definition is based.|
+|description|no|string|The optional description for this interface definition.|
+|metadata|no|map of metadata|Defines additional metadata information.|
+|inputs|no|map of parameter definitions and refinements|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the Interface Type definition).|
+|operations|no|map of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
+|notifications|no|map of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
+
+Interface definitions in node or relationship type definitions have the
+following grammar:
+```
+<interface_definition_name>:
+  type: <interface_type_name>
+  description: <interface_description>
+  metadata: <map of yaml values>
+  inputs: <parameter_definitions_and_refinements>
+  operations: <operation_refinements>
+  notifications: <notification definition>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- interface_definition_name: represents the mandatory symbolic name of
+  the interface as a string.
+
+- interface_type_name: represents the mandatory name of the interface
+  type for the interface definition.
+
+- parameter_definitions_and_refinements: represents the optional map of
+  input parameters which the TOSCA orchestrator will make available
+  (i.e. pass) to all defined operations. This means these parameters and
+  their values will be accessible to the implementation artifacts (e.g.,
+  scripts) associated to each operation during their execution
+
+  - the map represents a mix of parameter refinements (for parameters
+    already defined in the interface type) and new parameter
+    definitions.
+
+  - with the new parameter definitions, we can flexibly add new parameters
+    when changing the implementation of operations and notifications
+    during refinements or assignments.
+
+- operation_refinements: represents the optional map of operation
+  definition refinements for this interface; the referred operations
+  must have been previously defined in the interface type.
+
+- notification_refinements: represents the optional map of notification
+  definition refinements for this interface; the referred notifications
+  must have been previously defined in the interface type.
+
+An interface definition within a node or relationship type (including
+interface definitions in requirements definitions) uses the following
+definition refinement rules when the containing entity type is derived:
+
+- type: must be derived from (or the same as) the type in the interface
+  definition in the parent entity type definition.
+
+- description: a new definition is unrestricted and will overwrite the
+  one inherited from the interface definition in the parent entity type
+  definition.
+
+- inputs: not applicable to the definitions in the parent entity type
+  but to the definitions in the interface type referred by the type
+  keyname (see grammar above for the rules).
+
+- operations: not applicable to the definitions in the parent entity
+  type but to the definitions in the interface type referred by the type
+  keyname (see grammar above for the rules).
+
+- notifications: not applicable to the definitions in the parent entity
+  type but to the definitions in the interface type referred by the type
+  keyname (see grammar above for the rules).
+
+## 11.3 Interface Assignment
+
+An interface assignment is used to specify assignments for the inputs,
+operations and notifications defined in the interface. Interface
+assignments may be used within a node or relationship template
+definition (including when interface assignments are referenced as part
+of a requirement assignment in a node template).
+
+The following is the list of recognized keynames for a TOSCA interface
+assignment:
+
+|inputs|no|map of parameter value assignments|The optional map of input parameter assignments. Template authors MAY provide parameter assignments for interface inputs that are not defined in their corresponding interface type.|
+|operations|no|map of operation assignments|The optional map of operations assignments specified for this interface.|
+|notifications|no|map of notification assignments|The optional map of notifications assignments specified for this interface.|
+
+Interface assignments have the following grammar:
+```
+<interface_definition_name>:
+  inputs: <parameter_value_assignments>
+  operations:  <operation_assignments>
+  notifications: <notification_assignments>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- interface_definition_name: represents the mandatory symbolic name of
+  the interface as a string.
+
+- parameter_value_assignments: represents the optional map of parameter
+  value assignments for passing input parameter values to all interface
+  operations
+
+  - template authors MAY provide new parameter assignments for interface
+    inputs that are not defined in the interface definition.
+
+- operation_assignments: represents the optional map of operation
+  assignments for operations defined in the interface definition.
+
+- notification_assignments: represents the optional map of notification
+  assignments for notifications defined in the interface definition.
+
+## 11.4 Operation Definition
+
+An operation definition defines a function or procedure to which an
+operation implementation can be bound.
+
+A new operation definition may be declared only inside interface type
+definitions (this is the only place where new operations can be
+defined). In interface type, node type, or relationship type definitions
+(including operation definitions as part of a requirement definition) we
+may further refine operations already defined in an interface type.
+
+An operation definition or refinement inside an interface type
+definition may not contain an operation implementation definition and it
+may not contain an attribute mapping as part of its output definition
+(as both these keynames are node/relationship specific).
+
+The following is the list of recognized keynames for a TOSCA operation
+definition (including definition refinement)
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|description|no|string|The optional description string for the associated operation.|
+|implementation|no|operation implementation definition|The optional definition of the operation implementation. May not be used in an interface type definition (i.e. where an operation is initially defined), but only during refinements. |
+|inputs|no|map of parameter definitions|The optional map of parameter definitions for operation input values.|
+|outputs|no|map of parameter definitions|The optional map of parameter definitions for operation output values. Only as part of node and relationship type definitions, the output definitions may include mappings onto attributes of the node or relationship type that contains the definition.|
+
+Operation definitions have the following grammar:
+```
+<operation_name>:
+   description: <operation_description>
+   implementation: <operation_implementation_definition>
+   inputs: <parameter_definitions>
+   outputs: <parameter_definitions>
+```
+
+The following single-line grammar may be used when the operation’s
+implementation definition is the only keyname that is needed, and when
+the operation implementation definition itself can be specified using a
+single line grammar:
+```
+<operation_name>: <operation_implementation_definition>
+```
+In the above grammars, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- operation_name: represents the mandatory symbolic name of the
+  operation as a string.
+
+- operation_description: represents the optional description string for
+  the operation.
+
+- operation_implementation_definition: represents the optional
+  specification of the operation’s implementation).
+
+- parameter_definitions: represents the optional map of parameter
+  definitions which the TOSCA orchestrator will make available as inputs
+  to or receive as outputs from the corresponding implementation
+  artifact during its execution.
+
+An operation definition within an interface, node, or relationship type
+(including interface definitions in requirements definitions) uses the
+following refinement rules when the containing entity type is derived:
+
+- description: a new definition is unrestricted and will overwrite the
+  one inherited from the operation definition in the parent entity type
+  definition.
+
+- implementation: a new definition is unrestricted and will overwrite
+  the one inherited from the operation definition in the parent entity
+  type definition.
+
+- inputs: parameter definitions inherited from the parent entity type
+  may be refined; new parameter definitions may be added.
+
+- outputs: parameter definitions inherited from the parent entity type
+  may be refined; new parameter definitions may be added.
+
+The following additional requirements apply:
+
+- The definition of implementation is not allowed in interface type
+  definitions (as a node or node type context is missing at that point).
+  Thus, it can be part only of an operation refinement and not of the
+  original operation definition.
+
+- The default refinement behavior for implementations SHALL be
+  overwrite. That is, implementation definitions in a derived type
+  overwrite any defined in its parent type.
+
+- Defining a fixed value for an input parameter (as part of its
+  definition) may only use a parameter_value_expression that is
+  meaningful in the scope of the context. For example, within the
+  context of an Interface Type definition functions such as get_propery
+  or get_attribute cannot be used. Within the context of Node or
+  Relationship Type definitions, these functions may only reference
+  properties and attributes accessible starting from SELF (i.e.
+  accessing a node by symbolic name is not meaningful).
+
+- Defining attribute mapping as part of the output parameter definition
+  is not allowed in interface type definitions (i.e. as part of
+  operation definitions). It is allowed only in node and relationship
+  type definitions (as part of operation refinements) and has to be
+  meaningful in the scope of the context (e.g. SELF).
+
+- Implementation artifact file names (e.g., script filenames) may
+  include file directory path names that are relative to the TOSCA file
+  file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
+  file.
+
+The following code snippet shows an example operation definition:
+```
+interfaces:
+  Configure:
+    pre_configure_source:
+      implementation: 
+        primary: 
+          file: scripts/pre_configure_source.sh
+          type: Bash
+          repository: my_service_catalog
+        dependencies:
+           - file : scripts/setup.sh
+             type : Bash
+             repository : my_service_catalog
+```
+The next example shows single-line grammar for the operation implementation:
+```
+interfaces:
+  Configure:
+    pre_configure_source:
+      implementation: 
+        primary: scripts/pre_configure_source.sh
+        dependencies: 
+          - scripts/setup.sh
+          - binaries/library.rpm
+          - scripts/register.py
+```
+The following code snippet shows an example of the single-line grammar
+for the entire operation definitions:
+```
+interfaces:
+  Standard:
+    start: scripts/start_server.sh
+```
+## 11.5 Operation Assignment
+
+An operation assignment may be used to assign values for input
+parameters, specify attribute mappings for output parameters, and
+define/redefine the implementation definition of an already defined
+operation in the interface definition. An operation assignment may be
+used inside interface assignments inside node template or relationship
+template definitions (this includes when operation assignments are part
+of a requirement assignment in a node template).
+
+An operation assignment may add or change the implementation and
+description definition of the operation. Assigning a value to an input
+parameter that had a fixed value specified during operation definition
+or refinement is not allowed. Providing an attribute mapping for an
+output parameter that was mapped during an operation refinement is also
+not allowed.
+
+Note also that in the operation assignment we can use inputs and outputs
+that have not been previously defined in the operation definition. This
+is equivalent to an ad-hoc definition of a parameter, where the type is
+inferred from the assigned value (for input parameters) or from the
+attribute to map to (for output parameters).
+
+The following is the list of recognized keynames for an operation
+assignment:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+implementation|no|operation implementation definition|The optional definition of the operation implementation. Overrides implementation provided at operation definition.|
+|inputs|no|map of parameter value assignments|The optional map of parameter value assignments for assigning values to operation inputs. |
+|outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how operation outputs are mapped onto attributes of the node or relationship that contains the operation definition. |
+
+Operation assignments have the following grammar:
+
+```
+<operation_name>:
+   implementation: <operation_implementation_definition>
+   inputs: <parameter_value_assignments>
+   outputs: <parameter_mapping_assignments>
+```
+The following single-line grammar may be used when the operation’s
+implementation definition is the only keyname that is needed, and when
+the operation implementation definition itself can be specified using a
+single line grammar:
+```
+<operation_name>: <operation_implementation_definition> 
+```
+In the above grammars, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- operation_name: represents the mandatory symbolic name of the
+  operation as a string.
+
+- operation_implementation_definition: represents the optional
+  specification of the operation’s implementation
+
+  - the implementation declared here overrides the implementation provided
+    at operation definition.
+
+- parameter_value_assignments: represents the optional map of parameter
+  value assignments for passing input parameter values to operations.
+
+  - assignments for operation inputs that are not defined in the operation
+    definition may be provided
+
+- parameter_mapping_assignments: represents the optional map of
+  parameter mapping assignments that consists of named output values
+  returned by operation implementations (i.e. artifacts) and associated
+  attributes into which this output value must be stored
+
+  - assignments for operation outputs that are not defined in the
+    operation definition may be provided.
+
+The following additional requirements apply:
+
+- The behavior for implementation of operations SHALL be override. That
+  is, implementation definitions assigned in an operation assignment
+  override any defined in the operation definition.
+
+- Template authors MAY provide parameter assignments for operation
+  inputs that are not defined in the operation definition.
+
+- Template authors MAY provide attribute mappings for operation outputs
+  that are not defined in the operation definition.
+
+- Implementation artifact file names (e.g., script filenames) may
+  include file directory path names that are relative to the TOSCA file
+  file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
+  file.
+
+## 11.6 Notification Definition
+
+A notification definition defines an asynchronous notification or
+incoming message that can be associated with an interface. The
+notification is a way for an events generated by the external
+implementations to be transmitted to the TOSCA orchestrator. Values
+can be sent with a notification as notification outputs and can be
+mapped to node/relationship attributes similarly to the way operation
+outputs are mapped to attributes. The artifact that the orchestrator
+is registering with in order to receive the notification is specified
+using the implementation keyname in a similar way to
+operations. Inputs parameters in notification definitions provide
+configuration information to the artifacts registered to receive the
+events.
+
+When the notification is received an event is generated within the
+orchestrator that can be associated to triggers in policies to call
+other internal operations and workflows. The notification name (using
+the \<interface_name\>.\<notification_name\> notation) itself identifies
+the event type that is generated and can be textually used when defining
+the associated triggers.
+
+A notification definition may be used only inside interface type
+definitions (this is the only place where new notifications can be
+defined). Inside interface type, node type, or relationship type
+definitions (including notifications definitions as part of a
+requirement definition) we may further refine a notification already
+defined in the interface type.
+
+A notification definition or refinement inside an interface type
+definition may not contain a notification implementation definition and
+it may not contain an attribute mapping as part of its output definition
+(as both these keynames are node/relationship specific).
+
+The following is the list of recognized keynames for a TOSCA
+notification definition:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|description|no|string|The optional description string for the associated notification.|
+|implementation|no|notification implementation definition|The optional definition of the notification implementation.|
+|inputs|no|map of parameter definitions|The optional map of parameter definitions for notification input values.|
+|outputs|no|map of parameter definitions|The optional map of parameter definitions that specify notification output values.  Only as part of node and relationship type definitions, the output definitions may include their mappings onto attributes of the node type or relationship type that contains the definition. |
+
+Notification definitions have the following grammar:
+
+```
+<notification_name>:
+  description: <notification_description>
+  implementation: <notification_implementation_definition>
+  inputs: <parameter_definitions>
+  outputs: <parameter_definitions>
+```
+
+The following single-line grammar may be used when the notification’s
+implementation definition is the only keyname that is needed and when
+the notification implementation definition itself can be specified using
+a single line grammar:
+```
+<notification_name>: <notification_implementation_definition> 
+```
+In the above grammars, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- notification_name: represents the mandatory symbolic name of the
+  notification as a string.
+
+- notification_description: represents the optional description string
+  for the notification.
+
+- notification_implementation_definition: represents the optional
+  specification of the notification implementation (i.e. the external
+  artifact that may send notifications)
+
+- parameter_definitions: represents the optional map of parameter
+  definitions for parameters that the orchestrator will make available
+  as inputs or receive as outputs from the corresponding
+  implementation artifact during its execution.
+
+A notification definition within an interface, node, or relationship
+type (including interface definitions in requirements definitions) uses
+the following refinement rules when the containing entity type is
+derived:
+
+- description: a new definition is unrestricted and will overwrite the
+  one inherited from the notification definition in the parent entity
+  type definition.
+
+- implementation: a new definition is unrestricted and will overwrite
+  the one inherited from the notification definition in the parent
+  entity type definition.
+
+- inputs: parameter definitions inherited from the parent entity type
+  may be refined; new parameter definitions may be added.
+
+- outputs: parameter definitions inherited from the parent entity type
+  may be refined; new parameter definitions may be added.
+
+The following additional requirements apply:
+
+- The definition of implementation is not allowed in interface type
+  definitions (as a node or node type context is missing at that point).
+  Thus, it can be part only of a notification refinement and not of the
+  original notification definition.
+
+- The default sub-classing (i.e. refinement) behavior for
+  implementations of notifications SHALL be overwrite. That is,
+  implementation artifacts definitions in a derived type overwrite any
+  defined in its parent type.
+
+- Defining attribute mapping as part of the output parameter definition
+  is not allowed in interface type definitions (i.e. as part of
+  operation definitions). It is allowed only in node and relationship
+  type definitions (as part of operation refinements).
+
+- Defining a mapping in an output parameter definition may use an
+  attribute target that is meaningful in the scope of the context.
+  Within the context of Node or Relationship Type definitions these
+  functions may only reference attributes starting from the same node
+  (i.e. SELF).
+
+- Implementation artifact file names (e.g., script filenames) may
+  include file directory path names that are relative to the TOSCA file
+  file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
+  file.
+
+## 11.7 Notification Assignment
+
+A notification assignment may be used to specify attribute mappings for
+output parameters and to define/redefine the implementation definition
+and description definition of an already defined notification in the
+interface definition. A notification assignment may be used inside
+interface assignments inside node or relationship template definitions
+(this includes when notification assignments are part of a requirement
+assignment in a node template).
+
+Providing an attribute mapping for an output parameter that was mapped
+during a previous refinement is not allowed. Note also that in the
+notification assignment we can use outputs that have not been previously
+defined in the operation definition. This is equivalent to an ad-hoc
+definition of an output parameter, where the type is inferred from the
+attribute to map to.
+
+The following is the list of recognized keynames for a TOSCA
+notification assignment:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|implementation|no|notification implementation definition|The optional definition of the notification implementation. Overrides implementation provided at notification definition.|
+|inputs|no|map of parameter value assignments|The optional map of parameter value assignments for assigning values to notification inputs. |
+|outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how notification outputs values are mapped onto attributes of the node or relationship type that contains the notification definition.|
+
+Notification assignments have the following grammar:
+```
+<notification_name>:
+  implementation: <notification_implementation_definition>
+  inputs: <parameter_value_assignments>
+  outputs: <parameter_mapping_assignments>
+```
+The following single-line grammar may be used when the notification’s
+implementation definition is the only keyname that is needed, and when
+the notification implementation definition itself can be specified using
+a single line grammar:
+```
+<notification_name>: <notification_implementation_definition> 
+```
+In the above grammars, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- notification_name: represents the mandatory symbolic name of the
+  notification as a string.
+
+- notification_implementation_definition: represents the optional
+  specification of the notification implementation (i.e. the external
+  artifact that is may send notifications)
+
+  - the implementation declared here overrides the implementation provided
+    at notification definition.
+
+- parameter_value_assignments: represents the optional map of parameter
+  value assignments for passing input parameter values to notifications.
+
+  - assignments for notification inputs that are not defined in the notification
+    definition may be provided
+
+- parameter_mapping_assignments: represents the optional map of
+  parameter_mapping_assignments that consists of named output values
+  returned by notification implementations (i.e. artifacts) and associated
+  attributes into which this output value must be stored
+
+  - assignments for notification outputs that are not defined in the
+    notification definition may be provided.
+
+The following additional requirements apply:
+
+- The behavior for implementation of notifications SHALL be override.
+  That is, implementation definitions assigned in a notification
+  assignment override any defined in the notification definition.
+
+- Template authors MAY provide attribute mappings for notification
+  outputs that are not defined in the corresponding notification
+  definition.
+
+- Implementation artifact file names (e.g., script filenames) may
+  include file directory path names that are relative to the TOSCA file
+  file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
+  file.
+
+## 11.8 Operation and Notification Implementations
+
+An operation implementation definition specifies one or more artifacts
+(e.g. scripts) to be used as the implementation for an operation in an
+interface.
+
+A notification implementation definition specifies one or more artifacts
+to be used by the orchestrator to subscribe and receive a particular
+notification (i.e. the artifact implements the notification).
+
+The operation implementation definition and the notification
+implementation definition share the same keynames and grammar, with the
+exception of the timeout keyname that has no meaning in the context of a
+notification implementation definition and should not be used in such.
+
+The following is the list of recognized keynames for an operation
+implementation definition or a notification implementation definition:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|primary|no|artifact definition|The optional implementation artifact (i.e., the primary script file within a TOSCA CSAR file).  |
+|dependencies|no|list of artifact definition|The optional list of one or more dependent or secondary implementation artifacts which are referenced by the primary implementation artifact (e.g., a library the script installs or a secondary script).  |
+
+Operation implementation definitions and notification implementation
+definitions have the following grammar:
+```
+implementation: 
+  primary: <primary_artifact_definition> | <primary_artifact_name>
+  dependencies: <list_of_dependent_artifacts>
+```
+The following single-line grammar may be used when only a primary
+implementation artifact name is needed:
+```
+implementation: <primary_artifact_name> 
+```
+This notation can be used when the primary artifact name uniquely
+identifies the artifact because it refers to an artifact
+specified in the artifacts section of a type or template.
+
+In the above grammars, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- primary_artifact_definition: represents a full inline definition of
+  an artifact that can be used as an implementation of an operation or
+  notification.
+
+- primary_artifact_name: represents the symbolic name of an artifact
+  defined in the node type or node template that contains the
+  interface operation or notification for which the implementation is
+  defined.
+
+- list_of_dependent_artifacts: represents the optional ordered list of
+  one or more dependent or secondary implementation artifacts. Each of
+  these artifacts can be defined using an inline artifact definition
+  or using a symbolic name of an artifact that is defined in the node
+  type or node template that contains the interface operation or
+  notification for which the implementation is defined.
+
+# 12 Artifacts
+
+## 12.1 Artifact Type
+
+An *artifact type* is a reusable entity that defines the type of one or
+more files that are used to define implementation or deployment
+artifacts that are referenced by nodes or relationships.
+
+An artifact type definition is a type of TOSCA type definition and as
+a result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+artifact type definition has the following recognized keynames:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|mime_type|no|string|The optional mime type property for the artifact type.|
+|file_ext|no|list of string|The optional file extension property for the artifact type.|
+|properties|no|map of property definitions|An optional map of property definitions for the artifact type.|
+
+```
+<artifact_type_name>:
+  derived_from: <parent_artifact_type_name>
+  version: <version_number>
+  metadata:  <map of string>
+  description: <artifact_description>
+  mime_type: <mime_type_string>
+  file_ext: [ <file_extensions> ]
+  properties: <property_definitions>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- artifact_type_name: represents the name of the artifact type being
+  declared as a string.
+
+- parent_artifact_type_name: represents the name of the artifact type
+  this artifact type definition derives from (i.e., its “parent” type).
+
+- mime_type_string: represents the optional Multipurpose Internet Mail
+  Extensions (MIME) standard string value that describes the file
+  contents for this type of artifact type as a string.  The mime_type
+  keyname is meant to have values that are Apache mime types such as
+  those defined here:
+  <http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types>
+
+- file_extensions: represents the optional list of one or more
+  recognized file extensions for this type of artifact type as strings.
+
+- property_definitions: represents the optional map of property
+  definitions for the artifact type.
+
+During artifact type derivation the keyname definitions follow these
+rules:
+
+- mime_type: a new definition is unrestricted and will overwrite the one
+  inherited from the parent type.
+
+- file_ext: a new definition is unrestricted and will overwrite the one
+  inherited from the parent type.
+
+- properties: existing property definitions may be refined; new property
+  definitions may be added.
+
+The following shows an example artifact type definition:
+```
+my_artifact_type:
+  description: Java Archive artifact type
+  derived_from: Root
+  mime_type: application/java-archive
+  file_ext: [ jar ]
+  properties:
+    id: 
+      description: Identifier of the jar
+      type: string
+      required: true
+    creator:
+      description: Vendor of the java implementation on which the jar is based
+      type: string
+      required: false
+```
+
+Information about artifacts can be broadly classified in two categories
+that serve different purposes:
+
+- Selection of artifact processor. This category includes informational
+  elements such as artifact version, checksum, checksum algorithm etc.
+  and is used by TOSCA Orchestrator to select the correct artifact
+  processor for the artifact. These informational elements are captured
+  in TOSCA as keywords for the artifact.
+
+- Properties processed by artifact processor. Some properties are not
+  processed by the Orchestrator but passed on to the artifact processor
+  to assist with proper processing of the artifact. These informational
+  elements are described through artifact properties.
+
+## 12.2 Artifact definition
+
+An artifact definition defines a named, typed file that can be
+associated with a node type or node template and used by a TOSCA
+Orchestrator to facilitate deployment and implementation of interface
+operations.
+
+The following is the list of recognized keynames for a TOSCA artifact
+definition:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|type|yes|string|The mandatory artifact type for the artifact definition.|
+|file|yes|string|The mandatory URI string (relative or absolute) that can be used to locate the artifact’s file.|
+|repository|no|string|The optional name of the repository definition that contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.|
+|description|no|string|The optional description for the artifact definition.|
+|metadata|no|map of metadata|Defines additional metadata information.|
+|artifact_version|no|string|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
+|checksum|no|string|The checksum used to validate the integrity of the artifact.|
+|checksum_algorithm|no|string|Algorithm used to calculate the artifact checksum (e.g. MD5, SHA [Ref]). Shall be specified if checksum is specified for an artifact.|
+|properties|no|map of property assignments|The optional map of property assignments associated with the artifact.|
+
+Artifact definitions have the following grammar:
+
+```
+<artifact_name>: 
+  description: <artifact_description>
+  metadata: <map_of_metadata>
+  type: <artifact_type_name>
+  file: <artifact_file_uri>
+  repository: <artifact_repository_name>
+  version: <artifact _version>
+  checksum: <artifact_checksum>
+  checksum_algorithm: <artifact_checksum_algorithm>
+  properties: <property assignments>
+```
+
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- artifact_name: represents the mandatory symbolic name of the artifact
+  as a string.
+
+- artifact_type_name: represents the mandatory artifact type the
+  artifact definition is based upon.
+
+- artifact_file_uri: represents the mandatory URI string (relative or
+  absolute) which can be used to locate the artifact’s file.
+
+- artifact_repository_name: represents the optional name of the
+  repository definition to use to retrieve the associated artifact
+  (file) from.
+
+- artifact_version: represents the version of artifact
+
+- artifact_checksum: represents the checksum of the Artifact
+
+- artifact_checksum_algorithm:represents the algorithm for verifying the
+  checksum. Shall be specified if checksum is specified
+
+- properties: represents an optional map of property assignments
+  associated with the artifact
+
+Artifact definitions represent specific external entities. If a certain
+artifact definition cannot be reused as is, then it may be completely
+redefined.
+
+- If an artifact is redefined, the symbolic name from the definition in
+  the parent node type is reused, but no keyname definitions are
+  inherited from the definition in the parent node type, and the new
+  definition completely overwrites the definition in the parent.
+
+- If the artifact is not redefined the complete definition is inherited
+  from the parent node type.
+
+The following example represents an artifact definition with property
+assignments:
+```
+artifacts:
+  sw_image:
+    description: Image for virtual machine
+    type: tosca.artifacts.Deployment.Image.VM
+    file: http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2
+    checksum: ba411cafee2f0f702572369da0b765e2
+    version: 3.2
+    checksum_algorithm: MD5
+    properties:
+      name: vSRX
+      container_format: BARE
+      disk_format: QCOW2
+      min_disk: 1 GB
+      size: 649 MB
+```
+# 13 Workflows
+
+## 13.1 Declarative Workflows
+
+> State that declarative workflows are automatically
+> generated. Specific steps for how to do this is profile
+> specific. Orchestrators that support certain profiles are expected
+> to know how to create declarative workflows for those profiles.
+
+## 13.2 Imperative Workflows
+
+A workflow definition defines an imperative workflow that is associated
+with a TOSCA service. A workflow definition can either include the steps
+that make up the workflow, or it can refer to an artifact that expresses
+the workflow using an external workflow language.
+
+The following is the list of recognized keynames for a TOSCA workflow
+definition:
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|description|no|string|The optional description for the workflow definition.|
+|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|inputs|no|map of parameter definitions|The optional map of input parameter definitions.|
+|precondition|no|condition clause|Condition clause that must evaluate to true before the workflow can be processed.|
+|steps|no|map of step definitions|An optional map of valid imperative workflow step definitions.|
+|implementation|no|operation implementation definition|The optional definition of an external workflow definition. This keyname is mutually exclusive with the steps keyname above.|
+|outputs|no|map of attribute mappings|The optional map of attribute mappings that specify workflow  output values and their mappings onto attributes of a node or relationship defined in the service.|
+
+Imperative workflow definitions have the following grammar:
+```
+<workflow_name>:
+  description: <workflow_description>
+  metadata: <map of YAML values>
+  inputs: <parameter_definitions>
+  precondition: <condition_clause>
+  steps: <workflow_steps>
+  implementation: <operation_implementation_definitions>
+  outputs: <attribute_mappings>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- workflow_name:
+
+- workflow_description:
+
+- parameter_definitions:
+
+- condition_clause:
+
+- workflow_steps:
+
+- operation_implementation_definition: represents a full inline
+  definition of an implementation artifact
+
+- attribute_mappings: represents the optional map of attribute_mappings
+  that consists of named output values returned by operation
+  implementations (i.e. artifacts) and associated mappings that specify
+  the attribute into which this output value must be stored.
+
+### 13.2.1 Workflow Precondition Definition
+
+A workflow precondition defines a condition clause that checks if a
+workflow can be processed or not based on the state of the instances of
+a TOSCA service deployment. If the condition is not met, the workflow
+will not be triggered.
+
+> Examples TO BE PROVIDED
+
+### 13.2.2 Workflow Step Definition
+
+A workflow step allows to define one or multiple sequenced activities in
+a workflow and how they are connected to other steps in the workflow.
+They are the building blocks of a declarative workflow.
+
+The following is the list of recognized keynames for a TOSCA workflow
+step definition:
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|target|yes|string|The target of the step (this can be a node template name, a group name)|
+|target_relationship|no|string|The optional name of a requirement of the target in case the step refers to a relationship rather than a node or group. Note that this is applicable only if the target is a node.|
+|filter|no|list of validation clauses|Filter is a list of validation clauses that allows to provide a filtering logic.|
+|activities|yes|list of activity definition|The list of sequential activities to be performed in this step.|
+|on_success|no|list of string|The optional list of step names to be performed after this one has been completed with success (all activities has been correctly processed).|
+|on_failure|no|list of string|The optional list of step names to be called after this one in case one of the step activity failed.|
+
+Workflow step definitions have the following grammars:
+```
+steps:
+  <step_name>
+    target: <target_name>
+    target_relationship: <target_requirement_name>
+    filter: <list_of_condition_clause_definition>
+    activities: <list_of_activity_definition>
+    on_success: <target_step_name>
+    on_failure: <target_step_name>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- target_name: represents the name of a node template or group in the
+  service.
+
+- target_requirement_name: represents the name of a requirement of the
+  node template (in case target_name refers to a node template.
+
+- list_of_condition_clause_definition: represents a list of
+  condition clause definitions.
+
+- list_of_activity_definition: represents a list of activity
+  definitions.
+
+- target_step_name: represents the name of another step of the
+  workflow.
+
+### 13.2.3 Activity Definition
+
+An activity defines an operation to be performed in a TOSCA workflow
+step or in an action body of a policy trigger. Activity definitions can
+be of the following types:
+
+- Delegate workflow activity definition:
+
+  - Defines the name of the delegate workflow and optional input
+    assignments. This activity requires the target to be provided by the
+    orchestrator (no-op node or relationship).
+
+- Set state activity definition:
+
+  - Sets the state of a node.
+
+- Call operation activity definition:
+
+  - Calls an operation defined on a TOSCA interface of a node,
+    relationship or group. The operation name uses the
+    \<interface_name\>.\<operation_name\> notation. Optionally,
+    assignments for the operation inputs can also be provided. If
+    provided, they will override for this operation call the operation
+    inputs assignment in the node template.
+
+- Inline workflow activity definition:
+
+  - Inlines another workflow defined in the service (allowing
+    reusability). The definition includes the name of a workflow to be
+    inlined and optional workflow input assignments.
+
+#### 13.2.3.1 Delegate Workflow Activity Definition
+
+The following is a list of recognized keynames for a delegate activity
+definition.
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|delegate|yes|string or empty  (see grammar below)|Defines the name of the delegate workflow and optional input assignments. This activity requires the target to be provided by the orchestrator (no-op node or relationship).|
+|workflow|no|string|The name of the delegate workflow. Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the delegate workflow.|
+
+A delegate activity definition has the following grammar.
+
+```
+- delegate: 
+   workflow: <delegate_workflow_name>
+   inputs: <parameter_assignments>
+```
+
+As an optimizaton, the following short notation can be used if no
+input assignments are provided.
+```
+- delegate: <delegate_workflow_name>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- delegate_workflow_name: represents the name of the workflow of the
+  node provided by the TOSCA orchestrator.
+
+- parameter_assignments: represents the optional map of parameter
+  assignments for passing parameters as inputs to this workflow
+  delegation.
+
+#### 13.2.3.2 Set State Activity Definition
+
+This activity sets the state of the target node.
+
+The following is a list of recognized keynames for a set state activity
+definition.
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|set_state|yes|string|Value of the node state.|
+
+A set state activity definition has the following grammar.
+```
+- set_state: <new_node_state>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- new_node_state: represents the state that will be affected to the node
+  once the activity is performed.
+
+#### 13.2.3.3 Call Operation Activity Definition
+
+This activity is used to call an operation on the target node. Operation
+input assignments can be optionally provided.
+
+The following is a list of recognized keynames for a call operation
+activity definition.
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|call_operation|yes|string or empty (see grammar below)|Defines the opration call. The operation name uses the \<interface_name\>.\<operation_name\> notation. Optionally, assignments for the operation inputs can also be provided. If provided, they will override for this operation call the operation inputs assignment in the node template.|
+|operation|no|string|The name of the operation to call, using the \<interface_name\>.\<operation_name\> notation.  Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the called operation. Any provided input assignments will override the operation input assignment in the target node template for this operation call.|
+
+A call operation activity definition has the following grammar.
+```
+- call_operation: 
+   operation: <operation_name>
+   inputs: <parameter_assignments>
+```
+
+As an optimization, the following short notation can be used if no
+input assignments are provided:
+```
+- call_operation: <operation_name>
+```
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- operation_name: represents the name of the operation that will be
+  called during the workflow execution. The notation used is
+  \<interface_sub_name\>.\<operation_sub_name\>, where
+  interface_sub_name is the interface name and the operation_sub_name is
+  the name of the operation within this interface.
+
+- parameter_assignments: represents the optional map of parameter
+  assignments for passing parameters as inputs to this workflow
+  delegation.
+
+#### 13.2.3.4 Inline Workflow Activity Definition
+
+This activity is used to inline a workflow in the activities sequence.
+The definition includes the name of the inlined workflow and optional
+input assignments.
+
+The following is a list of recognized keynames for an inline workflow
+activity definition.
+
+|Keyname|Mandatory|Type|Description|
+| ----- | ------- | ----- | ------- |
+|inline|yes|string or empty (see grammar below)|The definition includes the name of a workflow to be inlined and optional workflow input assignments.|
+|workflow|no|string|The name of the inlined workflow. Mandatory in the extended notation.|
+|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the inlined workflow.|
+
+An inline workflow activity definition has the following grammar.
+```
+- inline: 
+   workflow: <inlined_workflow_name>
+   inputs:
+     <parameter_assignments>
+```
+
+As an optimization, the following short notation can be used if no
+input assignments are provided.
+```
+- inline: <inlined_workflow_name>
+```
+
+In the above grammar, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- inlined_workflow_name: represents the name of the workflow to inline.
+
+- parameter_assignments: represents the optional map of parameter
+  assignments for passing parameters as inputs to this workflow
+  delegation.
+
+The following represents a list of activity definitions (using the short
+notation):
+```
+ - delegate: deploy
+ - set_state: started
+ - call_operation: Standard.start
+ - inline: my_workflow
+```
+# 14 Creating Representations from Templates
 
 TOSCA service templates specify a set of nodes that need to be
-*instantiated* at service deployment time. Some service templates may
-include multiple nodes that perform the same role. For example, a
-template that models an SD-WAN service might contain multiple VPN Site
-nodes, one for each location that connects to the SD-WAN. Rather than
-having to create a separate service template for each possible number
-of VPN sites, it is preferable to create a single service template
-that allows the number of VPN sites to be specified at deployment time
-as an input to the template. This section documents TOSCA language
-support for this functionality.
+*instantiated* at service deployment time. As discussed in [Chapter
+4](#4-tosca-operational-model) this occurs in two separate steps:
+
+1. A TOSCA Processor first creates a *service representation* based on
+   a service template. This representation is a graph that contains
+   node representations and relationship representations.
+
+2. An Orchestrator then creates *external implementations* based on
+   the information stored in the representation graph (e.g., by
+   running workflows that call interface operations on each of the
+   nodes and relationships in the graph).
+
+[Chapter 4](#4-tosca-operational-model) discusses how node and
+relationship representations are created by matching a service
+template with deployment-specific input values. This chapter discusses
+issues of *cardinality* that determine how many node representations
+are created from each node template and how relationships are
+established between these multiple node represenations.
+
+## 14.1 Specifying Number of Node Representations
+
+Some service templates may include multiple nodes that perform the
+same role. For example, a template that models an SD-WAN service might
+contain multiple VPN Site nodes, one for each location that connects
+to the SD-WAN. Rather than having to create a separate service
+template for each possible number of VPN sites, it is preferable to
+create a single service template that allows the number of VPN sites
+to be specified at deployment time as an input to the template. This
+section documents TOSCA language support for this functionality.
 
 The discussion in this section uses an example SD-WAN with three sites
 as shown in the following figure:
@@ -7065,9 +8348,7 @@ this service can be deployed:
 
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 description: Template for deploying SD-WAN with three sites.
-
 service_template:
   inputs:
     location1:
@@ -7105,8 +8386,6 @@ service templates must be created, one for each possible number of
 SD-WAN sites. This leads to undesirable template proliferation. The
 next section presents an alternative.
 
-## Specifying Number of Node Representations
-
 To avoid the need for multiple service templates, TOSCA allows all VPN
 Site nodes to be created from the same Site node template in the
 service template. The TOSCA node template definition grammar uses a
@@ -7116,9 +8395,9 @@ similar to the `count` keyword in requirement definitions.
 
 The grammar for the `count` keyword is as follows:
 
-| Keyname     | Required | Type    | Constraints                       | Description                                                                                                                           |
-|-------------|----------|---------|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| count       | no       | integer | when not specified, defaults to 1 | The optional number of nodes in the representation graph that will be created from this node template. If not specified,  one single node is created. |
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|count|no|integer|The optional number of nodes in the representation graph that will be created from this node template. If not specified,  one single node is created.|
 
 It is expected that the value of the `count` is provided as an input
 to the service template. This enables the creation of a simplified
@@ -7142,14 +8421,11 @@ code snippet:
 
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 description: Template for deploying SD-WAN with a variable number of sites.
-
 service_template:
   inputs:
     number_of_sites:
       type: integer
-  
   node_templates:
     sdwan:
       type: VPN
@@ -7160,7 +8436,7 @@ service_template:
         - vpn: sdwan
 ```
 
-### Node-Specific Input Values
+## 14.2 Node-Specific Input Values
 
 The service template in the previous section conveniently ignores the
 location property of the Site node. As shown earlier, the location
@@ -7170,17 +8446,17 @@ multiple input values are required to initialize the location property
 for each of the Site node representations.
 
 To allow specific input values to be matched with specific node
-template representations, each node is assigned a unique index to
-differentiate it from other nodes created from the same node
-template. This index is accessed using the `NODE_INDEX` reserved
-keyword that references the index of the node in the context of which
-the `NODE_INDEX` keyword is used. This keyword can then can be used to
-index the list of input values. The grammar for the `NODE_INDEX`
-keyword is as follows:
+representations, each node representation is assigned a unique index
+to differentiate it from other nodes representations created from the
+same node template. This index is accessed using the `NODE_INDEX`
+reserved keyword that references the index of the node in the context
+of which the `NODE_INDEX` keyword is used. This keyword can then can
+be used to index the list of input values. The grammar for the
+`NODE_INDEX` keyword is as follows:
 
-| Keyword     | Valid Contexts | Description                                                                                                                                |
-|-------------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| NODE_INDEX | Node Representation | A TOSCA orchestrator will interpret this keyword as the runtime index in the list of node representations created from a single node template. |
+|Keyword|Valid Contexts|Description|
+|----|----|----|
+|NODE_INDEX|Node Representation|A TOSCA orchestrator will interpret this keyword as the runtime index in the list of node representations created from a single node template.|
 
 The `NODE_INDEX` for a node representation is immutable: it never
 changes during the lifetime of that node representation, even if node
@@ -7193,9 +8469,7 @@ service template:
 
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 description: Template for deploying SD-WAN with a variable number of sites.
-
 service_template:
   inputs:
     number_of_sites:
@@ -7203,7 +8477,6 @@ service_template:
     location:
       type: list
       entry_schema: Location
-  
   node_templates:
     sdwan:
       type: VPN
@@ -7225,7 +8498,7 @@ service_template:
 > the majority will do), then we use the single value input. If the
 > occurrences are more, then we use lists.
 
-### Cardinality of Relationships
+## 14.3 Cardinality of Relationships
 
 We may also need to accommodate scenarios where a node template with
 multiple representations defines a requirement to another node
@@ -7234,7 +8507,7 @@ introduces grammar for specifying the cardinality of such
 requirements. Specific mechanisms depend on the type of the
 relationships to be established.
 
-#### Many-to-One Relationships
+### 14.3.1 Many-to-One Relationships
 
 In the SD-WAN service template above, each of the site node
 representations has a relationship to a VPN node that can only be
@@ -7261,7 +8534,7 @@ This template specifies that all four node representations created
 from the `left` node template must use the one node representation
 created from the`right` node template as their target node.
 
-#### One-to-Many Relationships
+### 14.3.2 One-to-Many Relationships
 
 An example of a *one-to-many* relationship is shown in the following
 figure:
@@ -7311,7 +8584,7 @@ requirement, it defaults to 1 and the orchestrator will only establish
 one single relationship to one of the `right` nodes. Which one of the
 `right` nodes is selected is implementation-specific.
 
-#### Full mesh
+### 14.3.3 Full mesh
 
 In a *full mesh* scenario, all nodes on the left establish
 relationships to all of the nodes on the right as shown in the
@@ -7362,7 +8635,7 @@ service_template:
             count: {$get_input: number_of_right}
 ```
 
-#### Matched Pairs
+### 14.3.4 Matched Pairs
 
 For some services, representations created from different node
 templates must remain matched up in pairs. For example, let’s extend
@@ -7427,7 +8700,7 @@ service_template:
         - uses: [right, NODE_INDEX]
 ```
 
-#### Random Pairs
+### 14.3.5 Random Pairs
 
 Some scenarios require nodes to be organized in pairs, but the
 ordering of the nodes is not important. The following figure shows and
@@ -7498,7 +8771,7 @@ This scenario works as follows:
   incoming relationships will be established. This ensures that each
   target node is only allocated once.
 
-#### Many-to-Many Relationships
+### 14.3.6 Many-to-Many Relationships
 
 The mechanisms introduced above can also be used to define more
 complex *many-to-many* scenarios. For example, a 1:2 pattern is shown
@@ -7626,1087 +8899,26 @@ service_template:
         - uses: [right, {$remainder: [NODE_INDEX, {$get_input: number_of_right}]
 ```
 
-# Interfaces, Operations, Notifications, and Artifacts
-
-### Interface Type
-
-An Interface Type is a reusable entity that describes a set of
-operations that can be used to interact with or to manage a node or
-relationship in a TOSCA topology.
-
-#### Keynames
-
-The Interface Type is a TOSCA type entity and has the common keynames
-listed in Section 4.2.5.2 Common keynames in type definitions. In
-addition, the Interface Type has the following recognized keynames:
-
-| Keyname       | Mandatory | Type                                                        | Description                                                                                             |
-|---------------|-----------|-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| inputs        | no        | map of [parameter definitions](#parameter-definition)       | The optional map of input parameter definitions available to all operations defined for this interface. |
-| operations    | no        | map of [operation definitions](#operation-definition)       | The optional map of operations defined for this interface.                                              |
-| notifications | no        | map of [notification definitions](#notification-definition) | The optional map of notifications defined for this interface.                                           |
-
-#### Grammar
-
-Interface Types have following grammar:
-```
-<interface_type_name>:
-  derived_from: <parent_interface_type_name>
-  version: <version_number>
-  metadata: 
-    <map of string>
-  description: <interface_description>
-  inputs: 
-    <parameter_definitions>
-  operations:
-    <operation_definitions>
-  notifications:
-    <Notification definition>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- interface_type_name: represents the mandatory name of the interface as
-  a string.
-
-- parent_interface_type_name: represents the name of the Interface Type
-  this Interface Type definition derives from (i.e. its “parent” type).
-
-- version_number: represents the optional TOSCA version number for the
-  Interface Type.
-
-- interface_description: represents the optional description for the
-  Interface Type.
-
-- parameter_definitions: represents the optional map of parameter
-  definitions which the TOSCA orchestrator will make available (i.e., or
-  pass) to all implementation artifacts for operations declared on the
-  interface during their execution.
-
-- operation_definitions: represents the optional map of one or more
-  operation definitions.
-
-- notification_definitions: represents the optional map of one or more
-  notification definitions.
-
-#### Derivation rules
-
-During Interface Type derivation the keyname definitions follow these
-rules:
-
-- inputs: existing parameter definitions may be refined; new parameter
-  definitions may be added.
-
-- operations: existing operation definitions may be refined; new
-  operation definitions may be added.
-
-- notifications: existing notification definitions may be refined; new
-  notification definitions may be added.
-
-#### Example
-
-The following example shows a custom interface used to define multiple
-configure operations.
-```
-mycompany.mytypes.myinterfaces.MyConfigure:
-  derived_from: tosca.interfaces.relationship.Root
-  description: My custom configure Interface Type
-  inputs:
-    mode:
-      type: string
-  operations:
-    pre_configure_service:
-      description: pre-configure operation for my service
-    post_configure_service:
-      description: post-configure operation for my service
-```
-#### Additional Requirements
-
-- Interface Types **MUST NOT** include any implementations for defined
-  operations or notifications; that is, the implementation keyname is
-  invalid in this context.
-
-### Interface definition
-
-An Interface definition defines an interface (containing operations and
-notifications definitions) that can be associated with (i.e. defined
-within) a Node or Relationship Type definition (including Interface
-definitions in Requirements definitions). An Interface definition may be
-refined in subsequent Node or Relationship Type derivations.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA interface
-definition:
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|type|yes|string|The mandatory name of the Interface Type this interface definition is based upon.|
-|description|no|string|The optional description for this interface definition.|
-|inputs|no|map of parameter definitions and refinements|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the Interface Type definition).|
-|operations|no|map of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
-|notifications|no|map of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
-
-#### Grammar
-
-Interface definitions in Node or Relationship Type definitions have the
-following grammar:
-```
-<interface_definition_name>:
-  type: <interface_type_name>
-  description: <interface_description>
-  inputs: 
-    <parameter_definitions_and_refinements>
-  operations:
-    <operation_refinements>
-  notifications:
-    <notification definition>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- interface_definition_name: represents the mandatory symbolic name of
-  the interface as a string.
-
-- interface_type_name: represents the mandatory name of the Interface
-  Type for the interface definition.
-
-- interface_description: represents the optional description string for
-  the interface.
-
-- parameter_definitions_and_refinements: represents the optional map of
-  input parameters which the TOSCA orchestrator will make available
-  (i.e. pass) to all defined operations. This means these parameters and
-  their values will be accessible to the implementation artifacts (e.g.,
-  scripts) associated to each operation during their execution
-
-  - the map represents a mix of parameter refinements (for parameters
-    already defined in the Interface Type) and new parameter
-    definitions.
-
-  - with the new parameter definitions, we can flexibly add new parameters
-    when changing the implementation of operations and notifications
-    during refinements or assignments.
-
-- operation_refinements: represents the optional map of operation
-  definition refinements for this interface; the referred operations
-  must have been previously defined in the Interface Type.
-
-- notification_refinements: represents the optional map of notification
-  definition refinements for this interface; the referred notifications
-  must have been previously defined in the Interface Type.
-
-#### Refinement rules
-
-An interface definition within a node or relationship type (including
-interface definitions in requirements definitions) uses the following
-definition refinement rules when the containing entity type is derived:
-
-- type: must be derived from (or the same as) the type in the interface
-  definition in the parent entity type definition.
-
-- description: a new definition is unrestricted and will overwrite the
-  one inherited from the interface definition in the parent entity type
-  definition.
-
-- inputs: not applicable to the definitions in the parent entity type
-  but to the definitions in the interface type referred by the type
-  keyname (see grammar above for the rules).
-
-- operations: not applicable to the definitions in the parent entity
-  type but to the definitions in the interface type referred by the type
-  keyname (see grammar above for the rules).
-
-- notifications: not applicable to the definitions in the parent entity
-  type but to the definitions in the interface type referred by the type
-  keyname (see grammar above for the rules).
-
-### Interface assignment
-
-An Interface assignment is used to specify assignments for the inputs,
-operations and notifications defined in the Interface. Interface
-assignments may be used within a Node or Relationship Template
-definition (including when Interface assignments are referenced as part
-of a Requirement assignment in a node template).
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA interface
-assignment:
-
-| Keyname       | Mandatory | Type                                                              | Description                                                                                                                                                                          |
-|---------------|-----------|-------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| inputs        | no        | map of [parameter value assignments](#parameter-value-assignment) | The optional map of input parameter assignments. Template authors MAY provide parameter assignments for interface inputs that are not defined in their corresponding Interface Type. |
-| operations    | no        | map of [operation assignme](#operation-definition)nts             | The optional map of operations assignments specified for this interface.                                                                                                             |
-| notifications | no        | map of [notification assignments](#notification-definition)       | The optional map of notifications assignments specified for this interface.                                                                                                          |
-
-#### Grammar
-
-Interface assignments have the following grammar:
-```
-<interface_definition_name>:
-  inputs: 
-    <parameter_value_assignments>
-  operations:
-    <operation_assignments>
-  notifications:
-    <notification_assignments>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- interface_definition_name: represents the mandatory symbolic name of
-  the interface as a string.
-
-- parameter_value_assignments: represents the optional map of parameter
-  value assignments for passing input parameter values to all interface
-  operations
-
-  - template authors MAY provide new parameter assignments for interface
-    inputs that are not defined in the Interface definition.
-
-- operation_assignments: represents the optional map of operation
-  assignments for operations defined in the Interface definition.
-
-- notification_assignments: represents the optional map of notification
-  assignments for notifications defined in the Interface definition.
-
-### Operation definition
-
-An operation definition defines a function or procedure to which an
-operation implementation can be bound.
-
-A new operation definition may be declared only inside interface type
-definitions (this is the only place where new operations can be
-defined). In interface type, node type, or relationship type definitions
-(including operation definitions as part of a requirement definition) we
-may further refine operations already defined in an interface type.
-
-An operation definition or refinement inside an interface type
-definition may not contain an operation implementation definition and it
-may not contain an attribute mapping as part of its output definition
-(as both these keynames are node/relationship specific).
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA operation
-definition (including definition refinement)
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|description|no|string|The optional description string for the associated operation.|
-|implementation|no|operation implementation definition|The optional definition of the operation implementation. May not be used in an interface type definition (i.e. where an operation is initially defined), but only during refinements. |
-|inputs|no|map of parameter definitions|The optional map of parameter definitions for operation input values.|
-|outputs|no|map of parameter definitions|The optional map of parameter definitions for operation output values. Only as part of node and relationship type definitions, the output definitions may include mappings onto attributes of the node or relationship type that contains the definition.|
-
-#### Grammar
-
-Operation definitions have the following grammar:
-
-##### Short notation
-
-The following single-line grammar may be used when the operation’s
-implementation definition is the only keyname that is needed, and when
-the operation implementation definition itself can be specified using a
-single line grammar:
-```
-<[operation_name](#TYPE_YAML_STRING)>: <[operation_implementation_definition](# BKM_Implementation_Oper_Notif_Def)>
-```
-##### Extended notation 
-
-The following multi-line grammar may be used when additional information
-about the operation is needed:
-```
-<operation_name>:
-   description: <operation_description>
-   implementation: <operation_implementation_definition>
-   inputs: 
-     <parameter_definitions>
-   outputs:
-     <parameter_definitions>
-```
-In the above grammars, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- operation_name: represents the mandatory symbolic name of the
-  operation as a string.
-
-- operation_description: represents the optional description string for
-  the operation.
-
-- operation_implementation_definition: represents the optional
-  specification of the operation’s implementation).
-
-- parameter_definitions: represents the optional map of parameter
-  definitions which the TOSCA orchestrator will make available as inputs
-  to or receive as outputs from the corresponding implementation
-  artifact during its execution.
-
-#### Refinement rules
-
-An operation definition within an interface, node, or relationship type
-(including interface definitions in requirements definitions) uses the
-following refinement rules when the containing entity type is derived:
-
-- description: a new definition is unrestricted and will overwrite the
-  one inherited from the operation definition in the parent entity type
-  definition.
-
-- implementation: a new definition is unrestricted and will overwrite
-  the one inherited from the operation definition in the parent entity
-  type definition.
-
-- inputs: parameter definitions inherited from the parent entity type
-  may be refined; new parameter definitions may be added.
-
-- outputs: parameter definitions inherited from the parent entity type
-  may be refined; new parameter definitions may be added.
-
-#### Additional requirements
-
-- The definition of implementation is not allowed in interface type
-  definitions (as a node or node type context is missing at that point).
-  Thus, it can be part only of an operation refinement and not of the
-  original operation definition.
-
-- The default refinement behavior for implementations SHALL be
-  overwrite. That is, implementation definitions in a derived type
-  overwrite any defined in its parent type.
-
-- Defining a fixed value for an input parameter (as part of its
-  definition) may only use a parameter_value_expression that is
-  meaningful in the scope of the context. For example, within the
-  context of an Interface Type definition functions such as get_propery
-  or get_attribute cannot be used. Within the context of Node or
-  Relationship Type definitions, these functions may only reference
-  properties and attributes accessible starting from SELF (i.e.
-  accessing a node by symbolic name is not meaningful).
-
-- Defining attribute mapping as part of the output parameter definition
-  is not allowed in interface type definitions (i.e. as part of
-  operation definitions). It is allowed only in node and relationship
-  type definitions (as part of operation refinements) and has to be
-  meaningful in the scope of the context (e.g. SELF).
-
-- Implementation artifact file names (e.g., script filenames) may
-  include file directory path names that are relative to the TOSCA file
-  file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
-  file.
-
-#### Examples
-
-##### Single-line example
-```
-interfaces:
-  Standard:
-    start: scripts/start_server.sh
-```
-##### Multi-line example with shorthand implementation definitions
-```
-interfaces:
-  Configure:
-    pre_configure_source:
-      implementation: 
-        primary: scripts/pre_configure_source.sh
-        dependencies: 
-          - scripts/setup.sh
-          - binaries/library.rpm
-          - scripts/register.py
-```
-##### Multi-line example with extended implementation definitions
-```
-interfaces:
-  Configure:
-    pre_configure_source:
-      implementation: 
-        primary: 
-          file: scripts/pre_configure_source.sh
-          type: tosca.artifacts.Implementation.Bash
-          repository: my_service_catalog
-        dependencies:
-           - file : scripts/setup.sh
-             type : tosca.artifacts.Implementation.Bash
-             repository : my_service_catalog
-```
-### Operation assignment
-
-An operation assignment may be used to assign values for input
-parameters, specify attribute mappings for output parameters, and
-define/redefine the implementation definition of an already defined
-operation in the interface definition. An operation assignment may be
-used inside interface assignments inside node template or relationship
-template definitions (this includes when operation assignments are part
-of a requirement assignment in a node template).
-
-An operation assignment may add or change the implementation and
-description definition of the operation. Assigning a value to an input
-parameter that had a fixed value specified during operation definition
-or refinement is not allowed. Providing an attribute mapping for an
-output parameter that was mapped during an operation refinement is also
-not allowed.
-
-Note also that in the operation assignment we can use inputs and outputs
-that have not been previously defined in the operation definition. This
-is equivalent to an ad-hoc definition of a parameter, where the type is
-inferred from the assigned value (for input parameters) or from the
-attribute to map to (for output parameters).
-
-#### Keynames
-
-The following is the list of recognized keynames for an operation
-assignment:
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|implementation|no|operation implementation definition|The optional definition of the operation implementation. Overrides implementation provided at operation definition.|
-|inputs|no|map of parameter value assignments|The optional map of parameter value assignments for assigning values to operation inputs. |
-|outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how operation outputs are mapped onto attributes of the node or relationship that contains the operation definition. |
-
-#### Grammar
-
-Operation assignments have the following grammar:
-
-##### Short notation
-
-The following single-line grammar may be used when the operation’s
-implementation definition is the only keyname that is needed, and when
-the operation implementation definition itself can be specified using a
-single line grammar:
-```
-<[operation_name](#TYPE_YAML_STRING)>: <[operation_implementation_definition](#operation-and-notification-implementation-definition)> 
-```
-##### Extended notation
-
-The following multi-line grammar may be used in Node or Relationship
-Template definitions when additional information about the operation is
-needed:
-```
-<operation_name>:
-   implementation: <operation_implementation_definition>
-   inputs: 
-     <parameter_value_assignments>
-   outputs:
-     <parameter_mapping_assignments>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- operation_name: represents the mandatory symbolic name of the
-  operation as a string.
-
-- operation_implementation_definition: represents the optional
-  specification of the operation’s implementation
-
-  - the implementation declared here overrides the implementation provided
-    at operation definition.
-
-- parameter_value_assignments: represents the optional map of parameter
-  value assignments for passing input parameter values to operations.
-
-  - assignments for operation inputs that are not defined in the operation
-    definition may be provided
-
-- parameter_mapping_assignments: represents the optional map of
-  parameter mapping assignments that consists of named output values
-  returned by operation implementations (i.e. artifacts) and associated
-  attributes into which this output value must be stored
-
-  - assignments for operation outputs that are not defined in the
-    operation definition may be provided.
-
-#### Additional requirements
-
-- The behavior for implementation of operations SHALL be override. That
-  is, implementation definitions assigned in an operation assignment
-  override any defined in the operation definition.
-
-- Template authors MAY provide parameter assignments for operation
-  inputs that are not defined in the operation definition.
-
-- Template authors MAY provide attribute mappings for operation outputs
-  that are not defined in the operation definition.
-
-- Implementation artifact file names (e.g., script filenames) may
-  include file directory path names that are relative to the TOSCA file
-  file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
-  file.
-
-#### Examples
-
-TBD
-
-### Notification definition
-
-A notification definition defines an asynchronous notification or
-incoming message that can be associated with an interface. The
-notification is a way for an external event to be transmitted to the
-TOSCA orchestrator. Values can be sent with a notification as
-notification outputs and we can map them to node/relationship attributes
-similarly to the way operation outputs are mapped to attributes. The
-artifact that the orchestrator is registering with in order to receive
-the notification is specified using the implementation keyname in a
-similar way to operations. As opposed to an operation definition, a
-notification definition does not include an inputs keyname since
-notifications are not invoked from the orchestrator.
-
-When the notification is received an event is generated within the
-orchestrator that can be associated to triggers in policies to call
-other internal operations and workflows. The notification name (using
-the \<interface_name\>.\<notification_name\> notation) itself identifies
-the event type that is generated and can be textually used when defining
-the associated triggers.
-
-A notification definition may be used only inside interface type
-definitions (this is the only place where new notifications can be
-defined). Inside interface type, node type, or relationship type
-definitions (including notifications definitions as part of a
-requirement definition) we may further refine a notification already
-defined in the interface type.
-
-A notification definition or refinement inside an interface type
-definition may not contain a notification implementation definition and
-it may not contain an attribute mapping as part of its output definition
-(as both these keynames are node/relationship specific).
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA
-notification definition:
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|description|no|string|The optional description string for the associated notification.|
-|implementation|no|notification implementation definition|The optional definition of the notification implementation.|
-|outputs|no|map of parameter definitions|The optional map of parameter definitions that specify notification output values.  Only as part of node and relationship type definitions, the output definitions may include their mappings onto attributes of the node type or relationship type that contains the definition. |
-
-#### Grammar
-
-Notification definitions have the following grammar:
-
-##### Short notation
-
-The following single-line grammar may be used when the notification’s
-implementation definition is the only keyname that is needed and when
-the notification implementation definition itself can be specified using
-a single line grammar:
-```
-<[notification_name](#TYPE_YAML_STRING)>: <[notification_implementation_definition](#operation-and-notification-implementation-definition)> 
-```
-##### Extended notation 
-
-The following multi-line grammar may be used when additional information
-about the notification is needed:
-```
-<notification_name>:
-  description: <notification_description>
-  implementation: <notification_implementation_definition>
-  outputs: 
-    <parameter_definitions>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- notification_name: represents the mandatory symbolic name of the
-  notification as a string.
-
-- notification_description: represents the optional description string
-  for the notification.
-
-- notification_implementation_definition: represents the optional
-  specification of the notification implementation (i.e. the external
-  artifact that may send notifications)
-
-- parameter_definitions: represents the optional map of parameter
-  definitions for parameters that the orchestrator will receive as
-  outputs from the corresponding implementation artifact during its
-  execution.
-
-#### Refinement rules
-
-A notification definition within an interface, node, or relationship
-type (including interface definitions in requirements definitions) uses
-the following refinement rules when the containing entity type is
-derived:
-
-- description: a new definition is unrestricted and will overwrite the
-  one inherited from the notification definition in the parent entity
-  type definition.
-
-- implementation: a new definition is unrestricted and will overwrite
-  the one inherited from the notification definition in the parent
-  entity type definition.
-
-- outputs: parameter definitions inherited from the parent entity type
-  may be refined; new parameter definitions may be added.
-
-#### Additional requirements
-
-- The definition of implementation is not allowed in interface type
-  definitions (as a node or node type context is missing at that point).
-  Thus, it can be part only of a notification refinement and not of the
-  original notification definition.
-
-- The default sub-classing (i.e. refinement) behavior for
-  implementations of notifications SHALL be overwrite. That is,
-  implementation artifacts definitions in a derived type overwrite any
-  defined in its parent type.
-
-- Defining attribute mapping as part of the output parameter definition
-  is not allowed in interface type definitions (i.e. as part of
-  operation definitions). It is allowed only in node and relationship
-  type definitions (as part of operation refinements).
-
-- Defining a mapping in an output parameter definition may use an
-  attribute target that is meaningful in the scope of the context.
-  Within the context of Node or Relationship Type definitions these
-  functions may only reference attributes starting from the same node
-  (i.e. SELF).
-
-- Implementation artifact file names (e.g., script filenames) may
-  include file directory path names that are relative to the TOSCA file
-  file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
-  file.
-
-#### Examples
-
-TBD
-
-### Notification assignment
-
-A notification assignment may be used to specify attribute mappings for
-output parameters and to define/redefine the implementation definition
-and description definition of an already defined notification in the
-interface definition. A notification assignment may be used inside
-interface assignments inside node or relationship template definitions
-(this includes when notification assignments are part of a requirement
-assignment in a node template).
-
-Providing an attribute mapping for an output parameter that was mapped
-during a previous refinement is not allowed. Note also that in the
-notification assignment we can use outputs that have not been previously
-defined in the operation definition. This is equivalent to an ad-hoc
-definition of an output parameter, where the type is inferred from the
-attribute to map to.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA
-notification assignment:
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|implementation|no|notification implementation definition|The optional definition of the notification implementation. Overrides implementation provided at notification definition.|
-|outputs|no|map of parameter mapping assignments|The optional map of parameter mapping assignments that specify how notification outputs values are mapped onto attributes of the node or relationship type that contains the notification definition.|
-
-#### Grammar
-
-Notification assignments have the following grammar:
-
-##### Short notation
-
-The following single-line grammar may be used when the notification’s
-implementation definition is the only keyname that is needed, and when
-the notification implementation definition itself can be specified using
-a single line grammar:
-```
-<[notification_name](#TYPE_YAML_STRING)>: <[notification_implementation_definition](#operation-and-notification-implementation-definition)> 
-```
-##### Extended notation
-
-The following multi-line grammar may be used in Node or Relationship
-Template definitions when additional information about the notification
-is needed:
-```
-<notification_name>:
-  implementation: <notification_implementation_definition>
-  outputs: 
-    <parameter_mapping_assignments>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- notification_name: represents the mandatory symbolic name of the
-  notification as a string.
-
-- notification_implementation_definition: represents the optional
-  specification of the notification implementation (i.e. the external
-  artifact that is may send notifications)
-
-  - the implementation declared here overrides the implementation provided
-    at notification definition.
-
-- parameter_mapping_assignments: represents the optional map of
-  parameter_mapping_assignments that consists of named output values
-  returned by operation implementations (i.e. artifacts) and associated
-  attributes into which this output value must be stored
-
-  - assignments for notification outputs that are not defined in the
-    operation definition may be provided.
-
-#### Additional requirements
-
-- The behavior for implementation of notifications SHALL be override.
-  That is, implementation definitions assigned in a notification
-  assignment override any defined in the notification definition.
-
-- Template authors MAY provide attribute mappings for notification
-  outputs that are not defined in the corresponding notification
-  definition.
-
-- Implementation artifact file names (e.g., script filenames) may
-  include file directory path names that are relative to the TOSCA file
-  file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
-  file.
-
-#### Examples
-
-TBD
-
-### Operation and notification implementation definition
-
-An operation implementation definition specifies one or more artifacts
-(e.g. scripts) to be used as the implementation for an operation in an
-interface.
-
-A notification implementation definition specifies one or more artifacts
-to be used by the orchestrator to subscribe and receive a particular
-notification (i.e. the artifact implements the notification).
-
-The operation implementation definition and the notification
-implementation definition share the same keynames and grammar, with the
-exception of the timeout keyname that has no meaning in the context of a
-notification implementation definition and should not be used in such.
-
-#### Keynames
-
-The following is the list of recognized keynames for an operation
-implementation definition or a notification implementation definition:
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|primary|no|artifact definition|The optional implementation artifact (i.e., the primary script file within a TOSCA CSAR file).  |
-|dependencies|no|list of  artifact definition|The optional list of one or more dependent or secondary implementation artifacts which are referenced by the primary implementation artifact (e.g., a library the script installs or a secondary script).  |
-|timeout|no|integer|Timeout value in seconds. Has no meaning and should not be used within a notification implementation definition.|
-
-#### Grammar
-
-Operation implementation definitions and notification implementation
-definitions have the following grammar:
-
-##### Short notation for use with single artifact
-
-The following single-line grammar may be used when only a primary
-implementation artifact name is needed:
-```
-[implementation](#TYPE_YAML_STRING): <[primary_artifact_name](#TYPE_YAML_STRING)> 
-```
-This notation can be used when the primary artifact name uniquely
-identifies the artifact, either because it refers to an artifact
-specified in the artifacts section of a type or template, or because it
-represents the name of a script in the CSAR file that contains the
-definition.
-
-##### Short notation for use with multiple artifacts
-
-The following multi-line short-hand grammar may be used when multiple
-artifacts are needed, but each of the artifacts can be uniquely
-identified by name as before:
-```
-  primary: <primary_artifact_name>
-  dependencies:
-    - <list_of_dependent_artifact_names>
-  timeout: 60
-```
-##### Extended notation for use with single artifact
-
-The following multi-line grammar may be used in Node or Relationship
-Type or Template definitions when only a single artifact is used but
-additional information about the primary artifact is needed (e.g. to
-specify the repository from which to obtain the artifact, or to specify
-the artifact type when it cannot be derived from the artifact file
-extension):
-```
-implementation: 
-  primary:
-    <primary_artifact_definition>
-  timeout: 100
-```
-##### Extended notation for use with multiple artifacts
-
-The following multi-line grammar may be used in Node or Relationship
-Type or Template definitions when there are multiple artifacts that may
-be needed for the operation to be implemented and additional information
-about each of the artifacts is required:
-```
-implementation: 
-  primary: 
-    <primary_artifact_definition>   
-  dependencies: 
-    - <list_of_dependent_artifact definitions>
-  timeout: 120
-```
-In the above grammars, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- primary_artifact_name: represents the optional name
-  (string) of an implementation artifact definition
-  (defined elsewhere), or the direct name of an implementation
-  artifact’s relative filename (e.g., a service template-relative,
-  path-inclusive filename or absolute file location using a URL).
-
-- primary_artifact_definition: represents a full inline definition of an
-  implementation artifact.
-
-- list_of_dependent_artifact_names: represents the optional ordered list
-  of one or more dependent or secondary implementation artifact names
-  (as strings) which are referenced by the primary implementation
-  artifact. TOSCA orchestrators will copy these files to the same
-  location as the primary artifact on the target node so as to make them
-  accessible to the primary implementation artifact when it is executed.
-
-- list_of_dependent_artifact_definitions: represents the ordered list of
-  one or more inline definitions of dependent or secondary
-  implementation artifacts. TOSCA orchestrators will copy these
-  artifacts to the same location as the primary artifact on the target
-  node so as to make them accessible to the primary implementation
-  artifact when it is executed.
-
-## Artifacts
-
-### Artifact Type
-
-An Artifact Type is a reusable entity that defines the type of one or
-more files that are used to define implementation or deployment
-artifacts that are referenced by nodes or relationships.
-
-#### Keynames
-
-The Artifact Type is a TOSCA type entity and has the common keynames
-listed in Section 4.2.5.2 Common keynames in type definitions. In
-addition, the Artifact Type has the following recognized keynames:
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|mime_type|no|string|The optional mime type property for the Artifact Type.|
-|file_ext|no|list of string|The optional file extension property for the Artifact Type.|
-|properties|no|map of property definitions|An optional map of property definitions for the Artifact Type.|
-
-#### Grammar
-
-Artifact Types have following grammar:
-```
-<artifact_type_name>:
-  derived_from: <parent_artifact_type_name>
-  version: <version_number>
-  metadata: 
-    <map of string>
-  description: <artifact_description>
-  mime_type: <mime_type_string>
-  file_ext: [ <file_extensions> ]
-  properties:     
-    <property_definitions>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- artifact_type_name: represents the name of the Artifact Type being
-  declared as a string.
-
-- parent_artifact_type_name: represents the name of the Artifact Type
-  this Artifact Type definition derives from (i.e., its “parent” type).
-
-- version_number: represents the optional TOSCA version number for the
-  Artifact Type.
-
-- artifact_description: represents the optional description string for
-  the Artifact Type.
-
-- mime_type_string: represents the optional Multipurpose Internet Mail
-  Extensions (MIME) standard string value that describes the file
-  contents for this type of Artifact Type as a string.
-
-- file_extensions: represents the optional list of one or more
-  recognized file extensions for this type of artifact type as strings.
-
-- property_definitions: represents the optional map of property
-  definitions for the artifact type.
-
-#### Derivation rules
-
-During Artifact Type derivation the keyname definitions follow these
-rules:
-
-- mime_type: a new definition is unrestricted and will overwrite the one
-  inherited from the parent type.
-
-- file_ext: a new definition is unrestricted and will overwrite the one
-  inherited from the parent type.
-
-- properties: existing property definitions may be refined; new property
-  definitions may be added.
-
-#### Examples
-```
-my_artifact_type:
-  description: Java Archive artifact type
-  derived_from: tosca.artifact.Root
-  mime_type: application/java-archive
-  file_ext: [ jar ]
-  properties:
-    id: 
-      description: Identifier of the jar
-      type: string
-      required: true
-    creator:
-      description: Vendor of the java implementation on which the jar is based
-      type: string
-      required: false
-```
-#### Additional Requirements
-
-- The ‘mime_type’ keyname is meant to have values that are Apache mime
-  types such as those defined here:
-  <http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types>
-
-#### Notes
-
-Information about artifacts can be broadly classified in two categories
-that serve different purposes:
-
-- Selection of artifact processor. This category includes informational
-  elements such as artifact version, checksum, checksum algorithm etc.
-  and s used by TOSCA Orchestrator to select the correct artifact
-  processor for the artifact. These informational elements are captured
-  in TOSCA as keywords for the artifact.
-
-- Properties processed by artifact processor. Some properties are not
-  processed by the Orchestrator but passed on to the artifact processor
-  to assist with proper processing of the artifact. These informational
-  elements are described through artifact properties.
-
-### Artifact definition
-
-An artifact definition defines a named, typed file that can be
-associated with Node Type or node template and used by orchestration
-engine to facilitate deployment and implementation of interface
-operations.
-
-#### Keynames
-
-The following is the list of recognized keynames for a TOSCA artifact
-definition when using the extended notation:
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|type|yes|string|The mandatory artifact type for the artifact definition.|
-|file|yes|string|The mandatory URI string (relative or absolute) which can be used to locate the artifact’s file.|
-|repository|no|string|The optional name of the repository definition which contains the location of the external repository that contains the artifact.  The artifact is expected to be referenceable by its file URI within the repository.|
-|description|no|string|The optional description for the artifact definition.|
-|deploy_path|no|string|The file path the associated file will be deployed on within the target node’s container. |
-|artifact_version|no|string|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
-|checksum|no|string|The checksum used to validate the integrity of the artifact.|
-|checksum_algorithm|no|string|Algorithm used to calculate the artifact checksum (e.g. MD5, SHA [Ref]). Shall be specified if checksum is specified for an artifact.|
-|properties|no|map of property assignments|The optional map of property assignments associated with the artifact.|
-
-#### Grammar
-
-Artifact definitions have one of the following grammars:
-
-##### Short notation
-
-The following single-line grammar may be used when the artifact’s type
-and mime type can be inferred from the file URI:
-```
-<[artifact_name](#TYPE_YAML_STRING)>: <[artifact_file_uri](#TYPE_YAML_STRING)> 
-```
-##### Extended notation:
-
-The following multi-line grammar may be used when the artifact’s
-definition’s type and mime type need to be explicitly declared:
-```
-<artifact_name>: 
-  description: <artifact_description>
-  type: <artifact_type_name>
-  file: <artifact_file_uri>
-  repository: <artifact_repository_name>
-  deploy_path: <file_deployment_path>
-  version: <artifact _version>
-  checksum: <artifact_checksum>
-  checksum_algorithm: <artifact_checksum_algorithm>
-  properties: <property assignments>
-```
-In the above grammars, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- artifact_name: represents the mandatory symbolic name of the artifact
-  as a string.
-
-- artifact_description: represents the optional description for the
-  artifact.
-
-- artifact_type_name: represents the mandatory artifact type the
-  artifact definition is based upon.
-
-- artifact_file_uri: represents the mandatory URI string (relative or
-  absolute) which can be used to locate the artifact’s file.
-
-- artifact_repository_name: represents the optional name of the
-  repository definition to use to retrieve the associated artifact
-  (file) from.
-
-- file_deployement_path: represents the optional path the
-  artifact_file_uri will be copied into within the target node’s
-  container.
-
-- artifact_version: represents the version of artifact
-
-- artifact_checksum: represents the checksum of the Artifact
-
-- artifact_checksum_algorithm:represents the algorithm for verifying the
-  checksum. Shall be specified if checksum is specified
-
-- properties: represents an optional map of property assignments
-  associated with the artifact
-
-#### Refinement rules
-
-Artifact definitions represent specific external entities. If a certain
-artifact definition cannot be reused as is, then it may be completely
-redefined.
-
-- If an artifact is redefined, the symbolic name from the definition in
-  the parent node type is reused, but no keyname definitions are
-  inherited from the definition in the parent node type, and the new
-  definition completely overwrites the definition in the parent.
-
-- If the artifact is not redefined the complete definition is inherited
-  from the parent node type.
-
-#### Examples
-
-The following represents an artifact definition:
-```
-my_file_artifact: ../my_apps_files/operation_artifact.txt 
-```
-The following example represents an artifact definition with property
-assignments:
-```
-artifacts:
-  sw_image:
-    description: Image for virtual machine
-    type: tosca.artifacts.Deployment.Image.VM
-    file: http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2
-    checksum: ba411cafee2f0f702572369da0b765e2
-    version: 3.2
-    checksum_algorithm: MD5
-    properties:
-      name: vSRX
-      container_format: BARE
-      disk_format: QCOW2
-      min_disk: 1 GB
-      size: 649 MB
-```
-# Substitution
+## 14. Relationship-Specific Input Values
+
+> Introduce need for RELATIONSHIP_INDEX
+
+To allow specific input values to be matched with specific
+relationship representations, each relationship representation is
+assigned a unique index to differentiate it from other relationship
+representations with the same name within the same node
+representation. This index is accessed using the
+`RELATIONSHIP_INDEX` reserved keyword that references the index of the
+relationship in the context of its source node. 
+This keyword can then can be used to index the list of input
+values. The grammar for the `RELATIONSHIP_INDEX` keyword is as
+follows:
+
+|Keyword|Valid Contexts|Description|
+|----|----|----|
+|RELATIONSHIP_INDEX|Relationship Representation|A TOSCA orchestrator will interpret this keyword as the runtime index in the list of relationship representations with the same name within a node.|
+
+# 15 Substitution
 
 The TOSCA *substitution* feature allows nodes in a service topology to
 be *decomposed* using *substituting services* that describe the
@@ -8720,7 +8932,7 @@ annotated with the `substitute` directive. Service templates advertize
 their ability to provide substituting implementations using the
 `substitution_mapping` section in the service template definition.
 
-## Substitution mapping
+## 15.1 Substitution Mapping
 
 The `substitution_mapping` section in a service template serves four
 purposes:
@@ -8751,8 +8963,6 @@ these values are mapped.
 
 > This *event escalation* mechanism needs to be better defined.
 
-### Keynames
-
 |Keyname|Mandatory|Type|Description|
 |---|---|---|---|
 |node_type|yes|string|The name of the Node Type of the nodes for which the service template can provide an implementation.|
@@ -8763,44 +8973,35 @@ these values are mapped.
 |requirements|no|list of requirement mappings|The list of requirement mappings.|
 |interfaces|no|map of interfaces mappings|The map of interface mappings that map interface operations called on the substituted node to implementations workflows on the substituting service.|
 
-### Grammar
-
 The grammar of the substitution_mapping section is as follows:
 ```
 node_type: <node_type_name>
 substitution_filter : <substitution_filter>
-properties:
-  <property_mappings>
-attributes:
-  <attribute_mappings>
-capabilities:
-  <capability_mappings>
-requirements:
-  <requirement_mappings>
-interfaces:
-  <interface_mappings>
+properties: <property_mappings>
+attributes: <attribute_mappings>
+capabilities: <capability_mappings>
+requirements: <requirement_mappings>
+interfaces: <interface_mappings>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-- **node_type_name**: represents the Node Type name for which the
+- node_type_name: represents the node type name for which the
   Service Template can offer an implementation.
-- **substitution_filter**: represents a filter that reduces the set of
+- substitution_filter: represents a filter that reduces the set of
   abstract nodes for which this service template is an implementation
   by only substituting for those nodes whose properties and
   capabilities satisfy the condition clause specified in the filter.
-- **properties**: represents the map of *property to input* mappings.
-- **attributes**: represents the map of *output to attribute*
+- property_mappings: represents the map of *property to input* mappings.
+- attribute_mappings: represents the map of *output to attribute*
   mappings.
-- **capability_mappings**: represents the map of capability mappings.
-- **requirement_mappings**: represents the list of requirement
+- capability_mappings: represents the map of capability mappings.
+- requirement_mappings: represents the list of requirement
   mappings.
-- **interfaces:** represents the map of interface mappings.
+- interface_mappings: represents the map of interface mappings.
 
-### Examples
+> Examples to be provided
 
-> To be provided
-
-### Notes
+Please note:
 
 - The `node_type` specified in the substitution mapping SHOULD not
   provide implementations for interface operations defined in the
@@ -8810,11 +9011,10 @@ have the following meaning:
   implementation). Specifically, all the required properties of all
   its node templates must have valid property assignments.
 
-## Property mapping
+## 15.2 Property mapping
 A property mapping allows a property value of a substituted node to be
 mapped to an input value of the substituting service template.
 
-### Grammar
 The grammar of a property_mapping is as follows:
 ```
 <property_name>: <input_name> 
@@ -8822,26 +9022,25 @@ The grammar of a property_mapping is as follows:
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-- **input_name**: represents the name of an input defined for the
+- input_name: represents the name of an input defined for the
   substituting service template.
-- **property_name**: represents the name of a property of the
+- property_name: represents the name of a property of the
   substituted node (defined using a corresponding property definition
   in the specified Node Type)
-- **property_path**: represents a *TOSCA Path* expression that
+- property_path: represents a *TOSCA Path* expression that
   references a property of a capability or requirement of the
   substituted node.
 
-### Additional requirements
+The following additional requirements apply:
 - Mappings must be type-compatible (i.e., properties mapped to input
   must have the type specified in the corresponding input definition).
 - Property mappings must be defined for all *mandatory* service
   template inputs that do not define a `default` value.
 
-## Attribute mapping
+## 15.3 Attribute Mapping
 An attribute mapping allows an output value of the substituting
 service template to be mapped to an attribute of the substituted node.
 
-### Grammar
 The grammar of an attribute_mapping is as follows:
 ```
 <attribute_name>: <output_name> 
@@ -8849,26 +9048,25 @@ The grammar of an attribute_mapping is as follows:
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-- **output_name**: represents the name of an output defined in the
+- output_name: represents the name of an output defined in the
   substituting service template.
-- **attribute_name**: represents the name of an attribute of the
+- attribute_name: represents the name of an attribute of the
   substituted node (defined using a corresponding attribute definition
   in the specified Node Type)
-- **attribute_path**: represents a *TOSCA Path* expression that
+- attribute_path: represents a *TOSCA Path* expression that
   references an attribute of a capability or requirement of the
   substituted node.
 
-### Additional requirements
+The following additional requirements apply:
 - Mappings must be type-compatible (i.e., outputs mapped to attributes
   must have the type specified in the corresponding attribute
   definition).
 
-## Capability mapping
+## 15.4 Capability Mapping
 A capability mapping allows a capability of one of the nodes in the
 substituting service template to be mapped to a capability of the
 substituted node.
 
-### Grammar
 The grammar of a capability_mapping is as follows:
 ```
 <capability_name>: [ <node_template_name>, <node_template_capability_name> ]
@@ -8880,10 +9078,10 @@ have the following meaning:
 - node_template_name: represents a valid name of a node template
   definition within the substituting service template.
 - node_template_capability_name: represents a valid name of a
-  [capability definition](#capability-definition) within the
+  capability definition within the
   \<node_template_name\> declared in this mapping.
 
-## Requirement mapping
+## 15.5 Requirement Mapping
 
 A requirement mapping defines how requirements of the substituted node
 are mapped to one or more requirements of nodes in the substituting
@@ -8905,7 +9103,41 @@ To accommodate these use cases, requirement mappings are defined using
 YAML *lists* rather than *maps*. In addition, each of the mappings in
 the list may in turn identify a *list* of requirements.
 
-### Mapping Multiple Requirements with the Same Name
+The grammar for requirement mappings is as follows:
+```
+<requirement_name>:
+  - [ <node_template_name_1>, <node_template_requirement_name_1> ]
+  - ...
+  - [ <node_template_name_n>, <node_template_requirement_name_n> ]
+```
+As an optimization, if the requirement mapping defines a *one-to-one*
+mapping (i.e., a mapping of a requirement onto a single requirement of
+a single node in the substituting template), the following single-line
+grammar may be used:
+```
+<requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
+```
+
+> If we plan to support the "convience" grammar of mapping multiple
+>requirement instances at the same time, we need to document it here.
+
+In the above grammars, the pseudo values that appear in angle brackets
+have the following meaning:
+
+- requirement_name: represents the name of the requirement as it
+  appears in the type definition for the Node Type name that is
+  declared as the value for on the substitution_mappings’ `node_type`
+  key.
+- node_template_name: represents a valid name of a node template
+  definition within the same substituting service template
+- node_template_requirement_name: represents a valid name of a
+  requirement definition within the \<node_template_name\> declared in
+  this mapping.
+
+The following subsections illustrate this grammar in the context of
+various use cases.
+
+### 15.5.1 Mapping Multiple Requirements with the Same Name
 The following example shows a `Client` node type that defines a
 `service` requirement with a `count_range` of `[2, 2]`, which means
 that nodes of type `Client` need exactly two `service` relationships
@@ -9146,7 +9378,7 @@ service_template:
     compute:
       type: Compute
 ```
-### Mapping Requirements Multiple Times
+### 15.5.2 Mapping a Requirement Multiple Times
 Imagine a scenario where nodes of type `Client` need to be hosted on
 nodes of type `Compute` as shown by the following type definitions:
 ```yaml
@@ -9250,10 +9482,29 @@ service_template:
 Using this syntax, the target of the requirement mapping is a *list*
 of target requirements rather than a single requirement.
 
-### Requirement Mapping Rules
-This section documents the rules for requirement mapping. The types
-defined in the following code snippet are used to illustrate the
-rules:
+### 15.5.3 Requirement Mapping Rules
+This section documents the rules for requirement mapping.
+
+1. Requirements from a *substituted* node can only be mapped onto
+   *dangling* requirements in the substituting template.
+2. The total number of requirements mapped onto *mandatory*
+   requirements in the substituting template must not exceed the lower
+   bound of the `count_range` in the corresponding requirement
+   definition in the substituted node's type.
+3. The total number of requirement mappings must not exceed the upper
+   bound of the `count_range` in the corresponding requirement
+   definition in the substituted node's type. Note that this is a
+   convenience rule only, since according to rule 2, any *excess*
+   mappings would have to map onto optional requirements, and as a
+   result can safely be ignored.
+
+Note that there are no constraints on the minimum number of
+requirement mappings. More specifically, the total number of
+requirement mappings is allowed to be smaller than the lower bound of
+the `count_range` in the corresponding requirement definition.
+
+The types defined in the following code snippet are used to illustrate
+these rules:
 ```yaml
 tosca_definitions_version: tosca_2_0
 capability_types:
@@ -9281,97 +9532,6 @@ In this example, the `Client` node type defines a `service`
 requirement with a `count_range` of `[1, 4]`. This means that a client
 can have up to four `service` connections to a `Server` node, but only
 one of those is mandatory.
-
-### Requirement Assignments
-
-Any service template that uses the `Client` node type must specify the
-correct number of requirement assignments, i.e, the number of
-mandatory requirements must be greater than or equal to the lower
-bound of the `count_range` and he total number of requirement
-assignments (optional as well as mandatory) must be less than or equal
-to the upper bound of the count range.
-
-The following shows a valid service template that uses `Client` and
-`Server` nodes.
-```yaml
-tosca_definitions_version: tosca_2_0
-imports:
-  - types.yaml
-service_template:
-  node_templates:
-    server1:
-      type: Server
-    server2:
-      type: Server
-    server3:
-      type: Server
-    client:
-      type: Client
-      directives: [ substitute ]
-      requirements:
-        - service: server1
-        - service: server2
-        - service: server3
-```
-In this example, the requirement assignments specify the target nodes
-directly, but it is also valid to leave requirements dangling as in
-the following example:
-```yaml
-tosca_definitions_version: tosca_2_0
-imports:
-  - types.yaml
-service_template:
-  node_templates:
-    server1:
-      type: Server
-    server2:
-      type: Server
-    server3:
-      type: Server
-    client:
-      type: Client
-      directives: [ substitute ]
-      requirements:
-        - service: server1
-        - service:
-            optional: True
-        - service:
-            optional: True
-```
-In this example, only the first `service` assignment is mandatory. The
-next two are optional. However, after the orchestrator *fulfills* the
-dangling (optional) requirements, the resulting service topology for
-this second example will likely be identical to the service topology
-in the first example, since the orchestrator is able to fulfill both
-of the optional requirements using `server` nodes in this topology.
-
-Note that after requirements have been fulfilled, it no longer matters
-whether the requirement were mandatory or optional. All that matters
-is that if the service topology is valid, the number of established
-relationships is guaranteed to fall within the `count_range` specified
-in the corresponding requirement definition.
-
-### Mapping Requirements
-This section introduces the rules for requirement mappings:
-
-1. As in earlier versions of the spec, requirements from a
-   *substituted* node can only be mapped onto *dangling* requirements
-   in the substituting template.
-2. The total number of requirements mapped onto *mandatory*
-   requirements in the substituting template must not exceed the lower
-   bound of the `count_range` in the corresponding requirement
-   definition in the substituted node's type.
-3. The total number of requirement mappings must not exceed the upper
-   bound of the `count_range` in the corresponding requirement
-   definition in the substituted node's type. Note that this is a
-   convenience rule only, since according to rule 2, any *excess*
-   mappings would have to map onto optional requirements, and as a
-   result can safely be ignored.
-
-Note that there are no constraints on the minimum number of
-requirement mappings. More specifically, the total number of
-requirement mappings is allowed to be smaller than the lower bound of
-the `count_range` in the corresponding requirement definition.
 
 The following code snippet shows a valid substituting template for the
 `client` node in the template shown above:
@@ -9561,39 +9721,13 @@ presumably will map onto optional requirements in the substituting
 template). This is done independent of the order in which the
 requirement mappings are specified.
 
-### Handling `UNBOUNDED` Count Ranges
+### 15.5.4 Handling `UNBOUNDED` Requirement Count Ranges
 *To be provided*
 
-### Requirement Mappoing Grammar
-The one-to-one mapping grammar of a requirement_mapping is as follows:
-```
-<requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
-```
-The one-to-many mapping grammar of a requirement_mapping is as follows:
-```
-<requirement_name>:
-  - [ <node_template_name_1>, <node_template_requirement_name_1> ]
-  - ...
-  - [ <node_template_name_n>, <node_template_requirement_name_n> ]
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- requirement_name: represents the name of the requirement as it
-  appears in the type definition for the Node Type name that is
-  declared as the value for on the substitution_mappings’ `node_type`
-  key.
-- node_template_name: represents a valid name of a node template
-  definition within the same substituting service template
-- node_template_requirement_name: represents a valid name of a
-  requirement definition within the \<node_template_name\> declared in
-  this mapping.
-
-## Interface mapping
+## 15.6 Interface Mapping
 An interface mapping allows an interface operation on the substituted
 node to be mapped to workflow in the substituting service template.
 
-### Grammar
 <!----
 {"id": "1110", "author": "Calin Curescu [2]", "date": "2018-08-23T08:33:00Z", "comment": "This could change if we introduce the operations keyname in the interface definitions", "target": "Grammar"}-->
 <!----
@@ -9605,67 +9739,57 @@ The grammar of an interface_mapping is as follows:
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
-- **interface_name:** represents the name of the interface as it appears
+- interface_name: represents the name of the interface as it appears
   in the Node Type definition for the Node Type (name) that is declared
   as the value for on the substitution_mappings’ `node_type` key.
-- **operation_name:** represents the name of the operation as it appears
+- operation_name: represents the name of the operation as it appears
   in the interface type definition for <interface_name>.
-- **workflow_name:** represents the name of a workflow defined in the
+- workflow_name: represents the name of a workflow defined in the
   substituting service template to which to map the specified
   interface operation.
 
-# Groups and Policies
+# 16 Groups and Policies
 
-## Group Type
+A *TOSCA group* is a logical grouping of nodes for purposes of uniform
+application of *policies* to collections of nodes. Conceptually, group
+definitions allow the creation of logical *membership* relationships
+to nodes in a service template that are not a part of the
+application's explicit requirement dependencies in the topology
+template (i.e. those required to actually get the application deployed
+and running). 
 
-A Group Type defines logical grouping types for nodes, typically for
-different management purposes. Conceptually, group definitions allow the
-creation of logical
-“membership” relationships 
+## 16.1 Group Type
 <!----
 {"id": "1121", "author": "Chris Lauwers", "date": "2020-08-03T18:44:00Z", "comment": "Edit to remove the implication that these\nare similar to \u201cTOSCA relationships\u201d", "target": "creation of logical\n\u201cmembership\u201d relationships "}-->
-to
-nodes in a service template that are not a part of the application’s
-explicit requirement dependencies in the service template (i.e. those
-required to actually get the application deployed and running). Instead,
-such logical membership allows for the introduction of things such as
-group management and uniform application of policies (i.e. requirements
-that are also not bound to the application itself) to the group’s
-members
-<!----
-{"id": "1122", "author": "Chris Lauwers", "date": "2021-01-17T02:47:00Z", "comment": "Alternative language suggested by PJ: A\nGroup Type defines logical grouping types for nodes for purposes of\nuniform application of policies to collections of nodes. Conceptually,\ngroup definitions allow the creation of logical \u201cmembership\u201d\nrelationships to nodes in a service template that are not a part of the\napplication\u2019s explicit requirement dependencies in the topology template\n(i.e. those required to actually get the application deployed and\nrunning). Instead, such logical membership allows for the introduction\nof things such as group management and uniform application of policies\n(i.e. requirements that are also not bound to the application itself) to\nthe group\u2019s members.", "target": "members"}-->
-. .
+
 <!----
 {"id": "1123", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:56:00Z", "comment": "I don\u2019t think\nthe text definitions of group and group type are sufficiently different.\nSo I\u2019ve added some suggested new text but will leave it to the editors\nto consider how much of the existing text can be\nremoved.", "target": ""}-->
 
-
-### Keynames
-
-The Group Type is a TOSCA type entity and has the common keynames listed
-in Section 4.2.5.2 Common keynames in type definitions. In addition, the
-Group Type has the following recognized keynames:
+As with most TOSCA entities, groups are typed. A group type definition
+is a type of TOSCA type definition and as a result supports the common
+keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+group type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|properties|no|map of property definitions|An optional map of property definitions for the Group Type.|
-|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Group Type.|
-|members |no|list of string|An optional list of one or more names of Node Types that are valid (allowed) as members of the Group Type.|
+|properties|no|map of property definitions|An optional map of property definitions for the group type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the group type.|
+|members |no|list of string|An optional list of one or more names of Node Types that are valid (allowed) as members of the group type.|
 
-### Grammar
+> What are group properties used for?
+> How can group attributes possibly be set, and what would they be used for?
 
-Group Types have the following grammar:
+Group types have the following grammar:
 ```
 <group_type_name>:
   derived_from: <parent_group_type_name>
   version: <version_number>
-  metadata: 
-    <map of string>
+  metadata: <map of YAML data>
   description: <group_description>
-  properties:
-    <property_definitions>
-  attributes:
-    <attribute_definitions>
-  members: [ <list_of_valid_member_types> ]
+  properties: <property_definitions>
+  attributes: <attribute_definitions>
+  members:  <list_of_valid_member_types> 
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9673,24 +9797,18 @@ have the following meaning:
 - group_type_name: represents the mandatory symbolic name of the Group
   Type being declared as a string.
 
-- parent_group_type_name: represents the name (string) of the Group Type
-  this Group Type definition derives from (i.e. its “parent” type).
-
-- version_number: represents the optional TOSCA version number for the
-  Group Type.
-
-- group_description: represents the optional description string for the
-  corresponding group_type_name.
+- parent_group_type_name: represents the name (string) of the group type
+  this group type definition derives from (i.e. its “parent” type).
 
 - attribute_definitions: represents the optional map of attribute
-  definitions for the Group Type.
+  definitions for the group type.
 
 - property_definitions: represents the optional map of property
-  definitions for the Group Type.
+  definitions for the group type.
 
 - list_of_valid_member_types: represents the optional list of TOSCA Node
   Types that are valid member types for being added to (i.e. members of)
-  the Group Type; if the members keyname is not defined then there are
+  the group type; if the members keyname is not defined then there are
   no restrictions to the member types;
 
   - note that the members of a group ultimately resolve to nodes, the
@@ -9700,9 +9818,7 @@ have the following meaning:
   - A node type is matched if it is the specified type or is derived from
     the node type
 
-### Derivation rules
-
-During Group Type derivation the keyname definitions follow these rules:
+During group type derivation the keyname definitions follow these rules:
 
 - properties: existing property definitions may be refined; new property
   definitions may be added.
@@ -9716,49 +9832,41 @@ During Group Type derivation the keyname definitions follow these rules:
   defined in the parent type then no restrictions are applied to the
   definition.
 
-### Example
-
-The following represents a Group Type definition:
+The following represents an example group type definition:
 ```
 group_types:
-  mycompany.mytypes.groups.placement:
-    description: My company’s group type for placing nodes of type Compute
-    members: [ tosca.nodes.Compute ]
+  mycompany.placement:
+    description: My company’s group type for placing nodes of type Software
+    members: [ Software ]
 ```
-## Group definition
+## 16.2 Group Definition
 
-Collections of Nodes may be defined using a Group. A group definition
-defines a logical grouping of node templates, typically for management
-purposes, but is separate from the application’s service template.
+Collections of nodes in a service template may be grouped together
+using a *group definition* in that same service template. A group
+definition defines a logical grouping of node templates for purposes
+of uniform application of policies.
 
-### Keynames
-
-The following is the list of recognized keynames for a TOSCA group
-definition:
+The following is the list of recognized keynames for a
+TOSCA group definition:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory name of the group type the group definition is based upon.|
 |description|no|string|The optional description for the group definition.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|metadata|no|map of YAML data|Defines a section used to declare additional metadata information. |
 |properties|no|map of property assignments|An optional map of property value assignments for the group definition.|
 |attributes|no|map of attribute assignments|An optional map of attribute value assignments for the group definition.|
 |members|no|list of string|The optional list of one or more node template names that are members of this group definition.|
-
-### Grammar
 
 Group definitions have one the following grammars:
 ```
 <group_name>:
   type: <group_type_name>
   description: <group_description>
-  metadata: 
-    <map of string>
-  properties:
-    <property_assignments>
-  attributes:
-    <attribute_assignments>
-  members: [ <list_of_node_templates> ]
+  metadata: <map of YAML data>
+  properties: <property_assignments>
+  attributes: <attribute_assignments>
+  members:  <list_of_node_templates> 
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9766,18 +9874,16 @@ have the following meaning:
 - group_name: represents the mandatory symbolic name of the group as a
   string.
 
-- group_type_name: represents the name of the Group Type the definition
+- group_type_name: represents the name of the group type the definition
   is based upon.
-
-- group_description: contains an optional description of the group.
 
 - property_assignments: represents the optional map of property
   assignments for the group definition that provide values for
-  properties defined in its declared Group Type.
+  properties defined in its declared group type.
 
 - attribute_assigments: represents the optional map of attribute
   assignments for the group definition that provide values for
-  attributes defined in its declared Group Type.
+  attributes defined in its declared group type.
 
 - list_of_node_templates: contains the mandatory list of one or more
   node template names or group symbolic names (within the same service
@@ -9789,83 +9895,66 @@ have the following meaning:
     that is derived from) with the node types in the
     list_of_valid_member_types
 
-### Example
-
 The following represents a group definition:
 ```
 groups:
   my_app_placement_group:
-    type: tosca.groups.Root
+    type: Root
     description: My application’s logical component grouping for placement
     members: [ my_web_server, my_sql_database ]
 ```
-## Policy Type
+## 16.3 Policy Type
 
-A Policy Type defines a type of a policy that affects or governs an
-application or service’s topology at some stage of its lifecycle but is
-not explicitly part of the topology itself (i.e., it does not prevent
-the application or service from being deployed or run if it did not
-exist).
+A *policy type* defines a type of a policy that affects or governs an
+application or service’s topology at some stage of its lifecycle but
+is not explicitly part of the topology itself (i.e., it does not
+prevent the application or service from being deployed or run if it
+did not exist).
 
-### Keynames
-
-The Policy Type is a TOSCA type entity and has the common keynames
-listed in Section 4.2.5.2 Common keynames in type definitions. In
-addition, the Policy Type has the following recognized keynames:
+A policy type definition is a type of TOSCA type definition and as a
+result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+policy type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|properties|no|map of property definitions|An optional map of property definitions for the Policy Type.|
-|targets|no|list of string|An optional list of valid Node Types or Group Types the Policy Type can be applied to.|
-|triggers|no|map of trigger definitions |An optional map of policy triggers for the Policy Type.|
+|properties|no|map of property definitions|An optional map of property definitions for the policy type.|
+|targets|no|list of string|An optional list of valid Node Types or group types the policy type can be applied to.|
+|triggers|no|map of trigger definitions |An optional map of policy triggers for the policy type.|
 
-
-### Grammar
-
-Policy Types have the following grammar:
+Policy types have the following grammar:
 ```
 <policy_type_name>:
   derived_from: <parent_policy_type_name>
   version: <version_number>
-  metadata: 
-    <map of string>
+  metadata: <map of YAML data>
   description: <policy_description>
-  properties:
-    <property_definitions> 
-  targets: [ <list_of_valid_target_types> ]
-  triggers:
-    <trigger_definitions>
+  properties: <property_definitions> 
+  targets:  <list_of_valid_target_types> 
+  triggers: <trigger_definitions>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- policy_type_name: represents the mandatory symbolic name of the Policy
-  Type being declared as a string.
+- policy_type_name: represents the mandatory symbolic name of the policy
+  type being declared as a string.
 
-- parent_policy_type_name: represents the name (string) of the Policy
-  Type this Policy Type definition derives from (i.e., its “parent”
+- parent_policy_type_name: represents the name (string) of the policy
+  type this policy type definition derives from (i.e., its “parent”
   type).
 
-- version_number: represents the optional TOSCA version number for the
-  Policy Type.
-
-- policy_description: represents the optional description string for the
-  corresponding policy_type_name.
-
 - property_definitions: represents the optional map of property
-  definitions for the Policy Type.
+  definitions for the policy type.
 
 - list_of_valid_target_types: represents the optional list of TOSCA
-  types (i.e. Group or Node Types) that are valid targets for this
-  Policy Type; if the targets keyname is not defined then there are no
+  types (i.e. group or node types) that are valid targets for this
+  policy type; if the targets keyname is not defined then there are no
   restrictions to the targets’ types.
 
 - trigger_definitions: represents the optional map of trigger
   definitions for the policy.
 
-### Derivation rules
-
-During Policy Type derivation the keyname definitions follow these
+During policy type derivation the keyname definitions follow these
 rules:
 
 - properties: existing property definitions may be refined; new property
@@ -9880,22 +9969,18 @@ rules:
 - triggers: existing trigger definitions may not be changed; new trigger
   definitions may be added.
 
-### Example
-
-The following represents a Policy Type definition:
+The following represents a policy type definition:
 ```
 policy_types:
-  mycompany.mytypes.policies.placement.Container.Linux:
+  placement.Container.Linux:
     description: My company’s placement policy for linux 
-    derived_from: tosca.policies.Root
+    derived_from: Root
 ```
-## Policy definition
+## 16.4 Policy Definition
 
 A policy definition defines a policy that can be associated with a TOSCA
 service or top-level entity definition (e.g., group definition, node
 template, etc.).
-
-### Keynames
 
 The following is the list of recognized keynames for a TOSCA policy
 definition:
@@ -9911,20 +9996,15 @@ definition:
 |targets|no|list of string|An optional list of valid node templates or Groups the Policy can be applied to.|
 |triggers|no|map of trigger definitions|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
 
-### Grammar
-
-Policy definitions have one the following grammars:
+Policy definitions have the following grammar:
 ```
 <policy_name>:
   type: <policy_type_name>
   description: <policy_description>
-  metadata: 
-    <map of string>
-  properties:
-    <property_assignments>
-  targets: [<list_of_policy_targets>]
-  triggers:
-    <trigger_definitions>
+  metadata: <map of YAML data>
+  properties: <property_assignments>
+  targets: <list_of_policy_targets>
+  triggers: <trigger_definitions>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9935,11 +10015,9 @@ have the following meaning:
 - policy_type_name: represents the name of the policy the definition is
   based upon.
 
-- policy_description: contains an optional description of the policy.
-
-- property_assignments: represents the optional map of [property
-  assignments](#property-assignment) for the policy definition that
-  provide values for properties defined in its declared Policy Type.
+- property_assignments: represents the optional map of property
+  assignments for the policy definition that provide values for
+  properties defined in its declared policy type.
 
 - list_of_policy_targets: represents the optional list of names of node
   templates or groups that the policy is to applied to.
@@ -9950,30 +10028,26 @@ have the following meaning:
     type that is derived from) with the types (of nodes or groups) in the
     list_of_valid_target_types.
 
-- trigger_definitions: represents the optional map
-  of [trigger definitions](#trigger-definition) for the policy; these
-  triggers apply in addition to the triggers defined in the policy
-  type.
+- trigger_definitions: represents the optional map of trigger
+  definitions) for the policy; these triggers apply in addition to the
+  triggers defined in the policy type.
+
 <!----
 {"id": "1173", "author": "Calin Curescu", "date": "2020-05-06T10:56:00Z", "comment": "!!! What is the meaning of these triggers\n  here w.r.t. the triggers defined in the policy type?  \n  I assume we should allow the definition of new triggers, that are used\n  in addition to the triggers defined in the policy type.  \n  But, in interface we did not allow to add new operations or\n  notifications.", "target": "trigger_definitions: represents the optional map\n  of [trigger definitions](#trigger-definition) for the policy; these\n  triggers apply in addition to the triggers defined in the policy\n  type."}-->
-
-
-### Example
 
 The following represents a policy definition:
 ```
   - my_compute_placement_policy:
-      type: tosca.policies.placement
+      type: placement
       description: Apply my placement policy to my application’s servers
       targets: [ my_server_1, my_server_2 ]
       # remainder of policy definition left off for brevity
 ```
-## Trigger definition
+## 16.5 Trigger Definition
 
-A trigger definition defines the event, condition and action that is
-used to “trigger” a policy with which it is associated.
+A trigger definition defines an *event, condition, action* tuple
+associated with a policy.
 
-### Keynames
 <!----
 {"id": "1181", "author": "Matt Rutkowski", "date": "2017-09-26T11:38:00Z", "comment": "RECALL; Policy type defn were to be consumed by a \u201cPolicy Engine\u201d that would create events on a known event monitoring service. We need to create diagram and explain the event-condition-action flow of policy (defn.)", "target": "Keynames"}-->
 
@@ -9982,14 +10056,13 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 |---|---|---|---|
-|description | no|string| The optional description string for the trigger.|
-|event    | yes    | string| The mandatory name of the event that activates the trigger’s action. |
-|condition  | no    | [condition clause](#BKM_Condition_Clause_Def)| The optional condition that must evaluate to true in order for the trigger’s action to be performed. Note: this is optional since sometimes the event occurrence itself is enough to trigger the action.|
-|action|yes|list of [activity definition](#activity-definitions)|The list of sequential activities to be performed when the event is triggered, and the condition is met (i.e., evaluates to true).|
+|description no|string|The optional description string for the trigger.|
+|event|yes|string|The mandatory name of the event that activates the trigger’s action.|
+|condition|no|condition clause|The optional condition that must evaluate to true in order for the trigger’s action to be performed. Note: this is optional since sometimes the event occurrence itself is enough to trigger the action.|
+|action|yes|list of activity definition|The list of sequential activities to be performed when the event is triggered, and the condition is met (i.e., evaluates to true).|
 <!----
 {"id": "1182", "author": "Chris Lauwers", "date": "2022-10-03T20:01:00Z", "comment": "We need to clarify the context in which event names can be interpreted. Are they globally scoped?", "target": "name"}-->
 
-### Grammar
 <!----
 {"id": "1185", "author": "Calin Curescu", "date": "2020-05-06T11:29:00Z", "comment": "This does not make any sense. Needs to be deleted.", "target": ""}-->
 
@@ -9999,8 +10072,7 @@ Trigger definitions have the following grammars:
   description: <trigger_description>
   event: <event_name>
   condition: <condition_clause>
-  action: 
-    - <list_of_activity_definition>
+  action: <list_of_activity_definition>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -10008,12 +10080,8 @@ have the following meaning:
 - trigger_name: represents the mandatory symbolic name of the trigger as
   a string.
 
-- trigger_description: represents the optional
-  [description](#TYPE_YAML_STRING) string for the corresponding
-  trigger_name.
-
 - event_name: represents the mandatory name of an event associated with
-  an interface notification on the identified resource (node). .
+  an interface notification on the identified resource (node).
 
 - condition_clause: an optional Boolean expression that can be evaluated
   within the context of the service with which the policy is associated
@@ -10027,373 +10095,45 @@ have the following meaning:
   are performed in response to the event if the (optional) condition is
   met.
 
-## Activity definitions
-
-An activity defines an operation to be performed in a TOSCA workflow
-step or in an action body of a policy trigger. Activity definitions can
-be of the following types:
-
-- Delegate workflow activity definition:
-
-  - Defines the name of the delegate workflow and optional input
-    assignments. This activity requires the target to be provided by the
-    orchestrator (no-op node or relationship).
-
-- Set state activity definition:
-
-  - Sets the state of a node.
-
-- Call operation activity definition:
-
-  - Calls an operation defined on a TOSCA interface of a node,
-    relationship or group. The operation name uses the
-    \<interface_name\>.\<operation_name\> notation. Optionally,
-    assignments for the operation inputs can also be provided. If
-    provided, they will override for this operation call the operation
-    inputs assignment in the node template.
-
-- Inline workflow activity definition:
-
-  - Inlines another workflow defined in the service (allowing
-    reusability). The definition includes the name of a workflow to be
-    inlined and optional workflow input assignments.
-
-### Delegate workflow activity definition
-
-#### Keynames
-
-The following is a list of recognized keynames for a delegate activity
-definition.
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|delegate|yes|string or empty  (see grammar below)|Defines the name of the delegate workflow and optional input assignments. This activity requires the target to be provided by the orchestrator (no-op node or relationship).|
-|workflow|no|string|The name of the delegate workflow. Mandatory in the extended notation.|
-|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the delegate workflow.|
-
-#### Grammar
-
-A delegate activity definition has the following grammar. The short
-notation can be used if no input assignments are provided.
-
-####  Short notation
-```
-- delegate: <delegate_workflow_name>
-```
-####  Extended notation
-```
-- delegate: 
-   workflow: <delegate_workflow_name>
-   inputs:
-     <parameter_assignments>
-```
-
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- **delegate_workflow_name**: represents the name of the workflow of the
-  node provided by the TOSCA orchestrator.
-
-- **parameter_assignments**: represents the optional map of parameter
-  assignments for passing parameters as inputs to this workflow
-  delegation.
-
-### Set state activity definition
-
-Sets the state of the target node.
-
-#### Keynames
-
-The following is a list of recognized keynames for a set state activity
-definition.
-
-| **Keyname** | **Mandatory** | **Type**      | **Description**          |
-|-------------|---------------|---------------|--------------------------|
-| set_state   | yes           | <u>string</u> | Value of the node state. |
-
-#### Grammar
-
-A set state activity definition has the following grammar.
-```
-- set_state: <new_node_state>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- new_node_state: represents the state that will be affected to the node
-  once the activity is performed.
-
-### Call operation activity definition
-
-This activity is used to call an operation on the target node. Operation
-input assignments can be optionally provided.
-
-#### Keynames
-
-The following is a list of recognized keynames for a call operation
-activity definition.
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|call_operation|yes|string or empty (see grammar below)|Defines the opration call. The operation name uses the \<interface_name\>.\<operation_name\> notation. Optionally, assignments for the operation inputs can also be provided. If provided, they will override for this operation call the operation inputs assignment in the node template.|
-|operation|no|string|The name of the operation to call, using the \<interface_name\>.\<operation_name\> notation.  Mandatory in the extended notation.|
-|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the called operation. Any provided input assignments will override the operation input assignment in the target node template for this operation call.|
-
-#### Grammar
-
-A call operation activity definition has the following grammar. The
-short notation can be used if no input assignments are provided.
-
-####  Short notation
-```
-- call_operation: <operation_name>
-```
-####  Extended notation
-```
-- call_operation: 
-   operation: <operation_name>
-   inputs:
-     <parameter_assignments>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- operation_name: represents the name of the operation that will be
-  called during the workflow execution. The notation used is
-  \<interface_sub_name\>.\<operation_sub_name\>, where
-  interface_sub_name is the interface name and the operation_sub_name is
-  the name of the operation within this interface.
-
-- **parameter_assignments**: represents the optional map of parameter
-  assignments for passing parameters as inputs to this workflow
-  delegation.
-
-### Inline workflow activity definition
-
-This activity is used to inline a workflow in the activities sequence.
-The definition includes the name of the inlined workflow and optional
-input assignments.
-
-#### Keynames
-
-The following is a list of recognized keynames for an inline workflow
-activity definition.
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|inline|yes|string or empty (see grammar below)|The definition includes the name of a workflow to be inlined and optional workflow input assignments.|
-|workflow|no|string|The name of the inlined workflow. Mandatory in the extended notation.|
-|inputs|no|map of parameter assignments|The optional map of input parameter assignments for the inlined workflow.|
-
-#### Grammar
-
-An inline workflow activity definition has the following grammar. The
-short notation can be used if no input assignments are provided.
-
-####  Short notation
-```
-- inline: <inlined_workflow_name>
-```
-####  Extended notation
-```
-- inline: 
-   workflow: <inlined_workflow_name>
-   inputs:
-     <parameter_assignments>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- inlined_workflow_name: represents the name of the workflow to inline.
-
-- **parameter_assignments**: represents the optional map of parameter
-  assignments for passing parameters as inputs to this workflow
-  delegation.
-
-### Example
-
-The following represents a list of activity definitions (using the short
-notation):
-```
- - delegate: deploy
- - set_state: started
- - call_operation: tosca.interfaces.node.lifecycle.Standard.start
- - inline: my_workflow
-```
-# Workflows
-
-## Imperative Workflow definition
-
-A workflow definition defines an imperative workflow that is associated
-with a TOSCA service. A workflow definition can either include the steps
-that make up the workflow, or it can refer to an artifact that expresses
-the workflow using an external workflow language.
-
-### Keynames
-
-The following is the list of recognized keynames for a TOSCA workflow
-definition:
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|description|no|string|The optional description for the workflow definition.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
-|inputs|no|map of parameter definitions|The optional map of input parameter definitions.|
-|precondition|no|condition clause|Condition clause that must evaluate to true before the workflow can be processed.|
-|steps|no|map of step definitions|An optional map of valid imperative workflow step definitions.|
-|implementation|no|operation implementation definition|The optional definition of an external workflow definition. This keyname is mutually exclusive with the steps keyname above.|
-|outputs|no|map of attribute mappings|The optional map of attribute mappings that specify workflow  output values and their mappings onto attributes of a node or relationship defined in the service.|
-
-### Grammar
-
-Imperative workflow definitions have the following grammar:
-```
-<workflow_name>:
-  description: <workflow_description>
-  metadata: 
-    <map of string>
-  inputs:
-    <parameter_definitions>
-  precondition:
-    <condition_clause>
-  steps:
-    <workflow_steps>
-  implementation:
-    <operation_implementation_definitions>
-  outputs:
-    <attribute_mappings>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- workflow_name:
-
-- workflow_description:
-
-- parameter_definitions:
-
-- condition_clause:
-
-- workflow_steps:
-
-- operation_implementation_definition: represents a full inline
-  definition of an implementation artifact
-
-- attribute_mappings: represents the optional map of attribute_mappings
-  that consists of named output values returned by operation
-  implementations (i.e. artifacts) and associated mappings that specify
-  the attribute into which this output value must be stored.
-
-## Workflow precondition definition
-
-A workflow precondition defines a condition clause that checks if a
-workflow can be processed or not based on the state of the instances of
-a TOSCA service deployment. If the condition is not met, the workflow
-will not be triggered.
-
-### Examples
-
-\<\<TO BE PROVIDED\>\>
-
-## Workflow step definition
-
-A workflow step allows to define one or multiple sequenced activities in
-a workflow and how they are connected to other steps in the workflow.
-They are the building blocks of a declarative workflow.
-
-### Keynames
-
-The following is the list of recognized keynames for a TOSCA workflow
-step definition:
-
-|Keyname|Mandatory|Type|Description|
-| ----- | ------- | ----- | ------- |
-|target|yes|string|The target of the step (this can be a node template name, a group name)|
-|target_relationship|no|string|The optional name of a requirement of the target in case the step refers to a relationship rather than a node or group. Note that this is applicable only if the target is a node.|
-|operation_host|no|string|The node on which operations should be executed (for TOSCA call_operation activities). This element is mandatory only for relationships and groups target. If target is a relationship then operation_host is mandatory and valid_values are SOURCE or TARGET – referring to the relationship source or target node. If target is a group then operation_host is optional. If not specified the operation will be triggered on every node of the group. If specified the valid_value is a node_type or the name of a node template.|
-|filter|no|list of validation clauses|Filter is a list of validation clauses that allows to provide a filtering logic.|
-|activities|yes|list of activity definition|The list of sequential activities to be performed in this step.|
-|on_success|no|list of string|The optional list of step names to be performed after this one has been completed with success (all activities has been correctly processed).|
-|on_failure|no|list of string|The optional list of step names to be called after this one in case one of the step activity failed.|
-
-### Grammar
-
-Workflow step definitions have the following grammars:
-```
-steps:
-  <step_name>
-    target: <target_name>
-    target_relationship: <target_requirement_name>
-    operation_host: <operation_host_name>
-    filter:
-      - <list_of_condition_clause_definition>
-    activities:
-      - <list_of_activity_definition>
-    on_success:
-      - <target_step_name>
-    on_failure:
-      - <target_step_name>
-```
-In the above grammar, the pseudo values that appear in angle brackets
-have the following meaning:
-
-- target_name: represents the name of a node template or group in the
-  service.
-
-- target_requirement_name: represents the name of a requirement of the
-  node template (in case target_name refers to a node template.
-
-- **operation_host:** the node on which the operation should be executed
-
-- **list_of_condition_clause_definition:** represents a list of
-  condition clause definition.
-
-- **list_of_activity_definition**: represents a list of activity
-  definition
-
-- **target_step_name**: represents the name of another step of the
-  workflow.
-
-TOSCA Cloud Service Archive (CSAR) format
-=========================================
+# 17 TOSCA Cloud Service Archive (CSAR) format
 
 This section defines the metadata of a cloud service archive as well as
 its overall structure. Except for the examples, this section is
 **normative.**
 
-Overall Structure of a CSAR
----------------------------
-
-A CSAR is a
-zip file 
+## 17.1 Overall Structure of a CSAR
 <!----
 {"id": "1367", "author": "Calin Curescu", "date": "2020-06-09T17:00:00Z", "comment": "Thinh would like to have this resolved\nbefore publishing TOSCA v2.0. What is zip? We need to give a clearer\ndefinition of the zip format. What version. Thinh will get back with a\nmore specific definition.  \nTal: look at java **jar specification**? It is zip...", "target": "A CSAR is a\nzip file "}-->
-where TOSCA
-definitions along with all accompanying artifacts (e.g. scripts,
-binaries, configuration files) can be packaged together. The zip file
-format shall conform to the Document Container File format as defined in
-the ISO/IEC 21320-1 "Document Container File — Part 1: Core" standard
-\[[ISO-IEC-21320-1](#CIT_ISO_IEC_21320_1)\]. A CSAR zip file MUST
-contain one of the following:
 
-- A
-  **TOSCA.meta** metadata file that provides entry information for a
-  TOSCA orchestrator processing the CSAR file.
+A CSAR is a zip or tar file where TOSCA definitions along with
+all accompanying artifacts (e.g. scripts, binaries, configuration
+files) can be packaged together.
+
+- The zip file format shall conform to the Document Container File
+  format as defined in the ISO/IEC 21320-1 "Document Container File —
+  Part 1: Core" standard
+  \[[ISO-IEC-21320-1](#CIT_ISO_IEC_21320_1)\]. 
+
+- The tar file format shall conform to TBD
+
+A CSAR zip file MUST contain one of the following:
+
+- A **TOSCA.meta** metadata file that provides entry information for a
+  TOSCA orchestrator processing the CSAR file.  The **TOSCA.meta**
+  file may be located either at the root of the archive or inside a
+  **TOSCA-Metadata** directory (the directory being at the root of the
+  archive). The CSAR may contain only one **TOSCA.meta** file.
+
+- A YAML (.yml or .yaml) file at the root of the archive, the yaml file
+  being a valid TOSCA file.
+
 <!----
 {"id": "1368", "author": "Calin Curescu", "date": "2019-01-30T15:18:00Z", "comment": "Why keep a mandatory directory for only\n  one file. I think we should allow to have the TOSCA.meta file also in\n  the root of the archive.  \n  Then the processor should do the following:  \n  Look for the TOSCA-Metadata directory. If found, look for the\n  TOSCA.meta inside. If latter not found give an error.  \n  Else look for the TOSCA.meta file in the root of the archive  \n  Look for the a .yml or . yaml file in the root directory", "target": "\n  **TOSCA.meta** metadata file that provides entry information for a\n  TOSCA orchestrator processing the CSAR file."}-->
- The **TOSCA.meta** file may be located either at the
-  root of the archive or inside a **TOSCA-Metadata** directory (the
-  directory being at the root of the archive). The CSAR may contain only
-  one **TOSCA.meta** file.
-
-- a yaml (.yml or .yaml) file at the root of the archive, the yaml file
-  being a valid tosca definition template.
 
 The CSAR file MAY contain other directories and files with arbitrary
 names and contents.
 
-TOSCA Meta File
----------------
+## 17.2 TOSCA Meta File
 
 A TOSCA meta file consists of name/value pairs. The name-part of a
 name/value pair is followed by a colon, followed by a blank, followed by
@@ -10411,8 +10151,10 @@ Blocks are separated by an empty line. The first block, called block_0,
 contains metadata about the CSAR itself and is further defined below.
 Other blocks may be used to represent custom generic metadata or
 metadata pertaining to files in the CSAR. A **TOSCA.meta** file is only
-required to include block_0. The structure of block_0 in the TOSCA meta
-file is as follows:
+required to include block_0.
+
+### 17.2.1 Block 0 Keynames in the TOSCA.meta File
+The structure of block_0 in the TOSCA meta file is as follows:
 ```
 CSAR-Version: digit.digit
 Created-By: string
@@ -10456,25 +10198,6 @@ contained in the CSAR.
 <!----
 {"id": "1382", "author": "Calin Curescu", "date": "2019-01-30T16:36:00Z", "comment": "MustFix.  \nIn version 1.0 (pre YAML) the subsequent blocks that contained\ndefinitions were used to provide definitions for types imported in the\nservice template, that is these files were parsed instead of taking the\ndefinitions from external repositoris.  \nSince 1.0 yaml, the files are specified explicitly in the imports\nstatements.  \nNevertheless, by allowing the other definition blocks (as per this\nparagraph formulation) we allow also the old style of imports by the\ndefinitions in the other blocks.  \nI think this puts a burden on the implementation of orchestrators and\nquite confusing. So we should deprecate the usage of definitions in the\nother blocks.  \nMoreover, the other blocks can contain other file type decriptions (for\nartifacts) in the other blocks. E.g:  \nName: Plans/AddUser.bpmn  \nContent-Type: application/vnd.oasis.bpmn  \nThese also seem obsolete and useless.  \nI think we should deprecate the other blocks in the TOSCA.meta\nfile", "target": "Note that any further TOSCA definitions files required by the\ndefinitions specified by **Entry-Definitions** or **Other-Definitions**\ncan be found by a TOSCA orchestrator by processing respective\n**imports** statements. Note also that artifact files (e.g. scripts,\nbinaries, configuration files) used by the TOSCA definitions and\nincluded in the CSAR are fully described and referred via relative path\nnames in artifact definitions in the respective TOSCA definitions files\ncontained in the CSAR."}-->
 
-### Custom keynames in the TOSCA.meta file
-
-Users can populate other blocks than block_0 in the TOSCA.meta file with
-custom name/value pairs that follow the entry syntax defined above and
-have names that are different from the normative keynames (e.g.
-CSAR-Version, Created-By, Entry-Definitions, Other-Definitions). These
-custom name/value pairs are outside the scope of the TOSCA
-specification.Nevertheless, future versions of the TOSCA specification
-may add definitions of new keynames to be used in the **TOSCA.meta**
-file. In case of a keyname collision (with a custom keyname) the TOSCA
-specification definitions take precedence.
-
-To minimize such keyname collisions the specification reserves the use
-of keynames starting with TOSCA and tosca. It is recommended as a good
-practice to use a specific prefix (e.g. identifying the organization,
-scope, etc.) when using custom keynames.
-
-### Example
-
 The following listing represents a valid **TOSCA.meta** file according
 to this TOSCA specification.
 ```
@@ -10492,8 +10215,24 @@ templates can be found in the files **tosca_moose.yaml** and
 **tosca_deer.yaml** found in the directory called **definitions** in the
 root of the CSAR file.
 
-Archive without TOSCA-Metadata
-------------------------------
+### 17.2.2 Custom Keynames in the TOSCA.meta File
+
+Users can populate other blocks than block_0 in the TOSCA.meta file with
+custom name/value pairs that follow the entry syntax defined above and
+have names that are different from the normative keynames (e.g.
+CSAR-Version, Created-By, Entry-Definitions, Other-Definitions). These
+custom name/value pairs are outside the scope of the TOSCA
+specification.Nevertheless, future versions of the TOSCA specification
+may add definitions of new keynames to be used in the **TOSCA.meta**
+file. In case of a keyname collision (with a custom keyname) the TOSCA
+specification definitions take precedence.
+
+To minimize such keyname collisions the specification reserves the use
+of keynames starting with TOSCA and tosca. It is recommended as a good
+practice to use a specific prefix (e.g. identifying the organization,
+scope, etc.) when using custom keynames.
+
+## 17.3 CSAR Without TOSCA.meta
 
 In case the archive doesn’t contains a **TOSCA.meta** file the archive
 is required to contains a single YAML file at the root of the archive
@@ -10509,8 +10248,6 @@ Note that in a CSAR without TOSCA-metadata it is not possible to
 unambiguously include definitions for substitution templates as we can
 have only one service template defined in a yaml file.
 
-### Example
-
 The following represents a valid TOSCA template file acting as the CSAR
 Entry-Definitions file in an archive without TOSCA-Metadata directory.
 ```
@@ -10523,7 +10260,7 @@ metadata:
 ```
 
 -------
-# Conformance
+# 18 Conformance
 <!-- Required section -->
 
 > (Note: The [OASIS TC
