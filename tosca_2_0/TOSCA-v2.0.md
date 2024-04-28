@@ -10232,7 +10232,7 @@ of keynames starting with TOSCA and tosca. It is recommended as a good
 practice to use a specific prefix (e.g. identifying the organization,
 scope, etc.) when using custom keynames.
 
-### 17.3 CSAR Without TOSCA.meta
+## 17.3 CSAR Without TOSCA.meta
 
 In case the archive doesn’t contains a **TOSCA.meta** file the archive
 is required to contains a single YAML file at the root of the archive
