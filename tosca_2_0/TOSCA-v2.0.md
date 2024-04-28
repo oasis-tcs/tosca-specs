@@ -9750,56 +9750,46 @@ have the following meaning:
 
 # 16 Groups and Policies
 
-## Group Type
+A *TOSCA group* is a logical grouping of nodes for purposes of uniform
+application of *policies* to collections of nodes. Conceptually, group
+definitions allow the creation of logical *membership* relationships
+to nodes in a service template that are not a part of the
+application's explicit requirement dependencies in the topology
+template (i.e. those required to actually get the application deployed
+and running). 
 
-A Group Type defines logical grouping types for nodes, typically for
-different management purposes. Conceptually, group definitions allow the
-creation of logical
-“membership” relationships 
+## 16.1 Group Type
 <!----
 {"id": "1121", "author": "Chris Lauwers", "date": "2020-08-03T18:44:00Z", "comment": "Edit to remove the implication that these\nare similar to \u201cTOSCA relationships\u201d", "target": "creation of logical\n\u201cmembership\u201d relationships "}-->
-to
-nodes in a service template that are not a part of the application’s
-explicit requirement dependencies in the service template (i.e. those
-required to actually get the application deployed and running). Instead,
-such logical membership allows for the introduction of things such as
-group management and uniform application of policies (i.e. requirements
-that are also not bound to the application itself) to the group’s
-members
-<!----
-{"id": "1122", "author": "Chris Lauwers", "date": "2021-01-17T02:47:00Z", "comment": "Alternative language suggested by PJ: A\nGroup Type defines logical grouping types for nodes for purposes of\nuniform application of policies to collections of nodes. Conceptually,\ngroup definitions allow the creation of logical \u201cmembership\u201d\nrelationships to nodes in a service template that are not a part of the\napplication\u2019s explicit requirement dependencies in the topology template\n(i.e. those required to actually get the application deployed and\nrunning). Instead, such logical membership allows for the introduction\nof things such as group management and uniform application of policies\n(i.e. requirements that are also not bound to the application itself) to\nthe group\u2019s members.", "target": "members"}-->
-. .
+
 <!----
 {"id": "1123", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:56:00Z", "comment": "I don\u2019t think\nthe text definitions of group and group type are sufficiently different.\nSo I\u2019ve added some suggested new text but will leave it to the editors\nto consider how much of the existing text can be\nremoved.", "target": ""}-->
 
-
-### Keynames
-
-The Group Type is a TOSCA type entity and has the common keynames listed
-in Section 4.2.5.2 Common keynames in type definitions. In addition, the
-Group Type has the following recognized keynames:
+As with most TOSCA entities, groups are typed. A group type definition
+is a type of TOSCA type definition and as a result supports the common
+keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+group type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|properties|no|map of property definitions|An optional map of property definitions for the Group Type.|
-|attributes|no|map of attribute definitions|An optional map of attribute definitions for the Group Type.|
-|members |no|list of string|An optional list of one or more names of Node Types that are valid (allowed) as members of the Group Type.|
+|properties|no|map of property definitions|An optional map of property definitions for the group type.|
+|attributes|no|map of attribute definitions|An optional map of attribute definitions for the group type.|
+|members |no|list of string|An optional list of one or more names of Node Types that are valid (allowed) as members of the group type.|
 
-### Grammar
+> What are group properties used for?
+> How can group attributes possibly be set, and what would they be used for?
 
-Group Types have the following grammar:
+Group types have the following grammar:
 ```
 <group_type_name>:
   derived_from: <parent_group_type_name>
   version: <version_number>
-  metadata: 
-    <map of string>
+  metadata: <map of YAML data>
   description: <group_description>
-  properties:
-    <property_definitions>
-  attributes:
-    <attribute_definitions>
-  members: [ <list_of_valid_member_types> ]
+  properties: <property_definitions>
+  attributes: <attribute_definitions>
+  members:  <list_of_valid_member_types> 
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9807,24 +9797,18 @@ have the following meaning:
 - group_type_name: represents the mandatory symbolic name of the Group
   Type being declared as a string.
 
-- parent_group_type_name: represents the name (string) of the Group Type
-  this Group Type definition derives from (i.e. its “parent” type).
-
-- version_number: represents the optional TOSCA version number for the
-  Group Type.
-
-- group_description: represents the optional description string for the
-  corresponding group_type_name.
+- parent_group_type_name: represents the name (string) of the group type
+  this group type definition derives from (i.e. its “parent” type).
 
 - attribute_definitions: represents the optional map of attribute
-  definitions for the Group Type.
+  definitions for the group type.
 
 - property_definitions: represents the optional map of property
-  definitions for the Group Type.
+  definitions for the group type.
 
 - list_of_valid_member_types: represents the optional list of TOSCA Node
   Types that are valid member types for being added to (i.e. members of)
-  the Group Type; if the members keyname is not defined then there are
+  the group type; if the members keyname is not defined then there are
   no restrictions to the member types;
 
   - note that the members of a group ultimately resolve to nodes, the
@@ -9834,9 +9818,7 @@ have the following meaning:
   - A node type is matched if it is the specified type or is derived from
     the node type
 
-### Derivation rules
-
-During Group Type derivation the keyname definitions follow these rules:
+During group type derivation the keyname definitions follow these rules:
 
 - properties: existing property definitions may be refined; new property
   definitions may be added.
@@ -9850,49 +9832,41 @@ During Group Type derivation the keyname definitions follow these rules:
   defined in the parent type then no restrictions are applied to the
   definition.
 
-### Example
-
-The following represents a Group Type definition:
+The following represents an example group type definition:
 ```
 group_types:
-  mycompany.mytypes.groups.placement:
-    description: My company’s group type for placing nodes of type Compute
-    members: [ tosca.nodes.Compute ]
+  mycompany.placement:
+    description: My company’s group type for placing nodes of type Software
+    members: [ Software ]
 ```
-## Group definition
+## 16.2 Group Definition
 
-Collections of Nodes may be defined using a Group. A group definition
-defines a logical grouping of node templates, typically for management
-purposes, but is separate from the application’s service template.
+Collections of nodes in a service template may be grouped together
+using a *group definition* in that same service template. A group
+definition defines a logical grouping of node templates for purposes
+of uniform application of policies.
 
-### Keynames
-
-The following is the list of recognized keynames for a TOSCA group
-definition:
+The following is the list of recognized keynames for a
+TOSCA group definition:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory name of the group type the group definition is based upon.|
 |description|no|string|The optional description for the group definition.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|metadata|no|map of YAML data|Defines a section used to declare additional metadata information. |
 |properties|no|map of property assignments|An optional map of property value assignments for the group definition.|
 |attributes|no|map of attribute assignments|An optional map of attribute value assignments for the group definition.|
 |members|no|list of string|The optional list of one or more node template names that are members of this group definition.|
-
-### Grammar
 
 Group definitions have one the following grammars:
 ```
 <group_name>:
   type: <group_type_name>
   description: <group_description>
-  metadata: 
-    <map of string>
-  properties:
-    <property_assignments>
-  attributes:
-    <attribute_assignments>
-  members: [ <list_of_node_templates> ]
+  metadata: <map of YAML data>
+  properties: <property_assignments>
+  attributes: <attribute_assignments>
+  members:  <list_of_node_templates> 
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9900,18 +9874,16 @@ have the following meaning:
 - group_name: represents the mandatory symbolic name of the group as a
   string.
 
-- group_type_name: represents the name of the Group Type the definition
+- group_type_name: represents the name of the group type the definition
   is based upon.
-
-- group_description: contains an optional description of the group.
 
 - property_assignments: represents the optional map of property
   assignments for the group definition that provide values for
-  properties defined in its declared Group Type.
+  properties defined in its declared group type.
 
 - attribute_assigments: represents the optional map of attribute
   assignments for the group definition that provide values for
-  attributes defined in its declared Group Type.
+  attributes defined in its declared group type.
 
 - list_of_node_templates: contains the mandatory list of one or more
   node template names or group symbolic names (within the same service
@@ -9923,83 +9895,66 @@ have the following meaning:
     that is derived from) with the node types in the
     list_of_valid_member_types
 
-### Example
-
 The following represents a group definition:
 ```
 groups:
   my_app_placement_group:
-    type: tosca.groups.Root
+    type: Root
     description: My application’s logical component grouping for placement
     members: [ my_web_server, my_sql_database ]
 ```
-## Policy Type
+## 16.3 Policy Type
 
-A Policy Type defines a type of a policy that affects or governs an
-application or service’s topology at some stage of its lifecycle but is
-not explicitly part of the topology itself (i.e., it does not prevent
-the application or service from being deployed or run if it did not
-exist).
+A *policy type* defines a type of a policy that affects or governs an
+application or service’s topology at some stage of its lifecycle but
+is not explicitly part of the topology itself (i.e., it does not
+prevent the application or service from being deployed or run if it
+did not exist).
 
-### Keynames
-
-The Policy Type is a TOSCA type entity and has the common keynames
-listed in Section 4.2.5.2 Common keynames in type definitions. In
-addition, the Policy Type has the following recognized keynames:
+A policy type definition is a type of TOSCA type definition and as a
+result supports the common keynames listed in [Section
+6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+policy type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|properties|no|map of property definitions|An optional map of property definitions for the Policy Type.|
-|targets|no|list of string|An optional list of valid Node Types or Group Types the Policy Type can be applied to.|
-|triggers|no|map of trigger definitions |An optional map of policy triggers for the Policy Type.|
+|properties|no|map of property definitions|An optional map of property definitions for the policy type.|
+|targets|no|list of string|An optional list of valid Node Types or group types the policy type can be applied to.|
+|triggers|no|map of trigger definitions |An optional map of policy triggers for the policy type.|
 
-
-### Grammar
-
-Policy Types have the following grammar:
+Policy types have the following grammar:
 ```
 <policy_type_name>:
   derived_from: <parent_policy_type_name>
   version: <version_number>
-  metadata: 
-    <map of string>
+  metadata: <map of YAML data>
   description: <policy_description>
-  properties:
-    <property_definitions> 
-  targets: [ <list_of_valid_target_types> ]
-  triggers:
-    <trigger_definitions>
+  properties: <property_definitions> 
+  targets:  <list_of_valid_target_types> 
+  triggers: <trigger_definitions>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- policy_type_name: represents the mandatory symbolic name of the Policy
-  Type being declared as a string.
+- policy_type_name: represents the mandatory symbolic name of the policy
+  type being declared as a string.
 
-- parent_policy_type_name: represents the name (string) of the Policy
-  Type this Policy Type definition derives from (i.e., its “parent”
+- parent_policy_type_name: represents the name (string) of the policy
+  type this policy type definition derives from (i.e., its “parent”
   type).
 
-- version_number: represents the optional TOSCA version number for the
-  Policy Type.
-
-- policy_description: represents the optional description string for the
-  corresponding policy_type_name.
-
 - property_definitions: represents the optional map of property
-  definitions for the Policy Type.
+  definitions for the policy type.
 
 - list_of_valid_target_types: represents the optional list of TOSCA
-  types (i.e. Group or Node Types) that are valid targets for this
-  Policy Type; if the targets keyname is not defined then there are no
+  types (i.e. group or node types) that are valid targets for this
+  policy type; if the targets keyname is not defined then there are no
   restrictions to the targets’ types.
 
 - trigger_definitions: represents the optional map of trigger
   definitions for the policy.
 
-### Derivation rules
-
-During Policy Type derivation the keyname definitions follow these
+During policy type derivation the keyname definitions follow these
 rules:
 
 - properties: existing property definitions may be refined; new property
@@ -10014,22 +9969,18 @@ rules:
 - triggers: existing trigger definitions may not be changed; new trigger
   definitions may be added.
 
-### Example
-
-The following represents a Policy Type definition:
+The following represents a policy type definition:
 ```
 policy_types:
-  mycompany.mytypes.policies.placement.Container.Linux:
+  placement.Container.Linux:
     description: My company’s placement policy for linux 
-    derived_from: tosca.policies.Root
+    derived_from: Root
 ```
-## Policy definition
+## 16.4 Policy Definition
 
 A policy definition defines a policy that can be associated with a TOSCA
 service or top-level entity definition (e.g., group definition, node
 template, etc.).
-
-### Keynames
 
 The following is the list of recognized keynames for a TOSCA policy
 definition:
@@ -10045,20 +9996,15 @@ definition:
 |targets|no|list of string|An optional list of valid node templates or Groups the Policy can be applied to.|
 |triggers|no|map of trigger definitions|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
 
-### Grammar
-
-Policy definitions have one the following grammars:
+Policy definitions have the following grammar:
 ```
 <policy_name>:
   type: <policy_type_name>
   description: <policy_description>
-  metadata: 
-    <map of string>
-  properties:
-    <property_assignments>
-  targets: [<list_of_policy_targets>]
-  triggers:
-    <trigger_definitions>
+  metadata: <map of YAML data>
+  properties: <property_assignments>
+  targets: <list_of_policy_targets>
+  triggers: <trigger_definitions>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -10069,11 +10015,9 @@ have the following meaning:
 - policy_type_name: represents the name of the policy the definition is
   based upon.
 
-- policy_description: contains an optional description of the policy.
-
-- property_assignments: represents the optional map of [property
-  assignments](#property-assignment) for the policy definition that
-  provide values for properties defined in its declared Policy Type.
+- property_assignments: represents the optional map of property
+  assignments for the policy definition that provide values for
+  properties defined in its declared policy type.
 
 - list_of_policy_targets: represents the optional list of names of node
   templates or groups that the policy is to applied to.
@@ -10084,30 +10028,26 @@ have the following meaning:
     type that is derived from) with the types (of nodes or groups) in the
     list_of_valid_target_types.
 
-- trigger_definitions: represents the optional map
-  of [trigger definitions](#trigger-definition) for the policy; these
-  triggers apply in addition to the triggers defined in the policy
-  type.
+- trigger_definitions: represents the optional map of trigger
+  definitions) for the policy; these triggers apply in addition to the
+  triggers defined in the policy type.
+
 <!----
 {"id": "1173", "author": "Calin Curescu", "date": "2020-05-06T10:56:00Z", "comment": "!!! What is the meaning of these triggers\n  here w.r.t. the triggers defined in the policy type?  \n  I assume we should allow the definition of new triggers, that are used\n  in addition to the triggers defined in the policy type.  \n  But, in interface we did not allow to add new operations or\n  notifications.", "target": "trigger_definitions: represents the optional map\n  of [trigger definitions](#trigger-definition) for the policy; these\n  triggers apply in addition to the triggers defined in the policy\n  type."}-->
-
-
-### Example
 
 The following represents a policy definition:
 ```
   - my_compute_placement_policy:
-      type: tosca.policies.placement
+      type: placement
       description: Apply my placement policy to my application’s servers
       targets: [ my_server_1, my_server_2 ]
       # remainder of policy definition left off for brevity
 ```
-## Trigger definition
+## 16.5 Trigger Definition
 
-A trigger definition defines the event, condition and action that is
-used to “trigger” a policy with which it is associated.
+A trigger definition defines an *event, condition, action* tuple
+associated with a policy.
 
-### Keynames
 <!----
 {"id": "1181", "author": "Matt Rutkowski", "date": "2017-09-26T11:38:00Z", "comment": "RECALL; Policy type defn were to be consumed by a \u201cPolicy Engine\u201d that would create events on a known event monitoring service. We need to create diagram and explain the event-condition-action flow of policy (defn.)", "target": "Keynames"}-->
 
@@ -10116,14 +10056,13 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 |---|---|---|---|
-|description | no|string| The optional description string for the trigger.|
-|event    | yes    | string| The mandatory name of the event that activates the trigger’s action. |
-|condition  | no    | [condition clause](#BKM_Condition_Clause_Def)| The optional condition that must evaluate to true in order for the trigger’s action to be performed. Note: this is optional since sometimes the event occurrence itself is enough to trigger the action.|
-|action|yes|list of [activity definition](#activity-definitions)|The list of sequential activities to be performed when the event is triggered, and the condition is met (i.e., evaluates to true).|
+|description no|string|The optional description string for the trigger.|
+|event|yes|string|The mandatory name of the event that activates the trigger’s action.|
+|condition|no|condition clause|The optional condition that must evaluate to true in order for the trigger’s action to be performed. Note: this is optional since sometimes the event occurrence itself is enough to trigger the action.|
+|action|yes|list of activity definition|The list of sequential activities to be performed when the event is triggered, and the condition is met (i.e., evaluates to true).|
 <!----
 {"id": "1182", "author": "Chris Lauwers", "date": "2022-10-03T20:01:00Z", "comment": "We need to clarify the context in which event names can be interpreted. Are they globally scoped?", "target": "name"}-->
 
-### Grammar
 <!----
 {"id": "1185", "author": "Calin Curescu", "date": "2020-05-06T11:29:00Z", "comment": "This does not make any sense. Needs to be deleted.", "target": ""}-->
 
@@ -10133,8 +10072,7 @@ Trigger definitions have the following grammars:
   description: <trigger_description>
   event: <event_name>
   condition: <condition_clause>
-  action: 
-    - <list_of_activity_definition>
+  action: <list_of_activity_definition>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -10142,12 +10080,8 @@ have the following meaning:
 - trigger_name: represents the mandatory symbolic name of the trigger as
   a string.
 
-- trigger_description: represents the optional
-  [description](#TYPE_YAML_STRING) string for the corresponding
-  trigger_name.
-
 - event_name: represents the mandatory name of an event associated with
-  an interface notification on the identified resource (node). .
+  an interface notification on the identified resource (node).
 
 - condition_clause: an optional Boolean expression that can be evaluated
   within the context of the service with which the policy is associated
@@ -10167,39 +10101,39 @@ This section defines the metadata of a cloud service archive as well as
 its overall structure. Except for the examples, this section is
 **normative.**
 
-Overall Structure of a CSAR
----------------------------
-
-A CSAR is a
-zip file 
+## 17.1 Overall Structure of a CSAR
 <!----
 {"id": "1367", "author": "Calin Curescu", "date": "2020-06-09T17:00:00Z", "comment": "Thinh would like to have this resolved\nbefore publishing TOSCA v2.0. What is zip? We need to give a clearer\ndefinition of the zip format. What version. Thinh will get back with a\nmore specific definition.  \nTal: look at java **jar specification**? It is zip...", "target": "A CSAR is a\nzip file "}-->
-where TOSCA
-definitions along with all accompanying artifacts (e.g. scripts,
-binaries, configuration files) can be packaged together. The zip file
-format shall conform to the Document Container File format as defined in
-the ISO/IEC 21320-1 "Document Container File — Part 1: Core" standard
-\[[ISO-IEC-21320-1](#CIT_ISO_IEC_21320_1)\]. A CSAR zip file MUST
-contain one of the following:
 
-- A
-  **TOSCA.meta** metadata file that provides entry information for a
-  TOSCA orchestrator processing the CSAR file.
+A CSAR is a zip or tar file where TOSCA definitions along with
+all accompanying artifacts (e.g. scripts, binaries, configuration
+files) can be packaged together.
+
+- The zip file format shall conform to the Document Container File
+  format as defined in the ISO/IEC 21320-1 "Document Container File —
+  Part 1: Core" standard
+  \[[ISO-IEC-21320-1](#CIT_ISO_IEC_21320_1)\]. 
+
+- The tar file format shall conform to TBD
+
+A CSAR zip file MUST contain one of the following:
+
+- A **TOSCA.meta** metadata file that provides entry information for a
+  TOSCA orchestrator processing the CSAR file.  The **TOSCA.meta**
+  file may be located either at the root of the archive or inside a
+  **TOSCA-Metadata** directory (the directory being at the root of the
+  archive). The CSAR may contain only one **TOSCA.meta** file.
+
+- A YAML (.yml or .yaml) file at the root of the archive, the yaml file
+  being a valid TOSCA file.
+
 <!----
 {"id": "1368", "author": "Calin Curescu", "date": "2019-01-30T15:18:00Z", "comment": "Why keep a mandatory directory for only\n  one file. I think we should allow to have the TOSCA.meta file also in\n  the root of the archive.  \n  Then the processor should do the following:  \n  Look for the TOSCA-Metadata directory. If found, look for the\n  TOSCA.meta inside. If latter not found give an error.  \n  Else look for the TOSCA.meta file in the root of the archive  \n  Look for the a .yml or . yaml file in the root directory", "target": "\n  **TOSCA.meta** metadata file that provides entry information for a\n  TOSCA orchestrator processing the CSAR file."}-->
- The **TOSCA.meta** file may be located either at the
-  root of the archive or inside a **TOSCA-Metadata** directory (the
-  directory being at the root of the archive). The CSAR may contain only
-  one **TOSCA.meta** file.
-
-- a yaml (.yml or .yaml) file at the root of the archive, the yaml file
-  being a valid tosca definition template.
 
 The CSAR file MAY contain other directories and files with arbitrary
 names and contents.
 
-TOSCA Meta File
----------------
+## 17.2 TOSCA Meta File
 
 A TOSCA meta file consists of name/value pairs. The name-part of a
 name/value pair is followed by a colon, followed by a blank, followed by
@@ -10217,8 +10151,10 @@ Blocks are separated by an empty line. The first block, called block_0,
 contains metadata about the CSAR itself and is further defined below.
 Other blocks may be used to represent custom generic metadata or
 metadata pertaining to files in the CSAR. A **TOSCA.meta** file is only
-required to include block_0. The structure of block_0 in the TOSCA meta
-file is as follows:
+required to include block_0.
+
+### 17.2.1 Block 0 Keynames in the TOSCA.meta File
+The structure of block_0 in the TOSCA meta file is as follows:
 ```
 CSAR-Version: digit.digit
 Created-By: string
@@ -10262,25 +10198,6 @@ contained in the CSAR.
 <!----
 {"id": "1382", "author": "Calin Curescu", "date": "2019-01-30T16:36:00Z", "comment": "MustFix.  \nIn version 1.0 (pre YAML) the subsequent blocks that contained\ndefinitions were used to provide definitions for types imported in the\nservice template, that is these files were parsed instead of taking the\ndefinitions from external repositoris.  \nSince 1.0 yaml, the files are specified explicitly in the imports\nstatements.  \nNevertheless, by allowing the other definition blocks (as per this\nparagraph formulation) we allow also the old style of imports by the\ndefinitions in the other blocks.  \nI think this puts a burden on the implementation of orchestrators and\nquite confusing. So we should deprecate the usage of definitions in the\nother blocks.  \nMoreover, the other blocks can contain other file type decriptions (for\nartifacts) in the other blocks. E.g:  \nName: Plans/AddUser.bpmn  \nContent-Type: application/vnd.oasis.bpmn  \nThese also seem obsolete and useless.  \nI think we should deprecate the other blocks in the TOSCA.meta\nfile", "target": "Note that any further TOSCA definitions files required by the\ndefinitions specified by **Entry-Definitions** or **Other-Definitions**\ncan be found by a TOSCA orchestrator by processing respective\n**imports** statements. Note also that artifact files (e.g. scripts,\nbinaries, configuration files) used by the TOSCA definitions and\nincluded in the CSAR are fully described and referred via relative path\nnames in artifact definitions in the respective TOSCA definitions files\ncontained in the CSAR."}-->
 
-### Custom keynames in the TOSCA.meta file
-
-Users can populate other blocks than block_0 in the TOSCA.meta file with
-custom name/value pairs that follow the entry syntax defined above and
-have names that are different from the normative keynames (e.g.
-CSAR-Version, Created-By, Entry-Definitions, Other-Definitions). These
-custom name/value pairs are outside the scope of the TOSCA
-specification.Nevertheless, future versions of the TOSCA specification
-may add definitions of new keynames to be used in the **TOSCA.meta**
-file. In case of a keyname collision (with a custom keyname) the TOSCA
-specification definitions take precedence.
-
-To minimize such keyname collisions the specification reserves the use
-of keynames starting with TOSCA and tosca. It is recommended as a good
-practice to use a specific prefix (e.g. identifying the organization,
-scope, etc.) when using custom keynames.
-
-### Example
-
 The following listing represents a valid **TOSCA.meta** file according
 to this TOSCA specification.
 ```
@@ -10298,8 +10215,24 @@ templates can be found in the files **tosca_moose.yaml** and
 **tosca_deer.yaml** found in the directory called **definitions** in the
 root of the CSAR file.
 
-Archive without TOSCA-Metadata
-------------------------------
+### 17.2.2 Custom Keynames in the TOSCA.meta File
+
+Users can populate other blocks than block_0 in the TOSCA.meta file with
+custom name/value pairs that follow the entry syntax defined above and
+have names that are different from the normative keynames (e.g.
+CSAR-Version, Created-By, Entry-Definitions, Other-Definitions). These
+custom name/value pairs are outside the scope of the TOSCA
+specification.Nevertheless, future versions of the TOSCA specification
+may add definitions of new keynames to be used in the **TOSCA.meta**
+file. In case of a keyname collision (with a custom keyname) the TOSCA
+specification definitions take precedence.
+
+To minimize such keyname collisions the specification reserves the use
+of keynames starting with TOSCA and tosca. It is recommended as a good
+practice to use a specific prefix (e.g. identifying the organization,
+scope, etc.) when using custom keynames.
+
+### 17.3 CSAR Without TOSCA.meta
 
 In case the archive doesn’t contains a **TOSCA.meta** file the archive
 is required to contains a single YAML file at the root of the archive
@@ -10315,8 +10248,6 @@ Note that in a CSAR without TOSCA-metadata it is not possible to
 unambiguously include definitions for substitution templates as we can
 have only one service template defined in a yaml file.
 
-### Example
-
 The following represents a valid TOSCA template file acting as the CSAR
 Entry-Definitions file in an archive without TOSCA-Metadata directory.
 ```
@@ -10329,7 +10260,7 @@ metadata:
 ```
 
 -------
-# Conformance
+# 18 Conformance
 <!-- Required section -->
 
 > (Note: The [OASIS TC
