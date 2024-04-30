@@ -4469,19 +4469,35 @@ Please note:
 #### 9.1.2.2 scalar-unit
 
 The TOSCA *scalar-unit* types can be used to define scalar values
-along with a unit from the list of recognized units provided below.
+along with an associated units.
 
 TOSCA scalar-unit typed values have the following grammar:
 ```
-<scalar> <unit> 
+<scalar_unit_name>:
+    version: <version_number>
+    metadata: 
+      <map of string>
+    description: <datatype_description>
+    # validation clause is implict; must be a unit_symbol_string+white space+data_value
+    data_value_type: <data_type_name> 
+    unit_symbol_table: <name of a unit_symbol_name>
+    unit_suffix: <string with no white space>
+    metadata: <metadata_map>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- scalar: is a mandatory scalar value.
+- scalar: is a mandatory scalar value name
 
 - unit: is a mandatory unit value. The unit value MUST be
   type-compatible with the scalar.
+
+- scalar-type: is the manadatory TOSCA data type of the scalar. This must not be a scalar-unit.
+
+- unit_symbol_table: is the manadatory name of a unit_symbol_table
+
+
+- unit_suffix: is an optional string of characters with no white space. If present it is appended to the symbol defined in the unit_symbol_table. This is provided as a convience so that a single unit_table containing SI prefixes can be used for mulitple SI units.
 
 The following additional requirements apply:
 
@@ -4492,145 +4508,92 @@ The following additional requirements apply:
   is missing on a property or attribute declaration derived from any
   scalar-unit type.
 
-The scalar-unit type is abstract and has the following recognized concrete
-types in TOSCA:
+The scalar-unit type is abstract.
 
-##### 9.1.2.2.1 scalar-unit.size
-
-The TOSCA *scalar-unit.size* type is used to define properties that
-have scalar values measured in size units. It supports the units shown
-in the following table:
-
-| Unit | Usage | Description                    |
-|------|-------|--------------------------------|
-| B    | size  | byte                           |
-| kB   | size  | kilobyte (1000 bytes)          |
-| KiB  | size  | kibibytes (1024 bytes)         |
-| MB   | size  | megabyte (1000000 bytes)       |
-| MiB  | size  | mebibyte (1048576 bytes)       |
-| GB   | size  | gigabyte (1000000000 bytes)    |
-| GiB  | size  | gibibytes (1073741824 bytes)   |
-| TB   | size  | terabyte (1000000000000 bytes) |
-| TiB  | size  | tebibyte (1099511627776 bytes) |
-
-These units are a subset of those defined by GNU at
-<http://www.gnu.org/software/parted/manual/html_node/unit.html>, which
-is a non-normative reference to this specification.
-
-TOSCA treats these unit values as *case-insensitive* (e.g., a value of
-‘kB’, ‘KB’ or ‘kb’ is equivalent), but it is considered best practice
-to use the case of these units as prescribed by GNU.
-
-<!----
-{"id": "843", "author": "Chris Lauwers", "date": "2020-07-20T18:40:00Z", "comment": "Bitrate units are case sensitive. We\n  should make this consistent.", "target": "GNU"}-->
-
-The following shown an example property of type scalar-unit.size:
+Unit symbol tables are used to define a set of related units and thier prefixes. They have the following grammar:
 ```
-# Storage size in Gigabytes
-properties:
-  storage_size: 10 GB
+<unit_symbol_table>:
+	map of unit_symbol_name
+
+<unit_symbol>:
+    unit_symbol_string: <string>
+    unit_symbol_multiplier: <integer or float>
 ```
 
-##### 9.1.2.2.2 scalar-unit.time
-
-The TOSCA *scalar-unit.time* type is used to define properties that have scalar
-values measured in time units. It supports the units shown
-in the following table:
-
-| Unit | Usage | Description  |
-|------|-------|--------------|
-| d    | time  | days         |
-| h    | time  | hours        |
-| m    | time  | minutes      |
-| s    | time  | seconds      |
-| ms   | time  | milliseconds |
-| us   | time  | microseconds |
-| ns   | time  | nanoseconds  |
-
-The unit values recognized by TOSCA for scalar-unit.time types are
-based upon a subset of those defined by International System of Units
-whose recognized abbreviations are defined within the following
-reference:
-<http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>. This
-document is a non-normative reference to this specification and
-intended for publications or grammars enabled for Latin characters
-which are not accessible in typical programming languages
-
-TOSCA treats these unit values as *case-insensitive* (e.g., a value of
-‘ms’, ‘mS’ or ‘MS’ is equivalent), but it is considered best practice
-to use the case of these units as described by this document.
-
-The following shown an example property of type scalar-unit.time:
+The following give an example of the use of a scalar_units:
 ```
-# Response time in milliseconds
-properties:
-  respone_time: 10 ms
+data_types:
+    non_negative_integer:
+        derived_from: integer
+        validation: { $greater_or_equal: [ $value,  0 ] }
+
+    bitrate:
+	version: 2.0
+	description: bitrate allowing multiples of 1024 as well as 1000 but not including prefixes above 10^12
+	derived_from: scalar-unit
+        data_value_type: non_negative_integer
+	unit_symbol_table: bits
+
+    length:
+	derived_from: scalar-unit
+	data_value_type: float
+	unit_symbol_table: ISO80000
+	unit_suffix: m  ## Note suffix is defined so will be added to entries in ISO80000 table
+
+    mass:
+	derived_from: scalar-unit
+	data_value_type: float
+	unit_symbol_table: ISO80000 # Note table is used by length and mass
+	unit_suffix: g
+
+unit_symbol_tables:
+	bits:
+		"B":   1 # Note no suffix defined in data type so index into table includes the B as well as the k
+	        "kB":  1000
+	        "KiB": 1024
+	        "MB":  1000000
+	        "MiB": 1048576
+	        "GB":  1000000000
+	        "GiB": 1073741824
+	        "TB":  1000000000000
+	        "TiB": 1099511627776
+
+	ISO80000: ## Truncated for brevity
+		m: 0.001
+		c: 0.01
+		d: 0.1
+		da: 10
+		h: 100
+		k: 1000
+		M: 1000000
+
+node_types:
+	box:
+		properties:
+			weight:
+				type: Mass
+			height:
+				type: length
+			width:
+				type: length
+				validation: { $less_than: [ 15 cm ] } ## Note valaidation is in centimeters
+			throughput:
+				type: bitrate
+service_template:
+	nade_templates:
+	node:
+		type:box
+		properties:
+			weight: 10 Kg
+			height: 100 mm
+			width: 125 mm ## Note defintion is in millimeters, conversion of units within a scalar is performed by the processor
+			throughput: 1 KiB
+
 ```
 
-##### 9.1.2.2.3  scalar-unit.frequency
 
-The TOSCA *scalar-unit.frequency* type is used to define properties
-that have scalar values measured in units per second. It supports the units shown
-in the following table:
 
-| Unit | Usage     | Description                                                                       |
-|------|-----------|-----------------------------------------------------------------------------------|
-| Hz   | frequency | Hertz, or Hz. equals one cycle per second.                                        |
-| kHz  | frequency | Kilohertz, or kHz, equals to 1,000 Hertz                                          |
-| MHz  | frequency | Megahertz, or MHz, equals to 1,000,000 Hertz or 1,000 kHz                         |
-| GHz  | frequency | Gigahertz, or GHz, equals to 1,000,000,000 Hertz, or 1,000,000 kHz, or 1,000 MHz. |
 
-The value for Hertz (Hz) is the International Standard Unit (ISU) as
-described by the Bureau International des Poids et Mesures (BIPM) in
-the “*SI Brochure: The International System of Units (SI) \[8th
-edition, 2006; updated in 2014\]*”,
-<http://www.bipm.org/en/publications/si-brochure/>
-
-TOSCA treats these unit values as *case-insensitive* (e.g., a value of
-‘khz’, ‘kHz’ or ‘KHZ’ is equivalent), but it is considered best practice
-to use the case of these units as described by this document.
-
-The following shown an example property of type scalar-unit.frequence:
-```
-# Processor raw clock rate
-properties:
-  clock_rate: 2.4 GHz
-```
-
-##### 9.1.2.2.4 scalar-unit.bitrate
-
-The TOSCA *scalar-unit.bitrate* type is used to define properties that
-have scalar values measured in bits per second. It supports the units shown
-in the following table:
-
-| Unit  | Usage   | Description                              |
-|-------|---------|------------------------------------------|
-| bps   | bitrate | bit per second                           |
-| Kbps  | bitrate | kilobit (1000 bits) per second           |
-| Kibps | bitrate | kibibits (1024 bits) per second          |
-| Mbps  | bitrate | megabit (1000000 bits) per second        |
-| Mibps | bitrate | mebibit (1048576 bits) per second        |
-| Gbps  | bitrate | gigabit (1000000000 bits) per second     |
-| Gibps | bitrate | gibibits (1073741824 bits) per second    |
-| Tbps  | bitrate | terabit (1000000000000 bits) per second  |
-| Tibps | bitrate | tebibits (1099511627776 bits) per second |
-
-TOSCA treats these unit values as *case-insensitive* (e.g., a value of
-‘bps’, ‘BPS’ or ‘Bps’ is equivalent), but it is considered best practice
-to use the case of these units as described by this document.
-
-The following shown an example property of type scalar-unit.bitrate:
-```
-# Somewhere in a node template definition
-requirements:
-  - link:
-      node_filter:
-        capabilities: 
-          - myLinkable
-              properties:
-                bitrate:
-                 - greater_or_equal: 10 Kbps # 10 * 1000 bits per second at least
-```
 #### 9.1.2.3 version
 
 The TOSCA *version* type represents a version string.
