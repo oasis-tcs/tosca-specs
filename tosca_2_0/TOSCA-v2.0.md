@@ -1525,11 +1525,11 @@ data_types:
    ...
    <tosca_datatype_def_n>
 ```
-The following code snippet shows example data type definitions:
+The following code snippet shows an example of data type definition:
 ```
 data_types:
   # A complex datatype definition
-  simple_contactinfo_type:
+  simple_contact_info:
     properties:
       name:
         type: string
@@ -1547,7 +1547,7 @@ data_types:
         type: string
       state:
         type: string
-      postalcode:
+      postal_code:
         type: string
 ```
 A detailed description of the data type definition grammar is
@@ -1564,12 +1564,15 @@ capability_types:
 The following code snippet shows example capability type definitions:
 ```
 capability_types:
-  mycompany.mytypes.myCustomEndpoint:
-    derived_from: tosca.capabilities.Endpoint
+  mycompany.mytypes.myGenericFeature:
     properties:
       # more details ...
-  mycompany.mytypes.myCustomFeature:
-    derived_from: tosca.capabilities.Feature
+  mycompany.mytypes.myfeatures.myFirstCustomFeature:
+    derived_from: mycompany.mytypes.myfeatures.myGenericFeature
+    properties:
+      # more details ...
+  mycompany.mytypes.myfeatures.transactSQL:
+    derived_from: mycompany.mytypes.myfeatures.myGenericFeature
     properties:
       # more details ...
 ```
@@ -1608,12 +1611,14 @@ relationship_types:
 The following code snippet shows example relationship type definitions:
 ```
 relationship_types:
+  mycompany.mytypes.HostedOn:
+    properties:
+      # more details ...
   mycompany.mytypes.myCustomClientServerType:
-    derived_from: tosca.relationships.HostedOn
+    derived_from: mycompany.mytypes.HostedOn
     properties:
       # more details ...
   mycompany.mytypes.myCustomConnectionType:
-    derived_from: tosca.relationships.ConnectsTo
     properties:
       # more details ...
 ```
@@ -1631,6 +1636,10 @@ node_types:
 The following code snippet shows example node type definitions:
 ```
 node_types:
+  Database:
+	description: "An abstract node type for all databases"
+  WebApplication:
+	description: "An abstract node type"
   my_webapp_node_type:
     derived_from: WebApplication
     properties:
@@ -1639,7 +1648,7 @@ node_types:
   my_database_node_type:
     derived_from: Database
     capabilities:
-      mytypes.myfeatures.transactSQL
+      mycompany.mytypes.myfeatures.transactSQL
 ```
 A detailed description of the node type definition grammar is
 provided in Section XXX.
@@ -1657,7 +1666,7 @@ The following code snippet shows an example group type definition:
 ```
 group_types:
   mycompany.mytypes.myScalingGroup:
-    derived_from: tosca.groups.Root
+    derived_from: mycompany.mytypes.mygroups
 ```
 A detailed description of the group type definition grammar is
 provided in Section XXX.
@@ -1785,7 +1794,7 @@ be used by service designers to compose complex service
 templates. Entities defined in TOSCA profiles are used as follows:
 
 - Types defined in a TOSCA profile provide reusable building blocks
-  based on which which services can be composed.
+  on which services can be composed.
 - Artifacts defined in a TOSCA profile can provide
   implementations for the TOSCA types defined in the profile. 
 
@@ -1815,10 +1824,9 @@ value that defines the name by which other TOSCA files can import this
 profile. TOSCA does not place any restrictions on the value of the
 profile name string. However, we encourage a Java-style reverse-domain
 notation with version as a best-practice convention.  For example, the
-following profile statement is used to define TOSCA Simple Profile
-Version 2.0 types:
+following profile statement is used to define Version 2.0 of a set of defintiosn suitable for describing cloud computing in an example company:
 ```
-profile: org.oasis-open.tosca.simple:2.0 
+profile: com.example.tosca_profiles.cloud_computing:2.0 
 ```
 The following defines a domain-specific profile for Kubernetes:
 ```
@@ -1832,7 +1840,7 @@ following rules:
 - If the parser encounters the `profile` keyname in a TOSCA file, then the
   corresponding profile name will be applied to all types defined in
   that file as well as to types defined in any imported TOSCA files.
-- If one of those imported files also defines the `profile` keyname—and
+- If one of those imported files itself contains also defines the `profile` keyname—and
   that profile name is different from the name of the importing
   profile—then that profile name overrides the profile name value from
   that point in the import tree onward, recursively.
@@ -1892,7 +1900,7 @@ defines (among other things) a **Host** capability type and a
 corresponding **HostedOn** relationship type as follows:
 ```
 tosca_definitions_version: tosca_2_0
-profile: org.base.v1
+profile: org.base:v1
 capability_types:
   Host:
     description: Hosting capability
@@ -1904,13 +1912,13 @@ Now let’s assume a different profile designer creates a
 platform-specific profile that defines (among other things) a
 **Platform** node type. The Platform node type defines a capability of
 type **Host**. Since the **Host** capability is defined in the
-**org.base.v1** profile, that profile must be imported as shown in the
+**org.base:v1** profile, that profile must be imported as shown in the
 snippet below:
 ```
 tosca_definitions_version: tosca_2_0
 profile: org.platform
 imports:
-  - profile: org.base.v1
+  - profile: org.base:v1
     namespace: p1
 node_types:
   Platform:
@@ -1925,7 +1933,7 @@ just adds a **Credential** data type (in addition to defining the
 follows:
 ```
 tosca_definitions_version: tosca_2_0
-profile: org.base.v2
+profile: org.base:v2
 capability_types:
   Host:
     description: Hosting capability
@@ -1943,11 +1951,11 @@ service that is to be hosted on the platform defined in the
 **org.platform** profile. The template introduces a **Service** node
 type that has a requirement for the platform’s **Host** capability. It
 also has a credential property of type **Credential** as defined in
-**org.base.v2**:
+**org.base:v2**:
 ```
 tosca_definitions_version: tosca_2_0
 imports:
-  - profile: org.base.v2
+  - profile: org.base:v2
     namespace: p2
   - profile: org.platform
     namespace: pl
@@ -1976,8 +1984,8 @@ This service template is invalid, since the **platform** node template
 does not define a capability of a type that is compatible with the
 **valid_capability_types** specified by the **host** requirement in the
 **service** node template. TOSCA grammar extensions are needed to
-specify that the **Host** capability type defined in **org.base.v2** is
-the same as the **Host** capability type defined in **org.base.v1**
+specify that the **Host** capability type defined in **org.base:v2** is
+the same as the **Host** capability type defined in **org.base:v1**
 
 The example in this section illustrates a general version compatibility
 issue that exists when different versions of the same profile are used
@@ -2165,7 +2173,7 @@ The following shows the same example but using the long notation:
 imports:
 - url: ../types/mytypes.yaml
 ```
-The following example mixes and matches short-notation and
+The following example mixes short-notation and
 long-notation import definitions:
 ```
 # Short notation and long notation supported
@@ -2447,8 +2455,7 @@ keynames appears in the sections below.
 
 The `inputs` section of a service template provides a means to define
 parameters using TOSCA parameter definitions, their allowed values via
-validation clauses and default values within a TOSCA service
-template. Input parameters defined in the inputs section of a service
+validation clauses and default values. Input parameters defined in the inputs section of a service
 template can be mapped to properties of node templates or relationship
 templates within the same service template and can thus be used for
 parameterizing the instantiation of the service template.
@@ -2484,7 +2491,7 @@ inputs:
 ### 6.9.3 Node Templates
 
 The `node_templates` section of a service template lists the node
-templates that describe the components that are used to compose cloud
+templates that describe the components that are used to compose
 applications.
 
 The grammar of the node_templates section is a follows:
@@ -2508,7 +2515,7 @@ node_templates:
 The `relationship_templates` section of a service template lists the
 relationship templates that describe the relations between components
 that are used to compose cloud applications.  Note that the explicit
-definition of relationship templatesis optional, since relationships
+definition of relationship templates is optional, since relationships
 between nodes get implicitly defined by referencing other node
 templates in the `requirements` sections of node templates.
 
@@ -2522,7 +2529,7 @@ relationship_templates:
 The following code snippet shows an example of a relationship_templates section:
 ```
 relationship_templates:
-  my_connectsto_relationship:
+  my_connects_to_relationship:
     type: ConnectsTo
     interfaces:
       Configure:
@@ -2600,7 +2607,7 @@ node_templates:
 groups:
   # server2 and server3 are part of the same group
   server_group_1:
-    type: Root
+    type: mycompany.mytypes.myScalingGroup
     members: [ server2, server3 ]
 ```
 ### 6.9.8 Policy Definitions
