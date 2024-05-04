@@ -3208,13 +3208,14 @@ The following code snippet shows an example capability type
 definition:
 ```
 MyFeature:
-  derived_from: Root
   description: a custom feature of my company’s application
   properties:
     my_feature_setting:
       type: string
     my_feature_value:
       type: integer
+    valid_source_node_types:
+	- MyCompanyNodes
 ```
 ## 8.2 Capability Definition
 
@@ -4009,7 +4010,7 @@ in the corresponding requirement definition.
 The value of the `allocation` keyword in a requirement assignment acts
 as a *capacity filter* for the target capability in the target
 node. When the requirement is fulfilled, a capability in a node is a
-valid target for the requirement if for each property of the target
+valid target for the requirement if, for each property of the target
 capability, the sum of all existing allocations plus the current
 allocation is less than or equal to the property value.
 
@@ -4079,8 +4080,8 @@ filter. TOSCA orchestrators use node filters are follows:
   the target capability type and/or the target node type specified in
   the requirement definition.
 
-- A node in this initial set is a valid target node candidate if—when
-  that node is used as the target node for the requirement—the node
+- A node in this initial set is a valid target node candidate if, when
+  that node is used as the target node for the requirement, the node
   filter condition clause evaluates to True.
 
 - Note that the context within which the node filter must be evaluated
