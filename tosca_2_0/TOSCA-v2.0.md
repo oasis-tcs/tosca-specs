@@ -4124,11 +4124,11 @@ specify a default value.
 |Primitive Types|Special Types|Collection Types|
 |:---|:---|:---|
 |string|timestamp|list|
-|integer|scalar-unit.size|map|
-|float|scalar-unit.time||
-|boolean|scalar-unit.frequency||
-|bytes|scalar-unit.bitrate||
-|nil|version|
+|integer|scalar-unit|map|
+|float|version||
+|boolean|||
+|bytes|||
+|nil||
 
 ### 9.1.1 Primitive Types
 
@@ -4519,6 +4519,7 @@ Unit symbol tables are used to define a set of related units and thier prefixes.
     unit_symbol_string: <string>
     unit_symbol_multiplier: <integer or float>
 ```
+Unit sysmbol strings are case sensitive.
 
 The following give an example of the use of a scalar_units:
 ```
@@ -4591,8 +4592,40 @@ service_template:
 
 ```
 
+##### 9.1.2.2.2 scalar-unit.time
 
+The TOSCA *scalar-unit.time* type is used to define properties that have scalar
+values measured in time units. It supports the units shown
+in the following table:
 
+| Unit | Usage | Description  |
+|------|-------|--------------|
+| d    | time  | days         |
+| h    | time  | hours        |
+| m    | time  | minutes      |
+| s    | time  | seconds      |
+| ms   | time  | milliseconds |
+| us   | time  | microseconds |
+| ns   | time  | nanoseconds  |
+
+The unit values recognized by TOSCA for scalar-unit.time types are
+based upon a subset of those defined by International System of Units
+whose recognized abbreviations are defined within the following
+reference:
+<http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>. This
+document is a non-normative reference to this specification and
+intended for publications or grammars enabled for Latin characters
+which are not accessible in typical programming languages
+
+TOSCA 2.0 treats these unit values as *case-sensitive*.
+
+The following shown an example property of type scalar-unit.time:
+```
+# Response time in milliseconds
+properties:
+  response_time: 10 ms
+```
+scalar-unit.time may be implemented as a concrete refienment of the scalar-unit type.
 
 #### 9.1.2.3 version
 
