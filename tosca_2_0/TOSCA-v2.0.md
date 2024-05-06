@@ -5225,7 +5225,6 @@ The following shows an example of a property refinement. Consider the
 definition of an Endpoint capability type:
 ```
 Endpoint:
-  derived_from: Root
   properties:
     protocol:
       type: string
