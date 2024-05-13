@@ -829,25 +829,27 @@ lifecycle:
     of services by providing support for updating and/or upgrading
     deployed services and by providing service assurance functionality.
 
+This section presents a TOSCA *functional architecture* and an
+associated *operational model* that supports the three service
+lifecycle phases outlined above. Note that this functional
+architecture is not intended to prescribe how TOSCA must be
+implemented. Instead, it aims to provide users of TOSCA with a mental
+model of how TOSCA implementations are expected to process TOSCA
+files.
+
 Note that it is not mandatory for compliant TOSCA implementations to
-support all three service lifecycle phases. Some implementations may use
-TOSCA only for service design and delegate orchestration and ongoing
-lifecycle management functionality to external (non-TOSCA)
+support all three service lifecycle phases. Some implementations may
+use TOSCA only for service design and delegate orchestration and
+ongoing lifecycle management functionality to external (non-TOSCA)
 orchestrators. Other implementations may decide to use TOSCA for all
-three phases of the service lifecycle.
+three phases of the service lifecycle. However, a complete
+architecture must anticipate all three lifecycle phases and must clearly distinguish between the four kinds of TOSCA entities defined in Section 2.4. 
 
-This section presents a TOSCA Functional Architecture and an associated
-operational model that supports the three service lifecycle phases
-outlined above. Note that this functional architecture is not intended to
-prescribe how TOSCA must be implemented. Instead, it aims to provide
-users of TOSCA with a mental model of how TOSCA implementations are
-expected to process TOSCA files.
+## 4.1 TOSCA Functional Architecture
 
-While TOSCA does not mandate that compatible implementations must
-support all three lifecycle phases, a complete architecture must
-anticipate all three and must include support for all four kinds of
-TOSCA entities. The TOSCA architecture defined here illustrates how the
-various TOSCA entities are used and how they are related.
+The following Figure shows the TOSCA functional architecture defined
+in this section. It illustrates how the various TOSCA entities are
+used by the different functional blocks and how they are related.
 
 ![TOSCA Functional Architecture](images/functional_architecture.png)
 
@@ -871,81 +873,88 @@ The functional architecture defines the following three blocks:
 The remainder of this section describes each of these functional blocks
 in more detail.
 
-### TOSCA Processor
+## 4.2 TOSCA Processor
 
 At the core of a compliant TOSCA implementation is a TOSCA Processor
 that can create service representations from TOSCA service templates. A
 TOSCA Processor contains the following functional blocks:
 
-#### Parser
+### 4.2.1 Parser
+
+A TOSCA parser performs the following functions:
 
 - Accepts a single TOSCA file plus imported TOSCA files (files without a
-  “service_template”)
+  `service_template`)
 - Can (optionally) import these units from one or more repositories,
   either individually or as complete profiles
-- Outputs valid normalized node templates and <u>unresolved</u>
-  requirements (one-to-one equivalency)
+- Outputs valid normalized node templates. Note that normalized node
+  templates may include unresolved (*dangling*) requirements.
 
-#### Resolver
+### 4.2.2 Resolver
 
-A resolver performs the following functions
+A resolver creates service representations based on normalized service
+templates. It performs the following functions:
 
-##### Creating Node Representations
+1. Creating Node Representations based on normalized node templates.
 
-- Converts normalized node templates to node representations.
-    - Either one-to-one or one-to-many if multiplicity is involved.
-    - Node templates with a "select" directive create a node in the
-      local representation graph that is a reference to the selected
-      node (from the local or a remote representation graph).
-    - Node templates with a "substitute" directive create a node in
-      the local representation graph that is associated to a remote
-      representation graph created from the substitution template.
-- Determines the values of the node properties and attributes
-    - From inputs
-    - By applying intrinsic functions (e.g. get_property, etc.)
-    - Some property and attribute values cannot be initialized since
-      they either depend on other uninitialized properties or attributes
-      or need to access other node representations via relationships that
-      have not been yet initialized.
+   - Either one-to-one or one-to-many if multiplicity is involved.
+   - Node templates with a `select` directive create a node in the
+     local representation graph that is a reference to the selected
+     node (from the local or a remote representation graph).
+   - Node templates with a `substitute` directive create a node in the
+     local representation graph that is associated to a remote
+     representation graph created from the substitution template.
+   - The resolver assigns values to node properties and attributes in
+     node representations based on values or functions defined in the
+     corresponding node templates.
+   - Some property and attribute values cannot be initialized since
+     they either depend on other uninitialized properties or
+     attributes or need to access other node representations via
+     relationships that have not been yet initialized.
 
-##### Creating Relationships connecting Node Representations
+2. Creating Relationships that Connect Node Representations
 
-- Relationships are created by Requirement Fulfillment
-    - If a requirement uses a node_filter that refers to uninitialized properties
-      or attributes, then the fulfillment of this requirement is postponed until
-      all referred properties or attributes are initialized.
-    - A circular dependency signifies a erroneous template and shall report an error
-    - After a relationship is created, properties and attributes that depend on it
-      to be initialized will be initialized.
-- In the end all requirements are satisfied and all relationships are added to the
-  representation graph.
-    - An unsatisfied non-optional requirement results in an error.
+   - Some relationships can be created directly based on target node
+     templates specified in node template requirements.
+   - Other relationships are created by fulfilling dangling requirements. 
+     - If a requirement uses a node_filter that refers to uninitialized properties
+       or attributes, then the fulfillment of this requirement is postponed until
+       all referred properties or attributes are initialized.
+     - A circular dependency signifies a erroneous template and shall report an error
+     - After a relationship is created, properties and attributes that depend on it
+       to be initialized will be initialized.
+   - At the end of this process all mandatory requirements must be
+     satisfied and all relationships are added to the representation
+     graph. An unsatisfied non-optional requirement results in an
+     error.
 
-##### Substitution Mapping
-- When substitution is directed for a node, the resolver creates a new representation
-  according to the substitution template, basically creating a service that is
-  represented by the substituted node.
-- The substitution service is initialized from the properties of the substituted node
-  and the workflows of the substitution service act as operations for the substituted
-  node (that is, the behavior of the node is substituted by the substitution service).
-    - This is defined via substitution mapping rules.
+3. Substitution Mapping
 
-### Orchestrator
+   - When substitution is directed for a node, the resolver creates a
+     new service representation based on the substituting template,
+     basically creating a service that represents the internals of the
+     substituted node.
+   - The substituting service is initialized from the properties of the substituted node
+     and the workflows of the substituting service act as operations for the substituted
+     node (that is, the behavior of the node is substituted by the substituting service).
+   - This is defined via substitution mapping rules.
+
+## 4.3 Orchestrator
 
 An orchestrator performs the following actions:
 
-- (Continuously) turns node representations into zero or more node
-  implementations (one-to-any)
+- (Continuously) turns node representations into one or more node
+  implementations
 - (Continuously) updates node representation attribute values (error if
   they do not adhere to TOSCA type validation clauses or property
-  definition validation clauses) *\[we still don’t know how to handle
-  multiplicity\]*
-- (Continuously) reactivates the resolver: outputs and even satisfaction
-  of requirements may change.
+  definition validation clauses) 
+- (Continuously) reactivates the resolver: outputs may change
+  attribute values, which can require refulfillment of dangling
+  requirements or resubsitution of substituted nodes.
 - (Optionally) changes the node representations themselves for day 2
   transformations.
 
-#### Changes in the representation graph
+## 4.4 Changes in the Representation Graph
 
 During the lifetime of a service there can be several actions or events that 
 change the representation graph of the running service.
@@ -986,28 +995,28 @@ representation graphs in the following four categories:
 - Novel: These are nodes and relationships that do not appear in the "old"
   representation graph but appear in the "new" representation graph.
 
-##### An example of graph-traversal changes performed with changes in the representation graph
+We then perform deletions of the obsolete nodes by traversing the
+representation graph in reverse dependency order as follows:
 
-For example we start by traversing the "old" representation graph in 
-reverse dependency order:
-- we start in parallel with all nodes that have no incoming dependency relationship
-    - we perform operations associated with deleting on all adjacent relationships
-      to this node that are in the "obsolete" category.
-    - we perform operations associated with deleting on the node itself if it is
-      in the "obsolete" category.
-    - we move to nodes that have no incoming dependency relationship to nodes that
-      have not been processed yet.
+- We start in parallel with all nodes that have no incoming dependency
+  relationship
+- we perform operations associated with deleting on all adjacent relationships
+  to this node that are in the "obsolete" category.
+- we perform operations associated with deleting on the node itself if it is
+  in the "obsolete" category.
+- we move to nodes that have no incoming dependency relationship to nodes that
+  have not been processed yet.
 
 After we have processed the deletion of the obsolete elements we traverse the "new" 
 representation graph in dependency order to preform the modifications and creations:
 - we start in parallel with the nodes that have no outgoing dependency relationship
-    - we perform operations associated with creation resp. modification on the node itself
-      if it is in the "novel" resp. "modified" category
-    - we perform operations associated with creation resp. modification on all adjacent
-      relationships in the "novel" resp. "modified" category if the node on the other
-      side of the relationship has been processed.
-    - we move to nodes that have no outgoing dependency relationship to nodes that
-      have not been processed yet.
+- we perform operations associated with creation resp. modification on the node itself
+  if it is in the "novel" resp. "modified" category
+- we perform operations associated with creation resp. modification on all adjacent
+  relationships in the "novel" resp. "modified" category if the node on the other
+  side of the relationship has been processed.
+- we move to nodes that have no outgoing dependency relationship to nodes that
+  have not been processed yet.
 
 After this we can consider the service to be in the new desired runtime state, and the
 "old" representation graph can be discarded and the "new" representation graph becomes
