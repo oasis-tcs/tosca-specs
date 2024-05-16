@@ -4172,11 +4172,11 @@ specify a default value.
 |Primitive Types|Special Types|Collection Types|
 |:---|:---|:---|
 |string|timestamp|list|
-|integer|scalar-unit.size|map|
+|integer|scalar-unit|map|
 |float|scalar-unit.time||
-|boolean|scalar-unit.frequency||
-|bytes|scalar-unit.bitrate||
-|nil|version|
+|boolean|version||
+|bytes|||
+|nil||
 
 ### 9.1.1 Primitive Types
 
@@ -4328,14 +4328,11 @@ Be aware that YAML parsers will parse numbers with a decimal point as
 !!float even if they *could* be represented as !!int, and likewise
 numbers without a decimal point would *always* be parsed as !!int.
 
-A TOSCA parser *shall not* attempt to convert a YAML !!int to a float.
-This requirement is necessary for avoiding rounding errors and ensuring
-portability. Users should thus add a “.0” suffix to literal integers
-that must be floats. Note that this even includes zero, i.e. users must
-specify “0” for a zero integer and “0.0” for a zero float.
+A TOSCA parser *shall not* attempt to convert a YAML !!int to a float except where the int is supplied as the value of a TOSCA property of type float.
+Type conversion in this exceptional case to prevent the need for users to add a “.0” suffix to literal integers
+that must be floats. 
 
-This following example would be invalid if there were no “.0” suffix
-added to “10”:
+Thus following example MUST NOT result in an error:
 ```yaml
 node_types:
   Node:
@@ -4348,7 +4345,7 @@ service_template:
     node:
       type: Node
       properties:
-        velocity: 10.0
+        velocity: 10
 ```
 Please note:
 
@@ -4360,8 +4357,7 @@ Please note:
 2.  TOSCA does not specify how to convert to other precisions nor to
     other formats, e.g. Bfloat16 and TensorFloat-32.
 
-3.  TOSCA does not specify the endianness of floats and indeed makes no
-    requirements for data representation.
+3.  TOSCA does not specify the endianness of floats and indeed makes no requirements for data representation.
 
 #### 9.1.1.4 boolean
 
@@ -4517,168 +4513,158 @@ Please note:
 #### 9.1.2.2 scalar-unit
 
 The TOSCA *scalar-unit* types can be used to define scalar values
-along with a unit from the list of recognized units provided below.
+along with an associated unit.
 
 TOSCA scalar-unit typed values have the following grammar:
 ```yaml
-<scalar> <unit> 
+<scalar> <unit_symbol_name>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- scalar: is a mandatory scalar value.
+- scalar: is a mandatory scalar value
 
-- unit: is a mandatory unit value. The unit value MUST be
-  type-compatible with the scalar.
+- unit_symbol_name: is a mandatory name string. 
 
 The following additional requirements apply:
 
 - Any number of spaces (including zero or none) SHALL be allowed
-  between the scalar value and the unit value.
+  between the scalar value and the unit symbol.
 
-- It SHALL be considered an error if either the scalar or unit portion
-  is missing on a property or attribute declaration derived from any
-  scalar-unit type.
+- The unit symbol MUST be defined in a concrete scalar type definition.
 
-The scalar-unit type is abstract and has the following recognized concrete
-types in TOSCA:
+- It SHALL be considered an error if either the scalar or unit symbol portion is missing on a property or attribute declaration derived from any scalar-unit type.
 
-##### 9.1.2.2.1 scalar-unit.size
+The scalar-unit type is abstract and cannot be used 'as is' in a valid TOSCA document, rather it must be refined into a concrete scalar type by means of a type definition. Scalar type definitions use the common key names.
 
-The TOSCA *scalar-unit.size* type is used to define properties that
-have scalar values measured in size units. It supports the units shown
-in the following table:
-
-| Unit | Usage | Description                    |
-|------|-------|--------------------------------|
-| B    | size  | byte                           |
-| kB   | size  | kilobyte (1000 bytes)          |
-| KiB  | size  | kibibytes (1024 bytes)         |
-| MB   | size  | megabyte (1000000 bytes)       |
-| MiB  | size  | mebibyte (1048576 bytes)       |
-| GB   | size  | gigabyte (1000000000 bytes)    |
-| GiB  | size  | gibibytes (1073741824 bytes)   |
-| TB   | size  | terabyte (1000000000000 bytes) |
-| TiB  | size  | tebibyte (1099511627776 bytes) |
-
-These units are a subset of those defined by GNU at
-<http://www.gnu.org/software/parted/manual/html_node/unit.html>, which
-is a non-normative reference to this specification.
-
-TOSCA treats these unit values as *case-insensitive* (e.g., a value of
-‘kB’, ‘KB’ or ‘kb’ is equivalent), but it is considered best practice
-to use the case of these units as prescribed by GNU.
-
-<!----
-{"id": "843", "author": "Chris Lauwers", "date": "2020-07-20T18:40:00Z", "comment": "Bitrate units are case sensitive. We\n  should make this consistent.", "target": "GNU"}-->
-
-The following shown an example property of type scalar-unit.size:
+A concrete scalar type is defined using the following grammar:
 ```yaml
-# Storage size in Gigabytes
-properties:
-  storage_size: 10 GB
+<scalar_unit_name>:
+    derived_from: <scalar-unit_type_name>
+    data_value_type: <data_type_name>
+    unit_suffix: <suffix>
+    unit_symbol_list:
+      - <unit_symbol_defintion_1>
+      - ...
+      - <unit_symbol_defintion_n>
 ```
+In the above grammar, the pseudo values that appear in angle brackets have the following meaning:
+
+    <scalar-unit_type_name>: represents the mandatory name of the parent type which must be either scalar-unit or a data type derived from scalar-unit.
+
+    <data_type_name>: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA intger or derived from them.
+
+    <suffix>: An optional string. If not present then unit_symbol_name is equal to unit_symbol. If present then unit_symbol_name is equal to unit_symbol&&unit_suffix. It is provided as a convience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for unit_symbol_name has an implict value of 1.0
+
+    <unit_symbol_defintion>: The unit symbol definition has the following grammar:
+
+```yaml
+    <unit_symbol>: <unit_symbol_multiplier>
+```
+In the above grammar, the pseudo values that appear in angle brackets have the following meaning:
+    
+    <unit_symbol> A name string, with no white space, used to identify the unit.
+
+    <unit_symbol_multiplier> A value of type TOSCA float which MUST be used by a TOSCA parser to convert values with the symbol into values in the base unit.
+
+    unit_symbol_name, unit_symbol and unit_suffix are all case sensitive.
+
+The following gives an example of the use of a scalar_units:
+```yaml
+data_types:
+  non_negative_number:
+    derived_from: float
+    validation: { $greater_or_equal: [ $value,  0 ] }
+
+  bitrate:
+    version: 2.0
+    description: bitrate allowing multiples of 1024 as well as 1000 but not including prefixes above 10^12
+    derived_from: scalar-unit
+    data_value_type: non_negative_number
+    unit_symbol_list:
+      B: 1 # No unit_suffix defined so base unit must be included in the list
+      kB: 1000 # No unit_suffix defined so unit_symbol includes the B character as well as the k
+      KiB: 1024
+      MB: 1000000
+      MiB: 1048576
+      GB:  1000000000
+      GiB: 1073741824
+      TB:  1000000000000
+      TiB: 1099511627776
+
+  length:
+    derived_from: scalar-unit
+    unit_symbol_list: &ISO80000
+      # symbols for smaller multipliers ommitted for brevity
+      μ: 0.0001
+      m: 0.001
+      c: 0.01
+      d: 0.1
+      da: 10 # symbols may be muliple characters
+      h: 100 # integer auto converted to float
+      k: 1000
+      M: 1000000
+      # symbols for larger multipliers omiited
+    unit_suffix: m  ## Note suffix is defined so will be appended to entries in the unit_symbol_list
+
+  mass:
+    derived_from: scalar-unit
+    unit_symbol_list: *ISO80000 # Note table is used by length and mass by means of YAML anchor and alias
+    unit_suffix: g
+
+node_types:
+  box:
+    properties:
+      weight:
+        type: mass
+      height:
+        type: length
+      width:
+        type: length
+        validation: { $less_than: [ 15 cm ] } ## Validation is in centimeters
+      throughput:
+        type: bitrate
+service_template:
+  node_templates:
+    node:
+      type: box
+      properties:
+        weight: 10.0kg # No space
+        height: 0.1 m
+        width: 125.3 mm ## Defintion is in millimeters, conversion of units within a scalar is performed by the parser
+        throughput: 10 KiB # Integer auto converted to float
+```
+Derivation of scalar-types uses the following rules:
+
+    - derived_from, data_value_type and unit_suffix may not be changed
+    - Additonal entries may be added to the unit_symbol_list
 
 ##### 9.1.2.2.2 scalar-unit.time
 
-The TOSCA *scalar-unit.time* type is used to define properties that have scalar
-values measured in time units. It supports the units shown
-in the following table:
-
-| Unit | Usage | Description  |
-|------|-------|--------------|
-| d    | time  | days         |
-| h    | time  | hours        |
-| m    | time  | minutes      |
-| s    | time  | seconds      |
-| ms   | time  | milliseconds |
-| us   | time  | microseconds |
-| ns   | time  | nanoseconds  |
-
-The unit values recognized by TOSCA for scalar-unit.time types are
-based upon a subset of those defined by International System of Units
-whose recognized abbreviations are defined within the following
-reference:
-<http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>. This
-document is a non-normative reference to this specification and
-intended for publications or grammars enabled for Latin characters
-which are not accessible in typical programming languages
-
-TOSCA treats these unit values as *case-insensitive* (e.g., a value of
-‘ms’, ‘mS’ or ‘MS’ is equivalent), but it is considered best practice
-to use the case of these units as described by this document.
-
-The following shown an example property of type scalar-unit.time:
+TOSCA no longer has an in-built date type for time but one can be defined using the scalar-unit abstract class as shown in the following example:
 ```yaml
-# Response time in milliseconds
-properties:
-  respone_time: 10 ms
+data_types:
+  scalar-unit.time:
+    version: 2.0
+    description: Time including non-SI units accepted for use with the SI units
+    derived_from: scalar-unit
+    data_value_type: float
+    unit_symbol_list:
+      # symbols for smaller multipliers ommitted for brevity
+      μs: 0.0001
+      ms: 0.001
+      cs: 0.01
+      ds: 0.1
+      das: 10
+      hs: 100
+      ks: 1000
+      Ms: 1000000
+      min: 60 
+      h: 3600 # hour
+      d: 86400 # day
+      # symbols for larger multipliers omiited
 ```
 
-##### 9.1.2.2.3  scalar-unit.frequency
-
-The TOSCA *scalar-unit.frequency* type is used to define properties
-that have scalar values measured in units per second. It supports the units shown
-in the following table:
-
-| Unit | Usage     | Description                                                                       |
-|------|-----------|-----------------------------------------------------------------------------------|
-| Hz   | frequency | Hertz, or Hz. equals one cycle per second.                                        |
-| kHz  | frequency | Kilohertz, or kHz, equals to 1,000 Hertz                                          |
-| MHz  | frequency | Megahertz, or MHz, equals to 1,000,000 Hertz or 1,000 kHz                         |
-| GHz  | frequency | Gigahertz, or GHz, equals to 1,000,000,000 Hertz, or 1,000,000 kHz, or 1,000 MHz. |
-
-The value for Hertz (Hz) is the International Standard Unit (ISU) as
-described by the Bureau International des Poids et Mesures (BIPM) in
-the “*SI Brochure: The International System of Units (SI) \[8th
-edition, 2006; updated in 2014\]*”,
-<http://www.bipm.org/en/publications/si-brochure/>
-
-TOSCA treats these unit values as *case-insensitive* (e.g., a value of
-‘khz’, ‘kHz’ or ‘KHZ’ is equivalent), but it is considered best practice
-to use the case of these units as described by this document.
-
-The following shown an example property of type scalar-unit.frequence:
-```yaml
-# Processor raw clock rate
-properties:
-  clock_rate: 2.4 GHz
-```
-
-##### 9.1.2.2.4 scalar-unit.bitrate
-
-The TOSCA *scalar-unit.bitrate* type is used to define properties that
-have scalar values measured in bits per second. It supports the units shown
-in the following table:
-
-| Unit  | Usage   | Description                              |
-|-------|---------|------------------------------------------|
-| bps   | bitrate | bit per second                           |
-| Kbps  | bitrate | kilobit (1000 bits) per second           |
-| Kibps | bitrate | kibibits (1024 bits) per second          |
-| Mbps  | bitrate | megabit (1000000 bits) per second        |
-| Mibps | bitrate | mebibit (1048576 bits) per second        |
-| Gbps  | bitrate | gigabit (1000000000 bits) per second     |
-| Gibps | bitrate | gibibits (1073741824 bits) per second    |
-| Tbps  | bitrate | terabit (1000000000000 bits) per second  |
-| Tibps | bitrate | tebibits (1099511627776 bits) per second |
-
-TOSCA treats these unit values as *case-insensitive* (e.g., a value of
-‘bps’, ‘BPS’ or ‘Bps’ is equivalent), but it is considered best practice
-to use the case of these units as described by this document.
-
-The following shown an example property of type scalar-unit.bitrate:
-```yaml
-# Somewhere in a node template definition
-requirements:
-  - link:
-      node_filter:
-        capabilities: 
-          - myLinkable
-              properties:
-                bitrate:
-                 - greater_or_equal: 10 Kbps # 10 * 1000 bits per second at least
-```
 #### 9.1.2.3 version
 
 The TOSCA *version* type represents a version string.
@@ -10502,20 +10488,13 @@ https://cwiki.apache.org/confluence/display/MAVEN/Version+number+policy
 Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, https://www.rfc-editor.org/info/rfc3552.
 
 ###### [File extensions for media types]
-File extensions for media types registered as described in RFC 4288 <http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types>
+File extensions for media types some registered as described in RFC 4288 <http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types>
 
 ###### [TOSCA discussion]
 tosca-community-contributions github repository. https://github.com/oasis-open/tosca-community-contributions
 
 ###### [RFC3339]
 G. Klyne and C, Newman "Date and Time on the Internet: Timestamps" July 2002, https://tools.ietf.org/html/rfc3339
-
-<!---- Paul Jordan The references below can be deleted if the scalar unit proposals are adopted --->
-###### [Units for size]
-parted manaul GNU http://www.gnu.org/software/parted/manual/html_node/unit.html>,
-
-###### []
-APPENDIX VII Recommended Unit Symbols, SI Prefixes, and Abbreviations IEEE <http://www.ewh.ieee.org/soc/ias/pub-dept/abbreviation.pdf>.
 
 ###### [SI Units]
 “*SI Brochure: The International System of Units (SI) \[8th
@@ -10637,6 +10616,8 @@ Moshe Elisha (<moshe.elisha@alcatel-lucent.com>), Alcatel-Lucent
 Nate Finch (<nate.finch@canonical.com>), Canonical
 
 Nikunj Nemani (<nnemani@vmware.com>), Wmware
+
+Paul Jordan (paul.m.jordan@outlook.com), Individual Member
 
 Peter Bruun (<peter-michael.bruun@hpe.com>), Hewlett Packard Enterprise
 
