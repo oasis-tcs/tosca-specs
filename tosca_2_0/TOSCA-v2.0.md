@@ -4172,11 +4172,11 @@ specify a default value.
 |Primitive Types|Special Types|Collection Types|
 |:---|:---|:---|
 |string|timestamp|list|
-|integer|scalar-unit.size|map|
+|integer|scalar-unit|map|
 |float|scalar-unit.time||
-|boolean|scalar-unit.frequency||
-|bytes|scalar-unit.bitrate||
-|nil|version|
+|boolean|version||
+|bytes|||
+|nil||
 
 ### 9.1.1 Primitive Types
 
