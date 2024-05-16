@@ -4621,7 +4621,7 @@ node_types:
         type: length
       width:
         type: length
-      validation: { $less_than: [ 15 cm ] } ## Validation is in centimeters
+        validation: { $less_than: [ 15 cm ] } ## Validation is in centimeters
       throughput:
         type: bitrate
 service_template:
