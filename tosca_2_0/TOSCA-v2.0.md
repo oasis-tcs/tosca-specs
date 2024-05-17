@@ -1663,9 +1663,9 @@ The following code snippet shows example node type definitions:
 ```yaml
 node_types:
   Database:
-	description: "An abstract node type for all databases"
+  description: "An abstract node type for all databases"
   WebApplication:
-	description: "An abstract node type"
+  description: "An abstract node type"
   my_webapp_node_type:
     derived_from: WebApplication
     properties:
@@ -3251,7 +3251,7 @@ MyFeature:
     my_feature_value:
       type: integer
     valid_source_node_types:
-	- MyCompanyNodes
+  - MyCompanyNodes
 ```
 ## 8.2 Capability Definition
 
@@ -4137,15 +4137,15 @@ service_template:
     my_node_template:
       # other details omitted for brevity
       requirements:
-	- host:
-	    node_filter:
-	      $and:
-		- $in_range:
-		  - $get_property: [ SELF, CAPABILITY, num_cpus ]
-		  - [ 1, 4 ]
-		- $greater_or_equal:
-		  - $get_property: [ SELF, CAPABILITY, mem_size ]
-		  - 512 MB 
+  - host:
+      node_filter:
+        $and:
+    - $in_range:
+      - $get_property: [ SELF, CAPABILITY, num_cpus ]
+      - [ 1, 4 ]
+    - $greater_or_equal:
+      - $get_property: [ SELF, CAPABILITY, mem_size ]
+      - 512 MB 
 ```
 # 9 Properties, Attributes, and Parameters
 
@@ -4337,7 +4337,7 @@ Thus following example MUST NOT result in an error:
 node_types:
   Node:
     properties:
-      velocity:
+      speed:
         type: float
 
 service_template:
@@ -4345,7 +4345,7 @@ service_template:
     node:
       type: Node
       properties:
-        velocity: 10
+          speed: 10
 ```
 Please note:
 
