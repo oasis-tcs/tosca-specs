@@ -511,6 +511,8 @@ implementations of TOSCA, for example:
 ## 2.4 Using TOSCA
 
 ### 2.4.1 TOSCA Files
+TOSCA files are files describing TOSCA service templates, TOSCA types,
+or a combination thereof.
 
 ### 2.4.2 Archive Format for Cloud Applications
 
