@@ -266,12 +266,11 @@ models first and then handled by management system.
 TOSCA's model-driven management approach is what enables its use for
 all Lifecycle Management Phases: information embedded in the model
 structure (the dependencies, connections, compositions) drives the
-automated processes. Moreover, changing and/or augmenting the model 
-automatically adapts the LCM / orchestration /management behaviour 
-as the behaviour is automatically extracted from the service model.
+automated processes. Thus, changing or augmenting the model also 
+automatically adapts the LCM / orchestration behaviour.
 Specifically, it allows service models to be used:
 
-- As starting point for Moves, Adds, Changes, and Deletions (MACDs)
+- As desired state for Moves, Adds, Changes, and Deletions (MACDs)
 - As context for handling faults and events using Closed Loop
   Automation
 
