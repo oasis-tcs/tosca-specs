@@ -1098,8 +1098,7 @@ definitions*, and *parameter definitions*.
 The 
 service templates introduced in Section 2 are defined in TOSCA files and expressed using
 statements in the TOSCA language. Service representation graphs are directed graphs of
-nodes and relationships created by the a resolver from service templates 
-that consist of *node templates* and *requirements*. Node
+nodes and relationships resolved from service templates that consist of *node templates* and *requirements*. Node
 templates specify a particular node type and then add additional information using 
 pairs of keynames and associated values. Service templates may include other
 templates as well such as relationship templates, groups, policies
@@ -1179,6 +1178,7 @@ TOSCA templates:
 
 ### 5.1.4 Template reuse
 A single TOSCA template may be reused by including it in one or more other TOSCA templates. Each template may be separately maintained and use it's own naming scheme. The resolution of naming scheme conflicts is discussed later in this document.
+<!--- Should this template reuse not specify that it's only the node types that can be reused not the service templates temselves. -->
 
 ## 5.2 Mandatory Keynames
 
