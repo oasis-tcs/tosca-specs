@@ -4338,7 +4338,7 @@ Be aware that YAML parsers will parse numbers with a decimal point as
 numbers without a decimal point would *always* be parsed as !!int.
 
 A TOSCA parser *shall not* attempt to convert a YAML !!int to a float except where the int is supplied as the value of a TOSCA property of type float.
-Type conversion in this exceptional case to prevent the need for users to add a “.0” suffix to literal integers
+Type conversion in this exceptional case is to prevent the need for users to add a “.0” suffix to literal integers
 that must be floats. 
 
 Thus following example MUST NOT result in an error:
@@ -4552,10 +4552,10 @@ A concrete scalar type is defined using the following grammar:
     derived_from: <scalar-unit_type_name>
     data_value_type: <data_type_name>
     unit_suffix: <suffix>
-    unit_symbol_list:
-      - <unit_symbol_defintion_1>
-      - ...
-      - <unit_symbol_defintion_n>
+    unit_symbol_map:
+      <unit_symbol_1>: <unit_symbol_multiplier_1>
+      ...
+      <unit_symbol_n>: <unit_symbol_multiplier_n>
 ```
 In the above grammar, the pseudo values that appear in angle brackets have the following meaning:
 
@@ -4565,18 +4565,11 @@ In the above grammar, the pseudo values that appear in angle brackets have the f
 
     <suffix>: An optional string. If not present then unit_symbol_name is equal to unit_symbol. If present then unit_symbol_name is equal to unit_symbol&&unit_suffix. It is provided as a convience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for unit_symbol_name has an implict value of 1.0
 
-    <unit_symbol_defintion>: The unit symbol definition has the following grammar:
-
-```yaml
-    <unit_symbol>: <unit_symbol_multiplier>
-```
-In the above grammar, the pseudo values that appear in angle brackets have the following meaning:
-    
     <unit_symbol> A name string, with no white space, used to identify the unit.
 
     <unit_symbol_multiplier> A value of type TOSCA float which MUST be used by a TOSCA parser to convert values with the symbol into values in the base unit.
 
-    unit_symbol_name, unit_symbol and unit_suffix are all case sensitive.
+    Note that unit_symbol_name, unit_symbol and unit_suffix are all case sensitive.
 
 The following gives an example of the use of a scalar_units:
 ```yaml
@@ -4590,7 +4583,7 @@ data_types:
     description: bitrate allowing multiples of 1024 as well as 1000 but not including prefixes above 10^12
     derived_from: scalar-unit
     data_value_type: non_negative_number
-    unit_symbol_list:
+    unit_symbol_map:
       B: 1 # No unit_suffix defined so base unit must be included in the list
       kB: 1000 # No unit_suffix defined so unit_symbol includes the B character as well as the k
       KiB: 1024
@@ -4603,7 +4596,7 @@ data_types:
 
   length:
     derived_from: scalar-unit
-    unit_symbol_list: &ISO80000
+    unit_symbol_map: &ISO80000
       # symbols for smaller multipliers ommitted for brevity
       μ: 0.0001
       m: 0.001
@@ -4614,11 +4607,11 @@ data_types:
       k: 1000
       M: 1000000
       # symbols for larger multipliers omiited
-    unit_suffix: m  ## Note suffix is defined so will be appended to entries in the unit_symbol_list
+    unit_suffix: m  ## Note suffix is defined so will be appended to entries in the unit_symbol_map
 
   mass:
     derived_from: scalar-unit
-    unit_symbol_list: *ISO80000 # Note table is used by length and mass by means of YAML anchor and alias
+    unit_symbol_map: *ISO80000 # Note map is used by both length and mass by means of YAML anchor and alias
     unit_suffix: g
 
 node_types:
@@ -4646,7 +4639,7 @@ service_template:
 Derivation of scalar-types uses the following rules:
 
     - derived_from, data_value_type and unit_suffix may not be changed
-    - Additonal entries may be added to the unit_symbol_list
+    - Additonal entries may be added to the unit_symbol_map
 
 ##### 9.1.2.2.2 scalar-unit.time
 
@@ -4658,7 +4651,7 @@ data_types:
     description: Time including non-SI units accepted for use with the SI units
     derived_from: scalar-unit
     data_value_type: float
-    unit_symbol_list:
+    unit_symbol_map:
       # symbols for smaller multipliers ommitted for brevity
       μs: 0.0001
       ms: 0.001
