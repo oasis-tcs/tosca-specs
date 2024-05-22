@@ -899,6 +899,7 @@ A TOSCA parser performs the following functions:
   either individually or as complete profiles
 - Outputs valid normalized node templates. Note that normalized node
   templates may include unresolved (*dangling*) requirements.
+<!--- We have not explained what we mean by normalized template -->
 
 ### 4.2.2 Resolver
 
