@@ -650,8 +650,8 @@ from which these representations were created. When fulfilling requirements,
 template directives to the TOSCA processor can be used to specify if 
 the target candidates are template-internal node representations, or
 external representations created from multiple service templates, or
-representations for external resources managed in an inventory. Either
-way, requirement fulfillment may result in relationships that are
+representations for external resources managed in an inventory. Thus, 
+requirement fulfillment may result in relationships that are
 established across service template boundaries.
 
 Requirements and capabilities are modelled by annotating node types
