@@ -1097,9 +1097,11 @@ definitions*, and *parameter definitions*.
 
 The 
 service templates introduced in Section 2 are defined in TOSCA files and expressed using
-statements in the TOSCA language. Service templates are directed
-graphs that consist of *node templates* and *requirements*. Node
-templates specify a particular node type and then add additional information using pairs of keynames and associated values. Service templates may include other
+statements in the TOSCA language. Service representation graphs are directed graphs of
+nodes and relationships created by the a resolver from service templates 
+that consist of *node templates* and *requirements*. Node
+templates specify a particular node type and then add additional information using 
+pairs of keynames and associated values. Service templates may include other
 templates as well such as relationship templates, groups, policies
 etc.
 
