@@ -266,10 +266,11 @@ models first and then handled by management system.
 TOSCA's model-driven management approach is what enables its use for
 all Lifecycle Management Phases: information embedded in the model
 structure (the dependencies, connections, compositions) drives the
-automated processes. Specifically, it allows service models to be
-used:
+automated processes. Thus, changing or augmenting the model also 
+automatically adapts the LCM / orchestration behaviour.
+Specifically, it allows service models to be used:
 
-- As starting point for Moves, Adds, Changes, and Deletions (MACDs)
+- As desired state for Moves, Adds, Changes, and Deletions (MACDs)
 - As context for handling faults and events using Closed Loop
   Automation
 
@@ -282,7 +283,7 @@ TOSCA models systems as graphs, where the vertices represent the
 components of the system and the edges represents relationships,
 dependencies, and other interactions between these components. 
 
-The use of graphs enables *declarative*" orchestration, where system
+The use of graphs enables *declarative* orchestration, where system
 designers can simply create descriptions ("models") of their systems,
 and delegate to the orchestrator the task of translating these
 descriptions into the commands to realize the systems being
@@ -333,9 +334,8 @@ to guide the design decisions make by orchestrators at design time.
 ### 2.2.4 TOSCA is Domain-Independent
 
 Since the fundamental abstraction defined by the TOSCA language is a
-*graph*, TOSCA can be used for application domain within which
-systems can be modeled as graphs. For example, TOSCA can be used to
-specify automated lifecycle management of the following:
+*graph*, TOSCA is not tied to any specific application domain. For example, 
+TOSCA can be used to specify automated lifecycle management of the following:
 
 - Infrastructure-as-a-Service Clouds: automate the deployment and
   management of workloads in IaaS clouds such as OpenStack, Amazon Web
@@ -430,10 +430,10 @@ it does standardize the grammar for defining templates.
 The use of templates supports reuse of service designs while at the
 same time allowing for service-specific variability. Specifically,
 node templates and relationship templates can use **TOSCA functions**
-to specify that configuration values need to be provided as inputs to
-each deployment, or that configuration values need to be retrieved at
+to specify that configuration values need to be provided as **template inputs** 
+to each deployment, or that configuration values need to be retrieved at
 deployment time from other node or relationship representations in the
-service representation graph. At deployment time, TOSCA processors
+service representation graph. At deployment time, TOSCA resolvers
 evaluate these functions to generate the values to be used when
 creating new service representations. TOSCA also includes grammar for
 creating multiple node representations from the same node template and
@@ -471,7 +471,10 @@ Figure : TOSCA Types and TOSCA Templates
 
 The use of types in TOSCA also provides the additional benefits of
 abstraction, information hiding, and reuse. TOSCA types can be
-organized in a *type hierarchy* where one or more type definitions can inherit from another type, each derived type may then be refined. This promotes reuse. The base type may be abstract and the derived types may be concrete which promotes abstraction.  **TOSCA node types*
+organized in a *type hierarchy* where one or more type definitions 
+can inherit from another type, each derived type may then be refined. 
+This promotes reuse. The base type may be abstract and the derived types 
+may be concrete which promotes abstraction. **TOSCA node types**
 and **TOSCA relationship types** define an externally visible
 *management façade* for entities of that type while hiding internal
 implementation details. This management façade defines interfaces that
@@ -479,7 +482,7 @@ can be used by an orchestrator to interact with the external
 implementations represented by the entity. When node types and
 relationship types are packaged together with internal implementation
 artifacts for their interfaces, they become *reusable building blocks*
-that can greatly facility the creation of end-to-end services. TOSCA
+that can greatly facilitate the creation of end-to-end services. TOSCA
 types that define such reusable building blocks are typically
 organized in domain-specific **TOSCA profiles**.
 
@@ -508,6 +511,8 @@ implementations of TOSCA, for example:
 ## 2.4 Using TOSCA
 
 ### 2.4.1 TOSCA Files
+TOSCA files are files describing TOSCA service templates, TOSCA types,
+or a combination thereof.
 
 ### 2.4.2 Archive Format for Cloud Applications
 
@@ -561,7 +566,7 @@ the properties defined in the node type. An orchestrator updates
 attribute values as a result of performing lifecycle management
 operations.
 
-For example, consider a service that consists of an some computing application, a database and something computing resource to run them on. A service template
+For example, consider a service that consists of an some computing application, a database and some computing resource to run them on. A service template
 defining that service would include one node template of node type or the particular application, another Node Template of Node Type  “database management system” or a more specific derivative, "MariaDB" perhaps, and a third Node Template of Node Type "compute" or more likely a more specific derivative. The
 DBMS Node Type defines properties like the IP address of
 an instance of this type, an operation for installing the database application with the corresponding IP address, and an operation for
@@ -619,10 +624,10 @@ orchestrator. For example, relationships may reference physical
 resources that are managed in a resource inventory. Service templates
 may not include node templates for these resources.
 
-TOSCA accommodates these scenarios using **requirements** and
+TOSCA accommodates both service template internal and external relationships using **requirements** and
 **capabilities** of node templates. A requirement defined in a node
-template expresses that the corresponding component depends on
-(requires) a feature provided by another component, or that the
+template expresses a relationship to a corresponding node. The component may
+require a feature provided by another component, or that the
 component has certain requirements against the hosting environment
 such as for the allocation of certain resources or the enablement of a
 specific mode of operation. Capabilities represent features exposed by
@@ -630,7 +635,7 @@ components that can be targeted by requirements of other
 components. If a requirement explicitly specifies a target node
 template defined in the same service template, it acts as a
 relationship template as defined in the previous section. A
-requirement that does not specify a target node template is referred
+requirement that does not explicitly specify a target node template is referred
 to as a **dangling requirement**. For simplicity, this specification
 uses the term *requirement* for both relationship templates
 and dangling requirements.
@@ -641,11 +646,12 @@ the context of *node templates*, fulfilling dangling requirements is
 done in the context of *node representations*. This means that when
 finding candidates for fulfilling a dangling requirement, the TOSCA
 processor must consider node representations rather than the templates
-from which these representations were created. TOSCA processors can
-take representations created from multiple service templates into
-account when fulfilling requirements, or they can attempt to use
-representations for external resources managed in an inventory. Either
-way, requirement fulfillment results in relationships that are
+from which these representations were created. When fulfilling requirements, 
+template directives to the TOSCA processor can be used to specify if 
+the target candidates are template-internal node representations, or
+external representations created from multiple service templates, or
+representations for external resources managed in an inventory. Thus, 
+requirement fulfillment may result in relationships that are
 established across service template boundaries.
 
 Requirements and capabilities are modelled by annotating node types
@@ -893,6 +899,7 @@ A TOSCA parser performs the following functions:
   either individually or as complete profiles
 - Outputs valid normalized node templates. Note that normalized node
   templates may include unresolved (*dangling*) requirements.
+<!--- We have not explained what we mean by normalized template -->
 
 ### 4.2.2 Resolver
 
@@ -983,7 +990,7 @@ For the service to reach the new desired runtime state, operations that are
 associated with the creation, deletion, and modification of
 nodes and relationships in the representation graph need to be performed.
 
-We can visualize (and the orchestrator can preform) these restorative actions
+We can visualize (and the orchestrator can perform) these restorative actions
 via graph traversals on the "old" and "new" representation graph.
 
 First let's categorize the nodes and relationships in the "old" and "new"
@@ -1012,7 +1019,7 @@ representation graph in reverse dependency order as follows:
   have not been processed yet.
 
 After we have processed the deletion of the obsolete elements we traverse the "new" 
-representation graph in dependency order to preform the modifications and creations:
+representation graph in dependency order to perform the modifications and creations:
 - we start in parallel with the nodes that have no outgoing dependency relationship
 - we perform operations associated with creation resp. modification on the node itself
   if it is in the "novel" resp. "modified" category
@@ -1090,9 +1097,10 @@ definitions*, and *parameter definitions*.
 
 The 
 service templates introduced in Section 2 are defined in TOSCA files and expressed using
-statements in the TOSCA language. Service templates are directed
-graphs that consist of *node templates* and *requirements*. Node
-templates specify a particular node type and then add additional information using pairs of keynames and associated values. Service templates may include other
+statements in the TOSCA language. Service representation graphs are directed graphs of
+nodes and relationships resolved from service templates that consist of *node templates* and *requirements*. Node
+templates specify a particular node type and then add additional information using 
+pairs of keynames and associated values. Service templates may include other
 templates as well such as relationship templates, groups, policies
 etc.
 
@@ -1170,6 +1178,7 @@ TOSCA templates:
 
 ### 5.1.4 Template reuse
 A single TOSCA template may be reused by including it in one or more other TOSCA templates. Each template may be separately maintained and use it's own naming scheme. The resolution of naming scheme conflicts is discussed later in this document.
+<!--- Should this template reuse not specify that it's only the node types that can be reused not the service templates temselves. -->
 
 ## 5.2 Mandatory Keynames
 
