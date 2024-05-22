@@ -283,7 +283,7 @@ TOSCA models systems as graphs, where the vertices represent the
 components of the system and the edges represents relationships,
 dependencies, and other interactions between these components. 
 
-The use of graphs enables *declarative*" orchestration, where system
+The use of graphs enables *declarative* orchestration, where system
 designers can simply create descriptions ("models") of their systems,
 and delegate to the orchestrator the task of translating these
 descriptions into the commands to realize the systems being
@@ -334,9 +334,8 @@ to guide the design decisions make by orchestrators at design time.
 ### 2.2.4 TOSCA is Domain-Independent
 
 Since the fundamental abstraction defined by the TOSCA language is a
-*graph*, TOSCA can be used for application domain within which
-systems can be modeled as graphs. For example, TOSCA can be used to
-specify automated lifecycle management of the following:
+*graph*, TOSCA is not tied to any specific application domain. For example, 
+TOSCA can be used to specify automated lifecycle management of the following:
 
 - Infrastructure-as-a-Service Clouds: automate the deployment and
   management of workloads in IaaS clouds such as OpenStack, Amazon Web
