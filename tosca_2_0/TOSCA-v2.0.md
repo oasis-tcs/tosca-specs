@@ -990,7 +990,7 @@ For the service to reach the new desired runtime state, operations that are
 associated with the creation, deletion, and modification of
 nodes and relationships in the representation graph need to be performed.
 
-We can visualize (and the orchestrator can preform) these restorative actions
+We can visualize (and the orchestrator can perform) these restorative actions
 via graph traversals on the "old" and "new" representation graph.
 
 First let's categorize the nodes and relationships in the "old" and "new"
@@ -1019,7 +1019,7 @@ representation graph in reverse dependency order as follows:
   have not been processed yet.
 
 After we have processed the deletion of the obsolete elements we traverse the "new" 
-representation graph in dependency order to preform the modifications and creations:
+representation graph in dependency order to perform the modifications and creations:
 - we start in parallel with the nodes that have no outgoing dependency relationship
 - we perform operations associated with creation resp. modification on the node itself
   if it is in the "novel" resp. "modified" category
