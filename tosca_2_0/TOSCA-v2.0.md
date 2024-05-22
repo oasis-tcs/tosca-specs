@@ -430,10 +430,10 @@ it does standardize the grammar for defining templates.
 The use of templates supports reuse of service designs while at the
 same time allowing for service-specific variability. Specifically,
 node templates and relationship templates can use **TOSCA functions**
-to specify that configuration values need to be provided as inputs to
-each deployment, or that configuration values need to be retrieved at
+to specify that configuration values need to be provided as **template inputs** 
+to each deployment, or that configuration values need to be retrieved at
 deployment time from other node or relationship representations in the
-service representation graph. At deployment time, TOSCA processors
+service representation graph. At deployment time, TOSCA resolvers
 evaluate these functions to generate the values to be used when
 creating new service representations. TOSCA also includes grammar for
 creating multiple node representations from the same node template and
@@ -471,7 +471,10 @@ Figure : TOSCA Types and TOSCA Templates
 
 The use of types in TOSCA also provides the additional benefits of
 abstraction, information hiding, and reuse. TOSCA types can be
-organized in a *type hierarchy* where one or more type definitions can inherit from another type, each derived type may then be refined. This promotes reuse. The base type may be abstract and the derived types may be concrete which promotes abstraction.  **TOSCA node types*
+organized in a *type hierarchy* where one or more type definitions 
+can inherit from another type, each derived type may then be refined. 
+This promotes reuse. The base type may be abstract and the derived types 
+may be concrete which promotes abstraction. **TOSCA node types**
 and **TOSCA relationship types** define an externally visible
 *management façade* for entities of that type while hiding internal
 implementation details. This management façade defines interfaces that
@@ -479,7 +482,7 @@ can be used by an orchestrator to interact with the external
 implementations represented by the entity. When node types and
 relationship types are packaged together with internal implementation
 artifacts for their interfaces, they become *reusable building blocks*
-that can greatly facility the creation of end-to-end services. TOSCA
+that can greatly facilitate the creation of end-to-end services. TOSCA
 types that define such reusable building blocks are typically
 organized in domain-specific **TOSCA profiles**.
 
