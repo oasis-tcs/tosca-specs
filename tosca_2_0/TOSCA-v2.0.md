@@ -566,7 +566,7 @@ the properties defined in the node type. An orchestrator updates
 attribute values as a result of performing lifecycle management
 operations.
 
-For example, consider a service that consists of an some computing application, a database and something computing resource to run them on. A service template
+For example, consider a service that consists of an some computing application, a database and some computing resource to run them on. A service template
 defining that service would include one node template of node type or the particular application, another Node Template of Node Type  “database management system” or a more specific derivative, "MariaDB" perhaps, and a third Node Template of Node Type "compute" or more likely a more specific derivative. The
 DBMS Node Type defines properties like the IP address of
 an instance of this type, an operation for installing the database application with the corresponding IP address, and an operation for
@@ -624,10 +624,10 @@ orchestrator. For example, relationships may reference physical
 resources that are managed in a resource inventory. Service templates
 may not include node templates for these resources.
 
-TOSCA accommodates these scenarios using **requirements** and
+TOSCA accommodates both service template internal and external relationships using **requirements** and
 **capabilities** of node templates. A requirement defined in a node
-template expresses that the corresponding component depends on
-(requires) a feature provided by another component, or that the
+template expresses a relationship to a corresponding node. The component may
+require a feature provided by another component, or that the
 component has certain requirements against the hosting environment
 such as for the allocation of certain resources or the enablement of a
 specific mode of operation. Capabilities represent features exposed by
@@ -635,7 +635,7 @@ components that can be targeted by requirements of other
 components. If a requirement explicitly specifies a target node
 template defined in the same service template, it acts as a
 relationship template as defined in the previous section. A
-requirement that does not specify a target node template is referred
+requirement that does not explicitly specify a target node template is referred
 to as a **dangling requirement**. For simplicity, this specification
 uses the term *requirement* for both relationship templates
 and dangling requirements.
@@ -646,11 +646,12 @@ the context of *node templates*, fulfilling dangling requirements is
 done in the context of *node representations*. This means that when
 finding candidates for fulfilling a dangling requirement, the TOSCA
 processor must consider node representations rather than the templates
-from which these representations were created. TOSCA processors can
-take representations created from multiple service templates into
-account when fulfilling requirements, or they can attempt to use
+from which these representations were created. When fulfilling requirements, 
+template directives to the TOSCA processor can be used to specify if 
+the target candidates are template-internal node representations, or
+external representations created from multiple service templates, or
 representations for external resources managed in an inventory. Either
-way, requirement fulfillment results in relationships that are
+way, requirement fulfillment may result in relationships that are
 established across service template boundaries.
 
 Requirements and capabilities are modelled by annotating node types
