@@ -6,6 +6,8 @@
 
 ## 23 May 2024
 
+&nbsp;
+
 #### This stage:
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.md (Authoritative) \
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.html \
@@ -10532,16 +10534,18 @@ Participant Name, Affiliation or "Individual Member"
 
 <!-- A TC can determine who they list here, however, TC Observers must not be listed. It is common practice for TCs to list everyone that was part of the TC during the creation of the document, but this is ultimately a TC decision on who they want to list and not list, and in what order. -->
 
-The following individuals have participated in the creation of this specification and are gratefully acknowledged:
+The following individuals have participated in the creation of this
+specification and are gratefully acknowledged:
 
-**OpenC2 TC Members:**
+**TOSCA TC Members:**
 
 | First Name | Last Name | Company |
 | :--- | :--- | :--- |
-Philippe | Alman | Something Networks
-Alex | Amirnovman | Company B
-Kris | Anderman | Mini Micro
-Darren | Anstman | Big Networks
+Calin | Curescu | Ericsson
+Chris | Lauwers | Individual Member
+Paul | Jordan | Individual Member
+Peter | Bruun | Hewlett Packard Enterprise
+Tal | Liron | Google
 
 > The following list needs to be cleaned up in accordance with OASIS
 > guidelines:
