@@ -1204,8 +1204,8 @@ support the following keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|description|no|string|Declares a description for the TOSCA element being defined.|
 |metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the element being defined.|
+|description|no|string|Declares a description for the TOSCA element being defined.|
 
 Grammar for these keynames is described here and may not be repeated
 for each entity definition.
@@ -1237,7 +1237,7 @@ TOSCA Orchestrators and SHOULD NOT affect runtime behavior.
 ### 5.3.2 description
 
 This optional keyname provides a means to include single or multiline
-descriptions within a TOSCA element as a *scalar string value* as
+descriptions within a TOSCA element as a *YAML scalar string value* as
 follows:
 ```yaml
 description: <description_string>
