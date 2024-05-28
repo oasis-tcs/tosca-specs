@@ -1742,7 +1742,7 @@ definition:
 |url|yes|string|The URL or network address used to access the repository.|
 <!---- Calin: as we already define previously that any multiline definition admits the description and metadata shold we keep it here (and all subsequent places?) -->
 
-These keynames can be used to define a repository using a multi-line
+These keynames can be used to define a repository using a
 grammar as follows:
 ```yaml
 <repository_name>:
@@ -2085,14 +2085,14 @@ definition:
 |metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the import definition.|
 
 These keynames can be used to import individual TOSCA files using the
-following multi-line grammar:
+following grammar:
 ```yaml
 imports:  
   - url: <file_uri>
     repository: <repository_name>
     namespace: <namespace_name>
 ```
-The following multi-line grammar can be used for importing TOSCA
+The following grammar can be used for importing TOSCA
 profiles:
 ```yaml
 imports:  
