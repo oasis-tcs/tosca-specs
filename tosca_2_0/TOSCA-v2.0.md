@@ -1556,12 +1556,7 @@ data_types:
    <tosca_datatype_def_n>
 ```
 The following code snippet shows an example of data type definition:
-```
->>>>>>> e05e079 (Changes to section 6)
-=======
-The following code snippet shows an example data type definition:
 ```yaml
->>>>>>> 62b4307 (typos and suggestions)
 data_types:
   # A complex datatype definition
   simple_contact_info:
