@@ -1790,6 +1790,7 @@ functions:
    ...
    <function_definition_n>
 ```
+<!---- Calin 2023-05-28: the validation clause(s) is a mess throughout the document, we should make it singular, and eliminate the lists -->
 The following example shows the definition of a square root function:
 ```yaml
 functions:
