@@ -1740,6 +1740,7 @@ definition:
 |description|no|string|Declares a description for the repository being defined.|
 |metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the repository being defined.|
 |url|yes|string|The URL or network address used to access the repository.|
+<!---- Calin: as we already define previously that any multiline definition admits the description and metadata shold we keep it here (and all subsequent places?) -->
 
 These keynames can be used to define a repository using a multi-line
 grammar as follows:
