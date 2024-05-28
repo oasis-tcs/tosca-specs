@@ -1491,10 +1491,10 @@ in their respective sections):
 <!----
 {"id": "427", "author": "Mike Rehder", "date": "2020-12-14T14:25:00Z", "comment": "New term \u201credefined\u201d. The sentence is\n  confusing \u2013 what is it trying to say? Is it saying that you can change\n  the type of a derived_from type (how?)?", "target": "redefined\n  "}-->
 
-- New validation clauses are added to already defined
-  keynames/entities (i.e. the defined validation clauses do not
-  replace the validation clause defined in the parent type but are
-  added to it).
+- New validation clause is added to already defined
+  keynames/entities (i.e. the defined validation clause does not
+  replace the validation clauses of the parent type but are
+  added to them).
 
 - Some definitions must be totally flexible, so they will overwrite
   the definition in the parent type.
@@ -2503,7 +2503,7 @@ inputs:
   <parameter_definitions>
 ```
 The following code snippet shows a simple inputs example without any
-validation clauses:
+validation clause:
 ```yaml
 inputs:
   fooName:
@@ -4168,7 +4168,7 @@ The content in this section is normative unless otherwise labeled except:
 The following table summarizes the TOSCA built-in data types. All of
 these type names are reserved and cannot be used for custom data
 types. Note, however, that it is possible to derive a custom data type
-from a primitive type, for example to add validation clauses or to
+from a primitive type, for example to add a validation clause or to
 specify a default value.
 
 |Primitive Types|Special Types|Collection Types|
@@ -4964,7 +4964,7 @@ The following requirements apply:
 - A valid datatype definition **MUST** have either a valid
   derived_from declaration or at least one valid property definition.
 
-- Any validation clauses **SHALL** be type-compatible with the type
+- A validation clause **SHALL** be type-compatible with the type
   declared by the derived_from keyname.
 
 - If a properties keyname is provided, it **SHALL** contain one or more
@@ -5024,7 +5024,7 @@ TOSCA list or map.
 
 If the schema definition specifies a map key, the type of the key schema
 must be derived originally from the string type (which basically ensures
-that the schema type is a string with additional validation clauses). As
+that the schema type is a string with additional validation clause). As
 there is little need for complex keys this caters to more
 straight-forward and clear specifications. If the key schema is not
 defined it is assumed to be string by default.
@@ -5040,7 +5040,7 @@ definition:
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory data type for the key or entry. If this schema definition is for a map key, then the referred type must be derived originally from string.|
 |description|no|string|The optional description for the schema.|
-|validation|no|validation clauses|The optional validation clause that must evaluate to True for the property.|
+|validation|no|validation clause|The optional validation clause that must evaluate to True for the property.|
 |key_schema|no|schema definition|When the schema itself is of type map, the optional schema definition that is used to specify the type of the keys of that map’s entries (if key_schema is not defined it is assumed to be “string” by default). For other schema types, the key_schema must not be defined.|
 |entry_schema|conditional|schema definition|When the schema itself is of type map or list, the schema definition is mandatory and is used to specify the type of the entries in that map or list. For other schema types, the entry_schema must not be defined.|
 
