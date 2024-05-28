@@ -1667,9 +1667,9 @@ The following code snippet shows example node type definitions:
 ```yaml
 node_types:
   Database:
-  description: "An abstract node type for all databases"
+    description: "An abstract node type for all databases"
   WebApplication:
-  description: "An abstract node type"
+    description: "An abstract node type"
   my_webapp_node_type:
     derived_from: WebApplication
     properties:
