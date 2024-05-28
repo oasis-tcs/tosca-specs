@@ -2519,7 +2519,7 @@ inputs:
     type: string
     description: String parameter with validation clause.
     default: My Site
-    validation: { $min_length: [ $value, 9 ] }
+    validation: { $greater_or_equal: [ $value, 9 ] }
 ```
 ### 6.9.3 Node Templates
 
@@ -2819,8 +2819,8 @@ my_app_node_type:
       description: application password
       validation:
         $and: 
-          - { $min_length: [ $value, 6 ] }
-          - { $max_length: [ $value, 10 ] }
+          - { $greater_or_equal: [ $value, 6 ] }
+          - { $less_or_equal: [ $value, 10 ] }
   attributes:
     my_app_port:
       type: integer
@@ -4250,8 +4250,8 @@ Please note:
     trimming of whitespace or newlines. [\[YAML 1.2 chapter
     6\]](https://yaml.org/spec/1.2/spec.html#Basic)
 
-2.  The TOSCA functions *concat*, *join*, *token*, *length*,
-    min_length*, *max_length*, and *pattern* are all Unicode-aware.
+2.  The TOSCA functions *concat*, *join*, *token*, *length*, 
+    and *matches* are all Unicode-aware.
     Specifically, the length of a string is a count of its runes, not
     the length of the byte array, which may differ according to the
     encoding. \[See XXX\]
@@ -4410,7 +4410,7 @@ Please note:
     working draft](https://yaml.org/type/binary.html), to ensure
     portability TOSCA implementations *shall not* accept this YAML type.
 
-2.  The TOSCA functions “length”, “min_length”, and “max_length” work
+2.  The TOSCA function “length” works
     differently for the bytes type vs. the string type. For the latter
     the length is the count of Unicode runes, not the count of bytes.
 
@@ -4795,7 +4795,7 @@ clause):
       entry_schema:
         description: listen port entry (simple integer type)
         type: integer
-        validation: { $max_length: [ $value, 128 ] }
+        validation: { $less_or_equal: [ $value, 128 ] }
 ```
 The following example shows a list declaration with an entry schema
 based upon a complex type:
@@ -4878,7 +4878,7 @@ with an entry schema definition based upon the built-in string type
       entry_schema:
         description: basic email address
         type: string
-        validation: { $max_length: [ $value, 128 ] }
+        validation: { $less_or_equal: [ $value, 128 ] }
 ```
 
 The next example shows a map with an entry schema definition for
@@ -4990,7 +4990,7 @@ derives from the built-in string type:
 ```yaml
 ShortString:
   derived_from: string
-  validation: { $max_length: [ $value, 16 ] }
+  validation: { $less_or_equal: [ $value, 16 ] }
 ```
 The next example defines a complex data type that represents a phone number:
 ```yaml
@@ -5011,7 +5011,7 @@ ExtendPhoneNumber:
   properties:
     phone_description:
       type: string
-      validation: { $max_length: [ $value, 128 ] }
+      validation: { $less_or_equal: [ $value, 128 ] }
 ```
 ## 9.3 Schema Definition
 
