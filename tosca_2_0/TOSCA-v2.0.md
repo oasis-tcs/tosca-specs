@@ -1856,13 +1856,9 @@ value that defines the name by which other TOSCA files can import this
 profile. TOSCA does not place any restrictions on the value of the
 profile name string. However, we encourage a Java-style reverse-domain
 notation with version as a best-practice convention.  For example, the
-following profile statement is used to define Version 2.0 of a set of defintiosn suitable for describing cloud computing in an example company:
-```
->>>>>>> e05e079 (Changes to section 6)
-=======
-following profile statement is used to define Version 2.0 of a set of defintions suitable for describing cloud computing in an example company:
+following profile statement is used to define Version 2.0 of a set of 
+definitions suitable for describing cloud computing in an example company:
 ```yaml
->>>>>>> 62b4307 (typos and suggestions)
 profile: com.example.tosca_profiles.cloud_computing:2.0 
 ```
 The following defines a domain-specific profile for Kubernetes:
