@@ -3656,7 +3656,7 @@ assignment:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|node|no|string|The optional keyname used to identify the target node of the requirement. This can either be the name of a target node template or the name of a target node type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
+|node|no|string or 2-entry list|The optional keyname used to identify the target node of the requirement: <br> - This can either be the symbolic name of a node template, where the TOSCA processor will select a node representation created from that template. If the count of the node template is 1 then the potential target is unique, otherwise the processor can select from several node representations. <br> - It can also be a 2-entry list, where the first entry is a string denoting the symbolic name of a node template, while the second entry is an index, thus uniquely identifying the node representation when multiple representations are created from the same node template. The second entry may be either an integer or the keyword NODE_INDEX which resolves to the index of the actual node representation where the requirement is defined (i.e. the index of the SOURCE node), or the keyword RELATIONSHIP_INDEX which resolves to the index of the actual relationship within this requirement created by this assignment. <br> - Finally, it can also be the name of a node type that the TOSCA processor will use to select a type-compatible target node to fulfill the requirement.|
 |capability|no|string|The optional keyname used to identify the target capability of the requirement. This can either be the name of a capability defined within a target node or the name of a target capability type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
 |relationship|conditional|relationship assignment or string|The conditional keyname used to provide values for the relationship definition in the corresponding requirement definition. This keyname can also be overloaded to define a symbolic name that references a relationship template defined elsewhere in the service template.|
 |allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent *allocations* from the property with the same name in the target capability. The allocation acts as a *capacity filter* for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
@@ -3685,7 +3685,7 @@ assignments can be used according to the following grammar:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
-  node: <node_template_name> | <node_type_name>
+  node: <node_template_name> | <node_template_and_index_list> | <node_type_name>
   relationship:
     type: <relationship_type_name>
     properties: <property_assignments>
@@ -3707,7 +3707,7 @@ shown here:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
-  node: <node_template_name> | <node_type_name>
+  node: <node_template_name> | <node_template_and_index_list> | <node_type_name>
   relationship: <relationship_type_name>
   node_filter: <node_filter_definition>
   count: <count_value>
@@ -3724,7 +3724,7 @@ grammar is used:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
-  node: <node_template_name> | <node_type_name>
+  node: <node_template_name> | <node_template_and_index_list> | <node_type_name>
   relationship: <relationship_template_name>
   node_filter: <node_filter_definition>
   count: <count_value>
@@ -3784,10 +3784,28 @@ have the following meaning:
     is the same as or derived from the type defined by the node keyname
     (if the node keyname is defined) in the requirement definition,
 
-  - in addition, the node template must fulfill the node filter
+  - note that if the template has count > 1 there are several target node
+    representation candidates,
+
+  - in addition, the node representation created from the template
+    must fulfill the node filter
     requirements of the node_filter (if a node_filter is defined) in the
     Requirement definition.
-
+    
+- node_template_and_index_list: represents an optional 2-entry list, where
+  the first entry is the name of a node template, and the second entry is an index;
+  
+   - the node template is subject to the same conditions as presented above,
+ 
+   - the index is either a non-negative integer, or the keyword NODE_INDEX
+     which resolves to the index of the actual node representation where the
+     requirement is defined (i.e. the index of the SOURCE node), or the keyword
+     RELATIONSHIP_INDEX which resolves to the index of the actual relationship
+     within this requirement created by this assignment,
+     
+   - for indexes outside the count range of the template, no valid target node
+     representation candidate will exist.
+  
 - node_type_name: represents the optional name of a node type that
   contains the capability that fulfills this requirement;
 
@@ -3899,6 +3917,19 @@ In this case, the `WebApplication` type defines a `host` requirement
 that uses relationship type `HostedOn` relate to the target node. The
 `host` requirement also specifies a capability type of `Container` to
 be the specific target of the requirement in the target node.
+
+The following example targets a WebServer created from the tomcat_server
+template that has the same multiplicity index as the actual my_application node.
+
+```yaml
+service_template:
+  node_templates:
+    my_application:
+      type: WebApplication
+      requirements:
+        - host: 
+            node: [ tomcat_server, NODE_INDEX ]
+```
 
 The following example shows a requirement named `database` that
 describes a requirement for a connection to a capability of type
