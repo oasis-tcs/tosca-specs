@@ -8348,7 +8348,7 @@ notation):
  - call_operation: Standard.start
  - inline: my_workflow
 ```
-# 14 Creating Multiple Implementations from Templates
+# 14 Creating Multiple Representations from Templates
 The content in this section is normative unless otherwise labeled except:
   - the examples
   - references unless labelled as normative.
