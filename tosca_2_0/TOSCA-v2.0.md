@@ -3252,8 +3252,8 @@ MyFeature:
       type: string
     my_feature_value:
       type: integer
-    valid_source_node_types:
-  - MyCompanyNodes
+  valid_source_node_types:
+    - MyCompanyNodes
 ```
 ## 8.2 Capability Definition
 
