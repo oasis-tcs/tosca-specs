@@ -3615,9 +3615,7 @@ following refinement rules for the supported keynames:
     capability keyname above.
 
 - relationship: must be derived from (or the same as) the relationship
-  type in the requirement definition in the parent node type definition;
-  if relationship is not defined in the parent type then no restrictions
-  are applied.
+  type in the requirement definition in the parent node type definition.
 
 - node_filter: a new definition is unrestricted and will be considered
   in addition (i.e. logical and) to the node_filter definition in the
