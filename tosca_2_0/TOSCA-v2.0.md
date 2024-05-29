@@ -4137,15 +4137,15 @@ service_template:
     my_node_template:
       # other details omitted for brevity
       requirements:
-  - host:
-      node_filter:
-        $and:
-    - $in_range:
-      - $get_property: [ SELF, CAPABILITY, num_cpus ]
-      - [ 1, 4 ]
-    - $greater_or_equal:
-      - $get_property: [ SELF, CAPABILITY, mem_size ]
-      - 512 MB 
+        - host:
+            node_filter:
+              $and:
+                - $in_range:
+                  - $get_property: [ SELF, CAPABILITY, num_cpus ]
+                  - [ 1, 4 ]
+                - $greater_or_equal:
+                  - $get_property: [ SELF, CAPABILITY, mem_size ]
+                  - 512 MB 
 ```
 # 9 Properties, Attributes, and Parameters
 
