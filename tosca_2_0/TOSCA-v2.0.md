@@ -4024,9 +4024,9 @@ service_template:
       requirements:
         - service: server1
         - service:
-            optional: True
+            optional: true
         - service:
-            optional: True
+            optional: true
 ```
 In this example, only the first `service` assignment is mandatory. The
 next two are optional. However, after the orchestrator *fulfills* the
