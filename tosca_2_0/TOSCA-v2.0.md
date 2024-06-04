@@ -6753,83 +6753,57 @@ $ceil: [ <float_type_arg> ]
 ## 10.3 TOSCA Path
 The following shows the TOSCA Path syntax in BNF format:
 ```bnf
-<tosca_path> ::=         <initial_context>, <node_context> |
-                         <initial_context>, <rel_context>
-<initial_context> ::=    <node_symbolic_name> | 
-                         <relationship_symbolic_name> |
-                         SELF 
-<rel_context> ::=        SOURCE, <node_context> | 
-                         TARGET, <node_context> | 
-                         CAPABILITY |
-                         <empty>
-<node_context> ::=       RELATIONSHIP, <requirement_name>, <id_of_outgoing_rel>, <rel_context> |
-                         CAPABILITY, <capability_name>, RELATIONSHIP, <id_of_incoming_rel>, <rel_context> |
+<tosca_path> ::=         <node_symbolic_name>, <idx>, <node_context> |
+                         SELF, <node_context> |
+                         <relationship_symbolic_name>, <rel_context> |
+                         SELF, <rel_context>
+<node_context> ::=       RELATIONSHIP, <requirement_name>, <idx>, <rel_context> |
+                         CAPABILITY, <capability_name>, RELATIONSHIP, <idx>, <rel_context> |
                          CAPABILITY, <capability_name> |
                          <empty>
-<id_of_outgoing_rel> ::= <integer_index> | 
-                         ALL | 
+<rel_context> ::=        SOURCE, <node_context> | 
+                         TARGET, <node_context> |
+                         CAPABILITY, RELATIONSHIP <idx>, <rel_context> | 
+                         CAPABILITY |
                          <empty>
-<id_of_incoming_rel> ::= <integer_index> |
+<idx> ::=                <integer_index> | 
                          ALL | 
                          <empty>
 ```
-If initial context refers to a node then the next context will refer to a relationship, if the initial context refers to a relationship context then the next context will refer to a node context. Then,
-each *\<node_context\>* can further resolve to a *\<rel_context\>* and
-vice versa, thus building additional traversal steps. In the end we
-reach either a node context, a relationship context, or a capability
-context as presented above.
+The initial context can refer to either a node or a relationship context:
+- Since several node representations can be created from the same node template, the *\<idx>* after the initial *\<node_symbolic_name>* selects one (or all) of them.
+- If *SELF* is used, and if the tosca_path is used within a requirement definition, *SELF* refers to the current relationship context, otherwise it refers to the current node context. 
+- A *\<node_context>* can further resolve to a *\<rel_context>* and so on, adding more traversal steps. In the end we reach a final node, relationship, or capability context.
 
-A *\<rel_context\>* can
+A *\<node_context>* can further:
+- lead to the outgoing relationship with index *\<idx>* out of the relationship defined by the requirement with symbolic name *\<requirement_name>* of the current node
+- lead to the relationship with index *\<idx>* out of the incoming relationships that target the capability with symbolic name *\<capability_name>* of the current node
+- end within the capability with symbolic name *\<capability_name>* in the current node 
+- end within the current node via the *\<empty>* resolution
 
-- further lead to the source node of the current relationship
-
-- further lead to the target node of the current relationship
-
+A *\<rel_context>* can further:
+- lead to the *SOURCE* node of the current relationship
+- lead to the *TARGET* node of the current relationship
+- lead to a relationship with index *\<idx>* out of the relationships defined by the same requirement as the current relationship
 - end within the target capability of the current relationship
+- end within the current relationship via the *\<empty>* resolution
 
-- end within the current relationship via the \<empty\> resolution
-
-A *\<node_context\>* can
-
-- further lead to the relationship with index \<idx_of_out_rel_in_req\>
-  defined by requirement with symbolic name \<requirement_name\> of the
-  current node
-
-- further lead to the relationship with index \<idx_of_incoming_rel\>
-  that has as target the capability with symbolic name
-  \<capability_name\> of the current node
-
-- end within the capability with symbolic name \<capability_name\> in
-  the current node
-
-- end within the current node via the \<empty\> resolution
-
-Note that both the indexes can either be a non-negative integer, the
-keyword ALL, or missing. If it is a non-negative integer, 0 represents
-the first index and so on incrementally. If the index is missing, the
-semantic meaning is that the first index (index with value 0) is used.
-If it is the keyword ALL, then we return the result for all possible
-indices (further resolved separately) as a list. If the there are
-multiple ALL keywords in the definition, then all the results shall be
-merged into a single list.
+Note that the *\<idx>* can either be a non-negative integer, thekeyword ALL, or missing:
+- If it is a non-negative integer, 0 represents the first index and so on incrementally.
+- If the index is missing, the semantic meaning is that the first index (index with value 0) is used.
+- If it is the keyword ALL, then we return the result for all possible indices (further resolved separately) as a list. If the there are multiple ALL keywords in the definition, then all the results shall be merged into a single list.
 
 We further list the changes from the get_property and get_attribute
 expression from v1.3 to v2.0:
 
 - Added multi-step traversal of the representation graph
-
 - Added the backward traversal from capabilities to incoming
   relationships
-
 - Added the target capability of a relationship as a possible traversal
-
 - Added the specification of indexes and allowing traversal of
   multi-count requirements
-
 - Changed the following syntax to work better in multi-step traversal:
-
   - The initial SOURCE, … becomes SELF, SOURCE, …
-
   - The initial TARGET, … becomes SELF, TARGET, …
 
 ## 10.4 Function Definitions
