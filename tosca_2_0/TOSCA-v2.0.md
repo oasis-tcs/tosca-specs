@@ -3685,7 +3685,7 @@ assignments can be used according to the following grammar:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
-  node: <node_template_name> | <node_template_and_index_list> | <node_type_name>
+  node: <node_template_name> | <tuple_of_node_template_and_index> | <node_type_name>
   relationship:
     type: <relationship_type_name>
     properties: <property_assignments>
@@ -3707,7 +3707,7 @@ shown here:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
-  node: <node_template_name> | <node_template_and_index_list> | <node_type_name>
+  node: <node_template_name> | <tuple_of_node_template_and_index> | <node_type_name>
   relationship: <relationship_type_name>
   node_filter: <node_filter_definition>
   count: <count_value>
@@ -3724,7 +3724,7 @@ grammar is used:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
-  node: <node_template_name> | <node_template_and_index_list> | <node_type_name>
+  node: <node_template_name> | <tuple_of_node_template_and_index> | <node_type_name>
   relationship: <relationship_template_name>
   node_filter: <node_filter_definition>
   count: <count_value>
@@ -3792,7 +3792,7 @@ have the following meaning:
     requirements of the node_filter (if a node_filter is defined) in the
     Requirement definition.
     
-- node_template_and_index_list: represents an optional 2-entry list, where
+- tuple_of_node_template_and_index: represents an optional 2-entry list, where
   the first entry is the name of a node template, and the second entry is an index;
   
    - the node template is subject to the same conditions as presented above,
