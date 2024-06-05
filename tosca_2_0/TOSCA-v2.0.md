@@ -4,7 +4,9 @@
 
 ## Committee Specification Draft 06
 
-## 18 April 2024
+## 23 May 2024
+
+&nbsp;
 
 #### This stage:
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.md (Authoritative) \
@@ -8946,7 +8948,7 @@ service_template:
         - uses: [right, {$remainder: [NODE_INDEX, {$get_input: number_of_right}]
 ```
 
-## 14. Relationship-Specific Input Values
+## 14.4 Relationship-Specific Input Values
 
 > Introduce need for RELATIONSHIP_INDEX
 
@@ -10340,8 +10342,7 @@ The content in this section is normative unless otherwise labeled except:
 
 > Remove this note before submitting for publication.)
 
-Conformance Targets
--------------------
+## 18.1 Conformance Targets
 
 The implementations subject to conformance are those introduced in
 Section 11.3 “Implementations”. They are listed here for convenience:
@@ -10356,8 +10357,7 @@ Section 11.3 “Implementations”. They are listed here for convenience:
 
 - TOSCA archive
 
-Conformance Clause 1: TOSCA YAML service template
--------------------------------------------------
+## 18.2 Conformance Clause 1: TOSCA YAML Service Template
 
 A document conforms to this specification as TOSCA YAML service template
 if it satisfies all the statements below:
@@ -10374,8 +10374,7 @@ if it satisfies all the statements below:
     definitions”, it is valid according to the definitions given in
     section 5.
 
-Conformance Clause 2: TOSCA processor
--------------------------------------
+## 18.3 Conformance Clause 2: TOSCA Processor
 
 A processor or program conforms to this specification as TOSCA processor
 if it satisfies all the statements below:
@@ -10399,8 +10398,7 @@ if it satisfies all the statements below:
 5.  It normalizes string values as described in section 5.4.9.3
     (Additional Requirements)
 
-Conformance Clause 3: TOSCA orchestrator
-----------------------------------------
+## 18.4 Conformance Clause 3: TOSCA Orchestrator
 
 A processor or program conforms to this specification as TOSCA
 orchestrator if it satisfies all the statements below:
@@ -10429,8 +10427,7 @@ orchestrator if it satisfies all the statements below:
     2.10 (Using node template substitution for chaining subsystems), 5.4
     (Capabilities Types) and 5.7 (Interface Types).).
 
-Conformance Clause 4: TOSCA generator
--------------------------------------
+## 18.5 Conformance Clause 4: TOSCA Generator
 
 A processor or program conforms to this specification as TOSCA generator
 if it satisfies at least one of the statements below:
@@ -10442,8 +10439,7 @@ if it satisfies at least one of the statements below:
 2.  When requested to generate a TOSCA archive, it always produces a
     conforming TOSCA archive, as defined in Clause 5: TOSCA archive.
 
-Conformance Clause 5: TOSCA archive
------------------------------------
+## 18.6 Conformance Clause 5: TOSCA Archive
 
 A package artifact conforms to this specification as TOSCA archive if it
 satisfies all the statements below:
@@ -10536,16 +10532,18 @@ Participant Name, Affiliation or "Individual Member"
 
 <!-- A TC can determine who they list here, however, TC Observers must not be listed. It is common practice for TCs to list everyone that was part of the TC during the creation of the document, but this is ultimately a TC decision on who they want to list and not list, and in what order. -->
 
-The following individuals have participated in the creation of this specification and are gratefully acknowledged:
+The following individuals have participated in the creation of this
+specification and are gratefully acknowledged:
 
-**OpenC2 TC Members:**
+**TOSCA TC Members:**
 
 | First Name | Last Name | Company |
 | :--- | :--- | :--- |
-Philippe | Alman | Something Networks
-Alex | Amirnovman | Company B
-Kris | Anderman | Mini Micro
-Darren | Anstman | Big Networks
+Calin | Curescu | Ericsson
+Chris | Lauwers | Individual Member
+Paul | Jordan | Individual Member
+Peter | Bruun | Hewlett Packard Enterprise
+Tal | Liron | Google
 
 > The following list needs to be cleaned up in accordance with OASIS
 > guidelines:
