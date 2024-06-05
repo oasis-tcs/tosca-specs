@@ -1206,8 +1206,8 @@ support the following keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|description|no|string|Declares a description for the TOSCA element being defined.|
 |metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the element being defined.|
+|description|no|string|Declares a description for the TOSCA element being defined.|
 
 Grammar for these keynames is described here and may not be repeated
 for each entity definition.
@@ -1239,7 +1239,7 @@ TOSCA Orchestrators and SHOULD NOT affect runtime behavior.
 ### 5.3.2 description
 
 This optional keyname provides a means to include single or multiline
-descriptions within a TOSCA element as a *scalar string value* as
+descriptions within a TOSCA element as a *YAML scalar string value* as
 follows:
 ```yaml
 description: <description_string>
@@ -1493,10 +1493,10 @@ in their respective sections):
 <!----
 {"id": "427", "author": "Mike Rehder", "date": "2020-12-14T14:25:00Z", "comment": "New term \u201credefined\u201d. The sentence is\n  confusing \u2013 what is it trying to say? Is it saying that you can change\n  the type of a derived_from type (how?)?", "target": "redefined\n  "}-->
 
-- New validation clauses are added to already defined
-  keynames/entities (i.e. the defined validation clauses do not
-  replace the validation clause defined in the parent type but are
-  added to it).
+- New validation clause is added to already defined
+  keynames/entities (i.e. the defined validation clause does not
+  replace the validation clauses of the parent type but are
+  added to them).
 
 - Some definitions must be totally flexible, so they will overwrite
   the definition in the parent type.
@@ -1558,12 +1558,7 @@ data_types:
    <tosca_datatype_def_n>
 ```
 The following code snippet shows an example of data type definition:
-```
->>>>>>> e05e079 (Changes to section 6)
-=======
-The following code snippet shows an example data type definition:
 ```yaml
->>>>>>> 62b4307 (typos and suggestions)
 data_types:
   # A complex datatype definition
   simple_contact_info:
@@ -1674,9 +1669,9 @@ The following code snippet shows example node type definitions:
 ```yaml
 node_types:
   Database:
-  description: "An abstract node type for all databases"
+    description: "An abstract node type for all databases"
   WebApplication:
-  description: "An abstract node type"
+    description: "An abstract node type"
   my_webapp_node_type:
     derived_from: WebApplication
     properties:
@@ -1747,8 +1742,9 @@ definition:
 |description|no|string|Declares a description for the repository being defined.|
 |metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the repository being defined.|
 |url|yes|string|The URL or network address used to access the repository.|
+<!---- Calin: as we already define previously that any multiline definition admits the description and metadata shold we keep it here (and all subsequent places?) -->
 
-These keynames can be used to define a repository using a multi-line
+These keynames can be used to define a repository using a
 grammar as follows:
 ```yaml
 <repository_name>:
@@ -1796,6 +1792,7 @@ functions:
    ...
    <function_definition_n>
 ```
+<!---- Calin 2023-05-28: the validation clause(s) is a mess throughout the document, we should make it singular, and eliminate the lists -->
 The following example shows the definition of a square root function:
 ```yaml
 functions:
@@ -1861,13 +1858,9 @@ value that defines the name by which other TOSCA files can import this
 profile. TOSCA does not place any restrictions on the value of the
 profile name string. However, we encourage a Java-style reverse-domain
 notation with version as a best-practice convention.  For example, the
-following profile statement is used to define Version 2.0 of a set of defintiosn suitable for describing cloud computing in an example company:
-```
->>>>>>> e05e079 (Changes to section 6)
-=======
-following profile statement is used to define Version 2.0 of a set of defintions suitable for describing cloud computing in an example company:
+following profile statement is used to define Version 2.0 of a set of 
+definitions suitable for describing cloud computing in an example company:
 ```yaml
->>>>>>> 62b4307 (typos and suggestions)
 profile: com.example.tosca_profiles.cloud_computing:2.0 
 ```
 The following defines a domain-specific profile for Kubernetes:
@@ -2091,14 +2084,14 @@ definition:
 |metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the import definition.|
 
 These keynames can be used to import individual TOSCA files using the
-following multi-line grammar:
+following grammar:
 ```yaml
 imports:  
   - url: <file_uri>
     repository: <repository_name>
     namespace: <namespace_name>
 ```
-The following multi-line grammar can be used for importing TOSCA
+The following grammar can be used for importing TOSCA
 profiles:
 ```yaml
 imports:  
@@ -2512,7 +2505,7 @@ inputs:
   <parameter_definitions>
 ```
 The following code snippet shows a simple inputs example without any
-validation clauses:
+validation clause:
 ```yaml
 inputs:
   fooName:
@@ -2528,7 +2521,7 @@ inputs:
     type: string
     description: String parameter with validation clause.
     default: My Site
-    validation: { $min_length: [ $value, 9 ] }
+    validation: { $greater_or_equal: [ $value, 9 ] }
 ```
 ### 6.9.3 Node Templates
 
@@ -2828,8 +2821,8 @@ my_app_node_type:
       description: application password
       validation:
         $and: 
-          - { $min_length: [ $value, 6 ] }
-          - { $max_length: [ $value, 10 ] }
+          - { $greater_or_equal: [ $value, 6 ] }
+          - { $less_or_equal: [ $value, 10 ] }
   attributes:
     my_app_port:
       type: integer
@@ -3261,8 +3254,8 @@ MyFeature:
       type: string
     my_feature_value:
       type: integer
-    valid_source_node_types:
-  - MyCompanyNodes
+  valid_source_node_types:
+    - MyCompanyNodes
 ```
 ## 8.2 Capability Definition
 
@@ -3624,9 +3617,7 @@ following refinement rules for the supported keynames:
     capability keyname above.
 
 - relationship: must be derived from (or the same as) the relationship
-  type in the requirement definition in the parent node type definition;
-  if relationship is not defined in the parent type then no restrictions
-  are applied.
+  type in the requirement definition in the parent node type definition.
 
 - node_filter: a new definition is unrestricted and will be considered
   in addition (i.e. logical and) to the node_filter definition in the
@@ -3667,7 +3658,7 @@ assignment:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|node|no|string|The optional keyname used to identify the target node of the requirement. This can either be the name of a target node template or the name of a target node type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime.|
+|node|no|string or 2-entry list|The optional keyname used to identify the target node of the requirement: <br> - This can either be the symbolic name of a node template, where the TOSCA processor will select a node representation created from that template. If the count of the node template is 1 then the potential target is unique, otherwise the processor can select from several node representations. <br> - It can also be a 2-entry list, where the first entry is a string denoting the symbolic name of a node template, while the second entry is an index, thus uniquely identifying the node representation when multiple representations are created from the same node template. The second entry may be either an integer or the keyword NODE_INDEX which resolves to the index of the actual node representation (among node representations created from the same node template) containing this requirement assignment, or the keyword RELATIONSHIP_INDEX which resolves to the index of the actual relationship (among relationships created from the same requirement) created by this requirement assignment. More information on multiplicity and node and relationship indexes can be found in [Chapter 14](#14-creating-multiple-representations-from-templates). <br> - Finally, it can also be the name of a node type that the TOSCA processor will use to select a type-compatible target node to fulfill the requirement.|
 |capability|no|string|The optional keyname used to identify the target capability of the requirement. This can either be the name of a capability defined within a target node or the name of a target capability type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
 |relationship|conditional|relationship assignment or string|The conditional keyname used to provide values for the relationship definition in the corresponding requirement definition. This keyname can also be overloaded to define a symbolic name that references a relationship template defined elsewhere in the service template.|
 |allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent *allocations* from the property with the same name in the target capability. The allocation acts as a *capacity filter* for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
@@ -3696,7 +3687,7 @@ assignments can be used according to the following grammar:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
-  node: <node_template_name> | <node_type_name>
+  node: <node_template_name> | <tuple_of_node_template_and_index> | <node_type_name>
   relationship:
     type: <relationship_type_name>
     properties: <property_assignments>
@@ -3718,7 +3709,7 @@ shown here:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
-  node: <node_template_name> | <node_type_name>
+  node: <node_template_name> | <tuple_of_node_template_and_index> | <node_type_name>
   relationship: <relationship_type_name>
   node_filter: <node_filter_definition>
   count: <count_value>
@@ -3735,7 +3726,7 @@ grammar is used:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
-  node: <node_template_name> | <node_type_name>
+  node: <node_template_name> | <tuple_of_node_template_and_index> | <node_type_name>
   relationship: <relationship_template_name>
   node_filter: <node_filter_definition>
   count: <count_value>
@@ -3795,10 +3786,29 @@ have the following meaning:
     is the same as or derived from the type defined by the node keyname
     (if the node keyname is defined) in the requirement definition,
 
-  - in addition, the node template must fulfill the node filter
+  - note that if the template has count > 1 there are several target node
+    representation candidates,
+
+  - in addition, the node representation created from the template
+    must fulfill the node filter
     requirements of the node_filter (if a node_filter is defined) in the
     Requirement definition.
-
+    
+- tuple_of_node_template_and_index: represents an optional 2-entry list, where
+  the first entry is the name of a node template, and the second entry is an index;
+  
+   - the node template is subject to the same conditions as presented above,
+ 
+   - the index is either a non-negative integer, or the keyword NODE_INDEX which
+     resolves to the index of the actual node representation (among node
+     representations created from the same node template) containing this
+     requirement assignment, or the keyword RELATIONSHIP_INDEX which resolves
+     to the index of the actual relationship (among relationships created
+     from the same requirement) created by this requirement assignment,
+     
+   - for indexes outside the count range of the template, no valid target node
+     representation candidate will exist.
+  
 - node_type_name: represents the optional name of a node type that
   contains the capability that fulfills this requirement;
 
@@ -3910,6 +3920,20 @@ In this case, the `WebApplication` type defines a `host` requirement
 that uses relationship type `HostedOn` relate to the target node. The
 `host` requirement also specifies a capability type of `Container` to
 be the specific target of the requirement in the target node.
+
+The following example targets a WebServer created from the tomcat_server
+template that has the same multiplicity index as the actual my_application node.
+
+```yaml
+service_template:
+  node_templates:
+    my_application:
+      type: WebApplication
+      count: 3
+      requirements:
+        - host: 
+            node: [ tomcat_server, NODE_INDEX ]
+```
 
 The following example shows a requirement named `database` that
 describes a requirement for a connection to a capability of type
@@ -4035,9 +4059,9 @@ service_template:
       requirements:
         - service: server1
         - service:
-            optional: True
+            optional: true
         - service:
-            optional: True
+            optional: true
 ```
 In this example, only the first `service` assignment is mandatory. The
 next two are optional. However, after the orchestrator *fulfills* the
@@ -4148,15 +4172,15 @@ service_template:
     my_node_template:
       # other details omitted for brevity
       requirements:
-  - host:
-      node_filter:
-        $and:
-    - $in_range:
-      - $get_property: [ SELF, CAPABILITY, num_cpus ]
-      - [ 1, 4 ]
-    - $greater_or_equal:
-      - $get_property: [ SELF, CAPABILITY, mem_size ]
-      - 512 MB 
+        - host:
+            node_filter:
+              $and:
+                - $in_range:
+                  - $get_property: [ SELF, CAPABILITY, num_cpus ]
+                  - [ 1, 4 ]
+                - $greater_or_equal:
+                  - $get_property: [ SELF, CAPABILITY, mem_size ]
+                  - 512 MB 
 ```
 # 9 Properties, Attributes, and Parameters
 
@@ -4177,7 +4201,7 @@ The content in this section is normative unless otherwise labeled except:
 The following table summarizes the TOSCA built-in data types. All of
 these type names are reserved and cannot be used for custom data
 types. Note, however, that it is possible to derive a custom data type
-from a primitive type, for example to add validation clauses or to
+from a primitive type, for example to add a validation clause or to
 specify a default value.
 
 |Primitive Types|Special Types|Collection Types|
@@ -4259,8 +4283,8 @@ Please note:
     trimming of whitespace or newlines. [\[YAML 1.2 chapter
     6\]](https://yaml.org/spec/1.2/spec.html#Basic)
 
-2.  The TOSCA functions *concat*, *join*, *token*, *length*,
-    min_length*, *max_length*, and *pattern* are all Unicode-aware.
+2.  The TOSCA functions *concat*, *join*, *token*, *length*, 
+    and *matches* are all Unicode-aware.
     Specifically, the length of a string is a count of its runes, not
     the length of the byte array, which may differ according to the
     encoding. \[See XXX\]
@@ -4419,7 +4443,7 @@ Please note:
     working draft](https://yaml.org/type/binary.html), to ensure
     portability TOSCA implementations *shall not* accept this YAML type.
 
-2.  The TOSCA functions “length”, “min_length”, and “max_length” work
+2.  The TOSCA function “length” works
     differently for the bytes type vs. the string type. For the latter
     the length is the count of Unicode runes, not the count of bytes.
 
@@ -4804,7 +4828,7 @@ clause):
       entry_schema:
         description: listen port entry (simple integer type)
         type: integer
-        validation: { $max_length: [ $value, 128 ] }
+        validation: { $less_or_equal: [ $value, 128 ] }
 ```
 The following example shows a list declaration with an entry schema
 based upon a complex type:
@@ -4887,7 +4911,7 @@ with an entry schema definition based upon the built-in string type
       entry_schema:
         description: basic email address
         type: string
-        validation: { $max_length: [ $value, 128 ] }
+        validation: { $less_or_equal: [ $value, 128 ] }
 ```
 
 The next example shows a map with an entry schema definition for
@@ -4973,7 +4997,7 @@ The following requirements apply:
 - A valid datatype definition **MUST** have either a valid
   derived_from declaration or at least one valid property definition.
 
-- Any validation clauses **SHALL** be type-compatible with the type
+- A validation clause **SHALL** be type-compatible with the type
   declared by the derived_from keyname.
 
 - If a properties keyname is provided, it **SHALL** contain one or more
@@ -4999,7 +5023,7 @@ derives from the built-in string type:
 ```yaml
 ShortString:
   derived_from: string
-  validation: { $max_length: [ $value, 16 ] }
+  validation: { $less_or_equal: [ $value, 16 ] }
 ```
 The next example defines a complex data type that represents a phone number:
 ```yaml
@@ -5020,7 +5044,7 @@ ExtendPhoneNumber:
   properties:
     phone_description:
       type: string
-      validation: { $max_length: [ $value, 128 ] }
+      validation: { $less_or_equal: [ $value, 128 ] }
 ```
 ## 9.3 Schema Definition
 
@@ -5033,7 +5057,7 @@ TOSCA list or map.
 
 If the schema definition specifies a map key, the type of the key schema
 must be derived originally from the string type (which basically ensures
-that the schema type is a string with additional validation clauses). As
+that the schema type is a string with additional validation clause). As
 there is little need for complex keys this caters to more
 straight-forward and clear specifications. If the key schema is not
 defined it is assumed to be string by default.
@@ -5049,7 +5073,7 @@ definition:
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory data type for the key or entry. If this schema definition is for a map key, then the referred type must be derived originally from string.|
 |description|no|string|The optional description for the schema.|
-|validation|no|validation clauses|The optional validation clause that must evaluate to True for the property.|
+|validation|no|validation clause|The optional validation clause that must evaluate to True for the property.|
 |key_schema|no|schema definition|When the schema itself is of type map, the optional schema definition that is used to specify the type of the keys of that map’s entries (if key_schema is not defined it is assumed to be “string” by default). For other schema types, the key_schema must not be defined.|
 |entry_schema|conditional|schema definition|When the schema itself is of type map or list, the schema definition is mandatory and is used to specify the type of the entries in that map or list. For other schema types, the entry_schema must not be defined.|
 
@@ -5979,7 +6003,7 @@ table:
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
 |\<input_parameter_name\>|yes|string|The name of the parameter as defined in the inputs section of the service template.|
-|\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
+|\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. The index is either a non-negative integer; or if `$get_input`is used within a node template definition the keyword NODE_INDEX can be used, which resolves to the index of the actual node representation among the nodes created from the same template; and/or if `$get_input`is used within a requirement definition the keyword RELATIONSHIP_INDEX can be used, which resolves to the index of the actual relationship among the relationships created from the same requirement. More information on multiplicity and node and relationship indexes can be found in [Chapter 14](#14-creating-multiple-representations-from-templates).|
 
 The following snippet shows an example of the simple get_input grammar:
 ```yaml
@@ -6732,83 +6756,57 @@ $ceil: [ <float_type_arg> ]
 ## 10.3 TOSCA Path
 The following shows the TOSCA Path syntax in BNF format:
 ```bnf
-<tosca_path> ::=         <initial_context>, <node_context> |
-                         <initial_context>, <rel_context>
-<initial_context> ::=    <node_symbolic_name> | 
-                         <relationship_symbolic_name> |
-                         SELF 
-<rel_context> ::=        SOURCE, <node_context> | 
-                         TARGET, <node_context> | 
-                         CAPABILITY |
-                         <empty>
-<node_context> ::=       RELATIONSHIP, <requirement_name>, <id_of_outgoing_rel>, <rel_context> |
-                         CAPABILITY, <capability_name>, RELATIONSHIP, <id_of_incoming_rel>, <rel_context> |
+<tosca_path> ::=         <node_symbolic_name>, <idx>, <node_context> |
+                         SELF, <node_context> |
+                         <relationship_symbolic_name>, <rel_context> |
+                         SELF, <rel_context>
+<node_context> ::=       RELATIONSHIP, <requirement_name>, <idx>, <rel_context> |
+                         CAPABILITY, <capability_name>, RELATIONSHIP, <idx>, <rel_context> |
                          CAPABILITY, <capability_name> |
                          <empty>
-<id_of_outgoing_rel> ::= <integer_index> | 
-                         ALL | 
+<rel_context> ::=        SOURCE, <node_context> | 
+                         TARGET, <node_context> |
+                         CAPABILITY, RELATIONSHIP <idx>, <rel_context> | 
+                         CAPABILITY |
                          <empty>
-<id_of_incoming_rel> ::= <integer_index> |
+<idx> ::=                <integer_index> | 
                          ALL | 
                          <empty>
 ```
-If initial context refers to a node then the next context will refer to a relationship, if the initial context refers to a relationship context then the next context will refer to a node context. Then,
-each *\<node_context\>* can further resolve to a *\<rel_context\>* and
-vice versa, thus building additional traversal steps. In the end we
-reach either a node context, a relationship context, or a capability
-context as presented above.
+The initial context can refer to either a node or a relationship context:
+- Since several node representations can be created from the same node template, the *\<idx>* after the initial *\<node_symbolic_name>* selects one (or all) of them.
+- If *SELF* is used, and if the tosca_path is used within a requirement definition, *SELF* refers to the current relationship context, otherwise it refers to the current node context. 
+- A *\<node_context>* can further resolve to a *\<rel_context>* and so on, adding more traversal steps. In the end we reach a final node, relationship, or capability context.
 
-A *\<rel_context\>* can
+A *\<node_context>* can further:
+- lead to the outgoing relationship with index *\<idx>* out of the relationship defined by the requirement with symbolic name *\<requirement_name>* of the current node
+- lead to the relationship with index *\<idx>* out of the incoming relationships that target the capability with symbolic name *\<capability_name>* of the current node
+- end within the capability with symbolic name *\<capability_name>* in the current node 
+- end within the current node via the *\<empty>* resolution
 
-- further lead to the source node of the current relationship
-
-- further lead to the target node of the current relationship
-
+A *\<rel_context>* can further:
+- lead to the *SOURCE* node of the current relationship
+- lead to the *TARGET* node of the current relationship
+- lead to a relationship with index *\<idx>* out of the relationships defined by the same requirement as the current relationship
 - end within the target capability of the current relationship
+- end within the current relationship via the *\<empty>* resolution
 
-- end within the current relationship via the \<empty\> resolution
-
-A *\<node_context\>* can
-
-- further lead to the relationship with index \<idx_of_out_rel_in_req\>
-  defined by requirement with symbolic name \<requirement_name\> of the
-  current node
-
-- further lead to the relationship with index \<idx_of_incoming_rel\>
-  that has as target the capability with symbolic name
-  \<capability_name\> of the current node
-
-- end within the capability with symbolic name \<capability_name\> in
-  the current node
-
-- end within the current node via the \<empty\> resolution
-
-Note that both the indexes can either be a non-negative integer, the
-keyword ALL, or missing. If it is a non-negative integer, 0 represents
-the first index and so on incrementally. If the index is missing, the
-semantic meaning is that the first index (index with value 0) is used.
-If it is the keyword ALL, then we return the result for all possible
-indices (further resolved separately) as a list. If the there are
-multiple ALL keywords in the definition, then all the results shall be
-merged into a single list.
+Note that the *\<idx>* can either be a non-negative integer, thekeyword ALL, or missing:
+- If it is a non-negative integer, 0 represents the first index and so on incrementally.
+- If the index is missing, the semantic meaning is that the first index (index with value 0) is used.
+- If it is the keyword ALL, then we return the result for all possible indices (further resolved separately) as a list. If the there are multiple ALL keywords in the definition, then all the results shall be merged into a single list.
 
 We further list the changes from the get_property and get_attribute
 expression from v1.3 to v2.0:
 
 - Added multi-step traversal of the representation graph
-
 - Added the backward traversal from capabilities to incoming
   relationships
-
 - Added the target capability of a relationship as a possible traversal
-
 - Added the specification of indexes and allowing traversal of
   multi-count requirements
-
 - Changed the following syntax to work better in multi-step traversal:
-
   - The initial SOURCE, … becomes SELF, SOURCE, …
-
   - The initial TARGET, … becomes SELF, TARGET, …
 
 ## 10.4 Function Definitions
@@ -8328,7 +8326,7 @@ notation):
  - call_operation: Standard.start
  - inline: my_workflow
 ```
-# 14 Creating Multiple Implementations from Templates
+# 14 Creating Multiple Representations from Templates
 The content in this section is normative unless otherwise labeled except:
   - the examples
   - references unless labelled as normative.
