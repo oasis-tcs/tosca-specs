@@ -9059,6 +9059,12 @@ Please note:
 - The `node_type` specified in the substitution mapping SHOULD not
   provide implementations for interface operations defined in the
   type.
+  <!---- Calin-2024-06-05: I think that this constraint should not exist.
+  This will be evaluated from the directives. Could even have all
+  3 directives [select, substitute, create]
+  - If a node is select only the node_filter is relevat (rest might not be defined, it is ignored)
+  - If a node is substitute then the implementations are irelevant, they are ignored
+  - If a node is create, the node_filter is irelevant -->
 - A substituting service template MUST be a valid TOSCA template in
   its own right (i.e., when not used as a substituting
   implementation). Specifically, all the required properties of all
