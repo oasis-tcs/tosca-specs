@@ -9194,10 +9194,10 @@ grammar may be used:
 ```
 
 If we have several requirement mappings with the same requirement name (i.e. 
-for the key of the requirement mapping) that means that each requirement 
+as the key of the requirement mapping) that means that each requirement 
 assignment is mapped separately (in the order they appear in the list).
 If there is only one requirement mapping with a certain requirement name
-(i.e. for the key of the requirement mapping) then it means that all 
+(i.e. as the key of the requirement mapping) then it means that all 
 requirements assignments of that requirement are mapped to the same 
 target requirement(s).
 
@@ -9225,8 +9225,8 @@ have the following meaning:
   the keyword `UNBOUNDED`, which represents all the remaining assignments.
   Note that mappings with count can interspread mappings without count
   for the same requirement_name, however no other assignment for the
-  same requirement_name should not be used after one containing a
-  UNBOUNDED count.
+  same requirement_name should not be used after one containing an
+  `UNBOUNDED` count.
 
 The following subsections illustrate this grammar in the context of
 various use cases.
@@ -9914,8 +9914,8 @@ as follows: the first requirement assignment is mapped to the
 `service` requirement of the `software1` node, the second requirement 
 assignment is mapped to the `service` requirement of the `software2` 
 node, then the rest of the `service` requirements of the substituted
-node (at least 1 more at most UNBOUNDED) are mapped again to the
-`service` requirement of the `software1` node:
+node are mapped again to the `service` requirement of the `software1` 
+node:
 ```yaml
 tosca_definitions_version: tosca_2_0
 imports:
