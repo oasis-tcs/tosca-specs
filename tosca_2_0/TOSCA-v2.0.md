@@ -9055,10 +9055,6 @@ have the following meaning:
 > Examples to be provided
 
 Please note:
-
-- The `node_type` specified in the substitution mapping SHOULD not
-  provide implementations for interface operations defined in the
-  type.
   <!---- Calin-2024-06-05: I think that this constraint should not exist.
   This will be evaluated from the directives. Could even have all
   3 directives [select, substitute, create]
@@ -9077,7 +9073,8 @@ mapped to an input value of the substituting service template.
 The grammar of a property_mapping is as follows:
 ```yaml
 <property_name>: <input_name> 
-<property_path>: <input_name>
+[ CAPABILITY, <capability_name>, <property_name> ]: <input_name>
+[ RELATIONSHIP, <requirement_name>, <idx>, <property_name> ]: <input_name>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9085,10 +9082,19 @@ have the following meaning:
   substituting service template.
 - property_name: represents the name of a property of the
   substituted node (defined using a corresponding property definition
-  in the specified Node Type)
-- property_path: represents a *TOSCA Path* expression that
-  references a property of a capability or requirement of the
+  in the specified Node Type), or a property of a capability, or a
+  property of a relationship created by a requirement of the
   substituted node.
+- capability_name: represents the name of the capability as it appears
+  in the Node Type definition for the substituted node
+- requirement_name: represents the name of the requirement as it appears
+  in the Node Type definition for the substituted node
+- idx: index of the relationship defined from that requirement (0 is the
+  first index); if the index is missing, index 0 is assumed;
+  if the keyword ALL is used by as index, the corresponding
+  input will be assigned a list of all values of properties with
+  <property_name> from all relationships created from the requirement
+  with <requirement_name>.
 
 The following additional requirements apply:
 - Mappings must be type-compatible (i.e., properties mapped to input
@@ -9103,7 +9109,8 @@ service template to be mapped to an attribute of the substituted node.
 The grammar of an attribute_mapping is as follows:
 ```yaml
 <attribute_name>: <output_name> 
-<attribute_path>: <output_name> 
+[ CAPABILITY, <capability_name>, <attribute_name> ]: <output_name>
+[ RELATIONSHIP, <requirement_name>, <idx>, <attribute_name> ]: <output_name>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9111,10 +9118,19 @@ have the following meaning:
   substituting service template.
 - attribute_name: represents the name of an attribute of the
   substituted node (defined using a corresponding attribute definition
-  in the specified Node Type)
-- attribute_path: represents a *TOSCA Path* expression that
-  references an attribute of a capability or requirement of the
+  in the specified Node Type) or an attribute of a capability, or an
+  attribute of a relationship created by a requirement of the
   substituted node.
+- capability_name: represents the name of the capability as it appears
+  in the Node Type definition for the substituted node
+- requirement_name: represents the name of the requirement as it appears
+  in the Node Type definition for the substituted node
+- idx: index of the relationship defined from that requirement (0 is the
+  first index); if the index is missing, index 0 is assumed;
+  if the keyword ALL is used by as index, all attributes
+  with <attribute_name> from all relationships created from the requirement
+  with <requirement_name> will be assigned a coresponding value from the
+  output which is of a list type.
 
 The following additional requirements apply:
 - Mappings must be type-compatible (i.e., outputs mapped to attributes
