@@ -9435,7 +9435,6 @@ mapped to two corresponding `service` requirements of the `software`
 node in the substituting template.
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 imports:
   - types.yaml
 capability_types:
@@ -9476,11 +9475,10 @@ service_template:
 As a further convenience feature, if all of the requirement assignments
 are mapped to the same target requirement(s) is possible to drop the 
 grammar using the count. This syntax states that all `service` requirements
-of the substituted node are mapped to two corresponding `service` 
+of the substituted node are mapped to the corresponding `service` 
 requirements of the `software` node in the substituting template.
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 imports:
   - types.yaml
 capability_types:
@@ -9523,7 +9521,6 @@ Imagine a scenario where nodes of type `Client` need to be hosted on
 nodes of type `Compute` as shown by the following type definitions:
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 capability_types:
   Host:
     description: >-
@@ -9595,10 +9592,8 @@ twice, once to the `host` requirement of the `software1` node and once
 to the `host` requirement of the `software2` node.
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 imports:
   - types.yaml
-
 node_types:
   ClientSoftware:
     requirements:
@@ -9860,6 +9855,111 @@ template, and then it will perform the remaining mappings (which
 presumably will map onto optional requirements in the substituting
 template). This is done independent of the order in which the
 requirement mappings are specified.
+
+### 15.5.4 Handling `UNBOUNDED` Requirement Count Ranges
+In the case of `UNBOUNDED` count ranges, we must use unbounded grammar
+forms.
+
+In the following case all `service` requirements of the substituted node
+are mapped to the corresponding `service` requirements of the `software1` 
+node in the substituting template. This allows for the follwing compact
+syntax:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+node_types:
+  Client:
+    requirements:
+      - service:
+          capability: Service
+          relationship: ServedBy
+          node: Server
+          count_range: [ 3, UNBOUNDED]
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 0, UNBOUNDED ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software1, service ]
+  node_templates:
+    software1:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    software2:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    compute:
+      type: Compute
+```
+
+In the next case the `service` requirements of the substituted node
+are mapped to the corresponding `service` requirements of both the
+`software1` and `software2` nodes in the substituting template 
+as follows: the first requirement assignment is mapped to the 
+`service` requirement of the `software1` node, the second requirement 
+assignment is mapped to the `service` requirement of the `software2` 
+node, then the rest of the `service` requirements of the substituted
+node (at least 1 more at most UNBOUNDED) are mapped again to the
+`service` requirement of the `software1` node:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+node_types:
+  Client:
+    requirements:
+      - service:
+          capability: Service
+          relationship: ServedBy
+          node: Server
+          count_range: [ 3, UNBOUNDED]
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 0, UNBOUNDED ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software1, service ]
+      - service: [ software2, service ]
+      - [ service, UNBOUNDED ]: [ software1, service ]
+  node_templates:
+    software1:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    software2:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    compute:
+      type: Compute
+```
 
 ## 15.6 Interface Mapping
 An interface mapping allows an interface operation on the substituted
