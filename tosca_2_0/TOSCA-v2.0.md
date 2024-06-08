@@ -9185,6 +9185,17 @@ The grammar for requirement mappings is as follows:
   - ...
   - [ <node_template_name_n>, <node_template_requirement_name_n> ]
 ```
+If the substituting template uses *selectable* nodes to define
+requirements, then the following alternative syntax can be used:
+```yaml
+<requirement_name>:
+  - <selectable_node_template_name_1>
+  - ...
+  - <selectable_node_template_name_n>
+```
+It is possible to mix and match these two alternative syntaxes within
+the same requirement mappings list.
+
 As an optimization, if the requirement mapping defines a *one-to-one*
 mapping (i.e., a mapping of a requirement onto a single requirement of
 a single node in the substituting template), the following single-line
@@ -9192,7 +9203,10 @@ grammar may be used:
 ```yaml
 <requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
 ```
-
+or
+```yaml
+<requirement_name>: <selectable_node_template_name>
+```
 If we have several requirement mappings with the same requirement name (i.e. 
 as the key of the requirement mapping) that means that each requirement 
 assignment is mapped separately (in the order they appear in the list).
@@ -9217,6 +9231,9 @@ have the following meaning:
   key.
 - node_template_name: represents a valid name of a node template
   definition within the same substituting service template
+- selectable_node_template_name: represents a valid name of a
+  selectable node template definition within the same substituting
+  service template
 - node_template_requirement_name: represents a valid name of a
   requirement definition within the \<node_template_name\> declared in
   this mapping.
