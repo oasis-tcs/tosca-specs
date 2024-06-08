@@ -9193,13 +9193,13 @@ requirements, then the following alternative syntax can be used:
   - ...
   - <selectable_node_template_name_n>
 ```
-It is possible to mix and match these two alternative syntaxes within
-the same requirement mappings list.
+The TOSCA grammar allows mixing and matching these two alternative
+syntaxes within the same requirement mappings list.
 
 As an optimization, if the requirement mapping defines a *one-to-one*
 mapping (i.e., a mapping of a requirement onto a single requirement of
-a single node in the substituting template), the following single-line
-grammar may be used:
+a single node in the substituting template or a mapping to a single
+selectable node), the following single-line grammar may be used:
 ```yaml
 <requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
 ```
