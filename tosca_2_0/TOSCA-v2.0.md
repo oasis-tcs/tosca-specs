@@ -9185,14 +9185,28 @@ The grammar for requirement mappings is as follows:
   - ...
   - [ <node_template_name_n>, <node_template_requirement_name_n> ]
 ```
+If the substituting template uses *selectable* nodes to define
+requirements, then the following alternative syntax can be used:
+```yaml
+<requirement_name>:
+  - <selectable_node_template_name_1>
+  - ...
+  - <selectable_node_template_name_n>
+```
+The TOSCA grammar allows mixing and matching these two alternative
+syntaxes within the same requirement mappings list.
+
 As an optimization, if the requirement mapping defines a *one-to-one*
 mapping (i.e., a mapping of a requirement onto a single requirement of
-a single node in the substituting template), the following single-line
-grammar may be used:
+a single node in the substituting template or a mapping to a single
+selectable node), the following single-line grammar may be used:
 ```yaml
 <requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
 ```
-
+or
+```yaml
+<requirement_name>: <selectable_node_template_name>
+```
 If we have several requirement mappings with the same requirement name (i.e. 
 as the key of the requirement mapping) that means that each requirement 
 assignment is mapped separately (in the order they appear in the list).
@@ -9217,6 +9231,9 @@ have the following meaning:
   key.
 - node_template_name: represents a valid name of a node template
   definition within the same substituting service template
+- selectable_node_template_name: represents a valid name of a
+  selectable node template definition within the same substituting
+  service template
 - node_template_requirement_name: represents a valid name of a
   requirement definition within the \<node_template_name\> declared in
   this mapping.
@@ -9617,7 +9634,119 @@ service_template:
 Using this syntax, the target of the requirement mapping is a *list*
 of target requirements rather than a single requirement.
 
-### 15.5.3 Requirement Mapping Rules
+### 15.5.3 Requirement Mapping and Selectable Nodes
+
+The previous section shows a use case where the target node of a
+requirement of the substituted node is to be used multiple times as
+the target node of *multiple different requirements* in a subsituting
+template. The need for multiple requirements to be fulfilled by the
+same target node is quite common and usually exists independently of
+whether the service template is used as a substitution or as a
+stand-alone service. In fact, the TOSCA *selectable node* feature was
+introduced specifically for scenarios where requirements of different
+nodes need to be fulfilled by the same target node.
+
+The requirement mapping examples presented so far only show how to map
+requirements of a substituted node onto *dangling* requirements of
+nodes in the substituting template. This section shows how requirement
+mappings can also be used in conjunction with selectable nodes in
+substituting templates.
+
+Let's again consider the scenario from the previous section where a
+node of type `Client` is hosted on a node of type `Compute:
+```mermaid
+flowchart RL
+    subgraph T [Top-Level Topology]
+        client --> |host| compute
+   end
+```
+The following service template shows an implementation of this example:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+service_template:
+  node_templates:
+    compute:
+      type: Compute
+    client:
+      type: Client
+      directives: [ substitute ]
+      requirements:
+        - host: compute
+```
+
+The following figure shows a substituting topology that *decomposes*
+the node of type `Client` into two software components, each of which
+needs to be hosted on the same `compute` node. Unlike in the example
+in the previous section, a *selectable* node is used to express the
+need for both software components to be hosted on the same `compute`
+node:
+
+```mermaid
+flowchart RL
+    subgraph S [Substituting Topology]
+        host("compute<br/>[select]")
+        software1 --> |host| host 
+        software2 --> |host| host 
+   end
+```
+
+The requirement mappings defined in the corresponding service template
+must express that the target node of the `host` requirement of the
+substituted node is to be *selected* as the node represented by the
+*selectable* `compute` node in the subsituting template, as shown in
+the following Figure:
+
+```mermaid
+flowchart RL
+    S --> |substitutes| client
+    subgraph T [Top-Level Topology]
+        client --> |host| compute 
+    end 
+    subgraph S [Substituting Topology]
+        host("compute<br/>[select]")
+        software1 --> |host| host 
+        software2 --> |host| host 
+        host -.-> |mapped<br/>host<br/>requirement| compute
+   end
+```
+
+This can trivially be done using the syntax shown in the following
+code snippet:
+
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+          count_range: [ 1, 1 ]
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - host: compute
+  node_templates:
+    software1:
+      type: ClientSoftware
+    software2:
+      type: ClientSoftware
+    compute:
+      type: Compute
+      directives: [select]
+```
+
+The substitution mapping code in this service template provides an
+elegant mechanism for expressing that the target node of the `host`
+requirement of the `client` node is to be mapped directly to the
+*selectable* `compute` node in the substituting template.
+
+### 15.5.4 Requirement Mapping Rules
 This section documents the rules for requirement mapping.
 
 1. Requirements from a *substituted* node can only be mapped onto
@@ -9856,7 +9985,7 @@ presumably will map onto optional requirements in the substituting
 template). This is done independent of the order in which the
 requirement mappings are specified.
 
-### 15.5.4 Handling `UNBOUNDED` Requirement Count Ranges
+### 15.5.5 Handling `UNBOUNDED` Requirement Count Ranges
 In the case of `UNBOUNDED` count ranges, we must use unbounded grammar
 forms.
 
