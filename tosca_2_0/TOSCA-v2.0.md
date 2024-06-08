@@ -4589,7 +4589,7 @@ In the above grammar, the pseudo values that appear in angle brackets have the f
 
     <data_type_name>: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA intger or derived from them.
 
-    <suffix>: An optional string. If not present then unit_symbol_name is equal to unit_symbol. If present then unit_symbol_name is equal to unit_symbol&&unit_suffix. It is provided as a convience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for unit_symbol_name has an implict value of 1.0
+    <suffix>: An optional string. If not present then unit_symbol_name is equal to unit_symbol. If present then unit_symbol_name is equal to unit_symbol&&unit_suffix. It is provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for unit_symbol_name has an implict value of 1.0
 
     <unit_symbol> A name string, with no white space, used to identify the unit.
 
@@ -9055,10 +9055,12 @@ have the following meaning:
 > Examples to be provided
 
 Please note:
-
-- The `node_type` specified in the substitution mapping SHOULD not
-  provide implementations for interface operations defined in the
-  type.
+  <!---- Calin-2024-06-05: I think that this constraint should not exist.
+  This will be evaluated from the directives. Could even have all
+  3 directives [select, substitute, create]
+  - If a node is select only the node_filter is relevat (rest might not be defined, it is ignored)
+  - If a node is substitute then the implementations are irelevant, they are ignored
+  - If a node is create, the node_filter is irelevant -->
 - A substituting service template MUST be a valid TOSCA template in
   its own right (i.e., when not used as a substituting
   implementation). Specifically, all the required properties of all
@@ -9071,7 +9073,8 @@ mapped to an input value of the substituting service template.
 The grammar of a property_mapping is as follows:
 ```yaml
 <property_name>: <input_name> 
-<property_path>: <input_name>
+[ CAPABILITY, <capability_name>, <property_name> ]: <input_name>
+[ RELATIONSHIP, <requirement_name>, <idx>, <property_name> ]: <input_name>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9079,10 +9082,19 @@ have the following meaning:
   substituting service template.
 - property_name: represents the name of a property of the
   substituted node (defined using a corresponding property definition
-  in the specified Node Type)
-- property_path: represents a *TOSCA Path* expression that
-  references a property of a capability or requirement of the
+  in the specified Node Type), or a property of a capability, or a
+  property of a relationship created by a requirement of the
   substituted node.
+- capability_name: represents the name of the capability as it appears
+  in the Node Type definition for the substituted node
+- requirement_name: represents the name of the requirement as it appears
+  in the Node Type definition for the substituted node
+- idx: index of the relationship defined from that requirement (0 is the
+  first index); if the index is missing, index 0 is assumed;
+  if the keyword ALL is used by as index, the corresponding
+  input will be assigned a list of all values of properties with
+  <property_name> from all relationships created from the requirement
+  with <requirement_name>.
 
 The following additional requirements apply:
 - Mappings must be type-compatible (i.e., properties mapped to input
@@ -9097,7 +9109,8 @@ service template to be mapped to an attribute of the substituted node.
 The grammar of an attribute_mapping is as follows:
 ```yaml
 <attribute_name>: <output_name> 
-<attribute_path>: <output_name> 
+[ CAPABILITY, <capability_name>, <attribute_name> ]: <output_name>
+[ RELATIONSHIP, <requirement_name>, <idx>, <attribute_name> ]: <output_name>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9105,10 +9118,19 @@ have the following meaning:
   substituting service template.
 - attribute_name: represents the name of an attribute of the
   substituted node (defined using a corresponding attribute definition
-  in the specified Node Type)
-- attribute_path: represents a *TOSCA Path* expression that
-  references an attribute of a capability or requirement of the
+  in the specified Node Type) or an attribute of a capability, or an
+  attribute of a relationship created by a requirement of the
   substituted node.
+- capability_name: represents the name of the capability as it appears
+  in the Node Type definition for the substituted node
+- requirement_name: represents the name of the requirement as it appears
+  in the Node Type definition for the substituted node
+- idx: index of the relationship defined from that requirement (0 is the
+  first index); if the index is missing, index 0 is assumed;
+  if the keyword ALL is used by as index, all attributes
+  with <attribute_name> from all relationships created from the requirement
+  with <requirement_name> will be assigned a coresponding value from the
+  output which is of a list type.
 
 The following additional requirements apply:
 - Mappings must be type-compatible (i.e., outputs mapped to attributes
@@ -9146,10 +9168,10 @@ passing nodes between templates.
 
 The grammar for requirement mapping differs slightly from other
 substitution mapping grammars for the following two reasons:
-1. It is possible for a substituted node to have multiple requirements
-   with the same name, each of which may need to be mapped
-   separately.
-2. It is possible for the same requirement in a substituted node to be
+1. It is possible for a substituted node to have multiple requirement
+   assignments (up to the upper bound of the `count_range`),
+   each of which may need to be mapped separately.
+3. It is possible for the same requirement in a substituted node to be
    mapped multiple times.
 
 To accommodate these use cases, requirement mappings are defined using
@@ -9171,8 +9193,20 @@ grammar may be used:
 <requirement_name>: [ <node_template_name>, <node_template_requirement_name> ]
 ```
 
-> If we plan to support the "convience" grammar of mapping multiple
->requirement instances at the same time, we need to document it here.
+If we have several requirement mappings with the same requirement name (i.e. 
+as the key of the requirement mapping) that means that each requirement 
+assignment is mapped separately (in the order they appear in the list).
+If there is only one requirement mapping with a certain requirement name
+(i.e. as the key of the requirement mapping) then it means that all 
+requirements assignments of that requirement are mapped to the same 
+target requirement(s).
+
+If we have several requirement mappings with the same requirement name,
+and a consecutive subset of them have the same target reqirement(s), instead 
+of repeating the mapping we can use the following grammar:
+```yaml
+[ <requirement_name>, <count> ]: [ <node_template_name>, <node_template_requirement_name> ]
+```
 
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -9186,6 +9220,13 @@ have the following meaning:
 - node_template_requirement_name: represents a valid name of a
   requirement definition within the \<node_template_name\> declared in
   this mapping.
+- count: is the number of assignments of a requirement mapped to the
+  same target requirement(s). It can be either a non-negetive integer or
+  the keyword `UNBOUNDED`, which represents all the remaining assignments.
+  Note that mappings with count can interspread mappings without count
+  for the same requirement_name, however no other assignment for the
+  same requirement_name should not be used after one containing an
+  `UNBOUNDED` count.
 
 The following subsections illustrate this grammar in the context of
 various use cases.
@@ -9387,14 +9428,13 @@ service_template:
     compute:
       type: Compute
 ```
-As a convience feature, it is possible to *group* identical mapping
+As a convenience feature, it is possible to *group* identical mapping
 statements using the syntax in the following example. This syntax
 states that two `service` requirements of the substituted node are
 mapped to two corresponding `service` requirements of the `software`
 node in the substituting template.
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 imports:
   - types.yaml
 capability_types:
@@ -9432,12 +9472,55 @@ service_template:
     compute:
       type: Compute
 ```
+As a further convenience feature, if all of the requirement assignments
+are mapped to the same target requirement(s) is possible to drop the 
+grammar using the count. This syntax states that all `service` requirements
+of the substituted node are mapped to the corresponding `service` 
+requirements of the `software` node in the substituting template.
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+capability_types:
+  Host:
+    description: >-
+      Ability to host software.
+relationship_types:
+  HostedOn:
+    description: >-
+      Relationship to a host.
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 2, 2 ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software, service ]
+  node_templates:
+    software:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    compute:
+      type: Compute
+```
 ### 15.5.2 Mapping a Requirement Multiple Times
 Imagine a scenario where nodes of type `Client` need to be hosted on
 nodes of type `Compute` as shown by the following type definitions:
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 capability_types:
   Host:
     description: >-
@@ -9509,10 +9592,8 @@ twice, once to the `host` requirement of the `software1` node and once
 to the `host` requirement of the `software2` node.
 ```yaml
 tosca_definitions_version: tosca_2_0
-
 imports:
   - types.yaml
-
 node_types:
   ClientSoftware:
     requirements:
@@ -9776,7 +9857,109 @@ template). This is done independent of the order in which the
 requirement mappings are specified.
 
 ### 15.5.4 Handling `UNBOUNDED` Requirement Count Ranges
-*To be provided*
+In the case of `UNBOUNDED` count ranges, we must use unbounded grammar
+forms.
+
+In the following case all `service` requirements of the substituted node
+are mapped to the corresponding `service` requirements of the `software1` 
+node in the substituting template. This allows for the follwing compact
+syntax:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+node_types:
+  Client:
+    requirements:
+      - service:
+          capability: Service
+          relationship: ServedBy
+          node: Server
+          count_range: [ 3, UNBOUNDED]
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 0, UNBOUNDED ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software1, service ]
+  node_templates:
+    software1:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    software2:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    compute:
+      type: Compute
+```
+
+In the next case the `service` requirements of the substituted node
+are mapped to the corresponding `service` requirements of both the
+`software1` and `software2` nodes in the substituting template 
+as follows: the first requirement assignment is mapped to the 
+`service` requirement of the `software1` node, the second requirement 
+assignment is mapped to the `service` requirement of the `software2` 
+node, then the rest of the `service` requirements of the substituted
+node are mapped again to the `service` requirement of the `software1` 
+node:
+```yaml
+tosca_definitions_version: tosca_2_0
+imports:
+  - types.yaml
+node_types:
+  Client:
+    requirements:
+      - service:
+          capability: Service
+          relationship: ServedBy
+          node: Server
+          count_range: [ 3, UNBOUNDED]
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+      - service:
+          capability: Service
+          relationship: ServedBy
+          count_range: [ 0, UNBOUNDED ]
+  Compute:
+    capabilities:
+      host:
+        type: Host
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+      - service: [ software1, service ]
+      - service: [ software2, service ]
+      - [ service, UNBOUNDED ]: [ software1, service ]
+  node_templates:
+    software1:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    software2:
+      type: ClientSoftware
+      requirements:
+        - host: compute
+    compute:
+      type: Compute
+```
 
 ## 15.6 Interface Mapping
 An interface mapping allows an interface operation on the substituted
