@@ -6080,7 +6080,7 @@ following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
-|\< tosca_path\>|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in a later subsection. |
+|\<tosca_path\>|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in a later subsection. |
 |\<property_name\>|yes|The name of the property definition from which the function will return the value.|
 |\<nested_property_name_or_index_*\> |no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
@@ -6262,7 +6262,7 @@ wordpress.zip archive as
 
 This function is used as an argument inside validation functions. It
 returns the value of the property, attribute, or parameter for which the
-validation clause is defined. The $value function uses the following grammar:
+validation clause is defined. The *$value* function uses the following grammar:
 ```yaml
 $value: [<nested_value_name_or_index>, ... ]
 ```
@@ -6272,6 +6272,68 @@ It takes the arguments shown in the following table:
 | ----- | ------- | ----- | 
 |<nested_value_name_or_index\> |no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
+#### 10.2.1.6 node_index
+
+This function is used to return the runtime index of the current node 
+representation in the list of node representations created from the same 
+node template. The first index is 0, which is also what *$node_index* 
+will return when a single node representation is created from a node 
+template (i.e. where the default count is 1). The function should not
+be used outside a valid node context. The *$node_index* function 
+uses the following grammar:
+```yaml
+$node_index
+```
+
+#### 10.2.1.7 relationship_index
+
+This function is used to return the runtime index of the current relationship 
+in the list of relationships created from the same requirement. The first 
+index is 0. The function should not be used outside a valid relationship 
+context (i.e. a relationship type definitiom, or a requirement definition 
+or assignment). The *$relationship_index* function uses the following grammar:
+```yaml
+$relationship_index
+```
+
+#### 10.2.1.8 avalialble_allocation
+
+The *$avialable_allocation* function is used to retrieve the available
+allocation for capablity properties that can be target to an allocation
+semantic when a relationship is established to the capability.
+The main intended usage is to use this function within the conditon clause
+in a *node_filter* of a node with a *select* directive; this allows to 
+accept only nodes that have a certain available capacity that for 
+example can accomodate the expected allocations when used as a target
+for a relationship. The *$avialable_allocation* function uses the following 
+grammar:
+```yaml
+$avialable_allocation: [ <tosca_path>, <property_name> ]
+```
+The *$available_allocation* function takes the arguments shown in the
+following table:
+
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|\<tosca_path\>|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. In this case the \<tosca_path\> must lead to a capability context. |
+|\<property_name\>|yes|The name of the capability property definition from which the function will return the value. In this case it must be a allocatable property (i.e. of integer, float, or scalar property types). |
+
+Usage example:
+```yaml
+service_template:
+  node_templates:
+    my_node_template:
+      directive: [select]
+      node_filter:
+        $and:
+          - $greater_or_equal:
+            - $avialable_allocation: [ SELF, CAPABILITY, host, num_cpus ]
+            - 3
+          - $greater_or_equal:
+            - $avialable_allocation: [ SELF, CAPABILITY, host, mem_size ]
+            - 256 MB
+```
+                  
 ### 10.2.2 Boolean Functions
 
 TOSCA includes a number of functions that return Boolean values. These
