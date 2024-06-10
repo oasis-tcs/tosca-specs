@@ -3658,7 +3658,7 @@ assignment:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|node|no|string or 2-entry list|The optional keyname used to identify the target node of the requirement: <br> - This can either be the symbolic name of a node template, where the TOSCA processor will select a node representation created from that template. If the count of the node template is 1 then the potential target is unique, otherwise the processor can select from several node representations. <br> - It can also be a 2-entry list, where the first entry is a string denoting the symbolic name of a node template, while the second entry is an index, thus uniquely identifying the node representation when multiple representations are created from the same node template. The second entry may be either an integer or the keyword NODE_INDEX which resolves to the index of the actual node representation (among node representations created from the same node template) containing this requirement assignment, or the keyword RELATIONSHIP_INDEX which resolves to the index of the actual relationship (among relationships created from the same requirement) created by this requirement assignment. More information on multiplicity and node and relationship indexes can be found in [Chapter 14](#14-creating-multiple-representations-from-templates). <br> - Finally, it can also be the name of a node type that the TOSCA processor will use to select a type-compatible target node to fulfill the requirement.|
+|node|no|string or 2-entry list|The optional keyname used to identify the target node of the requirement: <br> - This can either be the symbolic name of a node template, where the TOSCA processor will select a node representation created from that template. If the count of the node template is 1 then the potential target is unique, otherwise the processor can select from several node representations. <br> - It can also be a 2-entry list, where the first entry is a string denoting the symbolic name of a node template, while the second entry is an index, thus uniquely identifying the node representation when multiple representations are created from the same node template. The index is a non-negative integer, with 0 being the first index. Note that functions like *$node_index* or *$relationship_index* may be used to match the target index withe the source/relationship index. More information on multiplicity and node and relationship indexes can be found in [Chapter 14](#14-creating-multiple-representations-from-templates). <br> - Finally, it can also be the name of a node type that the TOSCA processor will use to select a type-compatible target node to fulfill the requirement.|
 |capability|no|string|The optional keyname used to identify the target capability of the requirement. This can either be the name of a capability defined within a target node or the name of a target capability type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
 |relationship|conditional|relationship assignment or string|The conditional keyname used to provide values for the relationship definition in the corresponding requirement definition. This keyname can also be overloaded to define a symbolic name that references a relationship template defined elsewhere in the service template.|
 |allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent *allocations* from the property with the same name in the target capability. The allocation acts as a *capacity filter* for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
@@ -3799,12 +3799,7 @@ have the following meaning:
   
    - the node template is subject to the same conditions as presented above,
  
-   - the index is either a non-negative integer, or the keyword NODE_INDEX which
-     resolves to the index of the actual node representation (among node
-     representations created from the same node template) containing this
-     requirement assignment, or the keyword RELATIONSHIP_INDEX which resolves
-     to the index of the actual relationship (among relationships created
-     from the same requirement) created by this requirement assignment,
+   - the index is a non-negative integer,
      
    - for indexes outside the count range of the template, no valid target node
      representation candidate will exist.
@@ -3932,7 +3927,7 @@ service_template:
       count: 3
       requirements:
         - host: 
-            node: [ tomcat_server, NODE_INDEX ]
+            node: [ tomcat_server, $node_index ]
 ```
 
 The following example shows a requirement named `database` that
@@ -6003,7 +5998,7 @@ table:
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
 |\<input_parameter_name\>|yes|string|The name of the parameter as defined in the inputs section of the service template.|
-|\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. The index is either a non-negative integer; or if `$get_input`is used within a node template definition the keyword NODE_INDEX can be used, which resolves to the index of the actual node representation among the nodes created from the same template; and/or if `$get_input`is used within a requirement definition the keyword RELATIONSHIP_INDEX can be used, which resolves to the index of the actual relationship among the relationships created from the same requirement. More information on multiplicity and node and relationship indexes can be found in [Chapter 14](#14-creating-multiple-representations-from-templates).|
+|\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. The index is a non-negative integer. If `$get_input`is used within a node template definition the function `$node_index` can retrieve the index of the current node representation among the nodes created from the same template, and/or if `$get_input`is used within a requirement definition the function `$relationship_index` can retrieve the index of the actual relationship among the relationships created from the same requirement. More information on multiplicity and node and relationship indexes can be found in [Chapter 14](#14-creating-multiple-representations-from-templates).|
 
 The following snippet shows an example of the simple get_input grammar:
 ```yaml
@@ -6080,7 +6075,7 @@ following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
-|\< tosca_path\>|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in a later subsection. |
+|\<tosca_path\>|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in a later subsection. |
 |\<property_name\>|yes|The name of the property definition from which the function will return the value.|
 |\<nested_property_name_or_index_*\> |no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
@@ -6262,7 +6257,7 @@ wordpress.zip archive as
 
 This function is used as an argument inside validation functions. It
 returns the value of the property, attribute, or parameter for which the
-validation clause is defined. The $value function uses the following grammar:
+validation clause is defined. The *$value* function uses the following grammar:
 ```yaml
 $value: [<nested_value_name_or_index>, ... ]
 ```
@@ -6272,6 +6267,68 @@ It takes the arguments shown in the following table:
 | ----- | ------- | ----- | 
 |<nested_value_name_or_index\> |no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
+#### 10.2.1.6 node_index
+
+This function is used to return the runtime index of the current node 
+representation in the list of node representations created from the same 
+node template. The first index is 0, which is also what *$* 
+will return when a single node representation is created from a node 
+template (i.e. where the default count is 1). The function should not
+be used outside a valid node context. The *$* function 
+uses the following grammar:
+```yaml
+$node_index
+```
+
+#### 10.2.1.7 relationship_index
+
+This function is used to return the runtime index of the current relationship 
+in the list of relationships created from the same requirement. The first 
+index is 0. The function should not be used outside a valid relationship 
+context (i.e. a relationship type definitiom, or a requirement definition 
+or assignment). The *$relationship_index* function uses the following grammar:
+```yaml
+$relationship_index
+```
+
+#### 10.2.1.8 avalialble_allocation
+
+The *$avialable_allocation* function is used to retrieve the available
+allocation for capablity properties that can be target to an allocation
+semantic when a relationship is established to the capability.
+The main intended usage is to use this function within the conditon clause
+in a *node_filter* of a node with a *select* directive; this allows to 
+accept only nodes that have a certain available capacity that for 
+example can accomodate the expected allocations when used as a target
+for a relationship. The *$avialable_allocation* function uses the following 
+grammar:
+```yaml
+$avialable_allocation: [ <tosca_path>, <property_name> ]
+```
+The *$available_allocation* function takes the arguments shown in the
+following table:
+
+|Argument|Mandatory|Description|
+| ----- | ------- | ----- | 
+|\<tosca_path\>|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. In this case the \<tosca_path\> must lead to a capability context. |
+|\<property_name\>|yes|The name of the capability property definition from which the function will return the value. In this case it must be a allocatable property (i.e. of integer, float, or scalar property types). |
+
+Usage example:
+```yaml
+service_template:
+  node_templates:
+    my_node_template:
+      directive: [select]
+      node_filter:
+        $and:
+          - $greater_or_equal:
+            - $avialable_allocation: [ SELF, CAPABILITY, host, num_cpus ]
+            - 3
+          - $greater_or_equal:
+            - $avialable_allocation: [ SELF, CAPABILITY, host, mem_size ]
+            - 256 MB
+```
+                  
 ### 10.2.2 Boolean Functions
 
 TOSCA includes a number of functions that return Boolean values. These
@@ -8482,22 +8539,17 @@ for each of the Site node representations.
 To allow specific input values to be matched with specific node
 representations, each node representation is assigned a unique index
 to differentiate it from other nodes representations created from the
-same node template. This index is accessed using the `NODE_INDEX`
-reserved keyword that references the index of the node in the context
-of which the `NODE_INDEX` keyword is used. This keyword can then can
-be used to index the list of input values. The grammar for the
-`NODE_INDEX` keyword is as follows:
+same node template. This index is accessed using the `$node_index`
+function that retrieves the index of the node in the context
+of which `$node_index` is used. This can then
+be used to index the list of input values.
 
-|Keyword|Valid Contexts|Description|
-|----|----|----|
-|NODE_INDEX|Node Representation|A TOSCA orchestrator will interpret this keyword as the runtime index in the list of node representations created from a single node template.|
-
-The `NODE_INDEX` for a node representation is immutable: it never
+The node index for a node representation is immutable: it never
 changes during the lifetime of that node representation, even if node
 representations are added or deleted after the service has been
 deployed.
 
-The following service template shows how the NODE_INDEX keyword is
+The following service template shows how the `$node_index` function is
 used to retrieve specific values from a list of input values in a
 service template:
 
@@ -8518,7 +8570,7 @@ service_template:
       type: VPNSite
       count: { $get_input: number_of_sites }
       properties:
-        location: { $get_input: [ location, NODE_INDEX ] }
+        location: { $get_input: [ location, $node_index ] }
       requirements:
         - vpn: sdwan
 ```
@@ -8728,10 +8780,10 @@ on the right by using the same input value for the `count` keynames in
 both the `left` and `right` node templates. In addition, each
 requirement must correctly match source nodes and target nodes are
 matched correctly, which can be accomplished by making sure that a
-target node of each relationship has the same `NODE_INDEX` value as
+target node of each relationship has the same node index value as
 its source node. This following code snippet shows requirement
-definition grammar that uses `NODE_INDEX` values to uniquely identify
-target nodes:
+definition grammar that uses the `$node_index` function to uniquely 
+identify target nodes:
 
 ```yaml
 service_template:
@@ -8746,7 +8798,7 @@ service_template:
       type: Left
       count: {$get_input: number_of_nodes}
       requirements:
-        - uses: [right, NODE_INDEX]
+        - uses: [right, $node_index]
 ```
 
 ### 14.3.5 Random Pairs
@@ -8945,27 +8997,18 @@ service_template:
       type: Left
       count: {$get_input: number_of_left}
       requirements:
-        - uses: [right, {$remainder: [NODE_INDEX, {$get_input: number_of_right}]
+        - uses: [right, {$remainder: [$node_index, {$get_input: number_of_right}]
 ```
 
 ## 14.4 Relationship-Specific Input Values
 
-> Introduce need for RELATIONSHIP_INDEX
-
 To allow specific input values to be matched with specific
 relationship representations, each relationship representation is
 assigned a unique index to differentiate it from other relationship
-representations with the same name within the same node
-representation. This index is accessed using the
-`RELATIONSHIP_INDEX` reserved keyword that references the index of the
-relationship in the context of its source node. 
-This keyword can then can be used to index the list of input
-values. The grammar for the `RELATIONSHIP_INDEX` keyword is as
-follows:
-
-|Keyword|Valid Contexts|Description|
-|----|----|----|
-|RELATIONSHIP_INDEX|Relationship Representation|A TOSCA orchestrator will interpret this keyword as the runtime index in the list of relationship representations with the same name within a node.|
+representations created from the same requirement definition. 
+This index is accessed using the `$relationship_index` function that 
+references the index of the relationship in the context of its requirement. 
+This can then can be used to index the list of input values.
 
 # 15 Substitution
 
