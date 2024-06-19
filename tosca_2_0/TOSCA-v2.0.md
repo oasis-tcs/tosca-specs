@@ -50,6 +50,10 @@ This specification is related to:
 The Topology and Orchestration Specification for Cloud Applications (TOSCA) provides a language for describing application components and their relationships by means of a service topology, and for specifying the lifecycle management procedures for creation or modification of services using orchestration processes. The combination of topology and orchestration enables not only the automation of deployment but also the automation of the complete service lifecycle management. The TOSCA specification promotes a model-driven approach, whereby information embedded in the model structure (the dependencies, connections, compositions) drives the automated processes.
 
 #### Status:
+
+> The links in this section need to be reviewed to make sure they
+> point to the new OASIS website.
+
 This document was last revised or approved by the OASIS Topology and Orchestration Specification for Cloud Applications (TOSCA) TC on the above date. The level of approval is also listed above. Check the "Latest stage" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Technical Committee (TC) are listed at https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=tosca#technical.
 
 TC members should send comments on this specification to the TC's email list. Others should send comments to the TC's public comment list, after subscribing to it by following the instructions at the "[Send A Comment](https://www.oasis-open.org/committees/comments/index.php?wg_abbrev=tosca)" button on the TC's web page at https://www.oasis-open.org/committees/tosca/.
@@ -113,8 +117,8 @@ TOSCA 1.3. In particular:
    project in the
    [tosca-community-contributions](https://github.com/oasis-open/tosca-community-contributions)
    github repository.
-2. Instead of bundling Profiles with the TOSCA standard, TOSCA v2.0
-   provides support for user-defined domain-specific profiles:
+2. Rather than bundling Profiles with the TOSCA standard, TOSCA v2.0
+   provides support for user-defined domain-specific profiles as follows:
    - It allows collections of type definitions to be bundled together
      into named profiles.
    - It supports importing profiles using their profile name.
@@ -128,17 +132,17 @@ TOSCA 1.3. In particular:
    - It defines an operational model that provides guidance for
      updating and/or upgrading a running service and for responding to
      notifications about state changes or errors.
-4. TOSCA v2.0 addresses shortcomings of the v1.3 substitution mapping
-   grammar.
-5. TOSCA v2.0 introduces a new TOSCA Path syntax that allows a defined
+4. TOSCA v2.0 introduces a new TOSCA Path syntax that allows a defined
    traversal of an arbitary graph of nodes and relationships to an
    attribute or property.
-6. TOSCA v2.0 significantly enhances support for functions. It
+5. TOSCA v2.0 significantly enhances support for functions. It
    formalizes function syntax, it extends the set of built-in
    functions, and it introduces support for user-defined custom
    functions.
-7. TOSCA v2.0 harmonizes constraint syntax, filter syntax, and
+6. TOSCA v2.0 harmonizes constraint syntax, filter syntax, and
    condition syntax using boolean functions. 
+7. TOSCA v2.0 addresses shortcomings of the v1.3 substitution mapping
+   grammar.
 8. TOSCA v2.0 simplifies and extends the CSAR file format.
 9. TOSCA v2.0 includes a broad set of syntax clarifications,
    including but not limited to:
@@ -165,11 +169,11 @@ the following definitions when used in context of this document.
 
 |Term|Definition|
 |---|---|
-|Representation Model|A deployed service is a running instance of a Service Template. The instance is typically derived by running a declarative workflow that is automatically generated based on the node templates and relationship templates defined in the service template.|
-|Node Template| A *Node Template* specifies the occurrence of a component node as part of a service template. Each Node Template refers to a Node Type that defines the semantics of the node (e.g., properties, attributes, requirements, capabilities, interfaces). Node Types are defined separately for reuse purposes.                                                          |
-|Relationship Template| A *Relationship Template* specifies the occurrence of a relationship between nodes in a service template. Each Relationship Template refers to a Relationship Type that defines the semantics of the relationship (e.g., properties, attributes, interfaces, etc.). Relationship Types are defined separately for reuse purposes.                                           |
-|Service Template| A *Service Template* is used to specify the *topology* (or structure) and *orchestration* (or invocation of management behavior) of services so that they can be provisioned and managed in accordance with constraints and policies.                                                                                                                   |
-|Topology Model| A Topology Model defines the structure of a service in the context of a Service Template. A Topology model consists of a set of Node Template and Relationship Template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
+|Representation Model|A deployed service is a running instance of a service template. The instance is typically derived by running a declarative workflow that is automatically generated based on the node templates and relationship templates defined in the service template.|
+|Node Template| A *node template* specifies the occurrence of a component node as part of a service template. Each node template refers to a node type that defines the semantics of the node (e.g., properties, attributes, requirements, capabilities, interfaces). Node types are defined separately for reuse purposes.                                                          |
+|Relationship Template| A *relationship template* specifies the occurrence of a relationship between nodes in a service template. Each relationship template refers to a relationship type that defines the semantics of the relationship (e.g., properties, attributes, interfaces, etc.). relationship types are defined separately for reuse purposes.                                           |
+|Service Template| A *service template* is used to specify the *topology* (or structure) and *orchestration* (or invocation of management behavior) of services so that they can be provisioned and managed in accordance with constraints and policies.                                                                                                                   |
+|Topology Model| A Topology Model defines the structure of a service in the context of a service template. A Topology model consists of a set of node template and relationship template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
 |Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
 
 ### 1.3.2 Acronyms and abbreviations
@@ -236,15 +240,13 @@ services can be fully automated and supported across a variety of
 deployment environments. TOSCA was expressly designed to address the
 complexity associated with managing large systems by providing a
 language for specifying an information model and automating the
-lifecycle management of large complex systems.
-
-The goal of TOSCA is to define a
-language that is agnostic to specific technological and commercial
-ecosystems and that supports the design and operation of large systems
-without being tied to specific technologies or specific vendors. This
-enables a uniform management approach that can be used for all parts
-of the system and can integrate components across all layers of the
-technology stack.
+lifecycle management of large complex systems. The goal of TOSCA is
+to define a language that is agnostic to specific technological and
+commercial ecosystems and that supports the design and operation of
+large systems without being tied to specific technologies or specific
+vendors. This enables a uniform management approach that can be used
+for all parts of the system and can integrate components across all
+layers of the technology stack.
 
 The capabilities offered by TOSCA will facilitate higher service
 continuity, reduce service disruption and manual mitigation, increase
@@ -268,14 +270,14 @@ models first and then handled by management system.
 TOSCA's model-driven management approach is what enables its use for
 all Lifecycle Management Phases: information embedded in the model
 structure (the dependencies, connections, compositions) drives the
-automated processes. Thus, changing or augmenting the model also 
-automatically adapts the LCM / orchestration behaviour.
-Specifically, it allows service models to be used:
+automated processes. Specifically, it allows service models to be used:
 
 - As desired state for Moves, Adds, Changes, and Deletions (MACDs)
 - As context for handling faults and events using Closed Loop
   Automation
 
+In addition, changing or augmenting the model also 
+automatically adapts the LCM / orchestration behavior.
 Without the context provided by service models, lifecycle management
 cannot be fully automated.
 
@@ -288,7 +290,7 @@ dependencies, and other interactions between these components.
 The use of graphs enables *declarative* orchestration, where system
 designers can simply create descriptions ("models") of their systems,
 and delegate to the orchestrator the task of translating these
-descriptions into the commands to realize the systems being
+descriptions into the commands required to realize the systems being
 described. The use of graphs enables this as follows:
 
 - Relationships in a TOSCA graph encode dependencies that allow an
@@ -301,7 +303,7 @@ described. The use of graphs enables this as follows:
   automatically determine which system components may be affected by a
   component failure or by a change to an external resource. The
   orchestrator can then determine corrective actions that restore the
-  system has a whole to its nominal state, rather than just fixing
+  system as a whole to its nominal state, rather than just fixing
   individual components.
 
 Declarative management is often also referred to as *desired state* or
@@ -312,8 +314,8 @@ Declarative management is often also referred to as *desired state* or
 TOSCA models are based on *service templates* that are created by
 service designers. Service templates consist of node templates and
 relationship templates that have associated node types and relationship
-types. Types in TOSCA represent reusable components that are the
-building blocks from which services can be constructed, thereby
+types. Types in TOSCA represent reusable components that can be used as
+building blocks from which services are constructed, thereby
 promoting modularity and reuse.
 
 In addition, TOSCA allows modular designs whereby service templates
@@ -330,8 +332,8 @@ TOSCA also allows for the definition of abstract components that hide
 technology and vendor-specific implementation details. The choice of
 how to *implement* abstract components can be left to the orchestrator
 at deployment time. This further increases the value of TOSCA as a
-technology and vendor-neutral technology for orchestration. TOSCA supports the use of *policies*
-to guide the design decisions make by orchestrators at design time.
+technology and vendor-neutral technology language orchestration. TOSCA supports the use of *policies*
+to guide the service design decisions made by orchestrators at deployment time.
 
 ### 2.2.4 TOSCA is Domain-Independent
 
@@ -460,8 +462,8 @@ defines configurable properties that must be provided for the
 associated component, it defines the runtime attributes that are
 expected to be available for the component, and it specifies allowed
 and required interactions with other components. A TOSCA-based
-management system must include a TOSCA parser/validator that checks if
-the templates used in a TOSCA service template are valid for the types
+management system must include a **TOSCA parser/validator** that checks if
+the templates used in a TOSCA file are valid for the types
 with which they are associated. This allows many kinds of errors to
 be flagged at service *design time* rather than at service *deployment
 time*.  The following diagram shows how templates are created from and
@@ -518,7 +520,7 @@ or a combination thereof.
 
 ### 2.4.2 Archive Format for Cloud Applications
 
-In order to support in a certain environment for the execution and
+In order to support in a certain environment the execution and
 management of the lifecycle of a cloud application, all corresponding
 artifacts have to be available in that environment. This means that
 beside the TOSCA file of the cloud application, the deployment
@@ -531,7 +533,7 @@ A CSAR is a container file, i.e. it contains multiple files of possibly
 different file types. These files are typically organized in several
 subdirectories, each of which contains related files (and possibly other
 subdirectories etc.). The organization into subdirectories and their
-content is specific for a particular cloud application. CSARs are zip
+content is specific for a particular cloud application. CSARs are zip or tar
 files, typically compressed. A CSAR may contain a file called TOSCA.meta
 that describes the organization of the CSAR.
 
@@ -564,22 +566,24 @@ including the configurable properties of the component (via **property
 definitions**), its runtime state (via **attribute definitions**) and
 the operations (via **interface definitions**) available to manipulate
 the component. In a service template, a node template assigns values to
-the properties defined in the node type. An orchestrator updates
+the properties defined in the corresponding node type. An orchestrator updates
 attribute values as a result of performing lifecycle management
-operations.
+operations or in response to notifications about changes in component state.
 
 For example, consider a service that consists of an some computing application, a database and some computing resource to run them on. A service template
-defining that service would include one node template of node type or the particular application, another Node Template of Node Type  “database management system” or a more specific derivative, "MariaDB" perhaps, and a third Node Template of Node Type "compute" or more likely a more specific derivative. The
-DBMS Node Type defines properties like the IP address of
+defining that service would include one node template of the node type for the particular software application, another node template of node type *database management system* or a more specific derivative (MariaDB,perhaps), and a third node template of node type *compute* or more likely a more specific derivative. The
+DBMS node type defines properties like the IP address of
 an instance of this type, an operation for installing the database application with the corresponding IP address, and an operation for
 shutting down an instance of this DBMS. A constraint in
-the Node Template can specify a range of IP addresses available when
+the node template can specify a range of IP addresses available when
 making a concrete application server available.
 
 Node templates may include one or more **relationship templates** to
 other node templates in the service template. These relationship
 templates represent the edges in the service topology graph and model
-dependencies and other interactions between components. Relationship
+dependencies and other interactions between components. Note that in this specification, relationship templates are more
+frequently referred to as **requirements** for reasons that will be
+explained below. Relationship
 templates in TOSCA are unidirectional: the node template that includes
 the relationship template is implicitly defined as the **source node**
 of that relationship template and the relationship template explicitly
@@ -591,19 +595,15 @@ types are typically defined separately for reuse purposes and
 organized into profiles.
 
 In the example above, a relationship can be established from the application
-server Node Template to the database Node Template with the
-meaning “depends on”, and from both the application and DBMS Node Templates to the
-compute Node Template with meaning “deployed on”.
-
-Note that in this specification, relationship templates more
-frequently referred to as **requirements** for reasons that will be
-explained next.
+server node template to the database node template with the
+meaning *depends on*, and from both the application and DBMS node templates to the
+compute node template with meaning *deployed on*.
 
 <!----
 {"id": "95", "author": "Calin Curescu", "date": "2020-06-22T17:58:00Z", "comment": "Will this be understood correctly, since\nthis is part of the node requirement and not relationship template as\nsuch.", "target": "Node templates may include one or more\n<span class=\"comment-start\" id=\"96\" author=\"Chris Lauwers\"\ndate=\"2021-01-18T18:20:00Z\">Mike Rehder suggested to use the general\nterm \u201crelations\u201d to avoid reference to \u201crelationship templates\u201d or\ntypes.</span>*relationships* "}-->
 
 <!----
-{"id": "97", "author": "Michael Rehder", "date": "2020-12-15T08:49:00Z", "comment": "New term! It\u2019s\nconfusing to have \u201cService Template\u201d and \u201cService Topology Graph\u201d and\n\u201cTopology Template\u201d.", "target": "service topology\ngraph"}-->
+{"id": "97", "author": "Michael Rehder", "date": "2020-12-15T08:49:00Z", "comment": "New term! It\u2019s\nconfusing to have \u201cservice template\u201d and \u201cService Topology Graph\u201d and\n\u201cTopology Template\u201d.", "target": "service topology\ngraph"}-->
 
 <!----
 {"id": "98", "author": "Chris Lauwers", "date": "2021-01-18T18:17:00Z", "comment": "Should we introduce \u201cservice topology graph\u201d\nwhen what we mean is really the \u201cinstance\nmodel\u201d.", "target": "The"}-->
@@ -619,7 +619,7 @@ always be possible to define all node templates for a given service
 topology within a single service template. For example, modular design
 practices may dictate that different service sub-components be modelled
 using separate service templates. This may result in relationships
-that need to be established across multiple service
+across multiple service
 templates. Additionally, relationships may need to target components
 that already exist and do not need to be instantiated by an
 orchestrator. For example, relationships may reference physical
@@ -627,14 +627,16 @@ resources that are managed in a resource inventory. Service templates
 may not include node templates for these resources.
 
 TOSCA accommodates both service template internal and external relationships using **requirements** and
-**capabilities** of node templates. A requirement defined in a node
-template expresses a relationship to a corresponding node. The component may
-require a feature provided by another component, or that the
+**capabilities** of node templates. 
+Requirements express that a component 
+depends on a feature provided by another component, or that the
 component has certain requirements against the hosting environment
 such as for the allocation of certain resources or the enablement of a
 specific mode of operation. Capabilities represent features exposed by
 components that can be targeted by requirements of other
-components. If a requirement explicitly specifies a target node
+components. A requirement defined in one node
+template is fulfilled by establishing a relationship to a corresponding capability defined in a second node template.
+If a requirement explicitly specifies a target node
 template defined in the same service template, it acts as a
 relationship template as defined in the previous section. A
 requirement that does not explicitly specify a target node template is referred
@@ -642,7 +644,7 @@ to as a **dangling requirement**. For simplicity, this specification
 uses the term *requirement* for both relationship templates
 and dangling requirements.
 
-Dangling requirements must be fulfilled by the TOSCA processor at
+All mandatory dangling requirements must be fulfilled by the TOSCA processor at
 service deployment time. While dangling requirements are defined in
 the context of *node templates*, fulfilling dangling requirements is
 done in the context of *node representations*. This means that when
@@ -679,7 +681,7 @@ Figure : Requirements and Capabilities
 
 ## 3.3 Decomposition of Node Representations
 <!----
-{"id": "114", "author": "Michael Rehder", "date": "2020-12-15T16:17:00Z", "comment": "Another\nplace where I find the use of the term \u201cService Template\u201d overly\nconfusing. It should say \u201cTopology Template\u201d as that is the construct in\nthe end that is supporting the substitution.  \nSection 4.5.1 says \u201ctopology template\u201d so I think this change is in line\nwith the practical definitions in the document.", "target": "Service Template\n"}-->
+{"id": "114", "author": "Michael Rehder", "date": "2020-12-15T16:17:00Z", "comment": "Another\nplace where I find the use of the term \u201cservice template\u201d overly\nconfusing. It should say \u201cTopology Template\u201d as that is the construct in\nthe end that is supporting the substitution.  \nSection 4.5.1 says \u201ctopology template\u201d so I think this change is in line\nwith the practical definitions in the document.", "target": "service template\n"}-->
 
 TOSCA provides support for decomposing service components using its
 **substitution mapping** feature. This feature allows for the
@@ -692,10 +694,10 @@ service templates that describe the internals of that component.
 For example, a service template for a business application that is
 hosted on an application server tier might focus on defining the
 structure and manageability behavior of the business application
-itself.  The internals of the application server tier hosting the
+itself. The internals of the application server tier hosting the
 application can be provided in a separate service template built by
 another vendor specialized in deploying and managing application
-servers. This approach enables separation of concerns and re-use of
+servers. This approach enables separation of concerns as well as re-use of
 common infrastructure templates.
 
 ![Node Decomposition](images/service_decomposition.png)
@@ -704,37 +706,37 @@ Figure : Node Decomposition
 
 From the point of view of a service template (e.g. the business
 application service template from the example above) that uses another
-service template, the other Service Template (e.g. the application
-server tier) “looks” like just a node template. During deployment,
-however, this node template can be *substituted* by the second service
+service template, the other service template (e.g. the application
+server tier) *looks* just like a node template. During deployment,
+however, the node representation created from this node template can be *substituted* by a service created from the second service
 template if it exposes the same external *façade* (i.e. properties,
-capabilities, requirements, etc.) as the node template for which it is
-a substitution. Thus, a substitution with any service template that
-has the same *facade* as a certain node template in one service
-Template becomes possible, allowing for a hierarchical decomposition of
-service templates. This concept also allows for providing
-substitutable alternatives that can be selected by a TOSCA processor
-at service deployment time. For example there might exist two Service Templates, one for a
+capabilities, requirements, etc.) as the node for which it is
+a substitution. Thus, a substitution by any service template that
+has the same *facade* as the substituted node becomes possible, allowing for a hierarchical decomposition of
+service representations. This concept also allows for providing
+alternative substitutions that can be selected by a TOSCA processor
+at service deployment time. For example there might exist two service templates, one for a
 single node application server tier and another for a
-clustered application server tier, in this case and the appropriate
-option can be selected an a deployment-by-deployment basis.
+clustered application server tier, and the appropriate
+option can be selected on a deployment-by-deployment basis.
 
 ## 3.4 Interfaces, Operations, and Artifacts
 
-Both Node Types and Relationship Types may define lifecycle **operations**
+Both node types and relationship types may define lifecycle **operations**
 that define the actions an orchestration engine can invoke when
 instantiating a service from a service template or when managing a
 deployed service. For example, a node type for some software product
 might provide a `create` operation to handle the creation of an
 instance of a component at runtime, or a `start` or `stop` operation
-to handle a start or stop event triggered by an orchestration engine.
+to allow an orchestration engine to start or stop the software component.
 
 Operations that are related to the same management mission (e.g.
 lifecycle management) are grouped together in **interface
 definitions** in node and relationship types. Just like other TOSCA
-entities, interfaces refer to their corresponding **interface type**
+entities, interfaces have a corresponding **interface type**
 that defines the group of operations that are part of the
-interface. Interface Types can also define **notifications** that
+interface, the input parameters that are required by those operations,
+and any output parameters returned by the operations. Interface types can also define **notifications** that
 represent external events that are generated by the external
 implementations and received by the orchestrator.
 
@@ -785,10 +787,10 @@ For example, the application server node template will be instantiated
 by installing an actual application server at a concrete IP address
 considering the specified range of IP addresses. Next, the process
 engine node template will be instantiated by installing a concrete
-process engine on that application server (as indicated by the “hosted
-by” relationship template). Finally, the process model Node Template
+process engine on that application server (as indicated by the *hosted
+on* relationship template). Finally, the process model node template
 will be instantiated by deploying the process model on that process
-engine (as indicated by the “deployed on” relationship template).
+engine (as indicated by the *deployed on* relationship template).
 
 ## 3.6 Policies
 
@@ -815,17 +817,17 @@ defined by policy types. For example, a policy template for monthly
 payments for customers located in the USA will set the “payment period” property to
 “monthly” and the “currency” property to “USD”, leaving the “amount”
 property open. The “amount” property will be set when the
-corresponding Policy Template is used for a Policy within a Node
-Template. Thus, a Policy Template defines the invariant properties of
-a Policy, while the Policy sets the variant properties resulting from
-the actual usage of a Policy Template in a Node Template.
+corresponding policy template is used for a policy within a node
+template. Thus, a policy template defines the invariant properties of
+a policy, while the policy sets the variant properties resulting from
+the actual usage of a policy template in a node template.
 
 -------
 # 4 TOSCA Operational Model
 
-The content in this section is normative unless otherwise labeled except:
+The content in this section is normative unless otherwise labeled except for:
   - the examples
-  - references unless labelled as normative.
+  - references (unless they are labelled as normative)
 
 TOSCA is designed to support all three phases of the service
 lifecycle:
@@ -897,7 +899,7 @@ A TOSCA parser performs the following functions:
 
 - Accepts a single TOSCA file plus imported TOSCA files (files without a
   `service_template`)
-- Can (optionally) import these units from one or more repositories,
+- Can (optionally) import these files from one or more repositories,
   either individually or as complete profiles
 - Outputs valid normalized node templates. Note that normalized node
   templates may include unresolved (*dangling*) requirements.
@@ -908,7 +910,7 @@ A TOSCA parser performs the following functions:
 A resolver creates service representations based on normalized service
 templates. It performs the following functions:
 
-1. Creating Node Representations based on normalized node templates.
+1. Creating Node Representations based on Normalized Node Templates.
 
    - Either one-to-one or one-to-many if multiplicity is involved.
    - Node templates with a `select` directive create a node in the
@@ -982,7 +984,7 @@ representation graph, for example:
       service is running.
 - Runtime failures:
     - Nodes or relationships in the representation graph have failed and need
-      to be recreated while the service is running.
+      to be recreated or healed while the service is running.
 - Change in dependencies
     - External nodes or relationships to external nodes have failed and new
       relationships to external nodes need to be created (i.e. external
@@ -999,7 +1001,7 @@ First let's categorize the nodes and relationships in the "old" and "new"
 representation graphs in the following four categories:
 - Unchanged: These are nodes and relationships that appear in both the
   "old" and "new" representation graphs and have the same property values.
-  Given that a template can be upgrades, we correlate the same nodes and
+  Given that a template can be upgraded, we correlate the same nodes and
   relationships via their symbolic node names and requirement names.
 - Modified: These are nodes and relationships that appear in both the
   "old" and "new" representation graphs and have different property values.
@@ -1185,10 +1187,10 @@ A single TOSCA template may be reused by including it in one or more other TOSCA
 ## 5.2 Mandatory Keynames
 
 The TOSCA metamodel includes complex definitions used in types (e.g.,
-Node Types, Relationship Types, Capability Types, Data Types, etc.),
+node types, relationship types, capability types, data types, etc.),
 definitions and refinements (e.g., Requirement Definitions, Capability
 Definitions, Property and Parameter Definitions, etc.) and templates
-(e.g., Service Template, Node Template, etc.) all of which include their
+(e.g., service template, node template, etc.) all of which include their
 own list of reserved keynames that are sometimes marked as
 **mandatory**. If a keyname is marked as mandatory it **MUST** be
 defined in that particular definition context. In some definitions,
@@ -1271,7 +1273,7 @@ description: >
 <!----
 {"id": "172", "author": "Calin Curescu", "date": "2020-04-20T18:49:00Z", "comment": "TBD. Here comes some intro and generic description of the different specification blocks that will build the following sections.", "target": "TOSCA Service"}-->
 <!----
-{"id": "173", "author": "Michael Rehder", "date": "2020-12-15T08:38:00Z", "comment": "This isn\u2019t true \u2013 if a \u201cService Template\u201d\ncan contain just supporting parts like type definitions then it won\u2019t\ncontain a \u201cTOSCA Service\u201d.  \nIn the end, I think that the term \u201cService Template\u201d is very confusing\nas it is never used as a \u201ctemplate\u201d, as an object. It\u2019s a collection of\ndefinitions, some of which are supporting and one of which is the\nworking code definition for the service to be realized.  \n\u201cService Definition\u201d is a more practical term.", "target": "A TOSCA Service is\nspecified by a TOSCA Service <span class=\"comment-start\" id=\"174\"\nauthor=\"Chris Lauwers\" date=\"2022-12-05T18:44:00Z\">We haven't defined\nservice template yet.</span>Template"}-->
+{"id": "173", "author": "Michael Rehder", "date": "2020-12-15T08:38:00Z", "comment": "This isn\u2019t true \u2013 if a \u201cservice template\u201d\ncan contain just supporting parts like type definitions then it won\u2019t\ncontain a \u201cTOSCA Service\u201d.  \nIn the end, I think that the term \u201cservice template\u201d is very confusing\nas it is never used as a \u201ctemplate\u201d, as an object. It\u2019s a collection of\ndefinitions, some of which are supporting and one of which is the\nworking code definition for the service to be realized.  \n\u201cService Definition\u201d is a more practical term.", "target": "A TOSCA Service is\nspecified by a TOSCA Service <span class=\"comment-start\" id=\"174\"\nauthor=\"Chris Lauwers\" date=\"2022-12-05T18:44:00Z\">We haven't defined\nservice template yet.</span>Template"}-->
 <!----
 {"id": "178", "author": "Chris Lauwers", "date": "2022-06-22T14:26:00Z", "comment": "Update to reflect new naming", "target": "TOSCA file definition"}-->
 
@@ -2245,7 +2247,7 @@ define a node type with the same name as a node type defined in the
 importing file.
 
 For example, let say we have two TOSCA files, A and B, both of which
-contain a Node Type definition for *MyNode*:
+contain a node type definition for *MyNode*:
 
 **TOSCA File B**
 ```
@@ -2963,7 +2965,7 @@ as a result supports the common keynames listed in [Section
 relationship type definition has the following recognized keynames:
 
 <!----
-{"id": "520", "author": "Michael Rehder", "date": "2020-12-15T13:33:00Z", "comment": "I still think this is simply a Requirement Type \u2013 I can\u2019t see why it isn\u2019t and what advantage there is in calling it something else.", "target": "Relationship Type"}-->
+{"id": "520", "author": "Michael Rehder", "date": "2020-12-15T13:33:00Z", "comment": "I still think this is simply a Requirement Type \u2013 I can\u2019t see why it isn\u2019t and what advantage there is in calling it something else.", "target": "relationship type"}-->
 <!----
 {"id": "521", "author": "Michael Rehder", "date": "2020-12-15T12:12:00Z", "comment": "There is no\nrelationship type in a node template so why is this stated\nhere?", "target": "Node Templates"}-->
 
@@ -3071,7 +3073,7 @@ properties, relationships, or interfaces defined by its relationship
 type.
 
 <!----
-{"id": "532", "author": "Michael Rehder", "date": "2020-12-15T13:23:00Z", "comment": "My understanding is that this is an\nalternative to relations defined within node templates.  \nIt\u2019s not clear why this option would be chosen over the node-template\noption.  \nIf both relations in node-templates and Relationship Templates are used,\nhow are they combined together?  \nOr is this not recommended?  \nI can imagine that combination rules would be very difficult to define\nbut if it is possible, it must be defined", "target": "A Relationship Template\nspecifies the occurrence of a manageable relationship between node\ntemplates as part of an application\u2019s topology model that is defined in\na TOSCA Service Template. A Relationship template is an instance of a\nspecified Relationship Type and can provide customized properties, or\noperations that complement and change the defaults provided by its\nRelationship Type and its implementations."}-->
+{"id": "532", "author": "Michael Rehder", "date": "2020-12-15T13:23:00Z", "comment": "My understanding is that this is an\nalternative to relations defined within node templates.  \nIt\u2019s not clear why this option would be chosen over the node-template\noption.  \nIf both relations in node-templates and relationship templates are used,\nhow are they combined together?  \nOr is this not recommended?  \nI can imagine that combination rules would be very difficult to define\nbut if it is possible, it must be defined", "target": "A relationship template\nspecifies the occurrence of a manageable relationship between node\ntemplates as part of an application\u2019s topology model that is defined in\na TOSCA service template. A Relationship template is an instance of a\nspecified relationship type and can provide customized properties, or\noperations that complement and change the defaults provided by its\nrelationship type and its implementations."}-->
 
 TOSCA allows relationships between nodes to be defined *inline* using
 requirement assignments within node templates or *out-of-band* using
@@ -3091,10 +3093,10 @@ relationship template definition:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory name of the relationship type on which the relationship template is based.|
-|description|no|string|An optional description for the Relationship Template.|
+|description|no|string|An optional description for the relationship template.|
 |metadata|no|map of string|Defines a section used to declare additional metadata information. |
-|properties|no|map of property assignments|An optional map of property assignments for the Relationship Template.|
-|attributes|no|map of attribute assignments|An optional map of attribute assignments for the Relationship Template.|
+|properties|no|map of property assignments|An optional map of property assignments for the relationship template.|
+|attributes|no|map of attribute assignments|An optional map of attribute assignments for the relationship template.|
 |interfaces|no|map of interface assignments|An optional map of interface assignments for the relationship template.|
 |copy|no|string|The optional (symbolic) name of another relationship template from which to copy all keynames and values into this relationship template.|
 
@@ -3118,25 +3120,25 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - relationship_template_name: represents the mandatory symbolic name of
-  the Relationship Template being declared.
+  the relationship template being declared.
 
-- relationship_type_name: represents the name of the Relationship Type
-  the Relationship Template is based upon.
+- relationship_type_name: represents the name of the relationship type
+  the relationship template is based upon.
 
 - relationship_template_description: represents the optional description
-  string for the Relationship Template.
+  string for the relationship template.
 
 - property_assignments: represents the optional map of property
-  assignments for the Relationship Template that provide values for
-  properties defined in its declared Relationship Type.
+  assignments for the relationship template that provide values for
+  properties defined in its declared relationship type.
 
 - attribute_assignments: represents the optional map of attribute
-  assignments for the Relationship Template that provide values for
-  attributes defined in its declared Relationship Type.
+  assignments for the relationship template that provide values for
+  attributes defined in its declared relationship type.
 
 - interface_assignments: represents the optional map of interface
-  assignments for the Relationship Template for interface definitions
-  provided by its declared Relationship Type.
+  assignments for the relationship template for interface definitions
+  provided by its declared relationship type.
 
 - source_relationship_template_name: represents the optional (symbolic)
   name of another relationship template to copy into (all keynames and
@@ -3552,7 +3554,7 @@ have the following meaning:
   capability definition (in a target node).
 
 - interface_refinements: represents refinements for one or more already
-  declared interface definitions in the Relationship Type (as declared
+  declared interface definitions in the relationship type (as declared
   on the type keyname)
 
   - allowing for the declaration of new parameter definitions for these
@@ -5135,8 +5137,8 @@ that can be associated with an entity defined in this specification
 etc.). Properties are used by template authors to provide
 configuration values to TOSCA entities that indicate their *desired
 state* when they are instantiated. The value of a property can be
-retrieved using the `$get_property` function within TOSCA Service
-Templates.
+retrieved using the `$get_property` function within TOSCA service
+templates.
 
 The following is the list of recognized keynames for a TOSCA property
 definition:
@@ -5464,9 +5466,9 @@ have the following meaning:
 
 - attribute_name: represents the name of an attribute that will be used
   to select an attribute definition with the same name within on a TOSCA
-  entity (e.g., node template, Relationship Template, etc.) which is
+  entity (e.g., node template, relationship template, etc.) which is
   declared (or reflected from a Property definition) in its declared
-  type (e.g., a Node Type, node template, Capability Type, etc.).
+  type (e.g., a node type, node template, capability type, etc.).
 
 - attribute_value, attribute_value_expresssion: represent the
   type-compatible value to assign to the attribute. Attribute values may
@@ -6291,19 +6293,19 @@ or assignment). The *$relationship_index* function uses the following grammar:
 $relationship_index
 ```
 
-#### 10.2.1.8 avalialble_allocation
+#### 10.2.1.8 available_allocation
 
-The *$avialable_allocation* function is used to retrieve the available
+The *$available_allocation* function is used to retrieve the available
 allocation for capablity properties that can be target to an allocation
 semantic when a relationship is established to the capability.
 The main intended usage is to use this function within the conditon clause
 in a *node_filter* of a node with a *select* directive; this allows to 
 accept only nodes that have a certain available capacity that for 
 example can accomodate the expected allocations when used as a target
-for a relationship. The *$avialable_allocation* function uses the following 
+for a relationship. The *$available_allocation* function uses the following 
 grammar:
 ```yaml
-$avialable_allocation: [ <tosca_path>, <property_name> ]
+$available_allocation: [ <tosca_path>, <property_name> ]
 ```
 The *$available_allocation* function takes the arguments shown in the
 following table:
@@ -6322,10 +6324,10 @@ service_template:
       node_filter:
         $and:
           - $greater_or_equal:
-            - $avialable_allocation: [ SELF, CAPABILITY, host, num_cpus ]
+            - $available_allocation: [ SELF, CAPABILITY, host, num_cpus ]
             - 3
           - $greater_or_equal:
-            - $avialable_allocation: [ SELF, CAPABILITY, host, mem_size ]
+            - $available_allocation: [ SELF, CAPABILITY, host, mem_size ]
             - 256 MB
 ```
                   
@@ -7256,7 +7258,7 @@ have the following meaning:
 - notification_definitions: represents the optional map of one or more
   notification definitions.
 
-During Interface Type derivation the keyname definitions follow these
+During interface type derivation the keyname definitions follow these
 rules:
 
 - inputs: existing parameter definitions may be refined; new parameter
@@ -7276,7 +7278,7 @@ The following example shows a custom interface used to define multiple
 configure operations.
 ```yaml
 MyConfigure:
-  description: My custom configure Interface Type
+  description: My custom configure interface type
   inputs:
     mode:
       type: string
@@ -7302,9 +7304,9 @@ definition:
 |type|yes|string|The mandatory name of the interface type on which this interface definition is based.|
 |description|no|string|The optional description for this interface definition.|
 |metadata|no|map of metadata|Defines additional metadata information.|
-|inputs|no|map of parameter definitions and refinements|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the Interface Type definition).|
-|operations|no|map of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
-|notifications|no|map of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the Interface Type definition.|
+|inputs|no|map of parameter definitions and refinements|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the interface type definition).|
+|operations|no|map of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the interface type definition.|
+|notifications|no|map of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the interface type definition.|
 
 Interface definitions in node or relationship type definitions have the
 following grammar:
@@ -7498,9 +7500,9 @@ overwrite any defined in its parent type.
 - Defining a fixed value for an input parameter (as part of its
  definition) may only use a parameter_value_expression that is
   meaningful in the scope of the context. For example, within the
-  context of an Interface Type definition functions such as get_propery
+  context of an interface type definition functions such as get_propery
   or get_attribute cannot be used. Within the context of Node or
-  Relationship Type definitions, these functions may only reference
+  relationship type definitions, these functions may only reference
   properties and attributes accessible starting from SELF (i.e.
   accessing a node by symbolic name is not meaningful).
 
@@ -7754,7 +7756,7 @@ The following additional requirements apply:
 
 - Defining a mapping in an output parameter definition may use an
   attribute target that is meaningful in the scope of the context.
-  Within the context of Node or Relationship Type definitions these
+  Within the context of Node or relationship type definitions these
   functions may only reference attributes starting from the same node
   (i.e. SELF).
 
@@ -8997,7 +8999,7 @@ service_template:
       type: Left
       count: {$get_input: number_of_left}
       requirements:
-        - uses: [right, {$remainder: [$node_index, {$get_input: number_of_right}]
+        - uses: [right, {$remainder: [$node_index, {$get_input: number_of_right}]}]
 ```
 
 ## 14.4 Relationship-Specific Input Values
@@ -9061,7 +9063,7 @@ these values are mapped.
 
 |Keyname|Mandatory|Type|Description|
 |---|---|---|---|
-|node_type|yes|string|The name of the Node Type of the nodes for which the service template can provide an implementation.|
+|node_type|yes|string|The name of the node type of the nodes for which the service template can provide an implementation.|
 |substitution_filter|no|condition clause|The filter that further constrains the abstract nodes for which this service template can provide an implementation. For an abstract node that needs to be substituted, the condition clause specified by the substitution filter must evaluate to `True` for this template to be a valid substitution candidate.|
 |properties|no|map of property mappings|The map of property mappings that map properties of the substituted node to inputs of the service template.|
 |attributes|no|map of attribute mappings|The map of attribute mappings that map outputs from the service template to attributes of the substituted node.|
@@ -9082,7 +9084,7 @@ interfaces: <interface_mappings>
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 - node_type_name: represents the node type name for which the
-  Service Template can offer an implementation.
+  service template can offer an implementation.
 - substitution_filter: represents a filter that reduces the set of
   abstract nodes for which this service template is an implementation
   by only substituting for those nodes whose properties and
@@ -9125,13 +9127,13 @@ have the following meaning:
   substituting service template.
 - property_name: represents the name of a property of the
   substituted node (defined using a corresponding property definition
-  in the specified Node Type), or a property of a capability, or a
+  in the specified node type), or a property of a capability, or a
   property of a relationship created by a requirement of the
   substituted node.
 - capability_name: represents the name of the capability as it appears
-  in the Node Type definition for the substituted node
+  in the node type definition for the substituted node
 - requirement_name: represents the name of the requirement as it appears
-  in the Node Type definition for the substituted node
+  in the node type definition for the substituted node
 - idx: index of the relationship defined from that requirement (0 is the
   first index); if the index is missing, index 0 is assumed;
   if the keyword ALL is used by as index, the corresponding
@@ -9161,13 +9163,13 @@ have the following meaning:
   substituting service template.
 - attribute_name: represents the name of an attribute of the
   substituted node (defined using a corresponding attribute definition
-  in the specified Node Type) or an attribute of a capability, or an
+  in the specified node type) or an attribute of a capability, or an
   attribute of a relationship created by a requirement of the
   substituted node.
 - capability_name: represents the name of the capability as it appears
-  in the Node Type definition for the substituted node
+  in the node type definition for the substituted node
 - requirement_name: represents the name of the requirement as it appears
-  in the Node Type definition for the substituted node
+  in the node type definition for the substituted node
 - idx: index of the relationship defined from that requirement (0 is the
   first index); if the index is missing, index 0 is assumed;
   if the keyword ALL is used by as index, all attributes
@@ -9192,7 +9194,7 @@ The grammar of a capability_mapping is as follows:
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 - capability_name: represents the name of the capability as it appears
-  in the Node Type definition for the substituted node.
+  in the node type definition for the substituted node.
 - node_template_name: represents a valid name of a node template
   definition within the substituting service template.
 - node_template_capability_name: represents a valid name of a
@@ -9269,7 +9271,7 @@ In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - requirement_name: represents the name of the requirement as it
-  appears in the type definition for the Node Type name that is
+  appears in the type definition for the node type name that is
   declared as the value for on the substitution_mappings’ `node_type`
   key.
 - node_template_name: represents a valid name of a node template
@@ -10149,7 +10151,7 @@ The grammar of an interface_mapping is as follows:
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 - interface_name: represents the name of the interface as it appears
-  in the Node Type definition for the Node Type (name) that is declared
+  in the node type definition for the node type (name) that is declared
   as the value for on the substitution_mappings’ `node_type` key.
 - operation_name: represents the name of the operation as it appears
   in the interface type definition for <interface_name>.
@@ -10187,7 +10189,7 @@ group type definition has the following recognized keynames:
 | ----- | ------- | ----- | ------- |
 |properties|no|map of property definitions|An optional map of property definitions for the group type.|
 |attributes|no|map of attribute definitions|An optional map of attribute definitions for the group type.|
-|members |no|list of string|An optional list of one or more names of Node Types that are valid (allowed) as members of the group type.|
+|members |no|list of string|An optional list of one or more names of node types that are valid (allowed) as members of the group type.|
 
 > What are group properties used for?
 > How can group attributes possibly be set, and what would they be used for?
@@ -10331,7 +10333,7 @@ policy type definition has the following recognized keynames:
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
 |properties|no|map of property definitions|An optional map of property definitions for the policy type.|
-|targets|no|list of string|An optional list of valid Node Types or group types the policy type can be applied to.|
+|targets|no|list of string|An optional list of valid node types or group types the policy type can be applied to.|
 |triggers|no|map of trigger definitions |An optional map of policy triggers for the policy type.|
 
 Policy types have the following grammar:
@@ -11130,7 +11132,7 @@ Template)</p></li>
 <li><p>Changed “interface definitions” with “interface assignments” in
 the relationship template specification, given that we have split
 interface assignments from interface definitions (Section 3.8.7
-Relationship Template)</p></li>
+relationship template)</p></li>
 </ul></td>
 </tr>
 <tr class="even">
@@ -11213,7 +11215,7 @@ definition).</p></li>
 range of integer to an integer, to correct the wrong specification in
 TOSCA v1.3 (Section 3.3.5.3. Capability assignment).</p></li>
 <li><p>Added the possibility to have provide a symbolic name of a
-Capability definition within a target Node Type that can fulfill the
+Capability definition within a target node type that can fulfill the
 requirement in the Requirement definition (in addition to the Capability
 Type) (Section 3.3.5.5. Requirement definition).</p></li>
 <li><p>Added the possibility to provide a node_filter also in the
