@@ -4,7 +4,7 @@
 
 ## Committee Specification Draft 06
 
-## 23 May 2024
+## 20 June 2024
 
 &nbsp;
 
@@ -72,7 +72,7 @@ When referencing this specification the following citation format should be used
 
 _TOSCA Version 2.0_.
 Edited by Chris Lauwers and Calin Curescu.
-07 September 2022.
+20 June 2024.
 OASIS Committee Specification Draft 06.
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.html.
 Latest stage: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.html.
