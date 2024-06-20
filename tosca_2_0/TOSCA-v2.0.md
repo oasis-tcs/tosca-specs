@@ -1045,9 +1045,9 @@ relationships when the representation graph changes.
 
 -------
 # 5 TOSCA Grammar Overview
-The content in this section is normative unless otherwise labeled except:
+The content in this section is normative unless otherwise labeled except for:
   - the examples
-  - references unless labelled as normative.
+  - references (unless they are labelled as normative)
 
 ## 5.1 TOSCA Modeling Concepts
 
@@ -1063,28 +1063,28 @@ derivation and entity refinement.
 
 ### 5.1.1 Type Definitions and Entity Definitions
 
-TOSCA *templates* are defined in TOSCA files and expressed using the TOSCA
+TOSCA **templates** are defined in TOSCA files and expressed using statements in the TOSCA
 language. All TOSCA templates are *typed* using TOSCA types that are also
 defined in TOSCA files and expressed in the TOSCA language. Not only do types
 promote reuse, they also simplify the design of TOSCA templates by allowing
 relevant TOSCA entities to use and/or modify definitions already specified in
 the types.
 
-**Type definitions** consist of pairs keynames and associated values
+TOSCA **type definitions** consist of pairs of keynames and associated values
 that specify information relevant to the type. While all TOSCA types
-share a number of common keynames, each type definition has its own
-syntax, semantics, and set of keynames. TOSCA supports *node types*,
+share a number of common keynames, each type definition has its own set of keynames
+with their own syntax and semantics. TOSCA supports *node types*,
 *relationship types*, *capability types*, *interface types*, *artifact
 types*, *policy types*, *group types*, and *data types*.
 
-Some keynames in TOSCA type definitions are used to specify **entity
-definitions** that *declare* the presence of other entities in the
-context of the type. For example, most TOSCA type definitions include
+Some keynames in TOSCA type definitions are used to specify TOSCA **entity
+definitions** that *declare* the presence of those entities in the
+context of the type being defined. For example, most TOSCA type definitions include
 *property definitions* and *attribute definitions*. Node types and
 relationship types also include *interface definitions*, and node
 types have *requirement definitions* and *capability definitions*.
 Interface types can include *parameter definitions* that specify
-required inputs and expected outputs for interface operations.
+required inputs and expected outputs for interface operations and notifications.
 
 Just like type definitions, entity definitions consist of pairs of
 keynames and values. Each entity definition has it own syntax,
@@ -1101,9 +1101,9 @@ definitions*, and *parameter definitions*.
 
 The 
 service templates introduced in Section 2 are defined in TOSCA files and expressed using
-statements in the TOSCA language. Service representation graphs are directed graphs of
-nodes and relationships resolved from service templates that consist of *node templates* and *requirements*. Node
-templates specify a particular node type and then add additional information using 
+statements in the TOSCA language. Service templates define directed graphs
+that consist of *node templates* and *requirements*. Node
+templates specify a node type used for the template and then add additional information using 
 pairs of keynames and associated values. Service templates may include other
 templates as well such as relationship templates, groups, policies
 etc.
@@ -1180,16 +1180,16 @@ TOSCA templates:
   decomposed by a service created simultaneously from a substituting
   template.
 
-### 5.1.4 Template reuse
-A single TOSCA template may be reused by including it in one or more other TOSCA templates. Each template may be separately maintained and use it's own naming scheme. The resolution of naming scheme conflicts is discussed later in this document.
+### 5.1.4 TOSCA File Reuse
+A single TOSCA file may be reused by including it in one or more other TOSCA file. Each file may be separately maintained and use it's own naming scheme. The resolution of naming scheme conflicts is discussed later in this document.
 <!--- Should this template reuse not specify that it's only the node types that can be reused not the service templates temselves. -->
 
 ## 5.2 Mandatory Keynames
 
 The TOSCA metamodel includes complex definitions used in types (e.g.,
 node types, relationship types, capability types, data types, etc.),
-definitions and refinements (e.g., Requirement Definitions, Capability
-Definitions, Property and Parameter Definitions, etc.) and templates
+definitions and refinements (e.g., requirement definitions, capability
+definitions, property and parameter definitions, etc.) and templates
 (e.g., service template, node template, etc.) all of which include their
 own list of reserved keynames that are sometimes marked as
 **mandatory**. If a keyname is marked as mandatory it **MUST** be
@@ -1392,12 +1392,12 @@ dsl_definitions:
       architecture: x86_64
       type: linux
       distribution: ubuntu
-      os_version: 14.04
+      os_version: '14.04'
     redhat_image_props: &redhat_image_props
       architecture: x86_64
       type: linux
       distribution: rhel
-      os_version: 6.6
+      os_version: '6.6'
 ```
 
 ## 6.4 Type definitions
@@ -4602,7 +4602,7 @@ data_types:
     validation: { $greater_or_equal: [ $value,  0 ] }
 
   bitrate:
-    version: 2.0
+    version: '2.0'
     description: bitrate allowing multiples of 1024 as well as 1000 but not including prefixes above 10^12
     derived_from: scalar-unit
     data_value_type: non_negative_number
@@ -4670,7 +4670,7 @@ TOSCA no longer has an in-built date type for time but one can be defined using 
 ```yaml
 data_types:
   scalar-unit.time:
-    version: 2.0
+    version: '2.0'
     description: Time including non-SI units accepted for use with the SI units
     derived_from: scalar-unit
     data_value_type: float
@@ -8086,7 +8086,7 @@ artifacts:
     type: tosca.artifacts.Deployment.Image.VM
     file: http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2
     checksum: ba411cafee2f0f702572369da0b765e2
-    version: 3.2
+    version: '3.2'
     checksum_algorithm: MD5
     properties:
       name: vSRX
@@ -10718,7 +10718,7 @@ tosca_definitions_version: tosca_2_0
 metadata:
   template_name: my_template
   template_author: OASIS TOSCA TC
-  template_version: 1.0
+  template_version: '1.0'
 ```
 
 -------
