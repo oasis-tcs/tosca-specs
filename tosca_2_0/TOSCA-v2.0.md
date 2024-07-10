@@ -4595,7 +4595,7 @@ In the above grammar, the pseudo values that appear in angle brackets have the f
 
     <scalar-unit_type_name>: represents the mandatory name of the parent type which must be either scalar-unit or a data type derived from scalar-unit.
 
-    <data_type_name>: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA intger or derived from them.
+    <data_type_name>: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA integer or derived from them.
 
     <suffix>: An optional string. If not present then unit_symbol_name is equal to unit_symbol. If present then unit_symbol_name is equal to unit_symbol&&unit_suffix. It is provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for unit_symbol_name has an implict value of 1.0
 
