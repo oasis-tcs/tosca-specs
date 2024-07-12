@@ -3712,13 +3712,13 @@ assignments can be used according to the following grammar:
   optional: <is_optional>
   allocation: <allocation_property_assignments>
 ```
-In some cases, a relationship assignment only needs to refine the type
-of the relationship and does not need to assign properties,
-attributes, or interfaces. In that case, a single-line relationship
-assignment grammar can be used where the value of the `relationship`
-keyname in the requirement assignment refers to the symbolic name of
-the type of the relationship. This single-line relationship grammar is
-shown here:
+In some cases, the `relationship` keyname in a requirement assignment
+is only used to refine the type of the relationship and does not
+assign properties, attributes, or interfaces. In that case, a
+single-line *relationship assignment* grammar can be used where the
+string value of the `relationship` keyname refers to the symbolic name
+of the type of the relationship. This single-line `relationship`
+assignment grammar is shown here:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
@@ -3730,12 +3730,12 @@ shown here:
   optional: <is_optional>
   allocation: <allocation_property_assignments>
 ```
-As stated in the description of the supported keynames,
-the `relationship` keyname in a requirement assignment can also be
-overloaded to specify the symbolic name of a relationship template to
-use for creating the relationship to the target node when fulfilling
-the requirement. In that case, the following single-line relationship
-grammar is used:
+As stated in the description of the supported keynames for requirement
+assignments, the `relationship` keyname in a requirement assignment
+can also be overloaded to specify the symbolic name of a relationship
+template to use for creating the relationship to the target node when
+fulfilling the requirement. In that case, the following single-line
+grammar is used for the `relationship` keyname:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
@@ -3747,12 +3747,13 @@ grammar is used:
   optional: <is_optional>
   allocation: <allocation_property_assignments>
 ```
-When single-line relationship grammar is used, TOSCA Processors MUST
-first try to resolve the value of the `relationship` keyword as the
-symbolic name of a relationship type. If no relationship type with
-that name is found, the Processor MUST then try to find a relationship
-template with that name. If no such relationship template is found,
-the grammar must be determined to be in error.
+When single-line grammar is used for the `relationship` keyname in a
+requirement assignment, TOSCA Processors MUST first try to resolve
+the value of the `relationship` keyname as the symbolic name of a
+relationship type. If no relationship type with that name is found,
+the Processor MUST then try to find a relationship template with that
+name. If no such relationship template is found, the grammar must be
+determined to be in error.
 
 And finally, to simplify requirement assignment grammar, the following
 single-line grammar may be used if only a concrete node template for
@@ -4086,7 +4087,7 @@ in the corresponding requirement definition.
 
 ### 8.7.5 Capability Allocation
 
-The value of the `allocation` keyword in a requirement assignment acts
+The value of the `allocation` keyname in a requirement assignment acts
 as a *capacity filter* for the target capability in the target
 node. When the requirement is fulfilled, a capability in a node is a
 valid target for the requirement if, for each property of the target
@@ -6195,7 +6196,7 @@ node_templates:
 
 #### 10.2.1.3 get_attribute
 
-The **get_attribute** function is used within a representation graph to
+The *$get_attribute* function is used within a representation graph to
 obtain attribute values from nodes and relationships that have been
 created from an application model described in a service template. The
 nodes or relationships can be referenced by their name as assigned in
