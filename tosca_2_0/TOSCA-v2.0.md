@@ -6196,7 +6196,7 @@ node_templates:
 
 #### 10.2.1.3 get_attribute
 
-The **get_attribute** function is used within a representation graph to
+The *$get_attribute* function is used within a representation graph to
 obtain attribute values from nodes and relationships that have been
 created from an application model described in a service template. The
 nodes or relationships can be referenced by their name as assigned in
