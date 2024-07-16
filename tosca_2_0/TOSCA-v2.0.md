@@ -8652,7 +8652,7 @@ created from the`right` node template as their target node.
 An example of a *one-to-many* relationship is shown in the following
 figure:
 
-**Figure 12: Service Template with Many-to-Many Relationship**
+**Figure 12: Service Template with One-to-Many Relationship**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8759,7 +8759,7 @@ virtual PE router that must be used at each site. Let’s assume that Site nodes
 HostedOn relationship to the vPE nodes. The extended service topology
 is shown in the following figure:
 
-Figure 14: SD-WAN Service Template showing Matched Pairs
+**Figure 14: SD-WAN Service Template showing Matched Pairs**
 ```mermaid
 flowchart LR
     A((Site)) --> B((VPN))
@@ -8769,7 +8769,7 @@ In this example, the intent is for each site node to remain paired
 with its own vPE node for that site. A generic illustration of the
 *matched pairs* scenario is shown in the following figure:
 
-Figure 15: Generic Matched Pairs Example
+**Figure 15: Generic Matched Pairs Example**
 ```mermaid
 flowchart LR
     subgraph Left
