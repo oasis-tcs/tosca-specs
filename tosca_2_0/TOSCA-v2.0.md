@@ -10908,7 +10908,6 @@ G. Klyne and C, Newman "Date and Time on the Internet: Timestamps" July 2002, ht
 edition, 2006; updated in 2014\]*”,
 <http://www.bipm.org/en/publications/si-brochure/>
 
-
 # Appendix B. Safety, Security and Privacy Considerations
 
 <!-- Optional section -->
@@ -10929,15 +10928,14 @@ Remove this note before submitting for publication.)
 
 <!-- Required section -->
 
-Note: A Work Product approved by the TC must include a list of people who participated in the development of the Work Product. This is generally done by collecting the list of names in this appendix. This list shall be initially compiled by the Chair, and any Member of the TC may add or remove their names from the list by request. Remove this note before submitting for publication.
-
 ## C.1 Special Thanks
 
 <!-- This is an optional subsection to call out contributions from TC members. If a TC wants to thank non-TC members then they should avoid using the term "contribution" and instead thank them for their "expertise" or "assistance". -->
 
-Substantial contributions to this document from the following individuals are gratefully acknowledged:
-
-Participant Name, Affiliation or "Individual Member"
+The editors would like to gratefully acknowledge the work of Paul
+Lipton, Chair-Emeritus of the OASIS TOSCA TC, who recognized the need
+for extending the scope of the TOSCA language and initiated the work
+on TOSCA Version 2.0.
 
 ## C.2 Participants
 
@@ -10946,125 +10944,66 @@ Participant Name, Affiliation or "Individual Member"
 The following individuals have participated in the creation of this
 specification and are gratefully acknowledged:
 
-**TOSCA TC Members:**
-
 | First Name | Last Name | Company |
 | :--- | :--- | :--- |
 Calin | Curescu | Ericsson
 Chris | Lauwers | Individual Member
+Oliver | Kopp | Individual Member
 Paul | Jordan | Individual Member
 Peter | Bruun | Hewlett Packard Enterprise
 Tal | Liron | Google
 
-> The following list needs to be cleaned up in accordance with OASIS
-> guidelines:
+The following individuals have contributed to previous versions of the
+TOSCA specification or have otherwise provided expertise or
+assistance:
 
-Adam Souzis (<adam@souzis.com>)
-
-Alex Vul (<alex.vul@intel.com>), Intel
-
-Anatoly Katzman (<anatoly.katzman@att.com>), AT&T
-
-Arturo Martin De Nicolas (<arturo.martin-de-nicolas@ericsson.com>),
-Ericsson
-
-Avi Vachnis (<avi.vachnis@alcatel-lucent.com>), Alcatel-Lucent
-
-Calin Curescu (<calin.curescu@ericsson.com>), Ericsson
-
-Chris Lauwers (<lauwers@ubicity.com)>
-
-Claude Noshpitz (<claude.noshpitz@att.com>), AT&T
-
-Derek Palma (<dpalma@vnomic.com>), Vnomic
-
-Dmytro Gassanov (<dmytro.gassanov@netcracker.com>), NetCracker
-
-Frank Leymann (<Frank.Leymann@informatik.uni-stuttgart.de>), Univ. of
-Stuttgart
-
-Gábor Marton (<gabor.marton@nokia.com>), Nokia
-
-Gerd Breiter (<gbreiter@de.ibm.com>), IBM
-
-Hemal Surti (<hsurti@cisco.com>), Cisco
-
-Ifat Afek (<ifat.afek@alcatel-lucent.com>), Alcatel-Lucent
-
-Idan Moyal, (<idan@gigaspaces.com>), Gigaspaces
-
-Jacques Durand (<jdurand@us.fujitsu.com>), Fujitsu
-
-Jin Qin, (<chin.qinjin@huawei.com>), Huawei
-
-Jeremy Hess, (<jeremy@gigaspaces.com>), Gigaspaces
-
-John Crandall,
-([mailto:jcrandal@brocade.com](mailto:jcrandal@brocade.com)), Brocade
-
-Juergen Meynert (<juergen.meynert@ts.fujitsu.com>), Fujitsu
-
-Kapil Thangavelu (<kapil.thangavelu@canonical.com>), Canonical
-
-Karsten Beins (<karsten.beins@ts.fujitsu.com>), Fujitsu
-
-Kevin Wilson (<kevin.l.wilson@hp.com>), HP
-
-Krishna Raman (<kraman@redhat.com>), Red Hat
-
-Luc Boutier (<luc.boutier@fastconnect.fr>), FastConnect
-
-Luca Gioppo, (<luca.gioppo@csi.it>), CSI-Piemonte
-
-Matej Artač, (<matej.artac@xlab.si>), XLAB
-
-Matt Rutkowski (<mrutkows@us.ibm.com>), IBM
-
-Moshe Elisha (<moshe.elisha@alcatel-lucent.com>), Alcatel-Lucent
-
-Nate Finch (<nate.finch@canonical.com>), Canonical
-
-Nikunj Nemani (<nnemani@vmware.com>), Wmware
-
-Paul Jordan (paul.m.jordan@outlook.com), Individual Member
-
-Peter Bruun (<peter-michael.bruun@hpe.com>), Hewlett Packard Enterprise
-
-Philippe Merle (<philippe.merle@inria.fr>), Inria
-
-Priya TG (<priya.g@netcracker.com)> NetCracker
-
-Richard Probst (<richard.probst@sap.com>), SAP AG
-
-Sahdev Zala (<spzala@us.ibm.com>), IBM
-
-Shitao li (<lishitao@huawei.com>), Huawei
-
-Simeon Monov (<sdmonov@us.ibm.com>), IBM
-
-Sivan Barzily (<sivan@gigaspaces.com>), Gigaspaces
-
-Sridhar Ramaswamy (<sramasw@brocade.com>), Brocade
-
-Stephane Maes (<stephane.maes@hp.com>), HP
-
-Steve Baillargeon (<steve.baillargeon@ericsson.com>), Ericsson
-
-Tal Liron (tliron@redhat.com)
-
-Thinh Nguyenphu (<thinh.nguyenphu@nokia.com>), Nokia
-
-Thomas Spatzier (<thomas.spatzier@de.ibm.com>), IBM
-
-Ton Ngo (<ton@us.ibm.com>), IBM
-
-Travis Tripp (<travis.tripp@hp.com>), HP
-
-Vahid Hashemian (<vahidhashemian@us.ibm.com>), IBM
-
-Wayne Witzel (<wayne.witzel@canonical.com>), Canonical
-
-Yaron Parasol (<yaronpa@gigaspaces.com>), Gigaspaces
+- Adam Souzis 
+- Alex Vul 
+- Anatoly Katzman 
+- Arturo Martin De Nicolas 
+- Avi Vachnis 
+- Claude Noshpitz 
+- Derek Palma 
+- Dmytro Gassanov 
+- Frank Leymann 
+- Gábor Marton 
+- Gerd Breiter 
+- Hemal Surti 
+- Ifat Afek 
+- Idan Moyal 
+- Jacques Durand 
+- Jin Qin 
+- Jeremy Hess 
+- John Crandall
+- Juergen Meynert 
+- Kapil Thangavelu 
+- Karsten Beins 
+- Kevin Wilson 
+- Krishna Raman 
+- Luc Boutier 
+- Luca Gioppo 
+- Matej Artač 
+- Matt Rutkowski 
+- Moshe Elisha 
+- Nate Finch 
+- Nikunj Nemani 
+- Philippe Merle 
+- Priya TG 
+- Richard Probst 
+- Sahdev Zala 
+- Shitao Li 
+- Simeon Monov 
+- Sivan Barzily 
+- Sridhar Ramaswamy 
+- Stephane Maes 
+- Steve Baillargeon 
+- Thinh Nguyenphu 
+- Thomas Spatzier 
+- Ton Ngo 
+- Travis Tripp 
+- Vahid Hashemian 
+- Wayne Witzel 
+- Yaron Parasol 
 
 -------
 
@@ -11083,15 +11022,7 @@ Yaron Parasol (<yaronpa@gigaspaces.com>), Gigaspaces
 
 -------
 
-# Appendix E. Example Appendix with subsections
-
-## E.1 Subsection title
-
-### E.1.1 Sub-subsection
-
--------
-
-# Appendix F. Notices
+# Appendix E. Notices
 
 <!-- Required section. Do not modify. -->
 
