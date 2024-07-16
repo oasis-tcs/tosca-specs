@@ -160,7 +160,7 @@ TOSCA 1.3. In particular:
    - Short notation for entry_schema and key_schema has been
      documented
 
-## 1.2 Document conventions
+## 1.2 Document Conventions
 
 - Naming conventions
 - Font colors and styles
@@ -183,7 +183,7 @@ the following definitions when used in context of this document.
 |Topology Model| A Topology Model defines the structure of a service in the context of a service template. A Topology model consists of a set of node template and relationship template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
 |Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
 
-### 1.3.2 Acronyms and abbreviations
+### 1.3.2 Acronyms and Abbreviations
 Defined in this document
 - TOSCA Topology and Orchestration Specification for Cloud Applications
 - CSAR  Cloud Service Archive A file format defined by OASIS TOSCA to contain TOSCA files
@@ -1407,7 +1407,7 @@ dsl_definitions:
       os_version: '6.6'
 ```
 
-## 6.4 Type definitions
+## 6.4 Type Definitions
 
 TOSCA provides a type system to describe reusable building blocks to
 construct a service template (i.e. for the nodes, relationship, group
@@ -4130,7 +4130,7 @@ service_template:
               mem_size: 128 MB
 ```
 
-## 8.8 Node Filter definition
+## 8.8 Node Filter Definition
 
 In addition to the node, relationship and capability types, a filter,
 with the keyname node_filter, may be provided in requirement
@@ -8698,7 +8698,7 @@ requirement, it defaults to 1 and the orchestrator will only establish
 one single relationship to one of the `right` nodes. The choice of which one of the several
 `right` nodes is selected is implementation-specific.
 
-### 14.3.3 Full mesh
+### 14.3.3 Full Mesh
 
 In a *full mesh* scenario, all nodes on the left establish
 relationships to all of the nodes on the right as shown in the
@@ -9129,7 +9129,7 @@ Please note:
   implementation). Specifically, all the required properties of all
   its node templates must have valid property assignments.
 
-## 15.2 Property mapping
+## 15.2 Property Mapping
 A property mapping allows a property value of a substituted node to be
 mapped to an input value of the substituting service template.
 
