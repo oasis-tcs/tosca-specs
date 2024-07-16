@@ -407,7 +407,7 @@ specification allows for either approach.
 The following diagram shows how external implementations are modeled
 using representations, and how the Orchestrator synchronizes the two.
 
-Figure 1: Representations and Implementations
+**Figure 1: Representations and Implementations**
 
 ![TOSCA Representations and Implementations](images/representations_implementations.png)
 
@@ -457,7 +457,7 @@ representations.
 The following diagram shows how representations are created
 from templates by a resolver:
 
-Figure 2: TOSCA Templates and Representations
+**Figure 2: TOSCA Templates and Representations**
 
 ![TOSCA Templates and Representations](images/templates_representations.png)
 
@@ -476,7 +476,7 @@ be flagged at service *design time* rather than at service *deployment
 time*.  The following diagram shows how templates are created from and
 validated against TOSCA type definitions:
 
-Figure 3: TOSCA Types and TOSCA Templates
+**Figure 3: TOSCA Types and TOSCA Templates**
 
 ![TOSCA Types and Templates](images/types_templates.png)
 
@@ -502,7 +502,7 @@ this section. When a TOSCA implementation implements multiple TOSCA
 processing modules such as parsing, validating, and resolving, such an
 implementation is commonly referred to as a **TOSCA processor**.
 
-Figure 4: Summary of Core TOSCA Concepts
+**Figure 4: Summary of Core TOSCA Concepts**
 
 ![TOSCA Core Concepts](images/core_concepts.png)
 
@@ -679,7 +679,7 @@ the requirement.
 The following figure summarizes the various TOSCA abstractions used
 for defining requirements and capabilities:
 
-Figure 5: Requirements and Capabilities
+**Figure 5: Requirements and Capabilities**
 
 ![Requirements and Capabilities](images/requirements_and_capabilities.png)
 
@@ -707,7 +707,7 @@ another vendor specialized in deploying and managing application
 servers. This approach enables separation of concerns as well as re-use of
 common infrastructure templates.
 
-Figure 6: Node Decomposition
+**Figure 6: Node Decomposition**
 
 ![Node Decomposition](images/service_decomposition.png)
 
@@ -872,7 +872,7 @@ The following Figure shows the TOSCA functional architecture defined
 in this section. It illustrates how the various TOSCA entities are
 used by the different functional blocks and how they are related.
 
-Figure 7: TOSCA Functional Architecture
+**Figure 7: TOSCA Functional Architecture**
 
 ![TOSCA Functional Architecture](images/functional_architecture.png)
 
@@ -1296,7 +1296,7 @@ their grammars—that are allowed to appear in a TOSCA file.
 The major entities that can be defined in a TOSCA file are depicted in
 Figure 8.
 
-Figure 8: Structural Elements of a TOSCA File
+**Figure 8: Structural Elements of a TOSCA File**
 
 ![TOSCA File](images/tosca_file.png)
 
@@ -8432,7 +8432,7 @@ section documents TOSCA language support for this functionality.
 The discussion in this section uses an example SD-WAN with three sites
 as shown in the following figure:
 
-Figure 9: SD-WAN Example
+**Figure 9: SD-WAN Example**
 ```mermaid
 flowchart
     SiteA(Austin)
@@ -8506,7 +8506,7 @@ to the service template. This enables the creation of a simplified
 SD-WAN service template that contains only one single VPN Site node as
 shown in the following figure:
 
-Figure 10: TOSCA Service Template with Single VPN Site Node
+**Figure 10: TOSCA Service Template with Single VPN Site Node**
 ```mermaid
 flowchart
     Site(Site)
@@ -8609,7 +8609,7 @@ representations has a relationship to a VPN node that can only be
 instantiated once.  This is an example of a *many-to-one* relationship
 which is shown in the following figure:
 
-Figure 11: SD-WAN Service Template with Many-to-One Relationship
+**Figure 11: SD-WAN Service Template with Many-to-One Relationship**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8652,7 +8652,7 @@ created from the`right` node template as their target node.
 An example of a *one-to-many* relationship is shown in the following
 figure:
 
-Figure 12: Service Template with Many-to-Many Relationship
+**Figure 12: Service Template with Many-to-Many Relationship**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8704,7 +8704,7 @@ In a *full mesh* scenario, all nodes on the left establish
 relationships to all of the nodes on the right as shown in the
 following figure:
 
-Figure 13: Service Template with Full Mesh Relationships
+**Figure 13: Service Template with Full Mesh Relationships**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8823,7 +8823,7 @@ Some scenarios require nodes to be organized in pairs, but the
 ordering of the nodes is not important. The following figure shows and
 such a *random pairs* example:
 
-Figure 16: Service Template Showing Random Pairs
+**Figure 16: Service Template Showing Random Pairs**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8895,7 +8895,7 @@ The mechanisms introduced above can also be used to define more
 complex *many-to-many* scenarios. For example, a 1:2 pattern is shown
 in the following figure:
 
-Figure 17: Service Template Showing 1:2 Relationship Pattern
+**Figure 17: Service Template Showing 1:2 Relationship Pattern**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8941,7 +8941,7 @@ service_template:
 ```
 The following figure shows a 3:2 pattern:
 
-Figure 18: Service Template Showing 3:2 Relationship Pattern
+**Figure 18: Service Template Showing 3:2 Relationship Pattern**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -9343,7 +9343,7 @@ node_types:
 This following figure shows a service that consists of one such client
 node connected to two server nodes.
 
-Figure 19: Single Client Connected to Two Servers
+**Figure 19: Single Client Connected to Two Servers**
 ```mermaid
 graph BT;
 dummy((.)) ~~~  client
@@ -9376,7 +9376,7 @@ In this template, the `client` node is annotated with the
 be found to instantiate this node. The following figure shows one
 possible substitution.
 
-Figure 20: Example Substitution for Client Connected to Two Servers
+**Figure 20: Example Substitution for Client Connected to Two Servers**
 ```mermaid
 graph BT
     S --> |substitutes| client
@@ -9452,7 +9452,7 @@ The following figure shows an alternative substitution where both
 corresponding requirements of a single `software` node in the
 substituting topology:
 
-Figure 21: Alternative Substitution for Client Connected to Two Servers
+**Figure 21: Alternative Substitution for Client Connected to Two Servers**
 ```mermaid
 flowchart RL
     S --> |substitutes| client
@@ -9632,7 +9632,7 @@ The following figure shows a service that contains one node of type
 `Client`, one node of type `Compute`, and the `host` relationship
 between them:
 
-Figure 22: Client Deployed on Single Host
+**Figure 22: Client Deployed on Single Host**
 ```mermaid
 flowchart RL
     subgraph T [Top-Level Topology]
@@ -9659,7 +9659,7 @@ the node of type `Client` into two software components, each of which
 needs to be hosted on the same `compute` node defined in the top-level
 template that defines the `client` node.
 
-Figure 23: Example Substitution for Client Deployed on Single Host
+**Figure 23: Example Substitution for Client Deployed on Single Host**
 ```mermaid
 flowchart RL
     S --> |substitutes| client
@@ -9728,7 +9728,7 @@ substituting templates.
 Let's again consider the scenario from the previous section where a
 node of type `Client` is hosted on a node of type `Compute:
 
-Figure 24: Client Deployed on Single Host
+**Figure 24: Client Deployed on Single Host**
 ```mermaid
 flowchart RL
     subgraph T [Top-Level Topology]
@@ -9758,7 +9758,7 @@ in the previous section, a *selectable* node is used to express the
 need for both software components to be hosted on the same `compute`
 node:
 
-Figure 25: Substituting Template using Selectable Node
+**Figure 25: Substituting Template using Selectable Node**
 ```mermaid
 flowchart RL
     subgraph S [Substituting Topology]
@@ -9774,7 +9774,7 @@ substituted node is to be *selected* as the node represented by the
 *selectable* `compute` node in the subsituting template, as shown in
 the following Figure:
 
-Figure 26: Substitution with Requirement Mapping to Selectable Node
+**Figure 26: Substitution with Requirement Mapping to Selectable Node**
 ```mermaid
 flowchart RL
     S --> |substitutes| client
