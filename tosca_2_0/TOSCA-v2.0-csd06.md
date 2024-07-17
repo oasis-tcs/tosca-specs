@@ -5824,7 +5824,7 @@ A validation clause is a Boolean expression that must evaluate to True
 if the value for the entity it references is considered valid.
 Validation clauses have the following grammar:
 ```yaml
-validation: < validation_clause>
+validation: <validation_clause>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
