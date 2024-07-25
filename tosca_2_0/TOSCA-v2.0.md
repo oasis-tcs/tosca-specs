@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 07
 
-## 3 July 2024
+## 16 July 2024
 
 &nbsp;
 
@@ -49,10 +49,6 @@ This specification replaces or supersedes:
 
 This specification is related to:
 * _Introduction to TOSCA Version 2.0._ Edited by Chris Lauwers and Calin Curescu. Work in progress.
-
-#### Declared XML namespace:
-
-* http://docs.oasis-open.org/tosca/ns/2.0
 
 #### Abstract:
 
@@ -164,7 +160,7 @@ TOSCA 1.3. In particular:
    - Short notation for entry_schema and key_schema has been
      documented
 
-## 1.2 Document conventions
+## 1.2 Document Conventions
 
 - Naming conventions
 - Font colors and styles
@@ -187,7 +183,7 @@ the following definitions when used in context of this document.
 |Topology Model| A Topology Model defines the structure of a service in the context of a service template. A Topology model consists of a set of node template and relationship template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
 |Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
 
-### 1.3.2 Acronyms and abbreviations
+### 1.3.2 Acronyms and Abbreviations
 Defined in this document
 - TOSCA Topology and Orchestration Specification for Cloud Applications
 - CSAR  Cloud Service Archive A file format defined by OASIS TOSCA to contain TOSCA files
@@ -411,9 +407,9 @@ specification allows for either approach.
 The following diagram shows how external implementations are modeled
 using representations, and how the Orchestrator synchronizes the two.
 
-![TOSCA Representations and Implementations](images/representations_implementations.png)
+**Figure 1: Representations and Implementations**
 
-Figure : Representations and Implementations
+![TOSCA Representations and Implementations](images/representations_implementations.png)
 
 TOSCA representations don't just track individual components and their
 management aspects; they also capture how the various components
@@ -461,9 +457,9 @@ representations.
 The following diagram shows how representations are created
 from templates by a resolver:
 
-![TOSCA Templates and Representations](images/templates_representations.png)
+**Figure 2: TOSCA Templates and Representations**
 
-Figure : TOSCA Templates and Representations
+![TOSCA Templates and Representations](images/templates_representations.png)
 
 To allow for *design-time validation* of service templates, all TOSCA
 templates defined by those service templates have associated **TOSCA
@@ -480,9 +476,9 @@ be flagged at service *design time* rather than at service *deployment
 time*.  The following diagram shows how templates are created from and
 validated against TOSCA type definitions:
 
-![TOSCA Types and Templates](images/types_templates.png)
+**Figure 3: TOSCA Types and TOSCA Templates**
 
-Figure : TOSCA Types and TOSCA Templates
+![TOSCA Types and Templates](images/types_templates.png)
 
 The use of types in TOSCA also provides the additional benefits of
 abstraction, information hiding, and reuse. TOSCA types can be
@@ -506,9 +502,9 @@ this section. When a TOSCA implementation implements multiple TOSCA
 processing modules such as parsing, validating, and resolving, such an
 implementation is commonly referred to as a **TOSCA processor**.
 
-![TOSCA Core Concepts](images/core_concepts.png)
+**Figure 4: Summary of Core TOSCA Concepts**
 
-Figure : Summary of Core TOSCA Concepts
+![TOSCA Core Concepts](images/core_concepts.png)
 
 Note that this diagram is only intended to highlight concepts used in
 this specification, not to suggest software architectures or
@@ -683,9 +679,9 @@ the requirement.
 The following figure summarizes the various TOSCA abstractions used
 for defining requirements and capabilities:
 
-![Requirements and Capabilities](images/requirements_and_capabilities.png)
+**Figure 5: Requirements and Capabilities**
 
-Figure : Requirements and Capabilities
+![Requirements and Capabilities](images/requirements_and_capabilities.png)
 
 <!----
 {"id": "108", "author": "Michael Rehder", "date": "2020-12-15T16:33:00Z", "comment": "There should be some\ndiscussion about this issue \u2013 how are the relations defined in the\ntopology template related to the relations of the substituted node\ntype?", "target": ""}-->
@@ -711,9 +707,9 @@ another vendor specialized in deploying and managing application
 servers. This approach enables separation of concerns as well as re-use of
 common infrastructure templates.
 
-![Node Decomposition](images/service_decomposition.png)
+**Figure 6: Node Decomposition**
 
-Figure : Node Decomposition
+![Node Decomposition](images/service_decomposition.png)
 
 From the point of view of a service template (e.g. the business
 application service template from the example above) that uses another
@@ -876,9 +872,9 @@ The following Figure shows the TOSCA functional architecture defined
 in this section. It illustrates how the various TOSCA entities are
 used by the different functional blocks and how they are related.
 
-![TOSCA Functional Architecture](images/functional_architecture.png)
+**Figure 7: TOSCA Functional Architecture**
 
-Figure : TOSCA Functional Architecture
+![TOSCA Functional Architecture](images/functional_architecture.png)
 
 The functional architecture defines the following three blocks:
 
@@ -1298,11 +1294,11 @@ both. This section describes the top-level TOSCA keynames—along with
 their grammars—that are allowed to appear in a TOSCA file.
 
 The major entities that can be defined in a TOSCA file are depicted in
-Figure 1.
+Figure 8.
+
+**Figure 8: Structural Elements of a TOSCA File**
 
 ![TOSCA File](images/tosca_file.png)
-
-Figure : Structural Elements of a TOSCA File
 
 ## 6.1 Keynames
 
@@ -1411,7 +1407,7 @@ dsl_definitions:
       os_version: '6.6'
 ```
 
-## 6.4 Type definitions
+## 6.4 Type Definitions
 
 TOSCA provides a type system to describe reusable building blocks to
 construct a service template (i.e. for the nodes, relationship, group
@@ -3712,13 +3708,13 @@ assignments can be used according to the following grammar:
   optional: <is_optional>
   allocation: <allocation_property_assignments>
 ```
-In some cases, a relationship assignment only needs to refine the type
-of the relationship and does not need to assign properties,
-attributes, or interfaces. In that case, a single-line relationship
-assignment grammar can be used where the value of the `relationship`
-keyname in the requirement assignment refers to the symbolic name of
-the type of the relationship. This single-line relationship grammar is
-shown here:
+In some cases, the `relationship` keyname in a requirement assignment
+is only used to refine the type of the relationship and does not
+assign properties, attributes, or interfaces. In that case, a
+single-line *relationship assignment* grammar can be used where the
+string value of the `relationship` keyname refers to the symbolic name
+of the type of the relationship. This single-line `relationship`
+assignment grammar is shown here:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
@@ -3730,12 +3726,12 @@ shown here:
   optional: <is_optional>
   allocation: <allocation_property_assignments>
 ```
-As stated in the description of the supported keynames,
-the `relationship` keyname in a requirement assignment can also be
-overloaded to specify the symbolic name of a relationship template to
-use for creating the relationship to the target node when fulfilling
-the requirement. In that case, the following single-line relationship
-grammar is used:
+As stated in the description of the supported keynames for requirement
+assignments, the `relationship` keyname in a requirement assignment
+can also be overloaded to specify the symbolic name of a relationship
+template to use for creating the relationship to the target node when
+fulfilling the requirement. In that case, the following single-line
+grammar is used for the `relationship` keyname:
 ```yaml
 <requirement_name>:
   capability: <capability_symbolic_name> | <capability_type_name>
@@ -3747,12 +3743,13 @@ grammar is used:
   optional: <is_optional>
   allocation: <allocation_property_assignments>
 ```
-When single-line relationship grammar is used, TOSCA Processors MUST
-first try to resolve the value of the `relationship` keyword as the
-symbolic name of a relationship type. If no relationship type with
-that name is found, the Processor MUST then try to find a relationship
-template with that name. If no such relationship template is found,
-the grammar must be determined to be in error.
+When single-line grammar is used for the `relationship` keyname in a
+requirement assignment, TOSCA Processors MUST first try to resolve
+the value of the `relationship` keyname as the symbolic name of a
+relationship type. If no relationship type with that name is found,
+the Processor MUST then try to find a relationship template with that
+name. If no such relationship template is found, the grammar must be
+determined to be in error.
 
 And finally, to simplify requirement assignment grammar, the following
 single-line grammar may be used if only a concrete node template for
@@ -4086,7 +4083,7 @@ in the corresponding requirement definition.
 
 ### 8.7.5 Capability Allocation
 
-The value of the `allocation` keyword in a requirement assignment acts
+The value of the `allocation` keyname in a requirement assignment acts
 as a *capacity filter* for the target capability in the target
 node. When the requirement is fulfilled, a capability in a node is a
 valid target for the requirement if, for each property of the target
@@ -4133,7 +4130,7 @@ service_template:
               mem_size: 128 MB
 ```
 
-## 8.8 Node Filter definition
+## 8.8 Node Filter Definition
 
 In addition to the node, relationship and capability types, a filter,
 with the keyname node_filter, may be provided in requirement
@@ -6195,7 +6192,7 @@ node_templates:
 
 #### 10.2.1.3 get_attribute
 
-The **get_attribute** function is used within a representation graph to
+The *$get_attribute* function is used within a representation graph to
 obtain attribute values from nodes and relationships that have been
 created from an application model described in a service template. The
 nodes or relationships can be referenced by their name as assigned in
@@ -8435,6 +8432,7 @@ section documents TOSCA language support for this functionality.
 The discussion in this section uses an example SD-WAN with three sites
 as shown in the following figure:
 
+**Figure 9: SD-WAN Example**
 ```mermaid
 flowchart
     SiteA(Austin)
@@ -8508,10 +8506,8 @@ to the service template. This enables the creation of a simplified
 SD-WAN service template that contains only one single VPN Site node as
 shown in the following figure:
 
+**Figure 10: TOSCA Service Template with Single VPN Site Node**
 ```mermaid
----
-title: Example SD-WAN Service Deployment
----
 flowchart
     Site(Site)
     VPN(VPN)
@@ -8612,6 +8608,8 @@ In the SD-WAN service template above, each of the site node
 representations has a relationship to a VPN node that can only be
 instantiated once.  This is an example of a *many-to-one* relationship
 which is shown in the following figure:
+
+**Figure 11: SD-WAN Service Template with Many-to-One Relationship**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8654,6 +8652,7 @@ created from the`right` node template as their target node.
 An example of a *one-to-many* relationship is shown in the following
 figure:
 
+**Figure 12: Service Template with One-to-Many Relationship**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8699,12 +8698,13 @@ requirement, it defaults to 1 and the orchestrator will only establish
 one single relationship to one of the `right` nodes. The choice of which one of the several
 `right` nodes is selected is implementation-specific.
 
-### 14.3.3 Full mesh
+### 14.3.3 Full Mesh
 
 In a *full mesh* scenario, all nodes on the left establish
 relationships to all of the nodes on the right as shown in the
 following figure:
 
+**Figure 13: Service Template with Full Mesh Relationships**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8758,6 +8758,8 @@ the SD-WAN service above with a third node template that represents a
 virtual PE router that must be used at each site. Let’s assume that Site nodes establish a
 HostedOn relationship to the vPE nodes. The extended service topology
 is shown in the following figure:
+
+**Figure 14: SD-WAN Service Template showing Matched Pairs**
 ```mermaid
 flowchart LR
     A((Site)) --> B((VPN))
@@ -8767,6 +8769,7 @@ In this example, the intent is for each site node to remain paired
 with its own vPE node for that site. A generic illustration of the
 *matched pairs* scenario is shown in the following figure:
 
+**Figure 15: Generic Matched Pairs Example**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8820,6 +8823,7 @@ Some scenarios require nodes to be organized in pairs, but the
 ordering of the nodes is not important. The following figure shows and
 such a *random pairs* example:
 
+**Figure 16: Service Template Showing Random Pairs**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8891,6 +8895,7 @@ The mechanisms introduced above can also be used to define more
 complex *many-to-many* scenarios. For example, a 1:2 pattern is shown
 in the following figure:
 
+**Figure 17: Service Template Showing 1:2 Relationship Pattern**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -8935,6 +8940,8 @@ service_template:
               target_count: 1
 ```
 The following figure shows a 3:2 pattern:
+
+**Figure 18: Service Template Showing 3:2 Relationship Pattern**
 ```mermaid
 flowchart LR
     subgraph Left
@@ -9122,7 +9129,7 @@ Please note:
   implementation). Specifically, all the required properties of all
   its node templates must have valid property assignments.
 
-## 15.2 Property mapping
+## 15.2 Property Mapping
 A property mapping allows a property value of a substituted node to be
 mapped to an input value of the substituting service template.
 
@@ -9335,6 +9342,8 @@ node_types:
 ```
 This following figure shows a service that consists of one such client
 node connected to two server nodes.
+
+**Figure 19: Single Client Connected to Two Servers**
 ```mermaid
 graph BT;
 dummy((.)) ~~~  client
@@ -9366,6 +9375,8 @@ In this template, the `client` node is annotated with the
 `substitute` directive, which means that a substituting template must
 be found to instantiate this node. The following figure shows one
 possible substitution.
+
+**Figure 20: Example Substitution for Client Connected to Two Servers**
 ```mermaid
 graph BT
     S --> |substitutes| client
@@ -9440,6 +9451,8 @@ The following figure shows an alternative substitution where both
 `service` requirements of the substituted `client` node are mapped to
 corresponding requirements of a single `software` node in the
 substituting topology:
+
+**Figure 21: Alternative Substitution for Client Connected to Two Servers**
 ```mermaid
 flowchart RL
     S --> |substitutes| client
@@ -9618,6 +9631,8 @@ node_types:
 The following figure shows a service that contains one node of type
 `Client`, one node of type `Compute`, and the `host` relationship
 between them:
+
+**Figure 22: Client Deployed on Single Host**
 ```mermaid
 flowchart RL
     subgraph T [Top-Level Topology]
@@ -9643,6 +9658,8 @@ The following figure shows a substituting topology that *decomposes*
 the node of type `Client` into two software components, each of which
 needs to be hosted on the same `compute` node defined in the top-level
 template that defines the `client` node.
+
+**Figure 23: Example Substitution for Client Deployed on Single Host**
 ```mermaid
 flowchart RL
     S --> |substitutes| client
@@ -9710,6 +9727,8 @@ substituting templates.
 
 Let's again consider the scenario from the previous section where a
 node of type `Client` is hosted on a node of type `Compute:
+
+**Figure 24: Client Deployed on Single Host**
 ```mermaid
 flowchart RL
     subgraph T [Top-Level Topology]
@@ -9739,6 +9758,7 @@ in the previous section, a *selectable* node is used to express the
 need for both software components to be hosted on the same `compute`
 node:
 
+**Figure 25: Substituting Template using Selectable Node**
 ```mermaid
 flowchart RL
     subgraph S [Substituting Topology]
@@ -9754,6 +9774,7 @@ substituted node is to be *selected* as the node represented by the
 *selectable* `compute` node in the subsituting template, as shown in
 the following Figure:
 
+**Figure 26: Substitution with Requirement Mapping to Selectable Node**
 ```mermaid
 flowchart RL
     S --> |substitutes| client
@@ -10911,7 +10932,6 @@ G. Klyne and C, Newman "Date and Time on the Internet: Timestamps" July 2002, ht
 edition, 2006; updated in 2014\]*”,
 <http://www.bipm.org/en/publications/si-brochure/>
 
-
 # Appendix B. Safety, Security and Privacy Considerations
 
 <!-- Optional section -->
@@ -10932,15 +10952,14 @@ Remove this note before submitting for publication.)
 
 <!-- Required section -->
 
-Note: A Work Product approved by the TC must include a list of people who participated in the development of the Work Product. This is generally done by collecting the list of names in this appendix. This list shall be initially compiled by the Chair, and any Member of the TC may add or remove their names from the list by request. Remove this note before submitting for publication.
-
 ## C.1 Special Thanks
 
 <!-- This is an optional subsection to call out contributions from TC members. If a TC wants to thank non-TC members then they should avoid using the term "contribution" and instead thank them for their "expertise" or "assistance". -->
 
-Substantial contributions to this document from the following individuals are gratefully acknowledged:
-
-Participant Name, Affiliation or "Individual Member"
+The editors would like to gratefully acknowledge the work of Paul
+Lipton, Chair-Emeritus of the OASIS TOSCA TC, who recognized the need
+for extending the scope of the TOSCA language and initiated the work
+on TOSCA Version 2.0.
 
 ## C.2 Participants
 
@@ -10949,125 +10968,66 @@ Participant Name, Affiliation or "Individual Member"
 The following individuals have participated in the creation of this
 specification and are gratefully acknowledged:
 
-**TOSCA TC Members:**
-
 | First Name | Last Name | Company |
 | :--- | :--- | :--- |
 Calin | Curescu | Ericsson
 Chris | Lauwers | Individual Member
+Oliver | Kopp | Individual Member
 Paul | Jordan | Individual Member
 Peter | Bruun | Hewlett Packard Enterprise
 Tal | Liron | Google
 
-> The following list needs to be cleaned up in accordance with OASIS
-> guidelines:
+The following individuals have contributed to previous versions of the
+TOSCA specification or have otherwise provided expertise or
+assistance:
 
-Adam Souzis (<adam@souzis.com>)
-
-Alex Vul (<alex.vul@intel.com>), Intel
-
-Anatoly Katzman (<anatoly.katzman@att.com>), AT&T
-
-Arturo Martin De Nicolas (<arturo.martin-de-nicolas@ericsson.com>),
-Ericsson
-
-Avi Vachnis (<avi.vachnis@alcatel-lucent.com>), Alcatel-Lucent
-
-Calin Curescu (<calin.curescu@ericsson.com>), Ericsson
-
-Chris Lauwers (<lauwers@ubicity.com)>
-
-Claude Noshpitz (<claude.noshpitz@att.com>), AT&T
-
-Derek Palma (<dpalma@vnomic.com>), Vnomic
-
-Dmytro Gassanov (<dmytro.gassanov@netcracker.com>), NetCracker
-
-Frank Leymann (<Frank.Leymann@informatik.uni-stuttgart.de>), Univ. of
-Stuttgart
-
-Gábor Marton (<gabor.marton@nokia.com>), Nokia
-
-Gerd Breiter (<gbreiter@de.ibm.com>), IBM
-
-Hemal Surti (<hsurti@cisco.com>), Cisco
-
-Ifat Afek (<ifat.afek@alcatel-lucent.com>), Alcatel-Lucent
-
-Idan Moyal, (<idan@gigaspaces.com>), Gigaspaces
-
-Jacques Durand (<jdurand@us.fujitsu.com>), Fujitsu
-
-Jin Qin, (<chin.qinjin@huawei.com>), Huawei
-
-Jeremy Hess, (<jeremy@gigaspaces.com>), Gigaspaces
-
-John Crandall,
-([mailto:jcrandal@brocade.com](mailto:jcrandal@brocade.com)), Brocade
-
-Juergen Meynert (<juergen.meynert@ts.fujitsu.com>), Fujitsu
-
-Kapil Thangavelu (<kapil.thangavelu@canonical.com>), Canonical
-
-Karsten Beins (<karsten.beins@ts.fujitsu.com>), Fujitsu
-
-Kevin Wilson (<kevin.l.wilson@hp.com>), HP
-
-Krishna Raman (<kraman@redhat.com>), Red Hat
-
-Luc Boutier (<luc.boutier@fastconnect.fr>), FastConnect
-
-Luca Gioppo, (<luca.gioppo@csi.it>), CSI-Piemonte
-
-Matej Artač, (<matej.artac@xlab.si>), XLAB
-
-Matt Rutkowski (<mrutkows@us.ibm.com>), IBM
-
-Moshe Elisha (<moshe.elisha@alcatel-lucent.com>), Alcatel-Lucent
-
-Nate Finch (<nate.finch@canonical.com>), Canonical
-
-Nikunj Nemani (<nnemani@vmware.com>), Wmware
-
-Paul Jordan (paul.m.jordan@outlook.com), Individual Member
-
-Peter Bruun (<peter-michael.bruun@hpe.com>), Hewlett Packard Enterprise
-
-Philippe Merle (<philippe.merle@inria.fr>), Inria
-
-Priya TG (<priya.g@netcracker.com)> NetCracker
-
-Richard Probst (<richard.probst@sap.com>), SAP AG
-
-Sahdev Zala (<spzala@us.ibm.com>), IBM
-
-Shitao li (<lishitao@huawei.com>), Huawei
-
-Simeon Monov (<sdmonov@us.ibm.com>), IBM
-
-Sivan Barzily (<sivan@gigaspaces.com>), Gigaspaces
-
-Sridhar Ramaswamy (<sramasw@brocade.com>), Brocade
-
-Stephane Maes (<stephane.maes@hp.com>), HP
-
-Steve Baillargeon (<steve.baillargeon@ericsson.com>), Ericsson
-
-Tal Liron (tliron@redhat.com)
-
-Thinh Nguyenphu (<thinh.nguyenphu@nokia.com>), Nokia
-
-Thomas Spatzier (<thomas.spatzier@de.ibm.com>), IBM
-
-Ton Ngo (<ton@us.ibm.com>), IBM
-
-Travis Tripp (<travis.tripp@hp.com>), HP
-
-Vahid Hashemian (<vahidhashemian@us.ibm.com>), IBM
-
-Wayne Witzel (<wayne.witzel@canonical.com>), Canonical
-
-Yaron Parasol (<yaronpa@gigaspaces.com>), Gigaspaces
+- Adam Souzis 
+- Alex Vul 
+- Anatoly Katzman 
+- Arturo Martin De Nicolas 
+- Avi Vachnis 
+- Claude Noshpitz 
+- Derek Palma 
+- Dmytro Gassanov 
+- Frank Leymann 
+- Gábor Marton 
+- Gerd Breiter 
+- Hemal Surti 
+- Ifat Afek 
+- Idan Moyal 
+- Jacques Durand 
+- Jin Qin 
+- Jeremy Hess 
+- John Crandall
+- Juergen Meynert 
+- Kapil Thangavelu 
+- Karsten Beins 
+- Kevin Wilson 
+- Krishna Raman 
+- Luc Boutier 
+- Luca Gioppo 
+- Matej Artač 
+- Matt Rutkowski 
+- Moshe Elisha 
+- Nate Finch 
+- Nikunj Nemani 
+- Philippe Merle 
+- Priya TG 
+- Richard Probst 
+- Sahdev Zala 
+- Shitao Li 
+- Simeon Monov 
+- Sivan Barzily 
+- Sridhar Ramaswamy 
+- Stephane Maes 
+- Steve Baillargeon 
+- Thinh Nguyenphu 
+- Thomas Spatzier 
+- Ton Ngo 
+- Travis Tripp 
+- Vahid Hashemian 
+- Wayne Witzel 
+- Yaron Parasol 
 
 -------
 
@@ -11077,691 +11037,16 @@ Yaron Parasol (<yaronpa@gigaspaces.com>), Gigaspaces
 
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |
-| specname-v1.0-wd01 | yyyy-mm-dd | Editor Name | Initial working draft |
-
-> The following table needs to be formatted according to the above
-> guidelines.
-
-<table>
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 13%" />
-<col style="width: 14%" />
-<col style="width: 56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Revision</strong></th>
-<th><strong>Date</strong></th>
-<th><strong>Editor</strong></th>
-<th><strong>Changes Made</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>WD01, Rev01</td>
-<td>2019-04-01</td>
-<td>Chris Lauwers</td>
-<td>Initial WD01, Revision 01 baseline for TOSCA v2.0</td>
-</tr>
-<tr class="even">
-<td>WD01, Rev02</td>
-<td>2019-04-22</td>
-<td>Chris Lauwers</td>
-<td>Split of introductory chapters into the <em>Introduction to TOSCA
-Version 2.0</em> document.</td>
-</tr>
-<tr class="odd">
-<td>WD01, Rev03</td>
-<td>2019-05-08</td>
-<td>Calin Curescu</td>
-<td>Incorporate fixes from latest v1.3 specification</td>
-</tr>
-<tr class="even">
-<td>WD01, Rev04</td>
-<td>2019-05-10</td>
-<td>Chris Lauwers</td>
-<td>Fix syntax of schema constraint examples (Sections 5.3.2 and
-5.3.4)</td>
-</tr>
-<tr class="odd">
-<td>WD01, Rev05</td>
-<td>2019-08-30</td>
-<td>Chris Lauwers</td>
-<td>Cleanup formatting. No content changes.</td>
-</tr>
-<tr class="even">
-<td>WD01, Rev06</td>
-<td>2019-08-30</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Remove 3.6.20.3 since it is no longer relevant.</p></li>
-<li><p>Separate out new Operation Assignment section 3.8.3 from the
-original Operation Definition section 3.6.17</p></li>
-<li><p>Separate out new Notification Assignment section 3.8.4 from the
-original Notification Definition section 3.6.19</p></li>
-<li><p>Separate out new Interface Assignment section 3.8.5 from the
-original Interface Definition section 3.6.20</p></li>
-<li><p>Update the Interface Type definitions in section 5.8 to show the
-(now mandatory) ‘operations’ keyname.</p></li>
-<li><p>Remove erroneous interface definition in tosca.groups.Root type
-(section 5.10.1)</p></li>
-<li><p>Added ‘description’ keyname to Requirement definition (section
-3.7.3)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD01, Rev07</td>
-<td>2019-09-08</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Added the “value” keyname to property definition (Section 3.6.10
-Property Definition),</p></li>
-<li><p>Made the difference between outgoing and incoming parameters in
-the parameter definition (Section 3.6.14 Parameter definition)</p></li>
-<li><p>Added the “mapping” keyname to the parameter definition, for
-mapping the incoming parameter to an attribute (Section 3.6.14 Parameter
-definition)</p></li>
-<li><p>Changed the wrong usage of “property definitions” and “property
-assignments” instead of “parameter definitions” and “parameter
-assignments” throughout the document. For example, a larger impact can
-be seen in the definition of the get_input function (Section 4.4.1
-get_input).</p></li>
-<li><p>Changed Section “3.6.16 Operation implementation definition” to
-include notification implementation definition (Section 3.6.16 Operation
-implementation definition and notification implementation
-definition).</p></li>
-<li><p>Deleted Section “3.6.18 Notification implementation definition”
-since it was redundant and all relevant information has been transferred
-to Section “3.6.16 Operation implementation definition and notification
-implementation definition”. The “Notification definition” section
-becomes the new Section 3.6.18.</p></li>
-<li><p>Added operation assignment rules to the operation assignment
-section (Section 3.8.3 Operation Assignment).</p></li>
-<li><p>Added notification assignment rules to the notification
-assignment section (Section 3.8.4 Notification assignment).</p></li>
-<li><p>Added interface assignment rules to the interface assignment
-section (Section 3.8.5 Interface assignment).</p></li>
-<li><p>Changed “interface definitions” with “interface assignments” in
-the node template specification, given that we have split interface
-assignments from interface definitions (Section 3.8.6 Node
-Template)</p></li>
-<li><p>Changed “interface definitions” with “interface assignments” in
-the relationship template specification, given that we have split
-interface assignments from interface definitions (Section 3.8.7
-relationship template)</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD01, Rev08</td>
-<td>2019-09-30</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Fix error in TimeInterval example (Section 5.3.7.3.1)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD01, Rev09</td>
-<td>2020-02-20</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Move normative type definitions to the “Intro to TOSCA”
-document</p></li>
-<li><p>Move non-normative type definitions to the “Intro to TOSCA”
-document</p></li>
-<li><p>Move “CSAR” specification from the “intro to TOSCA” document into
-this document</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD01, Rev10</td>
-<td>2020-04-15</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Reorganized sections into a new layout (starting with the main
-concepts):</p></li>
-<li><p>3.5 -&gt; 3.1; 3.10 -&gt; 3.2.1; 3.1 -&gt; 3.2.2.1; 3.2 -&gt;
-3.2.2.2; 3.6.8 -&gt; 3.2.3.1; 3.6.6 -&gt; 3.2.3.2; 3.6.1 -&gt; 3.2.4.1;
-3.6.2 -&gt; 3.2.4.2; 3.7.1 -&gt; 3.2.5.2; 3.9 -&gt; 3.2.6; 3.7.9 -&gt;
-3.3.1; 3.8.6 -&gt; 3.3.2; 3.7.10 -&gt; 3.3.3; 3.8.7 -&gt; 3.3.4; 3.7.7
--&gt; 3.3.5.1; 3.7.2 -&gt; 3.3.5.2; 3.8.1 -&gt; 3.3.5.3; 3.7.8 -&gt;
-3.3.5.4; 3.7.3 -&gt; 3.3.5.5; 3.8.2 -&gt; 3.3.5.6; 3.6.5 -&gt; 3.3.5.7;
-3.6.4 -&gt; 3.3.5.8; 3.7.5 -&gt; 3.3.6.1; 3.6.19 -&gt; 3.3.6.2; 3.8.5
--&gt; 3.3.6.3; 3.6.17 -&gt; 3.3.6.4; 3.8.3 -&gt; 3.3.6.5; 3.6.18 -&gt;
-3.3.6.6; 3.8.4 -&gt; 3.3.6.7; 3.6.16 -&gt; 3.3.6.8; 3.7.4 -&gt; 3.3.7.1;
-3.6.7 -&gt; 3.3.7.2; 3.3 -&gt; 3.4.1; 3.7.6 -&gt; 3.4.2; 3.6.9 -&gt;
-3.4.3; 3.6.3 -&gt; 3.4.4; 3.6.10 -&gt; 3.4.5; 3.6.11 -&gt; 3.4.6; 3.6.12
--&gt; 3.4.7; 3.6.13 -&gt; 3.4.8; 3.6.14 -&gt; 3.4.9; 3.8.16 -&gt; 3.5.1;
-3.8.11 -&gt; 3.5.2; 3.8.12 -&gt; 3.5.3; 3.8.13 -&gt; 3.5.4; 3.8.14 -&gt;
-3.5.5; 3.8.15 -&gt; 3.5.6; 3.7.11 -&gt; 3.6.1; 3.8.8 -&gt; 3.6.2; 3.7.12
--&gt; 3.6.3; 3.8.9 -&gt; 3.6.4; 3.6.21 -&gt; 3.6.5; 3.6.20 -&gt; 3.6.6;
-3.6.24 -&gt; 3.6.7; 3.6.23 -&gt; 3.6.8; 3.6.22 -&gt; 3.6.9; 3.8.10 -&gt;
-3.7.1; 3.6.25 -&gt; 3.7.2; 3.6.26 -&gt; 3.7.3</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD02, Rev01</td>
-<td>2020-04-23</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Added Section 3.1.2 Modeling definitions and reuse</p></li>
-<li><p>Added Section 3.1.3 Goal of the derivation and refinement
-rules</p></li>
-<li><p>Added Section 3.2.5 Type definitions</p></li>
-<li><p>Added Section 3.2.5.1 General derivation and refinement
-rules</p></li>
-<li><p>Reworked and simplified Section 3.2.5.2 as describing common
-keynames that apply to all TOSCA entity types. Added derivation rules
-for the common keynames in TOSCA entity types (Section 3.2.5.2.3
-Derivation rules).</p></li>
-<li><p>Added derivation rules for the following TOSCA entity types:
-node, relationship, capability, interface, and data types in their
-specific sections. The new sub-sections are named “Derivation
-rules”.</p></li>
-<li><p>Added refinement rules for entitiy definitions contained in types
-undergoing derivations. Refinement rules for the following entity
-definitions: capability, requirement, interface, operation,
-notification, schema, property, attribute, and parameter definitions
-have been added in their specific sections. The new sub-sections are
-named “Refinement rules”.</p></li>
-<li><p>Explained that definitions for the properties, attributes and
-valid_source_types in a capability definition are refinements of the
-definitions in the capability type (Section 3.3.5.2. Capability
-definition).</p></li>
-<li><p>Changed the occurrences keyname in a capability assignment from a
-range of integer to an integer, to correct the wrong specification in
-TOSCA v1.3 (Section 3.3.5.3. Capability assignment).</p></li>
-<li><p>Added the possibility to have provide a symbolic name of a
-Capability definition within a target node type that can fulfill the
-requirement in the Requirement definition (in addition to the Capability
-Type) (Section 3.3.5.5. Requirement definition).</p></li>
-<li><p>Added the possibility to provide a node_filter also in the
-Requirement definition (this node filter is applied in addition to the
-node filter defined in the Requirement assignment) (Section 3.3.5.5.
-Requirement definition).</p></li>
-<li><p>Explained that the specification supports providing several
-requirement assignments with the same symbolic name that represent
-subsets of the occurrences specified in the Requirement definition
-(Section 3.3.5.6. Requirement assignment).</p></li>
-<li><p>Changed the occurrences keyname in a requirement assignment from
-a range of integer to an integer, to correct the wrong specification in
-TOSCA v1.3 (Section 3.3.5.6. Requirement assignment).</p></li>
-<li><p>Explained that property definitions may not be added to data
-types derived_from TOSCA primitive types (Section 3.4.2 Data
-Type).</p></li>
-<li><p>Added the rule for a map key definition that its type must be
-originally derived from string. This is due to fact that in many
-YAML/TOSCA parsers it is hard to process keys that are not strings, and
-the added benefit of non-string keys is minimal (Section 3.4.3 Schema
-definition).</p></li>
-<li><p>Explained that the default value is irrelevant for properties and
-parameters that are not required (i.e. where the keyname required is
-“false”) as they will stay undefined (Section 3.4.5 Property definition
-and Section 3.4.9 Parameter definition).</p></li>
-<li><p>A value definition “fixes” the property, that is it cannot be
-further refined (in a type) or even assigned in (in a template) (Section
-3.4.5 Property definition and Section 3.4.6 Property
-assignment).</p></li>
-<li><p>Added metadata keyname to attribute definitions (Section 3.4.7
-Attribute definition).</p></li>
-<li><p>Explained that parameter can be of two different kinds: outgoing
-parameters and incoming parameters, and this depends on the context they
-are defined in, and steers if these parameters will have a value
-assigned or will have a mapping to an attribute assigned (Section 3.4.9
-Parameter definition).</p></li>
-<li><p>A value or mapping definition “fixes” the parameter, that is it
-cannot be further refined (in a type) or even assigned in (in a
-template) (Section 3.4.9 Parameter definition and 3.4.10 Parameter
-assignment).</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD02, Rev02</td>
-<td>2020-05-07</td>
-<td></td>
-<td><ul>
-<li><p>Added derivation rules for the following TOSCA entity types:
-artifact, group, and policy types) in their specific sections; the new
-sub-sections are named “Derivation rules”.</p></li>
-<li><p>Added refinement rules for Artifact definitions (contained in
-node types undergoing derivations). The new sub-section is named
-“Refinement rules”.</p></li>
-<li><p>Added a single-line grammar for defining a value for a property
-to simplify the value definition for a property (Section 3.4.5 Property
-definition).</p></li>
-<li><p>Added the constraints keyname to attribute definitions (Section
-3.4.7 Attribute definition).</p></li>
-<li><p>Added a single-line grammar for parameter definitions when only a
-parameter to attribute mapping needs to be provided to an incoming
-parameter (Section 3.4.9 Parameter definition).</p></li>
-<li><p>Added explanation that triggers defined in the policy definition
-are applied in addition to the triggers defined in the policy type
-(Section 3.6.4 Policy definition).</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD02, Rev03</td>
-<td></td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Incorporate introductory content from the TOSCA v1.0 document
-with the goal of removing references to the XML version of the standard
-and making this a stand-alone document.</p></li>
-<li><p>Explicitly stated that the default keyname SHALL NOT be defined
-for properties and parameters that are not required (i.e. where the
-keyname required is “false”) as they will stay undefined (Section 4.4.5
-Property definition and Section 4.4.9 Parameter definition).</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD02, Rev04</td>
-<td>2020-06-09</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Eliminated some comments that were addressed already.</p></li>
-<li><p>Eliminated the namespace_uri that was already deprecated in TOSCA
-v1.3</p></li>
-<li><p>Eliminated the credential keyname from the repository definition
-(Section 4.2.3.2 Repository definition) since it was not very useful in
-the context and also to eliminate the dependency on an external type
-simple (Credential – in the simple profile)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD02, Rev05</td>
-<td>2020-06-18</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Eliminated the schedule keyname in trigger definitions, it was
-not relevant and used a complex type from the simple profile (Section
-4.6.5 Trigger definition).</p></li>
-<li><p>Deleted the operation_host keyword from the operation
-implementation definition since it was connected to a hostedOn
-relationship type, and this is a type feature and not a grammar feature
-(Section 4.3.6.8 Operation and notification implementation
-definition).</p></li>
-<li><p>Eliminated the HOST from the reserved function keywords since it
-was connected to a hostedOn relationship type, and this is a type
-feature and not a grammar feature (Section 5 TOSCA functions).</p></li>
-<li><p>Eliminated some comments that were addressed already.</p></li>
-<li><p>Changed the type of description to string in the keyname tables
-throughout the specification.</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD02, Rev06</td>
-<td>2020-06-20</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Update the TOSCA overview diagram to include workflows and
-policies (Section 3.1)</p></li>
-<li><p>Update the diagram that explains requirements and capabilities
-(Section 3.4)</p></li>
-<li><p>Update the diagram that explains substitution (Section
-3.5)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD02, Rev07</td>
-<td>2020-06-22</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Edit the “TOSCA core concepts” section to reflect current status
-of TOSCA (Section 3)</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD02, Rev08</td>
-<td>2020-06-24</td>
-<td>Thinh Nguyenphu</td>
-<td><ul>
-<li><p>Provide additional detail about the required ZIP format and
-standards in the CSAR definition (Section 6.1)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD03, Rev01</td>
-<td>2020-07-22</td>
-<td>Calin Curescu Chris Lauwers</td>
-<td><ul>
-<li><p>Remove numerous comments that have been resolved since they were
-first introduced.</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD03, Rev02</td>
-<td>2020-07-26</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Mark keywords as “mandatory” rather than “required” (to avoid
-confusion with the “required” keyword in property definitions</p></li>
-<li><p>Introduce “conditional” as an alternative to “yes” or “no” in the
-“mandatory” columns of the grammar definition.</p></li>
-<li><p>Remove “Constraints” columns in grammar definitions.</p></li>
-<li><p>Clarify that entry_schema is mandatory for collection
-types.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD03, Rev03</td>
-<td>2020-07-28</td>
-<td>Tal Liron</td>
-<td><ul>
-<li><p>Introduce clear specification of TOSCA built-in types (Sections
-4.4.1, 4.4.2, and 4.4.3)</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD03, Rev04</td>
-<td>2020-08-03</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Fix typos</p></li>
-<li><p>Minor formatting fixes</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD03, Rev05</td>
-<td>2020-08-18</td>
-<td>Tal Liron Chris Lauwers</td>
-<td><ul>
-<li><p>Add description of timestamp type</p></li>
-<li><p>Move scalar-unit types into the Special Types section
-(4.4.2)</p></li>
-<li><p>Remove multiples of “bytes per second” from scalar-unit.bitrate
-to make all scalar units case insensitive</p></li>
-<li><p>Remove references to the <strong>tosca</strong> namespace prefix
-from the built-in type definitions.</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD03, Rev06</td>
-<td>2020-08-31</td>
-<td>Tal Liron Chris lauwers</td>
-<td><ul>
-<li><p>Introduce the notion of “profiles”</p></li>
-<li><p>Support “import by profile name”</p></li>
-<li><p>Simplify “namespaces”</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD03, Rev07</td>
-<td>2020-09-06</td>
-<td>Chris Lauwers Tal Liron</td>
-<td><ul>
-<li><p>Remove obsolete prose about namespace URIs (4.2)</p></li>
-<li><p>Update the section about “import processing rules”
-(4.2.3.1)</p></li>
-<li><p>Introduce new prose about support for namespaces
-(4.2.3.2)</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD03, Rev08</td>
-<td>2020-09-07</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Clarify discussion of custom keynames in CSAR (6.2.1)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD03, Rev09</td>
-<td>2020-10-26</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Additional discussion of TOSCA Profiles (section 4.2.2)</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD03, Rev10</td>
-<td>2020-10-27</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Clarified throughout the specification that the key_schema
-keyname for maps has the default value as “string”, and that the
-entry_schema keyname definition is mandatory for lists and maps
-(sections 4.4.5 Schema definition, 4.4.7 Property definition, 4.4.9
-Attribute definition, 4.4.11 Parameter definition, 4.4.4. Data
-type)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD04, Rev01</td>
-<td>2020-11-19</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>New OASIS Logo</p></li>
-<li><p>Correct broken cross reference (Section 4.3.5.8)</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD04, Rev02</td>
-<td>2021-01-25</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Incorporate comments provided as part of external review by Paul
-Jordan (BT) and Mike Rehder (Amdocs)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD04, Rev03</td>
-<td>2021-05-03</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Introduce new Chapter 4 that describes Operational
-Model.</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD04, Rev04</td>
-<td>2021-06-28</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Slight reorganization of the Operation Model chapter (Chapter
-4)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD04, Rev05</td>
-<td>2022-02-15</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Modified the capability definition (Section 5.3.5.2 ) and
-assignment (Section 5.3.5.3) removing the occurrences keyname We also
-added the scope of relationships to the capability assignment (via
-directives).</p></li>
-<li><p>Modified the requirement definition (Section 5.3.5.5 ) and
-assignment (Section 5.3.5.6) replacing the occurrences keyname with the
-count_range keyname in the requirements definition, and how the
-assignment must respect the definition and how an automated assignment
-is assumed to exist if no assignment is specified. The keyname count
-replaces the keyname occurrences in the assignment to remove any
-confusion between their slightly different semantics. We also added the
-scope of relationships to the requirement assignment (via directives).
-Finally, we added the optional keyname for a requirement assignment to
-designate if the assignment is optional or not.</p></li>
-<li><p>We also added the possibility to specify capacity allocation in a
-requirement assignment (Section 5.3.5.6) where the target capability
-properties can act as capacity.</p></li>
-<li><p>Made the relationship definition conditional, it must be present
-either in the requirement definition (Section 5.3.5.5 ) or in the
-requirement assignment (Section 5.3.5.5 ).</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD04, Rev06</td>
-<td>2022-06-08</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Increased the expressivity of accessing properties and attributes
-in the representation graph by improving the navigation expression in
-the get_property and get_attribute functions. The representation graph
-traversal is handled via a new definition (tosca path), that is common
-to both and is described in section 6.4.2.2.1 The simplified TOSCA_PATH
-definition in BNF format.</p></li>
-<li><p>Added multi-step traversal of the representation graph</p></li>
-<li><p>Added the backward traversal from capabilities to incoming
-relationships</p></li>
-<li><p>Added the target capability of a relationship as a possible
-traversal</p></li>
-<li><p>Added the specification of indexes and allowing traversal of
-multi-count requirements</p></li>
-<li><p>Examples for get_property have been corrected and
-extended.</p></li>
-<li><p>Removed the deprecated get_operation_output function</p></li>
-<li><p>In relationship types (section 5.3.3) following keynames
-changed/added:</p></li>
-<li><p>valid_capability_types replaces valid_target_types</p></li>
-<li><p>valid_target_node_types - new</p></li>
-<li><p>valid_source_node_types - new</p></li>
-<li><p>In capability type (section 5.3.5.1) and definition (section
-5.3.5.2) following keynames changed/added:</p></li>
-<li><p>valid_source_node_types - replaces valid_source_types</p></li>
-<li><p>valid_relationship_types - new</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD05, Rev01</td>
-<td>2022-06-14</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Fix formatting errors and typos.</p></li>
-<li><p>Remove Section 6.1 about reserved function keywords (replaced
-with TOSCA Path discussion)</p></li>
-<li><p>Remove Section 6.2 about reserved environment variables.</p></li>
-<li><p>Rename topology_template keyword to service_template</p></li>
-<li><p>Remove reference to TOSCA v1.0 specification (Section
-5.2.6.2.8)</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD05, Rev02</td>
-<td>2022-06-14</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Remove ‘get_nodes_of_type’ function (Section 6.4)</p></li>
-<li><p>Remove section about ‘Context-based entity names’ (Section
-6.6)</p></li>
-<li><p>Remove sections about “Metadata keynames” (Section 5.2.1.1.1,
-Section 5.2.1.3.4, Section 5.2.1.3.5, Section 5.2.1.3.6)</p></li>
-<li><p>Document new metadata grammar (Section 5.2.1.3.3)</p></li>
-<li><p>Document short notation for schema definitions (Section
-5.4.5.2)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD05, Rev03</td>
-<td>2022-09-28</td>
-<td><p>Chris Lauwers</p>
-<p>Calin Curescu</p></td>
-<td><ul>
-<li><p>Change default count range to [0, UNBOUNDED] (Section
-5.3.5.5)</p></li>
-<li><p>Clarify semantics of profile keynames in imported TOSCA files
-(Section 5.2.2.2)</p></li>
-<li><p>Add section about function syntax (Section 6.1)</p></li>
-<li><p>Add section about defining user-defined custom functions (Section
-6.6)</p></li>
-<li><p>Update all intrinsic functions with the new dollar sign
-syntax.</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD05, Rev04</td>
-<td>2022-11-21</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Remove Normative Values (Section 5.8). Removal of the Simple
-Profile has made this section obsolete.</p></li>
-<li><p>Add Condition functions (Section 6.5)</p></li>
-<li><p>Update policy trigger syntax to use Boolean expressions.</p></li>
-<li><p>Update workflow precondition syntax to use Boolean
-expressions</p></li>
-<li><p>Move sections about functions and function definitions into the
-TOSCA Definitions chapter</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD05, Rev05</td>
-<td>2022-11-21</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Introduce new syntax for defining validation clauses on data
-types and property definitions.</p></li>
-<li><p>Update node filter syntax to use Boolean expressions.</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD05, Rev06</td>
-<td>2022-11-28</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Validation syntax examples.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD05, Rev07</td>
-<td>2022-12-14</td>
-<td>Calin Curescu</td>
-<td><ul>
-<li><p>Added the short string-value form for functions without arguments
-and changed section Function syntax (Section 5.4.14)
-accordingly.</p></li>
-<li><p>Added all the existing comparison operators as Boolean functions,
-the new Boolean logic functions and the new string, list and map
-membership Boolean functions (Section 6.2) and set manipulation (section
-6.4) and arithmetic functions (Section 6.5).</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD05, Rev08</td>
-<td>2023-01-17</td>
-<td><p>Chris Lauwers</p>
-<p>Calin Curescu</p></td>
-<td><ul>
-<li><p>Cleanup for correctness and consistency.</p></li>
-<li><p>Additional built-in functions (Section 6)</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD05, Rev09</td>
-<td>2023-01-18</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Document the ‘value’ function (Section 6.1.5)</p></li>
-</ul></td>
-</tr>
-<tr class="even">
-<td>WD06, Rev01</td>
-<td>2023-02-19</td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Fix document problems found when publishing CSD05.</p></li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td>WD06, Rev02</td>
-<td></td>
-<td>Chris Lauwers</td>
-<td><ul>
-<li><p>Remove support for the “range” built-in type (Section
-5.4.2)</p></li>
-</ul></td>
-</tr>
-</tbody>
-</table>
+|TOSCA-v2.0-csd01|23 April 2020|Chris Lauwers and Calin Curescu|Remove Simple Profile type definitions from the TOSCA specification.|
+|TOSCA-v2.0-csd02|25 June 2020|Chris Lauwers and Calin Curescu|Introduce refinement and augmentation rules.|
+|TOSCA-v2.0-csd03|28 October 2020|Chris Lauwers and Calin Curescu|Introduce support for user-defined profiles. Formalize support for TOSCA namespaces.|
+|TOSCA-v2.0-csd04|16 June 2022|Chris Lauwers and Calin Curescu|Introduce *TOSCA Operational Model*. Formalize TOSCA Path syntax.|
+|TOSCA-v2.0-csd05|19 January 2023|Chris Lauwers and Calin Curescu|Formalize function syntax and introduce support for user-defined functions. Harmonize constraint syntax, filter syntax, and condition syntax using boolean functions.|
+|TOSCA-v2.0-csd06|12 July 2024|Chris Lauwers and Calin Curescu|Extend operational model with support for updating and upgrading running services. Enhance and formalize *Substitution Mapping* syntax.|
 
 -------
 
-# Appendix E. Example Appendix with subsections
-
-## E.1 Subsection title
-
-### E.1.1 Sub-subsection
-
--------
-
-# Appendix F. Notices
+# Appendix E. Notices
 
 <!-- Required section. Do not modify. -->
 
