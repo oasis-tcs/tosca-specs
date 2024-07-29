@@ -1389,23 +1389,7 @@ where `<anchor_block>` defines a set of reusable YAML definitions (the
 `<anchor_definitions>`) for which `<anchor>` can be used as an alias
 elsewhere in the document.
 
-The following example shows DSL definitions for common image property
-assignments:
-<!----
-{"id": "236", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:18:00Z", "comment": "There should also be an example of how to use the macro once defined.", "target": "Example"}-->
-```
-dsl_definitions:
-    ubuntu_image_props: &ubuntu_image_props
-      architecture: x86_64
-      type: linux
-      distribution: ubuntu
-      os_version: '14.04'
-    redhat_image_props: &redhat_image_props
-      architecture: x86_64
-      type: linux
-      distribution: rhel
-      os_version: '6.6'
-```
+An example of the creation and subsequent use of a DSL defintion is shown in the section on Scalar type.s.
 
 ## 6.4 Type Definitions
 
