@@ -95,8 +95,6 @@ For complete copyright information please see the full Notices section in an App
 
 # Table of Contents
 
-> Provide later
-[[TOC will be inserted here]]
 
 -------
 
@@ -141,7 +139,6 @@ TOSCA 1.3. In particular:
      notifications about state changes or errors.
 4. TOSCA v2.0 introduces a new TOSCA Path syntax that allows a defined
    traversal of an arbitary graph of nodes and relationships to an
-   attribute or property.
 5. TOSCA v2.0 significantly enhances support for functions. It
    formalizes function syntax, it extends the set of built-in
    functions, and it introduces support for user-defined custom
@@ -239,7 +236,7 @@ of the system. To make matters worse, these tools often use
 incompatible interfaces or data schemas, resulting in integration
 nightmares. As the number of components grows—because the scale of the
 system increases and disaggregation becomes the norm—so will the
-number of required management tools. 
+number of required management tools.
 
 Management of such systems can be greatly simplified if the creation
 and lifecycle management of application, infrastructure, and network
@@ -292,7 +289,7 @@ cannot be fully automated.
 
 TOSCA models systems as graphs, where the vertices represent the
 components of the system and the edges represents relationships,
-dependencies, and other interactions between these components. 
+dependencies, and other interactions between these components.
 
 The use of graphs enables *declarative* orchestration, where system
 designers can simply create descriptions ("models") of their systems,
@@ -302,7 +299,7 @@ described. The use of graphs enables this as follows:
 
 - Relationships in a TOSCA graph encode dependencies that allow an
   orchestrator to automatically determine the *sequencing* between the
-  managment operations on invoked on various components in the system,
+  management operations on invoked on various components in the system,
   thereby avoiding the need for human-defined workflows. Implementing
   lifecycle or other management operations on the service can be
   achieved by traversing the graph.
@@ -334,7 +331,7 @@ allocation, and system integration.
 
 TOSCA's modularity features allow some service design decisions to be
 made by an orchestrator at deployment time rather than by a service
-designer at service design time. 
+designer at service design time.
 TOSCA also allows for the definition of abstract components that hide
 technology and vendor-specific implementation details. The choice of
 how to *implement* abstract components can be left to the orchestrator
@@ -606,19 +603,7 @@ server node template to the database node template with the
 meaning *depends on*, and from both the application and DBMS node templates to the
 compute node template with meaning *deployed on*.
 
-<!----
-{"id": "95", "author": "Calin Curescu", "date": "2020-06-22T17:58:00Z", "comment": "Will this be understood correctly, since\nthis is part of the node requirement and not relationship template as\nsuch.", "target": "Node templates may include one or more\n<span class=\"comment-start\" id=\"96\" author=\"Chris Lauwers\"\ndate=\"2021-01-18T18:20:00Z\">Mike Rehder suggested to use the general\nterm \u201crelations\u201d to avoid reference to \u201crelationship templates\u201d or\ntypes.</span>*relationships* "}-->
-
-<!----
-{"id": "97", "author": "Michael Rehder", "date": "2020-12-15T08:49:00Z", "comment": "New term! It\u2019s\nconfusing to have \u201cservice template\u201d and \u201cService Topology Graph\u201d and\n\u201cTopology Template\u201d.", "target": "service topology\ngraph"}-->
-
-<!----
-{"id": "98", "author": "Chris Lauwers", "date": "2021-01-18T18:17:00Z", "comment": "Should we introduce \u201cservice topology graph\u201d\nwhen what we mean is really the \u201cinstance\nmodel\u201d.", "target": "The"}-->
-
 ## 3.2 Requirements and Capabilities
-
-<!----
-{"id": "107", "author": "Michael Rehder", "date": "2020-12-15T09:11:00Z", "comment": "Confusing \u2013 \u201cservice topology\u201d is a new\nterm. It\u2019s a \u201ctopology template\u201d but not all \u201cservice template\u201d are a\n\u201ctopology template\u201d.", "target": "service topology within a single service\ntemplate"}-->
 
 We discussed earlier how relationship templates are used to link node
 templates together into a service topology graph. However, it may not
@@ -683,12 +668,7 @@ for defining requirements and capabilities:
 
 ![Requirements and Capabilities](images/requirements_and_capabilities.png)
 
-<!----
-{"id": "108", "author": "Michael Rehder", "date": "2020-12-15T16:33:00Z", "comment": "There should be some\ndiscussion about this issue \u2013 how are the relations defined in the\ntopology template related to the relations of the substituted node\ntype?", "target": ""}-->
-
 ## 3.3 Decomposition of Node Representations
-<!----
-{"id": "114", "author": "Michael Rehder", "date": "2020-12-15T16:17:00Z", "comment": "Another\nplace where I find the use of the term \u201cservice template\u201d overly\nconfusing. It should say \u201cTopology Template\u201d as that is the construct in\nthe end that is supporting the substitution.  \nSection 4.5.1 says \u201ctopology template\u201d so I think this change is in line\nwith the practical definitions in the document.", "target": "service template\n"}-->
 
 TOSCA provides support for decomposing service components using its
 **substitution mapping** feature. This feature allows for the
@@ -864,7 +844,7 @@ use TOSCA only for service design and delegate orchestration and
 ongoing lifecycle management functionality to external (non-TOSCA)
 orchestrators. Other implementations may decide to use TOSCA for all
 three phases of the service lifecycle. However, a complete
-architecture must anticipate all three lifecycle phases and must clearly distinguish between the four kinds of TOSCA entities defined in Section 2.4. 
+architecture must anticipate all three lifecycle phases and must clearly distinguish between the four kinds of TOSCA entities defined in Section 2.4.
 
 ## 4.1 TOSCA Functional Architecture
 
@@ -938,7 +918,7 @@ templates. It performs the following functions:
 
    - Some relationships can be created directly based on target node
      templates specified in node template requirements.
-   - Other relationships are created by fulfilling dangling requirements. 
+   - Other relationships are created by fulfilling dangling requirements
      - If a requirement uses a node_filter that refers to uninitialized properties
        or attributes, then the fulfillment of this requirement is postponed until
        all referred properties or attributes are initialized.
@@ -969,7 +949,7 @@ An orchestrator performs the following actions:
   implementations
 - (Continuously) updates node representation attribute values (error if
   they do not adhere to TOSCA type validation clauses or property
-  definition validation clauses) 
+  definition validation clauses)
 - (Continuously) reactivates the resolver: outputs may change
   attribute values, which can require refulfillment of dangling
   requirements or resubsitution of substituted nodes.
@@ -1064,9 +1044,6 @@ introduces grammar for defining TOSCA types and templates as defined
 in [Chapter 2](#23-tosca-core-concepts), it introduces the concepts of
 entity definitions and entity assignments, and presents rules for type
 derivation and entity refinement.
-
-> Explain separation of concerns and different roles. Refer to email
-> from Peter.
 
 ### 5.1.1 Type Definitions and Entity Definitions
 
@@ -1277,12 +1254,6 @@ description: >
 ```
 
 # 6 TOSCA File Definition
-<!----
-{"id": "172", "author": "Calin Curescu", "date": "2020-04-20T18:49:00Z", "comment": "TBD. Here comes some intro and generic description of the different specification blocks that will build the following sections.", "target": "TOSCA Service"}-->
-<!----
-{"id": "173", "author": "Michael Rehder", "date": "2020-12-15T08:38:00Z", "comment": "This isn\u2019t true \u2013 if a \u201cservice template\u201d\ncan contain just supporting parts like type definitions then it won\u2019t\ncontain a \u201cTOSCA Service\u201d.  \nIn the end, I think that the term \u201cservice template\u201d is very confusing\nas it is never used as a \u201ctemplate\u201d, as an object. It\u2019s a collection of\ndefinitions, some of which are supporting and one of which is the\nworking code definition for the service to be realized.  \n\u201cService Definition\u201d is a more practical term.", "target": "A TOSCA Service is\nspecified by a TOSCA Service <span class=\"comment-start\" id=\"174\"\nauthor=\"Chris Lauwers\" date=\"2022-12-05T18:44:00Z\">We haven't defined\nservice template yet.</span>Template"}-->
-<!----
-{"id": "178", "author": "Chris Lauwers", "date": "2022-06-22T14:26:00Z", "comment": "Update to reflect new naming", "target": "TOSCA file definition"}-->
 
 The content in this section is normative unless otherwise labeled except:
   - the examples
@@ -1333,9 +1304,6 @@ The following rules apply:
   definitions, or other import statements and be imported for use in
   other TOSCA files. However, a TOSCA file that defines a `profile`
   MUST NOT define a `service_template`.
-
-<!----
-{"id": "194", "author": "Matt Rutkowski", "date": "2015-08-25T21:52:00Z", "comment": "**[TOSCA-246](../customXml/item1.xml): Comments captured**: Perhaps need an advanced concept to define \u201cfeatures\u201d that are not necessarily attached to a particular node. (like things you might include in a manifest). Like the requirement for a global time sync. How do we reference that feature, where is that feature attached to (some node?). perhaps add a new keyword like \u201ccloud\u201d that can hold all these Features that have no immediate Node to attach them to. Perhaps a syntax convention, where we might just list the names of the features (in some precedent order (sequence). Need to answer: -Who requires, it who fulfills it and how do u maintain the relationship? Luc: Environmental requirements. e.g., Python or something similar.", "target": "Notes"}-->
 
 The remainder of this chapter provides detailed descriptions of the
 keynames and associated grammars used in a TOSCA file definition.
@@ -1391,8 +1359,7 @@ elsewhere in the document.
 
 The following example shows DSL definitions for common image property
 assignments:
-<!----
-{"id": "236", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-05T11:18:00Z", "comment": "There should also be an example of how to use the macro once defined.", "target": "Example"}-->
+
 ```
 dsl_definitions:
     ubuntu_image_props: &ubuntu_image_props
@@ -1419,8 +1386,6 @@ the TOSCA file.
 In this section, we present the definitions of common keynames that
 are used by all TOSCA type definitions. Type-specific definitions for the
 different TOSCA type entities are presented further in the document:
-
-> Cross references need to be updated later
 
 - Node Type in Section 4.3.1 Node Type.
 - Relationship Type in Section 4.3.3 Relationship Type.
@@ -1498,9 +1463,6 @@ in their respective sections):
 
 - Already defined entities that have a type may be redefined to have a
   type derived from the original type.
-  
-<!----
-{"id": "427", "author": "Mike Rehder", "date": "2020-12-14T14:25:00Z", "comment": "New term \u201credefined\u201d. The sentence is\n  confusing \u2013 what is it trying to say? Is it saying that you can change\n  the type of a derived_from type (how?)?", "target": "redefined\n  "}-->
 
 - New validation clause is added to already defined
   keynames/entities (i.e. the defined validation clause does not
@@ -1510,14 +1472,8 @@ in their respective sections):
 - Some definitions must be totally flexible, so they will overwrite
   the definition in the parent type.
 
-<!----
-{"id": "428", "author": "Mike Rehder", "date": "2020-12-14T14:29:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201care treated as a new declaration and\u201d?", "target": "must be totally\n  flexible"}-->
-
 - Some definitions must not be changed at all once defined (i.e. they
   represent some sort of “signature” fundamental to the type).
-
-<!----
-{"id": "429", "author": "Mike Rehder", "date": "2020-12-14T14:28:00Z", "comment": "Why \u201cshould\u201d? Isn\u2019t\n  this \u201ccannot\u201d?", "target": "must "}-->
 
 During type derivation the common keynames in type definitions use the
 following rules:
@@ -1721,8 +1677,7 @@ policy_types:
   <policy type_defn_n>
 ```
 The following code snippet shows an example policy type definition:
-<!----
-{"id": "327", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:48:00Z", "comment": "There should be a second policy definition in the example or it is just a repeat of the policy type definition example", "target": "Example"}-->
+
 ```
 policy_types:
   mycompany.mytypes.myScalingPolicy:
@@ -1839,7 +1794,7 @@ templates. Entities defined in TOSCA profiles are used as follows:
 - Types defined in a TOSCA profile provide reusable building blocks
   on which services can be composed.
 - Artifacts defined in a TOSCA profile can provide
-  implementations for the TOSCA types defined in the profile. 
+  implementations for the TOSCA types defined in the profile.
 
 TOSCA implementations can organize supported profiles in a catalog to
 allow other service templates to import those profiles by profile name.
@@ -1917,8 +1872,6 @@ defines Virtualized Network Function Descriptors (VNFDs), Network
 Service Descriptors (NSDs) and a Physical Network Function Descriptors
 (PNFDs).
 
-> We should give a couple of additional examples.
-
 ### 6.7.3 Profile Versions
 
 TOSCA Profiles are likely to evolve over time and profile designers will
@@ -1928,11 +1881,6 @@ TOSCA Version 1 standard. It is expected that profile designers will use
 a version qualifier to distinguish between different versions of their
 profiles, and service template designers must use the proper string name
 to make sure they import the desired versions of these profiles.
-
-> Do we impose a structure on profile names that distinguishes the version
-> qualifier from the base profile name? If so, is there a specific
-> separator character or string (in which case the use of the separator
-> must be escaped somehow (or disallowed) in profile names.
 
 When multiple versions of the same profile exist, it is possibly that
 service templates could mix and match different versions of a profile in
@@ -2035,10 +1983,6 @@ The example in this section illustrates a general version compatibility
 issue that exists when different versions of the same profile are used
 in a TOSCA service.
 
-> A number of suggestions for these extensions are currently being
-> discussed. Grammar extensions will be included in this document one they
-> are agreed upon.
-
 ## 6.8 Imports and Namespaces
 
 Modern software projects typically use *modular designs* that divide
@@ -2059,8 +2003,6 @@ companies and organizations to define domain-specific types and/or
 describe their software applications for reuse in other TOSCA files.
 
 ### 6.8.1 Import Definitions
-<!----
-{"id": "350", "author": "Calin Curescu", "date": "2019-01-30T15:54:00Z", "comment": "It would be good to allow also the import of specific types (via their fully qualified names) and also entire namespaces (i.e. types from entire namespaces) from a/the catalogue. That is, in addition to importing from a file: Globally well-known Local catalog File", "target": "Import definition"}-->
 
 *Import definitions* are used within a TOSCA file to uniquely identify
 and locate other TOSCA files that have type, repository, and function
@@ -2077,11 +2019,6 @@ The value of the `imports` keyname consists of a list of import
 definitions that identify the TOSCA files to be imported.  The
 following is the list of recognized keynames for a TOSCA import
 definition:
-
-<!----
-{"id": "351", "author": "Chris Lauwers", "date": "2020-09-01T00:21:00Z", "comment": "I think it should be illegal to import a\nservice template that contains a topology\ntemplate.", "target": ""}-->
-<!----
-{"id": "352", "author": "Matt Rutkowski", "date": "2016-09-06T09:49:00Z", "comment": "Nodejs has NPM that uses the following to\nimport new package modules:  \nA package is:  \na) a folder containing a program described by a\n[package.json](numbering.xml) file  \nb) a gzipped tarball containing (a)  \nc) a url that resolves to (b)  \nd) a \\<name\\>@\\<version\\> that is published on the registry (see\n[npm-registry](styles.xml)) with (c)  \ne) a \\<name\\>@\\<tag\\> (see [npm-dist-tag](settings.xml)) that points to\n(d)  \nf) a \\<name\\> that has a \"latest\" tag satisfying (e)  \ng) a \\<git remote url\\> that resolves to (a)  \nwe may want to adopt something similar if TOSCA references service\ntemplate (packages) from a\ncatalog)", "target": "imported"}-->
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
@@ -2129,7 +2066,7 @@ imports:
   - <file_uri_1>
   - <file_uri_2>
 ```
-### 6.8.2 Import Processing Rules 
+### 6.8.2 Import Processing Rules
 
 TOSCA processors and tooling MUST handle import statements as follows:
 
@@ -2245,8 +2182,6 @@ imports:
   repository: my_repository
 ```
 ### 6.8.4 Namespaces
-<!----
-{"id": "373", "author": "Chris Lauwers", "date": "2020-09-01T00:19:00Z", "comment": "I recommend removing this entire section and rewriting any parts that are still relevant inside the \u201cimports\u201d section.", "target": "Namespace"}-->
 
 When importing TOSCA files or TOSCA profiles, there exists a
 possibility for name collision. For example, an imported file may
@@ -2823,7 +2758,7 @@ The following code snippet shows an example node type definition:
 ```yaml
 my_app_node_type:
   derived_from: SoftwareComponent
-  description: My company’s custom applicaton
+  description: My company’s custom application
   properties:
     my_app_password:
       type: string
@@ -2971,11 +2906,6 @@ as a result supports the common keynames listed in [Section
 6.4.1](#641-common-keynames-in-type-definitions). In addition, the
 relationship type definition has the following recognized keynames:
 
-<!----
-{"id": "520", "author": "Michael Rehder", "date": "2020-12-15T13:33:00Z", "comment": "I still think this is simply a Requirement Type \u2013 I can\u2019t see why it isn\u2019t and what advantage there is in calling it something else.", "target": "relationship type"}-->
-<!----
-{"id": "521", "author": "Michael Rehder", "date": "2020-12-15T12:12:00Z", "comment": "There is no\nrelationship type in a node template so why is this stated\nhere?", "target": "Node Templates"}-->
-
 |Keyname|Mandatory|Definition/Type|Description|
 | :---- | :------ | :---- | :------ |
 |properties|no|map of property definitions|An optional map of property definitions for the relationship type.|
@@ -3035,7 +2965,7 @@ have the following meaning:
   are not restricted at all (i.e., all node types are valid).
 
 - source_node_type_names: represents the optional list of valid source
-  node types for the relationship. Source node type names canbe
+  node types for the relationship. Source node type names can be
   qualified using a namespace prefix. If undefined, the valid types
   are not restricted at all (i.e., all node types are valid).
 
@@ -3078,9 +3008,6 @@ of a given type between nodes in an application or service.  A
 relationship template defines application-specific values for the
 properties, relationships, or interfaces defined by its relationship
 type.
-
-<!----
-{"id": "532", "author": "Michael Rehder", "date": "2020-12-15T13:23:00Z", "comment": "My understanding is that this is an\nalternative to relations defined within node templates.  \nIt\u2019s not clear why this option would be chosen over the node-template\noption.  \nIf both relations in node-templates and relationship templates are used,\nhow are they combined together?  \nOr is this not recommended?  \nI can imagine that combination rules would be very difficult to define\nbut if it is possible, it must be defined", "target": "A relationship template\nspecifies the occurrence of a manageable relationship between node\ntemplates as part of an application\u2019s topology model that is defined in\na TOSCA service template. A Relationship template is an instance of a\nspecified relationship type and can provide customized properties, or\noperations that complement and change the defaults provided by its\nrelationship type and its implementations."}-->
 
 TOSCA allows relationships between nodes to be defined *inline* using
 requirement assignments within node templates or *out-of-band* using
@@ -4319,10 +4246,6 @@ Please note:
     streams and thus do have a size limit. Thus, TOSCA implementations
     should check against the size limit.
 
-> Tal’s comment: for functions we should specify their exact behavior
-> for various primitive types. Some won’t work on all types, e.g. “length”
-> should not work on integers.
-
 #### 9.1.1.2 integer
 
 A TOSCA *integer* is a 64-bit signed integer.
@@ -4780,9 +4703,6 @@ parameter or property. For example, if an application allows for being
 configured to listen on multiple ports, a list of ports could be
 configured using the list data type.
 
-<!----
-{"id": "859", "author": "Mike Rehder", "date": "2020-12-14T14:56:00Z", "comment": "What is a \u201cparameter of property\u201d?  \nShould just say \u201cfor a property\u201d.", "target": "a parameter of\nproperty"}-->
-
 Note that all entries in a list must be of the same type. The type
 (for simple entries) or schema (for complex entries) is defined by the
 mandatory entry_schema attribute of the respective [property
@@ -4943,11 +4863,6 @@ A data type definition is a type of TOSCA type definition and as a
 result supports the common keynames listed in [Section
 6.4.1](#641-common-keynames-in-type-definitions). In addition, the
 data type definition has the following recognized keynames:
-
-<!----
-{"id": "904", "author": "Chris Lauwers", "date": "2021-01-26T03:12:00Z", "comment": "Edit suggested by Mike Rehder: Not valid for a type derived from a complex type (parent has property definitions) or a type with property, key_schema or entry_schema definitions.", "target": "Type"}-->
-<!----
-{"id": "905", "author": "Chris Lauwers", "date": "2021-01-26T03:13:00Z", "comment": "Edit suggested by Mike Rehder: Not valid for a type derived from a simple type (parent has no property definitions) or a type with constraint definitions.", "target": "TOSCA"}-->
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
@@ -5345,8 +5260,6 @@ The following requirements apply:
   the default keyname is irrelevant for a non-required property.
 
 ## 9.5 Attribute Definition
-<!----
-{"id": "990", "author": "Calin Curescu", "date": "2020-05-07T23:14:00Z", "comment": "%%% !!! To implement this, throughout the specification. Default can have also value_expression! I think we might need also an attribute \u201cvalue_expresssion\u201d keyname that allows to define an attribute as a function of a different attribute (of the same entity), that we can define when creating node/relationship types, even before template design time.", "target": "Attribute definition"}-->
 
 An attribute definition defines a named, typed value that can be
 associated with an entity defined in this specification (e.g., a node,
@@ -6188,7 +6101,6 @@ node_templates:
                - TARGET
                - admin_credential
 ```
-> TODO: An example of second index (i.e. 1) and index ALL !!!
 
 #### 10.2.1.3 get_attribute
 
@@ -6400,11 +6312,6 @@ This section documents the list of built-in comparison functions.
 
 - Also note that Unicode string comparisons are implementation specific.
 
-- TODO explanation on how versions are compared
-
-<!----
-{"id": "807", "author": "Chris Lauwers", "date": "2020-08-18T23:01:00Z", "comment": "(From Tal): Do we want the comparison constraints to work for strings? E.g. should \"greater_than\" do a sorting-based comparison? I'll just point that it is non-trivial to sort Unicode strings. The most common way is to use the Unicode Collation Algorithm, which involves a database of information. There is a reference implementation in [ICU](webSettings.xml). Good and proper Unicode libraries will support it (e.g. [here is Go's](footnotes.xml)), but I do imagine it may be a burden for some implementations. I suggest we discuss this in the ad hoc and consider the pros and cons.", "target": "Notes"}-->
-
 ##### 10.2.2.2.1 equal
 
 The *$equal* function takes two arguments that have the same type. It
@@ -6489,9 +6396,6 @@ expressions and reference an appropriate standardized grammar.
 
 Note also that if ones means that the whole string is to be matched, the
 regular expression must start with a caret ^ and end with a \$.
-
-> Check for new lines and maybe add a third argument – e.g. as in
-> <https://www.pcre.org/> !!!
 
 #### 10.2.2.3 Boolean List, Map and String Functions
 
@@ -6656,8 +6560,7 @@ outputs:
        # Result: 9.12.1.10,9.12.1.20
        value: { $join: [ { $get_input: my_IPs }, “,” ] } 
 ```
-<!----
-{"id": "1336", "author": "Calin Curescu", "date": "2023-01-17T17:54:00Z", "comment": "Make a better example.", "target": "!!! Make an\nexample for concat and join where the differences are\nclear!!\\!"}-->
+
 #### 10.2.3.4 token
 
 The *$token* function is used within a TOSCA service template on a
@@ -6685,8 +6588,6 @@ outputs:
                        1 ] }
 ```
 ### 10.2.4 Set Functions
-
-> Note: We should discuss order
 
 #### 10.2.4.1 union
 
@@ -6943,9 +6844,6 @@ list of signature definitions as follows:
 Only the signatures keyname is mandatory and must provide at least one
 signature definition. Note that the signatures are tested in the order
 of their definition. The first matching implementation is used.
-
-<!----
-{"id": "1055", "author": "Calin Curescu", "date": "2022-09-20T16:21:00Z", "comment": "Put an example of an empty signature that\nmeans the function takes no parameters and my return any result. Put\nalso of this example with variadic: true.", "target": "signature\ndefinition"}-->
 
 Each \<signature_def\> uses the following grammar:
 ```yaml
@@ -8109,11 +8007,6 @@ The content in this section is normative unless otherwise labeled except:
   - references unless labelled as normative.
 ## 13.1 Declarative Workflows
 
-> State that declarative workflows are automatically
-> generated. Specific steps for how to do this is profile
-> specific. Orchestrators that support certain profiles are expected
-> to know how to create declarative workflows for those profiles.
-
 ## 13.2 Imperative Workflows
 
 A workflow definition defines an imperative workflow that is associated
@@ -8172,8 +8065,6 @@ A workflow precondition defines a condition clause that checks if a
 workflow can be processed or not based on the state of the instances of
 a TOSCA service deployment. If the condition is not met, the workflow
 will not be triggered.
-
-> Examples TO BE PROVIDED
 
 ### 13.2.2 Workflow Step Definition
 
@@ -8583,15 +8474,6 @@ service_template:
       requirements:
         - vpn: sdwan
 ```
-
-> This approach requires that inputs are provided as lists, even if
-> only one representation will be created. Should we allow a single value as
-> well as a list of values?
-
-> \[Calin\] This is as we see fit, not a problem. If a node is
-> supposed to have one “occurrence” in a topology template (which for
-> the majority will do), then we use the single value input. If the
-> occurrences are more, then we use lists.
 
 ## 14.3 Cardinality of Relationships
 
@@ -9020,8 +8902,6 @@ service_template:
         - uses: [right, {$remainder: [$node_index, {$get_input: number_of_right}]}]
 ```
 
-## 14.4 Relationship-Specific Input Values
-
 To allow specific input values to be matched with specific
 relationship representations, each relationship representation is
 assigned a unique index to differentiate it from other relationship
@@ -9077,8 +8957,6 @@ values must be passed between an abstract node and its substituting
 service, property and attribute mappings must be used to define how
 these values are mapped.
 
-> This *event escalation* mechanism needs to be better defined.
-
 |Keyname|Mandatory|Type|Description|
 |---|---|---|---|
 |node_type|yes|string|The name of the node type of the nodes for which the service template can provide an implementation.|
@@ -9114,8 +8992,6 @@ have the following meaning:
 - requirement_mappings: represents the list of requirement
   mappings.
 - interface_mappings: represents the map of interface mappings.
-
-> Examples to be provided
 
 Please note:
   <!---- Calin-2024-06-05: I think that this constraint should not exist.
@@ -9277,13 +9153,6 @@ If there is only one requirement mapping with a certain requirement name
 (i.e. as the key of the requirement mapping) then it means that all 
 requirements assignments of that requirement are mapped to the same 
 target requirement(s).
-
-If we have several requirement mappings with the same requirement name,
-and a consecutive subset of them have the same target reqirement(s), instead 
-of repeating the mapping we can use the following grammar:
-```yaml
-[ <requirement_name>, <count> ]: [ <node_template_name>, <node_template_requirement_name> ]
-```
 
 In the above grammars, the pseudo values that appear in angle brackets
 have the following meaning:
@@ -10171,10 +10040,6 @@ service_template:
 An interface mapping allows an interface operation on the substituted
 node to be mapped to workflow in the substituting service template.
 
-<!----
-{"id": "1110", "author": "Calin Curescu [2]", "date": "2018-08-23T08:33:00Z", "comment": "This could change if we introduce the operations keyname in the interface definitions", "target": "Grammar"}-->
-<!----
-{"id": "1111", "author": "Chris Lauwers", "date": "2020-08-03T18:40:00Z", "comment": "What about\nnotification mappings?", "target": "follows"}-->
 The grammar of an interface_mapping is as follows:
 ```yaml
 <interface_name>:
@@ -10205,11 +10070,6 @@ The content in this section is normative unless otherwise labeled except:
   - the examples
   - references unless labelled as normative.
 ## 16.1 Group Type
-<!----
-{"id": "1121", "author": "Chris Lauwers", "date": "2020-08-03T18:44:00Z", "comment": "Edit to remove the implication that these\nare similar to \u201cTOSCA relationships\u201d", "target": "creation of logical\n\u201cmembership\u201d relationships "}-->
-
-<!----
-{"id": "1123", "author": "Jordan,PM,Paul,TNK6 R", "date": "2020-11-09T08:56:00Z", "comment": "I don\u2019t think\nthe text definitions of group and group type are sufficiently different.\nSo I\u2019ve added some suggested new text but will leave it to the editors\nto consider how much of the existing text can be\nremoved.", "target": ""}-->
 
 As with most TOSCA entities, groups are typed. A group type definition
 is a type of TOSCA type definition and as a result supports the common
@@ -10222,9 +10082,6 @@ group type definition has the following recognized keynames:
 |properties|no|map of property definitions|An optional map of property definitions for the group type.|
 |attributes|no|map of attribute definitions|An optional map of attribute definitions for the group type.|
 |members |no|list of string|An optional list of one or more names of node types that are valid (allowed) as members of the group type.|
-
-> What are group properties used for?
-> How can group attributes possibly be set, and what would they be used for?
 
 Group types have the following grammar:
 ```yaml
@@ -10430,8 +10287,6 @@ template, etc.).
 
 The following is the list of recognized keynames for a TOSCA policy
 definition:
-<!----
-{"id": "1167", "author": "Chris Lauwers", "date": "2022-10-03T19:59:00Z", "comment": "Policies apply to entire service templates,\nnot to individual node templates. What was the intended use of targets\nin policy definitions?", "target": "definition"}-->
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
@@ -10478,9 +10333,6 @@ have the following meaning:
   definitions) for the policy; these triggers apply in addition to the
   triggers defined in the policy type.
 
-<!----
-{"id": "1173", "author": "Calin Curescu", "date": "2020-05-06T10:56:00Z", "comment": "!!! What is the meaning of these triggers\n  here w.r.t. the triggers defined in the policy type?  \n  I assume we should allow the definition of new triggers, that are used\n  in addition to the triggers defined in the policy type.  \n  But, in interface we did not allow to add new operations or\n  notifications.", "target": "trigger_definitions: represents the optional map\n  of [trigger definitions](#trigger-definition) for the policy; these\n  triggers apply in addition to the triggers defined in the policy\n  type."}-->
-
 The following represents a policy definition:
 ```yaml
   - my_compute_placement_policy:
@@ -10494,9 +10346,6 @@ The following represents a policy definition:
 A trigger definition defines an *event, condition, action* tuple
 associated with a policy.
 
-<!----
-{"id": "1181", "author": "Matt Rutkowski", "date": "2017-09-26T11:38:00Z", "comment": "RECALL; Policy type defn were to be consumed by a \u201cPolicy Engine\u201d that would create events on a known event monitoring service. We need to create diagram and explain the event-condition-action flow of policy (defn.)", "target": "Keynames"}-->
-
 The following is the list of recognized keynames for a TOSCA trigger
 definition:
 
@@ -10506,11 +10355,6 @@ definition:
 |event|yes|string|The mandatory name of the event that activates the trigger’s action.|
 |condition|no|condition clause|The optional condition that must evaluate to true in order for the trigger’s action to be performed. Note: this is optional since sometimes the event occurrence itself is enough to trigger the action.|
 |action|yes|list of activity definition|The list of sequential activities to be performed when the event is triggered, and the condition is met (i.e., evaluates to true).|
-<!----
-{"id": "1182", "author": "Chris Lauwers", "date": "2022-10-03T20:01:00Z", "comment": "We need to clarify the context in which event names can be interpreted. Are they globally scoped?", "target": "name"}-->
-
-<!----
-{"id": "1185", "author": "Calin Curescu", "date": "2020-05-06T11:29:00Z", "comment": "This does not make any sense. Needs to be deleted.", "target": ""}-->
 
 Trigger definitions have the following grammars:
 ```yaml
@@ -10551,8 +10395,6 @@ The content in this section is normative unless otherwise labeled except:
   - references unless labelled as normative.
 
 ## 17.1 Overall Structure of a CSAR
-<!----
-{"id": "1367", "author": "Calin Curescu", "date": "2020-06-09T17:00:00Z", "comment": "Thinh would like to have this resolved\nbefore publishing TOSCA v2.0. What is zip? We need to give a clearer\ndefinition of the zip format. What version. Thinh will get back with a\nmore specific definition.  \nTal: look at java **jar specification**? It is zip...", "target": "A CSAR is a\nzip file "}-->
 
 A CSAR is a package of files containing at least TOSCA definitions as
 well as accompanying artifacts (e.g. scripts, binaries, configuration files)
@@ -10572,51 +10414,6 @@ in one of two ways:
   `.yml` extension) is located at the root of the archive, it will be used
   as the root TOSCA YAML file.
 
-<!----
-{"id": "1368", "author": "Calin Curescu", "date": "2019-01-30T15:18:00Z", "comment": "Why keep a mandatory directory for only\n  one file. I think we should allow to have the TOSCA.meta file also in\n  the root of the archive.  \n  Then the processor should do the following:  \n  Look for the TOSCA-Metadata directory. If found, look for the\n  TOSCA.meta inside. If latter not found give an error.  \n  Else look for the TOSCA.meta file in the root of the archive  \n  Look for the a .yml or . yaml file in the root directory", "target": "\n  **TOSCA.meta** metadata file that provides entry information for a\n  TOSCA orchestrator processing the CSAR file."}-->
-
-The CSAR file may contain other directories and files with arbitrary
-names and content.
-
-### 17.1.1 CSAR Archiving Formats
-
-While any archiving method that maintains a file and directory structure
-can be used, two formats are specifically supported, tarballs and Zip files.
-
-#### 17.1.1.1 Tarballs
-
-These are optionally compressed streams generated by the `tar` (tape archive)
-command available on most operating systems. TOSCA at minimum supports
-uncompressed tarballs (named with a `.tar` extension) as well tarballs
-compressed with Gzip (named with a `.tar.gz` or `.tgz` extension). Other
-compression algorithms may also be optional supported.
-
-Because tarballs are organized sequentially, their contents can be efficiently
-streamed from a filesystem or a network server with minimal buffering and no
-need to store data local storage. For example, if only a single file in the
-tarball is needed, a client can skip other entries and read only that file.
-
-The supported tar format is UStar, as specified in
-[POSIX IEEE P1003.1](https://archive.org/details/mac_Internet_File_Formats_1995/page/n201/mode/2up).
-Gzip 4.3 is specified in [IETF RFC-1952](https://datatracker.ietf.org/doc/html/rfc1952).
-
-#### 17.1.1.2 Zip Files
-
-These are optionally compressed files relying on random access to entries.
-Files should be named with a `.zip` or a `.csar` extension.
-
-Note that the `.csar` extension has been used in previous versions of
-TOSCA to refer *exclusively* to Zip files. It is recommended to use the
-`.zip` extension instead in order to clarify and differentiate the archiving
-formats.
-
-Because Zip files require random access, the archive must be accessible in
-its entirety by clients, usually in a local file system. If it necessary to
-support clients with no access to local storage, tarballs may be preferred
-instead.
-
-The Zip format supported by TOSCA is specified in
-[ISO/IEC 21320-1 "Document Container File — Part 1: Core"](https://www.iso.org/standard/60101.html). 
 
 ## 17.2 TOSCA Meta File
 
@@ -10685,9 +10482,6 @@ binaries, configuration files) used by the TOSCA definitions and
 included in the CSAR are fully described and referred via relative path
 names in artifact definitions in the respective TOSCA definitions files
 contained in the CSAR.
-
-<!----
-{"id": "1382", "author": "Calin Curescu", "date": "2019-01-30T16:36:00Z", "comment": "MustFix.  \nIn version 1.0 (pre YAML) the subsequent blocks that contained\ndefinitions were used to provide definitions for types imported in the\nservice template, that is these files were parsed instead of taking the\ndefinitions from external repositoris.  \nSince 1.0 yaml, the files are specified explicitly in the imports\nstatements.  \nNevertheless, by allowing the other definition blocks (as per this\nparagraph formulation) we allow also the old style of imports by the\ndefinitions in the other blocks.  \nI think this puts a burden on the implementation of orchestrators and\nquite confusing. So we should deprecate the usage of definitions in the\nother blocks.  \nMoreover, the other blocks can contain other file type decriptions (for\nartifacts) in the other blocks. E.g:  \nName: Plans/AddUser.bpmn  \nContent-Type: application/vnd.oasis.bpmn  \nThese also seem obsolete and useless.  \nI think we should deprecate the other blocks in the TOSCA.meta\nfile", "target": "Note that any further TOSCA definitions files required by the\ndefinitions specified by **Entry-Definitions** or **Other-Definitions**\ncan be found by a TOSCA orchestrator by processing respective\n**imports** statements. Note also that artifact files (e.g. scripts,\nbinaries, configuration files) used by the TOSCA definitions and\nincluded in the CSAR are fully described and referred via relative path\nnames in artifact definitions in the respective TOSCA definitions files\ncontained in the CSAR."}-->
 
 The following listing represents a valid `TOSCA.meta` file according
 to this TOSCA specification.
@@ -10759,25 +10553,6 @@ metadata:
 The content in this section is normative unless otherwise labeled except:
   - the examples
   - references unless labelled as normative.
-
-> (Note: The [OASIS TC
-> Process](https://www.oasis-open.org/policies-guidelines/tc-process-2017-05-26/#wpComponentsConfClause)
-> requires that a specification approved by the TC at the Committee
-> Specification Public Review Draft, Committee Specification or OASIS
-> Standard level must include a separate section, listing a set of
-> numbered conformance clauses, to which any implementation of the
-> specification must adhere in order to claim conformance to the
-> specification (or any optional portion thereof). This is done by
-> listing the conformance clauses here.  For the definition of
-> "conformance clause," see [OASIS Defined
-> Terms](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2018-05-22/#dConformanceClause).
-
-> See "Guidelines to Writing Conformance Clauses":
-> https://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.
-
-> Remove this note before submitting for publication.)
-
-## 18.1 Conformance Targets
 
 The implementations subject to conformance are those introduced in
 Section 11.3 “Implementations”. They are listed here for convenience:
@@ -10893,14 +10668,6 @@ While any hyperlinks included in this appendix were valid at the time of publica
 ## A.1 Normative References
 
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
-
-> (Reference sources: For references to IETF RFCs, use the approved
-> citation formats at:
-> https://docs.oasis-open.org/templates/ietf-rfc-list/ietf-rfc-list.html.
-> For references to W3C Recommendations, use the approved citation
-> formats at:
-> https://docs.oasis-open.org/templates/w3c-recommendations-list/w3c-recommendations-list.html.
-> Remove this note before submitting for publication.)
 
 ###### [RFC2119]
 Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, http://www.rfc-editor.org/info/rfc2119.
@@ -11032,8 +10799,6 @@ assistance:
 -------
 
 # Appendix D. Revision History
-
-<!-- Optional section -->
 
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |
