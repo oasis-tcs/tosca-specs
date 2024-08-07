@@ -4652,7 +4652,7 @@ Derivation of scalar-types uses the following rules:
 
 ##### 9.1.2.2.2 scalar-unit.time <a name=scalar-unit.time></a>
 
-TOSCA no longer has an in-built date type for time but one can be defined using the scalar-unit  class as shown in the following example:
+TOSCA no longer has an in-built date type for time but one can be defined using the scalar-unit abstract class as shown in the following example:
 ```yaml
 data_types:
   scalar-unit.time:
@@ -8972,8 +8972,8 @@ be *decomposed* using *substituting services* that describe the
 internals of those nodes. Substitution provides a *declarative*
 mechanism for implementing TOSCA nodes that can be used as an
 alternative to *implementation artifacts*. Substitution allows for
-simplified representations of complex systems that * away*
-technology or vendor-specific implementation details.  nodes
+simplified representations of complex systems that *abstract away*
+technology or vendor-specific implementation details. Abstract nodes
 that expect to be *substituted* are based on node templates that are
 annotated with the `substitute` directive. Service templates advertize
 their ability to provide substituting implementations using the
