@@ -1360,22 +1360,7 @@ where `<anchor_block>` defines a set of reusable YAML definitions (the
 `<anchor_definitions>`) for which `<anchor>` can be used as an alias
 elsewhere in the document.
 
-The following example shows DSL definitions for common image property
-assignments:
-
-```
-dsl_definitions:
-    ubuntu_image_props: &ubuntu_image_props
-      architecture: x86_64
-      type: linux
-      distribution: ubuntu
-      os_version: '14.04'
-    redhat_image_props: &redhat_image_props
-      architecture: x86_64
-      type: linux
-      distribution: rhel
-      os_version: '6.6'
-```
+An example of defining and using a DSL definition, a YAML anchor, is given in [scalar-unit](#scalar-unit).
 
 ## 6.4 Type Definitions <a name=type-definitions></a>
 
@@ -4530,6 +4515,20 @@ In the above grammar, the pseudo values that appear in angle brackets have the f
 
 The following gives an example of the use of a scalar_units:
 ```yaml
+dsl_definitions:
+  # Defined a reusable list of prefixes taken from ISO80000
+   ISO_prefixes: &ISO80000
+         # symbols for smaller multipliers ommitted for brevity
+      μ: 0.0001
+      m: 0.001
+      c: 0.01
+      d: 0.1
+      da: 10 # symbols may be muliple characters
+      h: 100 # integer auto converted to float
+      k: 1000
+      M: 1000000
+      # symbols for larger multipliers omiited
+
 data_types:
   non_negative_number:
     derived_from: float
@@ -4553,17 +4552,7 @@ data_types:
 
   length:
     derived_from: scalar-unit
-    unit_symbol_map: &ISO80000
-      # symbols for smaller multipliers ommitted for brevity
-      μ: 0.0001
-      m: 0.001
-      c: 0.01
-      d: 0.1
-      da: 10 # symbols may be muliple characters
-      h: 100 # integer auto converted to float
-      k: 1000
-      M: 1000000
-      # symbols for larger multipliers omiited
+    unit_symbol_map: *ISO80000 # First use of the YAML anchor and alias
     unit_suffix: m  ## Note suffix is defined so will be appended to entries in the unit_symbol_map
 
   mass:
