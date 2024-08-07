@@ -2883,6 +2883,53 @@ node_templates:
         operations:
           configure: scripts/my_own_configure.sh
 ```
+### 7.2.1 Node template directives
+
+As described in the section above, a node template supports the following 3 directives 
+used by the TOSCA resolver to populate nodes in the representation graph.
+- `create` is the default directive, assumed if no directives are defined.
+  The resolver is creating the node based on the node template with the specified
+  properties, attributes, and interface implementations.
+- `select` is the directive that specifies that a node from a representation graph
+  external to this service should be selected and added into this service representation
+  graph. The node is not duplicated and its properties, attributes, interfaces and outgoing
+  relationships cannot be changed. Nevertheless, this node can become the target of incoming
+  relationships within this representation graph. The symbolic name of the node is an alias
+  by which this node is accessible in this representation graph.
+  - The only keyname that is relevant for the resolver if the `select` directive is used is the
+    `node_filter`, which is used to select a suitable node. All the others (e.g. property assginments,
+    interface implementations, requirements, etc.) are ignored.
+  - As the `node_filter` is only relevant for the `select` directive, it should not be present
+    if the `select` directive is not present. Note that if the `node_filter` is missing then
+    the selection will be based solely on the node type.
+  - A detailed description of the `node_filter` is given in the [Node Filter Definition Section](#node-filter-definition).
+- `substitute` is the directive that specifies that this node's realization and behaviour
+  should be realized by an internal service created from a substitution template. The substituted
+  node is also denoted as an abstract node within this specification.
+  - A node representation for the substituted node will be created and added to the representation
+    graph of the top-level service, and can be accessed in the top-level service via its symbolic name
+    as any other node representation. Within the the top-level service scope none of the substitution
+    service details are visible.
+    - The substituted node properties are defined from the property assignments, its relationships are establised from
+      requirements, and the node can be target of other relationships.
+  - A service is created from the substitution template habving its own representation graph and associated to the
+    substituted node in the top-level service.
+     - The properties of the substituted node may become inputs to the substitution service if such a
+       substitution mapping is defined.
+     - The attributes of the substituted node will receive the output values of the substitution service
+       if such substitution mapping is defined. Otherwise their value will remain undefined.
+  - As the behaviour of the substituted node is deferred to the substition service, any implementation
+    of the interfaces in the node template are ignored. To connect a behaviour to the interfae operations
+    and notifications they or must be mapped to workflows in the subtition service (which then provide the "implementation").
+  - A detailed description of the substitution mechanism is given in the [Substitution Section](#substitution).
+
+Note that several directives can be specified in a list. The TOSCA resolver will attempt to use them in 
+the right sequence. If not possible to fulfill the first in the list, it will try with the second, and so on.
+For example `directives: select, substitute, create` means that first the resolver will try to find a node that
+matches the `node_filter` within its available scope. If not found, it will try to find a suitable substitution
+template that matches this node. If not found, it will finally try to create a new node from the node template 
+definition.
+
 ## 7.3 Relationship Type <a name=relationship-type></a>
 
 A *relationship type* is a reusable entity that defines the structure
@@ -4047,15 +4094,17 @@ service_template:
 
 ## 8.8 Node Filter Definition <a name=node-filter-definition></a>
 
-In addition to the node, relationship and capability types, a filter,
-with the keyname node_filter, may be provided in requirement
-definitions and requirement assignments to constrain the allowed set
-of potential target nodes based upon their properties and their
-capabilities’ properties. This allows TOSCA orchestrators to help find
-the *best fit* when selecting among multiple potential target nodes
-for the expressed requirements. Also, if a node template was specified
-during requirement assignment it allows TOSCA orchestrators to verify
-that the specified node template fulfills the requirement.
+A node filter definition may be provided in the following two situations:
+- Within a node template defintion where the `select` directive is defined.
+  The `node_filter` is used to select an already existing node from
+  another service representation graph.
+- Within requirement definitions or assigmnents to constrain the allowed set
+  of potential target nodes based upon their properties and their
+  capabilities’ properties. This allows TOSCA orchestrators to help find
+  the *best fit* when selecting among multiple potential target nodes
+  for the expressed requirements. Also, if a node template was specified
+  during requirement assignment it allows TOSCA orchestrators to verify
+  that the specified node template fulfills the requirement.
 
 Node filters are defined using condition clauses as shown in the
 following grammar:
@@ -4064,21 +4113,24 @@ node_filter: <condition_clause>
 ```
 In the above grammar, the condition_clause represents a Boolean
 expression that will be used to select (filter) TOSCA nodes that are
-valid candidates for fulfilling the requirement that defines the node
-filter. TOSCA orchestrators use node filters are follows:
-
-- Orchestrators select an initial set of target node candidates based on
-  the target capability type and/or the target node type specified in
-  the requirement definition.
-
-- A node in this initial set is a valid target node candidate if, when
-  that node is used as the target node for the requirement, the node
-  filter condition clause evaluates to True.
-
-- Note that the context within which the node filter must be evaluated
-  is the relationship that is established to the target node as a result
-  of fulfilling the requirement. Specifically, this means that the SELF
-  keyword in any TOSCA Path expressions refer to that relationship.
+valid candidates. TOSCA orchestrators use node filters are follows:
+- Within a node template defintion using the `select` directive:
+  - Orchestrators select a external node of the same type as specified in the
+    node template that also fulfills the condition_clause of the node_filter.
+  - Note that the context within which the node filter is evaluated is the
+    potential target node to be selected. Specifically, this means that the SELF
+    keyword in any TOSCA Path expressions refers to the node.
+- Within requirement definitions or assigmnents:
+  - Orchestrators select an initial set of target node candidates based on
+    the target capability type and/or the target node type specified in
+    the requirement definition.
+  - A node in this initial set is a valid target node candidate if, when
+    that node is used as the target node for the requirement, the node
+    filter condition clause evaluates to True.
+  - Note that the context within which the node filter is evaluated
+    is the relationship that is established to the target node as a result
+    of fulfilling the requirement. Specifically, this means that the SELF
+    keyword in any TOSCA Path expressions refers to the relationship.
 
 The following example shows a node filter that will be used to select
 a Compute node based upon the values of its defined
