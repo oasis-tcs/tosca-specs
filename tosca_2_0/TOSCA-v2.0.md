@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 07
 
-## 16 July 2024
+## 12 August 2024
 
 &nbsp;
 
