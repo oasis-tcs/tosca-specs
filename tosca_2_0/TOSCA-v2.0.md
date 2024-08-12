@@ -1044,7 +1044,7 @@ The content in this section is normative unless otherwise labeled except for:
 This section defines concepts used in support of the modeling
 functionality of the TOSCA Version 2.0 specification. Specifically, it
 introduces grammar for defining TOSCA types and templates as defined
-in [Chapter 2](#23-tosca-core-concepts), it introduces the concepts of
+in [the Chapter TOSCA Core Concepts](#tosca-core-concepts), it introduces the concepts of
 entity definitions and entity assignments, and presents rules for type
 derivation and entity refinement.
 
@@ -2645,8 +2645,8 @@ requirements of that node, as well as its supported interfaces and the
 artifacts it uses.
 
 A node type definition is a type of TOSCA type definition and as a
-result supports the common keynames listed in [Section
-6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+result supports the common keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions). In addition, the
 node type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
@@ -2937,8 +2937,8 @@ of observable properties and attributes of a relationship as well as
 its supported interfaces.
 
 A relationship type definition is a type of TOSCA type definition and
-as a result supports the common keynames listed in [Section
-6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+as a result supports the common keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions). In addition, the
 relationship type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Definition/Type|Description|
@@ -3142,8 +3142,8 @@ expose. Requirements that are declared as part of one node can be
 fulfilled by the capabilities declared by another node.
 
 A capability type definition is a type of TOSCA type definition and as
-a result supports the common keynames listed in [Section
-6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+a result supports the common keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions). In addition, the
 capability type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
@@ -4904,8 +4904,8 @@ from from the TOSCA built-in types and *complex types* that define
 collections of properties that each have their own data types.
 
 A data type definition is a type of TOSCA type definition and as a
-result supports the common keynames listed in [Section
-6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+result supports the common keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions). In addition, the
 data type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
@@ -5965,7 +5965,7 @@ table:
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
 |\<input_parameter_name\>|yes|string|The name of the parameter as defined in the inputs section of the service template.|
-|\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. The index is a non-negative integer. If `$get_input`is used within a node template definition the function `$node_index` can retrieve the index of the current node representation among the nodes created from the same template, and/or if `$get_input`is used within a requirement definition the function `$relationship_index` can retrieve the index of the actual relationship among the relationships created from the same requirement. More information on multiplicity and node and relationship indexes can be found in [Chapter 14](#14-creating-multiple-representations-from-templates).|
+|\<nested_input_parameter_name_or_index_*\>|no|string \| integer|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. The index is a non-negative integer. If `$get_input`is used within a node template definition the function `$node_index` can retrieve the index of the current node representation among the nodes created from the same template, and/or if `$get_input`is used within a requirement definition the function `$relationship_index` can retrieve the index of the actual relationship among the relationships created from the same requirement. More information on multiplicity and node and relationship indexes can be found in [the chapter Creating Multiple Representations From Templates](#creating-multiple-representations-from-templates).|
 
 The following snippet shows an example of the simple get_input grammar:
 ```yaml
@@ -7166,8 +7166,8 @@ manage a node or relationship in a TOSCA topology as well as the input
 and output parameters used by those operations and notifications.
 
 An interface type definition is a type of TOSCA type definition and as
-a result supports the common keynames listed in [Section
-6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+a result supports the common keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions). In addition, the
 interface type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
@@ -7866,8 +7866,8 @@ more files that are used to define implementation or deployment
 artifacts that are referenced by nodes or relationships.
 
 An artifact type definition is a type of TOSCA type definition and as
-a result supports the common keynames listed in [Section
-6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+a result supports the common keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions). In addition, the
 artifact type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
@@ -8334,8 +8334,8 @@ The content in this section is normative unless otherwise labeled except:
   - references unless labelled as normative.
 
 TOSCA service templates specify a set of nodes that need to be
-*instantiated* at service deployment time. As discussed in [Chapter
-4](#4-tosca-operational-model) this occurs in two separate steps:
+*instantiated* at service deployment time. As discussed in [the chapter
+Tosca Operational Model](#tosca-operational-model) this occurs in two separate steps:
 
 1. A TOSCA Processor first creates a *service representation* based on
    a service template. This representation is a graph that contains
@@ -8346,7 +8346,8 @@ TOSCA service templates specify a set of nodes that need to be
    running workflows that call interface operations on each of the
    nodes and relationships in the graph).
 
-[Chapter 4](#4-tosca-operational-model) discusses how node and
+[The chapter
+Tosca Operational Model](#tosca-operational-model) discusses how node and
 relationship representations are created by matching a service
 template with deployment-specific input values. This chapter discusses
 issues of *cardinality* that determine how many node representations
@@ -10117,8 +10118,8 @@ The content in this section is normative unless otherwise labeled except:
 
 As with most TOSCA entities, groups are typed. A group type definition
 is a type of TOSCA type definition and as a result supports the common
-keynames listed in [Section
-6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions). In addition, the
 group type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
@@ -10259,8 +10260,8 @@ prevent the application or service from being deployed or run if it
 did not exist).
 
 A policy type definition is a type of TOSCA type definition and as a
-result supports the common keynames listed in [Section
-6.4.1](#641-common-keynames-in-type-definitions). In addition, the
+result supports the common keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions). In addition, the
 policy type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
