@@ -1195,7 +1195,7 @@ support the following keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the element being defined.|
+|[metadata](#metadata)|no|map of YAML values|Defines a section used to declare additional metadata information about the element being defined.|
 |description|no|string|Declares a description for the TOSCA element being defined.|
 
 Grammar for these keynames is described here and may not be repeated
@@ -1282,7 +1282,7 @@ The following is the list of recognized keynames for a TOSCA file:
 | :---- | :------ | :---- | :------ |
 |tosca_definitions_version|yes|string|Defines the version of the TOSCA specification used in this TOSCA file.|
 |description|no|string|Declares a description for this TOSCA file and its contents.|
-|metadata|no|map of YAML values|Defines a section used to declare additional metadata information. Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations.|
+|[metadata](#metadata)|no|map of YAML values|Defines a section used to declare additional metadata information. Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations.|
 |dsl_definitions|no|N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout this TOSCA file.|
 |artifact_types|no|map of artifact Types|Declares a map of artifact type definitions for use in this TOSCA file and/or external TOSCA files.|
 |data_types|no|map of data types|Declares a map of TOSCA data type definitions for use in this TOSCA file and/or external TOSCA files.|
@@ -1392,7 +1392,7 @@ way. This section serves to define them at once.
 | :---- | :------ | :---- | :------ |
 |derived_from|no|string|An optional parent type name from which this type derives.|
 |version|no|version|An optional version for the type definition.|
-|metadata|no|map|Defines a section used to declare additional metadata information.|
+|[metadata](#metadata)|no|map|Defines a section used to declare additional metadata information.|
 |description|no|string|An optional description for the type.|
 
 The common keynames in type definitions have the following grammar:
@@ -1692,7 +1692,7 @@ definition:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |description|no|string|Declares a description for the repository being defined.|
-|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the repository being defined.|
+|[metadata](#metadata)|no|map of YAML values|Defines a section used to declare additional metadata information about the repository being defined.|
 |url|yes|string|The URL or network address used to access the repository.|
 <!---- Calin: as we already define previously that any multiline definition admits the description and metadata shold we keep it here (and all subsequent places?) -->
 
@@ -2015,7 +2015,7 @@ definition:
 |repository|conditional|string|The optional symbolic name of the repository definition where the imported file can be found as a string. The repository name can only be used when a url is specified.|
 |namespace|no|string|The optional name of the namespace into which to import the type definitions from the imported template or profile.|
 |description|no|string|Declares a description for the import definition.|
-|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about the import definition.|
+|[metadata](#metadata)|no|map of YAML values|Defines a section used to declare additional metadata information about the import definition.|
 
 These keynames can be used to import individual TOSCA files using the
 following grammar:
@@ -2347,7 +2347,7 @@ template:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |description|no|string|The optional description for the service template.|
-|metadata|no|map of YAML values|Defines a section used to declare additional metadata information about this service template.|
+|[metadata](#metadata)|no|map of YAML values|Defines a section used to declare additional metadata information about this service template.|
 |inputs|no|map of parameter definitions|An optional map of input parameters (i.e., as parameter definitions) for the service template.|
 |node_templates|yes|map of node templates|A mandatory map of node template definitions for the service template.|
 |relationship_templates|no|map of relationship templates|An optional map of relationship templates for the service template.|
@@ -2779,7 +2779,7 @@ template definition:
 | :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory name of the node type on which the node template is based.|
 |description|no|string|An optional description for the node template.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of string|Defines a section used to declare additional metadata information. |
 |directives|no|list of string|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
 |properties|no|map of property assignments|An optional map of property value assignments for the node template.|
 |attributes|no|map of attribute assignments|An optional map of attribute value assignments for the node template.|
@@ -3063,7 +3063,7 @@ relationship template definition:
 | :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory name of the relationship type on which the relationship template is based.|
 |description|no|string|An optional description for the relationship template.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of string|Defines a section used to declare additional metadata information. |
 |properties|no|map of property assignments|An optional map of property assignments for the relationship template.|
 |attributes|no|map of attribute assignments|An optional map of attribute assignments for the relationship template.|
 |interfaces|no|map of interface assignments|An optional map of interface assignments for the relationship template.|
@@ -3244,7 +3244,7 @@ definition:
 | :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory name of the capability type on which this capability definition is based.|
 |description|no|string|The optional description of the Capability definition.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of string|Defines a section used to declare additional metadata information. |
 |properties|no|map of property refinements|An optional map of property refinements for the capability definition. The referred properties must have been defined in the capability type definition referred by the type keyword. New properties may not be added.|
 |attributes|no|map of attribute refinements|An optional map of attribute refinements for the capability definition. The referred attributes must have been defined in the capability type definition referred by the type keyword. New attributes may not be added.|
 |valid_source_node_types|no|list of string|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources. If valid_source_node_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
@@ -3446,7 +3446,7 @@ requirement definition:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |description|no|string|The optional description of the requirement definition.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of string|Defines a section used to declare additional metadata information. |
 |relationship|yes|relationship definition|The mandatory keyname used to define the relationship created as a result of fulfilling the requirement.|
 |node|no|string|The optional keyname used to provide the name of a valid node type that contains the capability definition that can be used to fulfill the requirement.|
 |capability|yes|string|The mandatory keyname used to specify the capability type for capabilities that can be used to fulfill this requirement. If the requirement definition defines a target node type, the capability keyname can also be used instead to specify the symbolic name of a capability defined by that target node type.|
@@ -3463,7 +3463,7 @@ support the following keynames:
 | :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory keyname used to provide the name of the relationship type used for the relationship.|
 |description|no|string|The optional description of the relationship definition.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of string|Defines a section used to declare additional metadata information. |
 |properties|no|map of property refinements|An optional map of property refinements for the relationship definition. The referred properties must have been defined in the relationship type definition referred by the type keyword. New properties may not be added.|
 |attributes|no|map of attribute refinements|An optional map of attribute refinements for the relationship definition. The referred attributes must have been defined in the relationship type definition referred by the type keyword. New attributes may not be added.|
 |interfaces|no|map of interface refinements|The optional keyname used to define interface refinements for interfaces defined by the relationship type.|
@@ -5114,7 +5114,7 @@ definition:
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory data type for the property.|
 |description|no|string|The optional description for the property.|
-|metadata|no|map of yaml values|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of yaml values|Defines a section used to declare additional metadata information. |
 |required|no|boolean|An optional key that declares a property as required (true) or not (false). Defaults to true.|
 |default|no|\<must match property type\>|An optional key that may provide a value to be used as a default if not provided by another means.  The default keyname SHALL NOT be defined when property is not required (i.e. the value of the required keyname is false).|
 |value|no|\<see below\>|An optional key that may provide a fixed value to be used. A property that has a fixed value provided (as part of a definition or refinement) cannot be subject to a further refinement or assignment. That is, a fixed value cannot be changed.|
@@ -5340,7 +5340,7 @@ definition:
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory data type for the attribute.|
 |description|no|string|The optional description for the attribute.|
-|metadata|no|map of yaml data|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of yaml data|Defines a section used to declare additional metadata information. |
 |default|no|\<must match attribute type\>|An optional key that may provide a value to be used as a default if not provided by another means. This value SHALL be type compatible with the type declared by the attribute definition’s type keyname.|
 |validation|no|validation clause|The optional validation clause for the attribute.|
 |key_schema|conditional|schema definition|The schema definition for the keys used to identify entries in attributes of type TOSCA map (or types that derive from map). If not specified, the key_schema defaults to string. For attributes of type other than map, the key_schema is not allowed. |
@@ -6847,7 +6847,7 @@ definition:
 |:---- | :------ | :---- | :------ |
 |signatures|yes|map of signature definitions|The map of signature definitions.|
 |description|no|string| The description of the function.|
-|metadata|no|map of metadata|Defines additional metadata information.|
+|[metadata](#metadata)|no|map of metadata|Defines additional metadata information.|
 
 The following is the list of recognized keynames for a TOSCA function
 signature definition:
@@ -7253,7 +7253,7 @@ definition:
 | :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory name of the interface type on which this interface definition is based.|
 |description|no|string|The optional description for this interface definition.|
-|metadata|no|map of metadata|Defines additional metadata information.|
+|[metadata](#metadata)|no|map of metadata|Defines additional metadata information.|
 |inputs|no|map of parameter definitions and refinements|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the interface type definition).|
 |operations|no|map of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the interface type definition.|
 |notifications|no|map of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the interface type definition.|
@@ -7968,7 +7968,7 @@ definition:
 |file|yes|string|The mandatory URI string (relative or absolute) that can be used to locate the artifact’s file.|
 |repository|no|string|The optional name of the repository definition that contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.|
 |description|no|string|The optional description for the artifact definition.|
-|metadata|no|map of metadata|Defines additional metadata information.|
+|[metadata](#metadata)|no|map of metadata|Defines additional metadata information.|
 |artifact_version|no|string|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
 |checksum|no|string|The checksum used to validate the integrity of the artifact.|
 |checksum_algorithm|no|string|Algorithm used to calculate the artifact checksum (e.g. MD5, SHA [Ref]). Shall be specified if checksum is specified for an artifact.|
@@ -8064,7 +8064,7 @@ definition:
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
 |description|no|string|The optional description for the workflow definition.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of string|Defines a section used to declare additional metadata information. |
 |inputs|no|map of parameter definitions|The optional map of input parameter definitions.|
 |precondition|no|condition clause|Condition clause that must evaluate to true before the workflow can be processed.|
 |steps|no|map of step definitions|An optional map of valid imperative workflow step definitions.|
@@ -10201,7 +10201,7 @@ TOSCA group definition:
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory name of the group type the group definition is based upon.|
 |description|no|string|The optional description for the group definition.|
-|metadata|no|map of YAML data|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of YAML data|Defines a section used to declare additional metadata information. |
 |properties|no|map of property assignments|An optional map of property value assignments for the group definition.|
 |attributes|no|map of attribute assignments|An optional map of attribute value assignments for the group definition.|
 |members|no|list of string|The optional list of one or more node template names that are members of this group definition.|
@@ -10337,7 +10337,7 @@ definition:
 | ----- | ------- | ----- | ------- |
 |type|yes|string|The mandatory name of the policy type the policy definition is based upon.|
 |description|no|string|The optional description for the policy definition.|
-|metadata|no|map of string|Defines a section used to declare additional metadata information. |
+|[metadata](#metadata)|no|map of string|Defines a section used to declare additional metadata information. |
 |properties|no|map of property assignments|An optional map of property value assignments for the policy definition.|
 |targets|no|list of string|An optional list of valid node templates or Groups the Policy can be applied to.|
 |triggers|no|map of trigger definitions|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
