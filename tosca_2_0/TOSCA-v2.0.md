@@ -1284,19 +1284,19 @@ The following is the list of recognized keynames for a TOSCA file:
 |[description](#description)|no|string|Declares a description for this TOSCA file and its contents.|
 |[metadata](#metadata)|no|map of YAML values|Defines a section used to declare additional metadata information. Domain-specific TOSCA profile specifications may define keynames that are mandatory for their implementations.|
 |[dsl_definitions](#dsl-definitions)|no|N/A|Defines reusable YAML macros (i.e., YAML alias anchors) for use throughout this TOSCA file.|
-|artifact_types|no|map of artifact Types|Declares a map of artifact type definitions for use in this TOSCA file and/or external TOSCA files.|
-|data_types|no|map of data types|Declares a map of TOSCA data type definitions for use in this TOSCA file and/or external TOSCA files.|
-|capability_types|no|map of capability types|Declares a map of capability type definitions for use in this TOSCA file and/or external TOSCA files.|
-|interface_types|no|map of interface types|Declares a map of interface type definitions for use in this TOSCA file and/or external TOSCA files.|
+|[artifact_types](#artifact-type)|no|map of artifact Types|Declares a map of artifact type definitions for use in this TOSCA file and/or external TOSCA files.|
+|[data_types](#data-types)|no|map of data types|Declares a map of TOSCA data type definitions for use in this TOSCA file and/or external TOSCA files.|
+|[capability_types](#capability-types)|no|map of capability types|Declares a map of capability type definitions for use in this TOSCA file and/or external TOSCA files.|
+|[interface_types](#interface-types)|no|map of interface types|Declares a map of interface type definitions for use in this TOSCA file and/or external TOSCA files.|
 |relationship_types|no|map of relationship types|Declares a map of relationship type definitions for use in this TOSCA file and/or external TOSCA files.|
 |node_types|no|map of node types|Declares a map of node type definitions for use in this TOSCA file and/or external TOSCA files.|
-|group_types|no|map of group types|Declares a map of group type definitions for use in this TOSCA file and/or external TOSCA files.|
-|policy_types|no|map of policy types|Declares a map of policy type definitions for use in this TOSCA file and/or external TOSCA files.|
-|repositories|no|map of repository definitions|Declares a map of external repositories that contain artifacts that are referenced in this TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
-|functions|no|map of function definitions|Declares a map of function definitions for use in this TOSCA file and/or external TOSCA files.|
+|[group_types](#group-types)|no|map of group types|Declares a map of group type definitions for use in this TOSCA file and/or external TOSCA files.|
+|[policy_types](#policy-types)|no|map of policy types|Declares a map of policy type definitions for use in this TOSCA file and/or external TOSCA files.|
+|[repositories](#repository-definitions)|no|map of repository definitions|Declares a map of external repositories that contain artifacts that are referenced in this TOSCA file along with the addresses used to connect to them in order to retrieve the artifacts.|
+|[functions](#function-definitions)|no|map of function definitions|Declares a map of function definitions for use in this TOSCA file and/or external TOSCA files.|
 |[profile](#profiles)|no|string|The profile name that can be used by other TOSCA files to import the type definitions in this document.|
 |[imports](#import-definitions)|no|list of import definitions|Declares a list of import statements pointing to external TOSCA files or well-known profiles. For example, these may be file locations or URIs relative to the TOSCA file within the same TOSCA CSAR file.|
-|service_template|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application's or service's components, as well as relationship templates representing relations between these components.|
+|[service_template](#service-template-definition)|no|service template definition|Defines a template from which to create a mode/representation of an application or service. Service templates consist of node templates that represent the application's or service's components, as well as relationship templates representing relations between these components.|
 
 The following rules apply:
 
