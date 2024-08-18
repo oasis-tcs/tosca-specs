@@ -1391,7 +1391,7 @@ way. This section serves to define them at once.
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |derived_from|no|string|An optional parent type name from which this type derives.|
-|version|no|version|An optional version for the type definition.|
+|version|no|[version](#version)|An optional version for the type definition.|
 |[metadata](#metadata)|no|map|Defines a section used to declare additional metadata information.|
 |[description](#description)|no|string|An optional description for the type.|
 
@@ -2012,7 +2012,7 @@ definition:
 | :---- | :------ | :---- | :------ |
 |[url](#importing-tosca-file)|conditional|string|The url that references a TOSCA file to be imported. An import statement must include either a url or a profile, but not both.|
 |[profile](#profiles)|conditional|string|The profile name that references a named type profile to be imported. An import statement must include either a url or a profile, but not both.|
-|repository|conditional|string|The optional symbolic name of the repository definition where the imported file can be found as a string. The repository name can only be used when a url is specified.|
+|[repository](#repository-definitions)|conditional|string|The optional symbolic name of the repository definition where the imported file can be found as a string. The repository name can only be used when a url is specified.|
 |[namespace](#namespaces)|no|string|The optional name of the namespace into which to import the type definitions from the imported template or profile.|
 |[description](#description)|no|string|Declares a description for the import definition.|
 |[metadata](#metadata)|no|map of YAML values|Defines a section used to declare additional metadata information about the import definition.|
@@ -4181,7 +4181,7 @@ specify a default value.
 |string|timestamp|list|
 |integer|scalar-unit|map|
 |float|scalar-unit.time||
-|boolean|version||
+|boolean|[version](#version)||
 |bytes|||
 |nil||
 
@@ -7966,7 +7966,7 @@ definition:
 | :---- | :------ | :---- | :------ |
 |type|yes|string|The mandatory artifact type for the artifact definition.|
 |file|yes|string|The mandatory URI string (relative or absolute) that can be used to locate the artifact’s file.|
-|repository|no|string|The optional name of the repository definition that contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.|
+|[repository](#repository-definitions)|no|string|The optional name of the repository definition that contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.|
 |[description](#description)|no|string|The optional description for the artifact definition.|
 |[metadata](#metadata)|no|map of metadata|Defines additional metadata information.|
 |artifact_version|no|string|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
