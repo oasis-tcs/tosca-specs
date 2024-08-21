@@ -841,13 +841,13 @@ implemented. Instead, it aims to provide users of TOSCA with a mental
 model of how TOSCA implementations are expected to process TOSCA
 files.
 
-Note that it is not mandatory for compliant TOSCA implementations to
+Note that it is not mandatory for compliant TOSCA implementations tofour kinds of TOSCA entities defined in Section 2.4
 support all three service lifecycle phases. Some implementations may
 use TOSCA only for service design and delegate orchestration and
 ongoing lifecycle management functionality to external (non-TOSCA)
 orchestrators. Other implementations may decide to use TOSCA for all
 three phases of the service lifecycle. However, a complete
-architecture must anticipate all three lifecycle phases and must clearly distinguish between the four kinds of TOSCA entities defined in Section 2.4.
+architecture must anticipate all three lifecycle phases and must clearly distinguish between the different types of TOSCA abstractions introduced in the section [TOSCA language abstractions](#tosca-language-abstractions).
 
 ## 4.1 TOSCA Functional Architecture <a name=tosca-functional-architecture></a>
 
