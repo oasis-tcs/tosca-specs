@@ -2672,7 +2672,7 @@ These keynames can be used according to the following grammar:
   capabilities:
     <capability_definitions>
   requirements: 
-    - <requirement_definitions>
+    <requirement_definitions>
   interfaces: 
     <interface_definitions> 
   artifacts:
