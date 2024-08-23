@@ -5961,8 +5961,8 @@ table:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|\<input_parameter_name\>|yes|[string](#string)|The name of the parameter as defined in the inputs section of the service template.|
-|\<nested_input_parameter_name_or_index_*\>|no|[string](#string) \| [integer](#integer)|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. The index is a non-negative integer. If `$get_input`is used within a node template definition the function `$node_index` can retrieve the index of the current node representation among the nodes created from the same template, and/or if `$get_input`is used within a requirement definition the function `$relationship_index` can retrieve the index of the actual relationship among the relationships created from the same requirement. More information on multiplicity and node and relationship indexes can be found in [the chapter Creating Multiple Representations From Templates](#creating-multiple-representations-from-templates).|
+|input_parameter_name|yes|[string](#string)|The name of the parameter as defined in the inputs section of the service template.|
+|nested_input_parameter_name_or_index_*|no|[string](#string) \| [integer](#integer)|Some TOSCA input parameters are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some parameters represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. The index is a non-negative integer. If `$get_input`is used within a node template definition the function `$node_index` can retrieve the index of the current node representation among the nodes created from the same template, and/or if `$get_input`is used within a requirement definition the function `$relationship_index` can retrieve the index of the actual relationship among the relationships created from the same requirement. More information on multiplicity and node and relationship indexes can be found in [the chapter Creating Multiple Representations From Templates](#creating-multiple-representations-from-templates).|
 
 The following snippet shows an example of the simple get_input grammar:
 ```yaml
@@ -6039,9 +6039,9 @@ following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
-|\<[tosca_path](#tosca-path)\>|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path). |
-|\<property_name\>|yes|The name of the property definition from which the function will return the value.|
-|\<nested_property_name_or_index_*\> |no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
+|[tosca_path](#tosca-path)|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path). |
+|property_name|yes|The name of the property definition from which the function will return the value.|
+|nested_property_name_or_index_*|no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 The following example shows how to use the get_property function with an
 actual node template name:
@@ -6161,9 +6161,9 @@ following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
-|\<[tosca_path](#tosca-path)>|yes|Using the \<tosca_path> we can traverse the representation graph to extract information from a certain node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path).|
-|\<attribute_name\> |yes|The name of the attribute definition the function will return the value from.|
-|\<nested_attribute_name_or_index_*\> |no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
+|[tosca_path](#tosca-path)|yes|Using the \<tosca_path> we can traverse the representation graph to extract information from a certain node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path).|
+|attribute_name|yes|The name of the attribute definition the function will return the value from.|
+|nested_attribute_name_or_index_*|no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 The $get_attribute function is used in the same way as the equivalent
 $get_property functions described above. Please see their examples and
@@ -6183,8 +6183,8 @@ following table:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ----- |
-|\<[tosca_path](#tosca-path)>|yes|[string](#string)|Using the <tosca_path a TOSCA processor can traverse the representation graph to the node that contains the artifact. The syntax is described in [the section TOSCA Path](#tosca-path).|
-|<artifact_name\>|yes|[string](#string)|The name of the artifact definition for which the function will return the location.|
+|[tosca_path](#tosca-path)|yes|[string](#string)|Using the <tosca_path a TOSCA processor can traverse the representation graph to the node that contains the artifact. The syntax is described in [the section TOSCA Path](#tosca-path).|
+|artifact_name|yes|[string](#string)|The name of the artifact definition for which the function will return the location.|
 
 The following example uses a snippet of a WordPress
 \[[WordPress](#CIT_WORDPRESS)\] web application to show how to use the
@@ -6228,7 +6228,7 @@ It takes the arguments shown in the following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
-|<nested_value_name_or_index\> |no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
+|nested_value_name_or_index|no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 #### 10.2.1.6 node_index <a name=node_index></a>
 
@@ -6273,8 +6273,8 @@ following table:
 
 |Argument|Mandatory|Description|
 | ----- | ------- | ----- | 
-|\<[tosca_path](#tosca-path)\>|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. In this case the \<tosca_path\> must lead to a capability context. |
-|\<property_name\>|yes|The name of the capability property definition from which the function will return the value. In this case it must be a allocatable property (i.e. of integer, float, or scalar property types). |
+|[tosca_path](#tosca-path)|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. In this case the \<tosca_path\> must lead to a capability context. |
+|property_name|yes|The name of the capability property definition from which the function will return the value. In this case it must be a allocatable property (i.e. of integer, float, or scalar property types). |
 
 Usage example:
 ```yaml
@@ -6588,8 +6588,8 @@ It takes the arguments shown in the following table:
 
 Argument|Mandatory|Type|Description
 | ----- | ------- | ----- | ----- |
-|\<list of strings\>|yes|list of string or string value expressions|A list of one or more strings (or expressions that result in a list of string values) which can be joined together into a single string.|
-|\<delimiter\>|no|[string](#string)|An optional delimiter used to join the string in the provided list.|
+|list of strings|yes|list of string or string value expressions|A list of one or more strings (or expressions that result in a list of string values) which can be joined together into a single string.|
+|delimiter|no|[string](#string)|An optional delimiter used to join the string in the provided list.|
 
 The following code snippet shows example $join functions:
 ```yaml
