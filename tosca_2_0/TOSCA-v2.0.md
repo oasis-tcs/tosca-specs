@@ -6037,11 +6037,11 @@ $get_property: [ <tosca_path>, <property_name>, <nested_property_name_or_index_1
 The *$get_property* function takes the arguments shown in the
 following table:
 
-|Argument|Mandatory|Description|
-| ----- | ------- | ----- | 
-|[tosca_path](#tosca-path)|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path). |
-|property_name|yes|The name of the property definition from which the function will return the value.|
-|nested_property_name_or_index_*|no|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
+|Argument|Mandatory|Type|Description|
+| ----- | ------- | ----- | ----- | 
+|[tosca_path](#tosca-path)|yes|[string](#string)|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path). |
+|property_name|yes|[string](#string)|The name of the property definition from which the function will return the value.|
+|nested_property_name_or_index_*|no|list of [string](#string) or [integer](#integer)|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 The following example shows how to use the get_property function with an
 actual node template name:
@@ -6159,11 +6159,11 @@ $get_attribute: [<tosca_path, <attribute_name>, <nested_attribute_name_or_index_
 The *$get_attribute* function takes the arguments shown in the
 following table:
 
-|Argument|Mandatory|Description|
-| ----- | ------- | ----- | 
-|[tosca_path](#tosca-path)|yes|Using the \<tosca_path> we can traverse the representation graph to extract information from a certain node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path).|
+|Argument|Mandatory|Type|Description|
+| ----- | ------- | ----- | ----- | 
+|[tosca_path](#tosca-path)|yes|[string](#string)|Using the \<tosca_path> we can traverse the representation graph to extract information from a certain node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path).|
 |attribute_name|yes|The name of the attribute definition the function will return the value from.|
-|nested_attribute_name_or_index_*|no|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
+|nested_attribute_name_or_index_*|no|list of [string](#string) or [integer](#integer)|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 The $get_attribute function is used in the same way as the equivalent
 $get_property functions described above. Please see their examples and
@@ -6226,9 +6226,9 @@ $value: [<nested_value_name_or_index>, ... ]
 ```
 It takes the arguments shown in the following table:
 
-|Argument|Mandatory|Description|
-| ----- | ------- | ----- | 
-|nested_value_name_or_index|no|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
+|Argument|Mandatory|Type|Description|
+| ----- | ------- | ----- | ----- | 
+|nested_value_name_or_index|no|list of [string](#string) or [integer](#integer)|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
 #### 10.2.1.6 node_index <a name=node_index></a>
 
@@ -6271,10 +6271,10 @@ $available_allocation: [ <tosca_path>, <property_name> ]
 The *$available_allocation* function takes the arguments shown in the
 following table:
 
-|Argument|Mandatory|Description|
-| ----- | ------- | ----- | 
-|[tosca_path](#tosca-path)|yes|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. In this case the \<tosca_path\> must lead to a capability context. |
-|property_name|yes|The name of the capability property definition from which the function will return the value. In this case it must be a allocatable property (i.e. of integer, float, or scalar property types). |
+|Argument|Mandatory|Type|Description|
+| ----- | ------- | ----- | ----- | 
+|[tosca_path](#tosca-path)|yes|[string](#string)|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. In this case the \<tosca_path\> must lead to a capability context. |
+|property_name|yes|[string](#string)|The name of the capability property definition from which the function will return the value. In this case it must be a allocatable property (i.e. of integer, float, or scalar property types).|
 
 Usage example:
 ```yaml
