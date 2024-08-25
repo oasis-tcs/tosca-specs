@@ -168,8 +168,6 @@ TOSCA 1.3. In particular:
 
 ## 1.3 Glossary <a name=glossary></a>
 
-<!-- Optional section with suggested subsections -->
-
 ### 1.3.1 Definitions of terms <a name=definitions-of-terms></a>
 The following terms are used throughout this specification and have
 the following definitions when used in context of this document.
@@ -351,7 +349,6 @@ TOSCA can be used to specify automated lifecycle management of the following:
 - Infrastructure-as-a-Service Clouds: automate the deployment and
   management of workloads in IaaS clouds such as OpenStack, Amazon Web
   Services, Microsoft Azure, Google Cloud, and others.
-<!-- May need to acknowledge the above terms as trademarks. Can't find guidance on OASIS web site, take advice -->
 - Cloud-Native Applications: deploy containerized applications,
   micro-services, and service meshes, for example by interfacing to
   orchestration platforms such as Kubernetes.
@@ -893,7 +890,6 @@ A TOSCA parser performs the following functions:
   either individually or as complete profiles
 - Outputs valid normalized node templates. Note that normalized node
   templates may include unresolved (*dangling*) requirements.
-<!--- We have not explained what we mean by normalized template -->
 
 ### 4.2.2 Resolver <a name=resolver></a>
 
@@ -1168,7 +1164,7 @@ TOSCA templates:
 
 ### 5.1.4 TOSCA File Reuse <a name=tosca-file-reuse></a>
 A single TOSCA file may be reused by including it in one or more other TOSCA file. Each file may be separately maintained and use it's own naming scheme. The resolution of naming scheme conflicts is discussed later in this document.
-<!--- Should this template reuse not specify that it's only the node types that can be reused not the service templates temselves. -->
+
 
 ## 5.2 Mandatory Keynames <a name=mandatory-keynames></a>
 
@@ -1693,7 +1689,6 @@ definition:
 |[description](#description)|no|[string](#string)|Declares a description for the repository being defined.|
 |[metadata](#metadata)|no|map of YAML values|Defines a section used to declare additional metadata information about the repository being defined.|
 |url|yes|[string](#string)|The URL or network address used to access the repository.|
-<!---- Calin: as we already define previously that any multiline definition admits the description and metadata shold we keep it here (and all subsequent places?) -->
 
 These keynames can be used to define a repository using a
 grammar as follows:
@@ -1743,7 +1738,7 @@ functions:
    ...
    <function_definition_n>
 ```
-<!---- Calin 2023-05-28: the validation clause(s) is a mess throughout the document, we should make it singular, and eliminate the lists -->
+
 The following example shows the definition of a square root function:
 ```yaml
 functions:
@@ -9036,12 +9031,7 @@ have the following meaning:
 - interface_mappings: represents the map of interface mappings.
 
 Please note:
-  <!---- Calin-2024-06-05: I think that this constraint should not exist.
-  This will be evaluated from the directives. Could even have all
-  3 directives [select, substitute, create]
-  - If a node is select only the node_filter is relevat (rest might not be defined, it is ignored)
-  - If a node is substitute then the implementations are irelevant, they are ignored
-  - If a node is create, the node_filter is irelevant -->
+  
 - A substituting service template MUST be a valid TOSCA template in
   its own right (i.e., when not used as a substituting
   implementation). Specifically, all the required properties of all
@@ -10633,7 +10623,7 @@ metadata:
 
 -------
 # 18 Conformance <a name=conformance></a>
-<!-- Required section -->
+
 The content in this section is normative unless otherwise labeled except:
   - the examples
   - references unless labelled as normative.
@@ -10761,8 +10751,6 @@ satisfies all the statements below:
 
 # Appendix A. References
 
-<!-- Required section -->
-
 This appendix contains the normative and informative references that are used in this document.
 
 While any hyperlinks included in this appendix were valid at the time of publication, OASIS cannot guarantee their long-term validity.
@@ -10803,8 +10791,6 @@ edition, 2006; updated in 2014\]*”,
 
 # Appendix B. Safety, Security and Privacy Considerations
 
-<!-- Optional section -->
-
 (Note: OASIS strongly recommends that Technical Committees consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
 
 While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF [[RFC3552](#rfc3552)] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
@@ -10819,11 +10805,7 @@ Remove this note before submitting for publication.)
 
 # Appendix C. Acknowledgments
 
-<!-- Required section -->
-
 ## C.1 Special Thanks
-
-<!-- This is an optional subsection to call out contributions from TC members. If a TC wants to thank non-TC members then they should avoid using the term "contribution" and instead thank them for their "expertise" or "assistance". -->
 
 The editors would like to gratefully acknowledge the work of Paul
 Lipton, Chair-Emeritus of the OASIS TOSCA TC, who recognized the need
@@ -10831,8 +10813,6 @@ for extending the scope of the TOSCA language and initiated the work
 on TOSCA Version 2.0.
 
 ## C.2 Participants
-
-<!-- A TC can determine who they list here, however, TC Observers must not be listed. It is common practice for TCs to list everyone that was part of the TC during the creation of the document, but this is ultimately a TC decision on who they want to list and not list, and in what order. -->
 
 The following individuals have participated in the creation of this
 specification and are gratefully acknowledged:
