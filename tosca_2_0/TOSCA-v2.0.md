@@ -334,7 +334,8 @@ TOSCA's modularity features allow some service design decisions to be
 made by an orchestrator at deployment time rather than by a service
 designer at service design time.
 TOSCA also allows for the definition of abstract components that hide
-technology and vendor-specific implementation details. The choice of
+technology and vendor-specific implementation details, via mechanisms 
+such as derivation of types and substitution of nodes. The choice of
 how to *implement* abstract components can be left to the orchestrator
 at deployment time. This further increases the value of TOSCA as a
 technology and vendor-neutral technology language orchestration. TOSCA supports the use of *policies*
@@ -356,7 +357,7 @@ TOSCA can be used to specify automated lifecycle management of the following:
   Network Functions and their composition into complex network services.
 - Software Defined Networking: support on-demand creation of network
   services (for example SD-WAN).
-- Functions-as-a-Service: define abstract software applications without
+- Functions-as-a-Service: define software applications without
   any deployment or operational considerations.
 - IoT and Edge computing: deploy many very similar copies of a service at the network edge.
 - Process Automation: support open and interoperable process control
@@ -481,8 +482,8 @@ The use of types in TOSCA also provides the additional benefits of
 abstraction, information hiding, and reuse. TOSCA types can be
 organized in a *type hierarchy* where one or more type definitions 
 can inherit from another type, each derived type may then be refined. 
-This promotes reuse. The base type may be abstract and the derived types 
-may be concrete which promotes abstraction. **TOSCA node types**
+This promotes reuse. The base type may be more generic and the derived types 
+may be more concrete which promotes abstraction. **TOSCA node types**
 and **TOSCA relationship types** define an externally visible
 *management façade* for entities of that type while hiding internal
 implementation details. This management façade defines interfaces that
@@ -672,11 +673,11 @@ for defining requirements and capabilities:
 
 TOSCA provides support for decomposing service components using its
 **substitution mapping** feature. This feature allows for the
-definition of *abstract* service designs that consist of components
+definition of *abstract* service designs that consist of generic components
 that are largely independent of specific technologies or vendor
 implementations. Technology or vendor-specific implementation details
-can be defined for each abstract component using *substituting*
-service templates that describe the internals of that component.
+can be defined for each generic component using *substituting*
+service templates that describe the internals of that component. 
 
 For example, a service template for a business application that is
 hosted on an application server tier might focus on defining the
@@ -1112,10 +1113,10 @@ can be derived from a parent type. A parent type can in turn be
 derived from its own parent type. There is no limit to the depth of a
 chain of derivations. Inheritance is a useful feature in support of
 abstraction. For example, base node types can be used to define
-abstract components without specifying technology or vendor-specific
+generic components without specifying technology or vendor-specific
 details about those components. Concrete derived node types can the be
 used to define technology-specific or vendor-specific specializations
-of the abstract types.
+of the generic types.
 
 The TOSCA specification includes *type derivation rules* that describe
 which keyname definitions are inherited from the parent type and which
@@ -1617,9 +1618,9 @@ The following code snippet shows example node type definitions:
 ```yaml
 node_types:
   Database:
-    description: "An abstract node type for all databases"
+    description: "An generic node type for all databases"
   WebApplication:
-    description: "An abstract node type"
+    description: "An generic node type"
   my_webapp_node_type:
     derived_from: WebApplication
     properties:
@@ -1786,9 +1787,8 @@ packages.
 
 TOSCA files that define profiles can be bundled together with other
 TOSCA files in the same CSAR package. For example, a TOSCA profile
-that defines *abstract* node types can be packaged together with TOSCA
-files that define substituting service templates for those abstract
-types.
+that defines more abstract node types can be packaged together with TOSCA
+files that define substituting service templates for those types.
 
 ### 6.7.1 Grammar <a name=grammar></a>
 A TOSCA file defines a TOSCA Profile using the `profile` keyword as
@@ -2898,8 +2898,7 @@ used by the TOSCA resolver to populate nodes in the representation graph.
     the selection will be based solely on the node type.
   - A detailed description of the `node_filter` is given in the [Node Filter Definition Section](#node-filter-definition).
 - `substitute` is the directive that specifies that this node's realization and behavior
-  should be realized by an internal service created from a substitution template. The substituted
-  node is also denoted as an abstract node within this specification.
+  should be realized by an internal service created from a substitution template.
   - A node representation for the substituted node will be created and added to the representation
     graph of the top-level service, and can be accessed in the top-level service via its symbolic name
     as any other node representation. Within the the top-level service scope none of the substitution
@@ -8955,11 +8954,13 @@ internals of those nodes. Substitution provides a *declarative*
 mechanism for implementing TOSCA nodes that can be used as an
 alternative to *implementation artifacts*. Substitution allows for
 simplified representations of complex systems that *abstract away*
-technology or vendor-specific implementation details. Abstract nodes
+technology or vendor-specific implementation details. More generic nodes
 that expect to be *substituted* are based on node templates that are
 annotated with the `substitute` directive. Service templates advertize
 their ability to provide substituting implementations using the
-`substitution_mapping` section in the service template definition.
+`substitution_mapping` section in the service template definition. 
+Substitution mapping can also be used to provide alternative implementation(s)
+(on a more detailed level) to those already defined in the node type or node template.
 
 The content in this section is normative unless otherwise labeled except:
   - the examples
@@ -8990,14 +8991,14 @@ Note that while capabilities and relationships may define properties
 and attributes, capability mappings and requirement mappings do not
 propagate these values. Capability and requirement mappings are used
 exclusively to control service topology. If capability or relationship
-values must be passed between an abstract node and its substituting
+values must be passed between the substituted node and its substituting
 service, property and attribute mappings must be used to define how
 these values are mapped.
 
 |Keyname|Mandatory|Type|Description|
 |---|---|---|---|
 |node_type|yes|[string](#string)|The name of the node type of the nodes for which the service template can provide an implementation.|
-|substitution_filter|no|condition clause|The filter that further constrains the abstract nodes for which this service template can provide an implementation. For an abstract node that needs to be substituted, the condition clause specified by the substitution filter must evaluate to `True` for this template to be a valid substitution candidate.|
+|substitution_filter|no|condition clause|The filter that further constrains the nodes for which this service template can provide an implementation. For a node that needs to be substituted, the condition clause specified by the substitution filter must evaluate to `True` for this template to be a valid substitution candidate.|
 |properties|no|[map](#map) of [property mappings](#property-mapping)|The map of property mappings that map properties of the substituted node to inputs of the service template.|
 |attributes|no|[map](#map) of [attribute mappings](#attribute-mapping)|The map of attribute mappings that map outputs from the service template to attributes of the substituted node.|
 |capabilities|no|[map](#map) of [capability mappings](#capability-mapping)|The map of capability mappings.|
@@ -9019,7 +9020,7 @@ have the following meaning:
 - node_type_name: represents the node type name for which the
   service template can offer an implementation.
 - substitution_filter: represents a filter that reduces the set of
-  abstract nodes for which this service template is an implementation
+  nodes for which this service template is an implementation
   by only substituting for those nodes whose properties and
   capabilities satisfy the condition clause specified in the filter.
 - property_mappings: represents the map of *property to input* mappings.
