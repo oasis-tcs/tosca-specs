@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 07
 
-## 12 August 2024
+## 10 September 2024
 
 &nbsp;
 
@@ -168,18 +168,24 @@ TOSCA 1.3. In particular:
 
 ## 1.3 Glossary <a name=glossary></a>
 
-### 1.3.1 Definitions of terms <a name=definitions-of-terms></a>
+### 1.3.1 Definitions of Terms <a name=definitions-of-terms></a>
 The following terms are used throughout this specification and have
 the following definitions when used in context of this document.
 
 |Term|Definition|
 |---|---|
-|Representation Model|A deployed service is a running instance of a service template. The instance is typically derived by running a declarative workflow that is automatically generated based on the node templates and relationship templates defined in the service template.|
-|Node Template| A *node template* specifies the occurrence of a component node as part of a service template. Each node template refers to a node type that defines the semantics of the node (e.g., properties, attributes, requirements, capabilities, interfaces). Node types are defined separately for reuse purposes.                                                          |
-|Relationship Template| A *relationship template* specifies the occurrence of a relationship between nodes in a service template. Each relationship template refers to a relationship type that defines the semantics of the relationship (e.g., properties, attributes, interfaces, etc.). relationship types are defined separately for reuse purposes.                                           |
-|Service Template| A *service template* is used to specify the *topology* (or structure) and *orchestration* (or invocation of management behavior) of services so that they can be provisioned and managed in accordance with constraints and policies.                                                                                                                   |
-|Topology Model| A Topology Model defines the structure of a service in the context of a service template. A Topology model consists of a set of node template and relationship template definitions that together define the topology of a service as a (not necessarily connected) directed graph.                                                                                  |
-|Abstract Node Template | An abstract node template is a node template that doesn’t define any implementations for the TOSCA lifecycle management operations. Service designers explicitly mark node templates as abstract using the substitute directive. TOSCA orchestrators provide implementations for abstract node templates by finding substituting templates for those node templates. |
+|External implementation|An external implementation is a *component* in the real world that can be used or managed by an Orchestrator. External implementations can consist of physical resources deployed in the real world as well as logical or virtual components provisioned or configured on those resources.|
+|System|A *collection* of one or more external implementations that is designed to work together to deliver a specific mission.|
+|Service|A system that can be deployed, provisioned, or configured *on-demand* by an Orchestrator.|
+|Topology|A topology defines the *structure* of a system. Topologies define the external implementations that make up the system as well as the interactions or other dependencies between these components.|
+|Representation|A representation is a *model* maintained by an Orchestrator that represents external implementations. Representations capture those aspects of external implementations that are relevant for management purposes.|
+|Service representation|A model that represents a *system* of one or more external implementations. Service representations model the topology of systems as *directed graphs* that consist of node representations and relationship representations.|
+|Node representation|Node representations are the *vertices* in a service representation graph. They represent external implementations.|
+|Relationship representation|Relationship representations are the *edges* in a service representation graph. They represent the interactions or other dependencies between the external implementations in a system.|
+|Template|Templates are *blueprints* that capture the design of external implementations. Representations are created from templates.|
+|Service template|A template that captures the design of a entire system or service. Service templates consist of node templates from which node representations can be created. Node templates can include requirements (and associated relationship templates) from which relationship representations can be created. Service templates can also define the actions required to create or configure external implementations based on these node and relationship representations.|
+|Node template|A template that captures the design of an individual component. Node templates define values for the configurable properties of components, specify observable runtime state, and define requirements and capabilities that specify how components interact. Node representations are created from node templates.|
+|Relationship template|A template that captures the design of *interactions* between components. Relationship representations are created from relationship templates.|
 
 ### 1.3.2 Acronyms and Abbreviations <a name=acronyms-and-abbreviations></a>
 Defined in this document
