@@ -1380,7 +1380,7 @@ different TOSCA type entities are presented further in the document:
 - [Node Types](#node-types)
 - [Relationship Types](#relationship-types)
 - [Interface Types](#interface-types)
-- [Capability Types](#)
+- [Capability Types](#capability-types)
 - [Data Types](#data-types)
 - [Artifact Types](#artifact-types)
 - [Group Types](#group-types)
@@ -2200,7 +2200,6 @@ imports:
   - url: /templates/TOSCAFileB.yaml
 node_types:
   MyNode:
-    derived_from: Root
     properties:
       # omitted here for brevity 
     capabilities:
@@ -2243,7 +2242,6 @@ imports:
     namespace: fileB
 node_types:
   MyNode:
-    derived_from: Root
     properties:
       # omitted here for brevity 
     capabilities:
@@ -2263,7 +2261,6 @@ imports:
     namespace: fileB
 node_types:
   MyNode:
-    derived_from: Root
     properties:
       # omitted here for brevity 
     capabilities:
@@ -3291,7 +3288,7 @@ have the following meaning:
 
   - if valid_source_node_types is defined in the capability type, each
     element in this list MUST either be in that list or derived from an
-    element in that list; if valid_source_types is not defined in the
+    element in that list; if valid_source_node_types is not defined in the
     capability type then no restrictions are applied.
 
 - relationship_type_names: represents the optional list of one or more
@@ -3300,7 +3297,7 @@ have the following meaning:
 
   - if valid_relationship_types is defined in the capability type, each
     element in this list MUST either be in that list or derived from an
-    element in that list; if valid_source_types is not defined in the
+    element in that list; if valid_relationship_types is not defined in the
     capability type then no restrictions are applied.
 
 The following single-line grammar may be used when only the capability
@@ -7921,7 +7918,6 @@ The following shows an example artifact type definition:
 ```yaml
 my_artifact_type:
   description: Java Archive artifact type
-  derived_from: Root
   mime_type: application/java-archive
   file_ext: [ jar ]
   properties:
@@ -10316,7 +10312,6 @@ The following represents a policy type definition:
 policy_types:
   placement.Container.Linux:
     description: My company’s placement policy for linux 
-    derived_from: Root
 ```
 ## 16.4 Policy Definition <a name=policy-definition></a>
 
@@ -10635,28 +10630,11 @@ The content in this section is normative unless otherwise labeled except:
   - the examples
   - references unless labelled as normative.
 
-> (Note: The [OASIS TC
-> Process](https://www.oasis-open.org/policies-guidelines/tc-process-2017-05-26/#wpComponentsConfClause)
-> requires that a specification approved by the TC at the Committee
-> Specification Public Review Draft, Committee Specification or OASIS
-> Standard level must include a separate section, listing a set of
-> numbered conformance clauses, to which any implementation of the
-> specification must adhere in order to claim conformance to the
-> specification (or any optional portion thereof). This is done by
-> listing the conformance clauses here.  For the definition of
-> "conformance clause," see [OASIS Defined
-> Terms](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2018-05-22/#dConformanceClause).
-
-> See "Guidelines to Writing Conformance Clauses":
-> https://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.
-
-> Remove this note before submitting for publication.)
-
 ## 18.1 Conformance Targets <a name=conformance-targets></a>
 
 The implementations subject to conformance are listed here:
 
-- [TOSCA YAML service template](#conformance-clause-1:-tosca-yaml-service-template)
+- [TOSCA file](#conformance-clause-1:-tosca-file)
 
 - [TOSCA processor](#conformance-clause-2:-tosca-processor)
 
@@ -10666,22 +10644,30 @@ The implementations subject to conformance are listed here:
 
 - [TOSCA archive](#conformance-clause-5:-tosca-archive)
 
-## 18.2 Conformance Clause 1: TOSCA YAML Service Template <a name=conformance-clause-1:-tosca-yaml-service-template></a>
+## 18.2 Conformance Clause 1: TOSCA File <a name=conformance-clause-1:-tosca-file></a>
 
-A document conforms to this specification as TOSCA YAML service template
+A document conforms to this specification as a TOSCA file
 if it satisfies all the statements below:
 
 1.  It is valid according to the grammar, rules and requirements defined
-    in section 3 “TOSCA definitions in YAML”.
+    in Section 6 [TOSCA File Definition](#tosca-file-definition).
 
-2.  When using functions defined in section 4 “TOSCA functions”, it is
+2.  When using functions defined in section 10 [TOSCA Functions](#tosca-functions), it is
     valid according to the grammar specified for these functions.
 
-3.  When using or referring to data types, artifact types, capability
-    types, interface types, node types, relationship types, group types,
-    policy types defined in section 5 “TOSCA normative type
-    definitions”, it is valid according to the definitions given in
-    section 5.
+3.  When defining entities that use data types, artifact types,
+    capability types, interface types, node types, relationship types,
+    group types, or policy types, these entity definitions are valid
+    according to the definitions given in:
+
+    - Section 7.1 [Node Type](#node-type)
+    - Section 7.3 [Relationship Type](#relationship-type)
+    - Section 8.1 [Capability Type](#capability-type)
+    - Section 9.2 [Data Type](#data-type)
+    - Section 11.1 [Interface Type](#interface-type)
+    - Section 12.1 [Artifact Type](#artifact-type)
+    - Section 16.1 [Group Type](#group-type)
+    - Section 16.3 [Policy Type](#policy-type)
 
 ## 18.3 Conformance Clause 2: TOSCA Processor <a name=conformance-clause-2:-tosca-processor></a>
 
