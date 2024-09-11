@@ -1380,7 +1380,7 @@ different TOSCA type entities are presented further in the document:
 - [Node Types](#node-types)
 - [Relationship Types](#relationship-types)
 - [Interface Types](#interface-types)
-- [Capability Types](#)
+- [Capability Types](#capability-types)
 - [Data Types](#data-types)
 - [Artifact Types](#artifact-types)
 - [Group Types](#group-types)
@@ -2200,7 +2200,6 @@ imports:
   - url: /templates/TOSCAFileB.yaml
 node_types:
   MyNode:
-    derived_from: Root
     properties:
       # omitted here for brevity 
     capabilities:
@@ -2243,7 +2242,6 @@ imports:
     namespace: fileB
 node_types:
   MyNode:
-    derived_from: Root
     properties:
       # omitted here for brevity 
     capabilities:
@@ -2263,7 +2261,6 @@ imports:
     namespace: fileB
 node_types:
   MyNode:
-    derived_from: Root
     properties:
       # omitted here for brevity 
     capabilities:
@@ -2595,7 +2592,7 @@ policies:
   - my_placement_policy:
       type: mycompany.placement
 ```
-### 6.9.10 Substitution Mapping <a name=substitution-mapping></a>
+### 6.9.10 Substitution Mappings <a name=substitution-mappings></a>
 
 The `substitution_mappings`section of a service template declares this
 service template as a candidate for substituting nodes marked with the
@@ -2651,9 +2648,9 @@ node type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[properties]|(#property-definition)no|map of property definitions|An optional map of property definitions for the node type.|
-|[attributes]|(#attribute-definition)no|map of attribute definitions|An optional map of attribute definitions for the node type.|
-|[capabilities]|(#capability-definition)no|map of capability definitions|An optional map of capability definitions for the node type.|
+|[properties](#property-definition)|no|map of property definitions|An optional map of property definitions for the node type.|
+|[attributes](#attribute-definition)|no|map of attribute definitions|An optional map of attribute definitions for the node type.|
+|[capabilities](#capability-definition)|no|map of capability definitions|An optional map of capability definitions for the node type.|
 |[requirements](#requirement-definition)|no|[list](#list) of requirement definitions|An optional list of requirement definitions for the node type.|
 |[interfaces](#interface-definition)|no|map of interface definitions|An optional map of interface definitions supported by the node type.|
 |[artifacts](#artifact-definition)|no|map of artifact definitions|An optional map of artifact definitions for the node type.|
@@ -2942,12 +2939,12 @@ relationship type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Definition/Type|Description|
 | :---- | :------ | :---- | :------ |
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the relationship type.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute definitions|An optional map of attribute definitions for the relationship type.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the relationship type.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute definitions|An optional map of attribute definitions for the relationship type.|
 |[interfaces](#interface-definition)|no|[map](#map) of interface definitions|An optional map of interface definitions supported by the relationship type.|
-|valid_[capability_types](#capability-types)|no|[list](#list) of [string](#string)|An optional list of one or more names of capability types that are valid targets for this relationship. If undefined, all capability types are valid.|
-|valid_target_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid targets for this relationship. If undefined, all node types are valid targets.|
-|valid_source_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid sources for this relationship. If undefined, all node types are valid sources.|
+|valid_capability_types|no|[list](#list) of [string](#string)|An optional list of one or more names of capability types that are valid targets for this relationship. If undefined, all capability types are valid.|
+|valid_target_node_types|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid targets for this relationship. If undefined, all node types are valid targets.|
+|valid_source_node_types|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid sources for this relationship. If undefined, all node types are valid sources.|
 
 These keynames can be used according to the following grammar:
 ```yaml
@@ -3063,8 +3060,8 @@ relationship template definition:
 |[type](#relationship-types)|yes|[string](#string)|The mandatory name of the relationship type on which the relationship template is based.|
 |[description](#description)|no|[string](#string)|An optional description for the relationship template.|
 |[metadata](#metadata)|no|[map](#map) of string|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)|no|[map](#map) of property assignments|An optional map of property assignments for the relationship template.|
-|[attributes]|(#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute assignments for the relationship template.|
+|[properties](#property-definition)|no|[map](#map) of property assignments|An optional map of property assignments for the relationship template.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute assignments for the relationship template.|
 |[interfaces](#interface-assignment)|no|[map](#map) of interface assignments|An optional map of interface assignments for the relationship template.|
 |copy|no|[string](#string)|The optional (symbolic) name of another relationship template from which to copy all keynames and values into this relationship template.|
 
@@ -3146,10 +3143,10 @@ capability type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the capability type.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute definitions|An optional map of attribute definitions for the capability type.|
-|valid_source_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources.|
-|valid_[relationship_types](#relationship-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the capability type.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute definitions|An optional map of attribute definitions for the capability type.|
+|valid_source_node_types|no|[list](#list) of [string](#string)|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources.|
+|valid_relationship_types|no|[list](#list) of [string](#string)|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid.|
 
 These keynames can be used according to the following grammar:
 ```yaml
@@ -3243,10 +3240,10 @@ definition:
 |[type](#capability-type)|yes|[string](#string)|The mandatory name of the capability type on which this capability definition is based.|
 |[description](#description)|no|[string](#string)|The optional description of the Capability definition.|
 |[metadata](#metadata)|no|[map](#map) of string|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)no|[map](#map) of property refinements|An optional map of property refinements for the capability definition. The referred properties must have been defined in the capability type definition referred by the type keyword. New properties may not be added.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute refinements|An optional map of attribute refinements for the capability definition. The referred attributes must have been defined in the capability type definition referred by the type keyword. New attributes may not be added.|
-|valid_source_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources. If valid_source_node_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
-|valid_[relationship_types](#relationship-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid. If valid_relationship_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
+|[properties](#property-definition)|no|[map](#map) of property refinements|An optional map of property refinements for the capability definition. The referred properties must have been defined in the capability type definition referred by the type keyword. New properties may not be added.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute refinements|An optional map of attribute refinements for the capability definition. The referred attributes must have been defined in the capability type definition referred by the type keyword. New attributes may not be added.|
+|valid_source_node_types|no|[list](#list) of [string](#string)|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources. If valid_source_node_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
+|valid_relationship_types|no|[list](#list) of [string](#string)|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid. If valid_relationship_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
 
 Note that the `occurrences` keyname is deprecated in TOSCA 2.0. By
 default, the number of occurrences is UNBOUNDED, i.e. any number of
@@ -3291,7 +3288,7 @@ have the following meaning:
 
   - if valid_source_node_types is defined in the capability type, each
     element in this list MUST either be in that list or derived from an
-    element in that list; if valid_source_types is not defined in the
+    element in that list; if valid_source_node_types is not defined in the
     capability type then no restrictions are applied.
 
 - relationship_type_names: represents the optional list of one or more
@@ -3300,7 +3297,7 @@ have the following meaning:
 
   - if valid_relationship_types is defined in the capability type, each
     element in this list MUST either be in that list or derived from an
-    element in that list; if valid_source_types is not defined in the
+    element in that list; if valid_relationship_types is not defined in the
     capability type then no restrictions are applied.
 
 The following single-line grammar may be used when only the capability
@@ -3367,8 +3364,8 @@ assignment:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[properties]|(#property-definition)no|[map](#map) of  property assignments|An optional map of property assignments for the capability definition.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute assignments|An optional map of attribute assignments for the capability definition.|
+|[properties](#property-definition)|no|[map](#map) of  property assignments|An optional map of property assignments for the capability definition.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute assignments for the capability definition.|
 |directives|no|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
 
 
@@ -3462,8 +3459,8 @@ support the following keynames:
 |[type](#relationship-types)|yes|[string](#string)|The mandatory keyname used to provide the name of the relationship type used for the relationship.|
 |[description](#description)|no|[string](#string)|The optional description of the relationship definition.|
 |[metadata](#metadata)|no|[map](#map) of string|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)no|[map](#map) of property refinements|An optional map of property refinements for the relationship definition. The referred properties must have been defined in the relationship type definition referred by the type keyword. New properties may not be added.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute refinements|An optional map of attribute refinements for the relationship definition. The referred attributes must have been defined in the relationship type definition referred by the type keyword. New attributes may not be added.|
+|[properties](#property-definition)|no|[map](#map) of property refinements|An optional map of property refinements for the relationship definition. The referred properties must have been defined in the relationship type definition referred by the type keyword. New properties may not be added.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute refinements|An optional map of attribute refinements for the relationship definition. The referred attributes must have been defined in the relationship type definition referred by the type keyword. New attributes may not be added.|
 |[interfaces](#interface-definition)|no|[map](#map) of interface refinements|The optional keyname used to define interface refinements for interfaces defined by the relationship type.|
 
 The keynames supported by requirement definitions and relationship
@@ -4908,7 +4905,7 @@ data type definition has the following recognized keynames:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |validation|no|[validation clause](#validation-clause)|The optional validation clause that must evaluate to True for values of this data type to be valid.|
-|[properties]|(#property-definition)no|[map](#map) of property definitions|The optional map property definitions that comprise the schema for a complex data type in TOSCA. |
+|[properties](#property-definition)|no|[map](#map) of property definitions|The optional map property definitions that comprise the schema for a complex data type in TOSCA. |
 |key_schema|conditional|schema definition|For data types that derive from the TOSCA map data type, the optional schema definition for the keys used to identify entries in properties of this data type. If not specified, the key_schema defaults to string. If present, the key_schema must derive from string. For data types that do not derive from the TOSCA map data type, the key_schema is not allowed.|
 |entry_schema|conditional|schema definition|For data types that derive from the TOSCA map or list data types, the mandatory schema definition for the entries in properties of this data type. For data types that do not derive from the TOSCA list or map data type, the entry_schema is not allowed.|
 
@@ -5984,14 +5981,12 @@ the complex input data.
 ```yaml
 data_types:
   NetworkInfo:
-    derived_from: tosca.Data.Root
     properties:
       name:
         type: string
       gateway:
         type: string
   RouterInfo:
-    derived_from: tosca.Data.Root
     properties:
       ip:
         type: string
@@ -7871,7 +7866,7 @@ artifact type definition has the following recognized keynames:
 | :---- | :------ | :---- | :------ |
 |mime_type|no|[string](#string)|The optional mime type property for the artifact type.|
 |file_ext|no|[list](#list) of [string](#string)|The optional file extension property for the artifact type.|
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the artifact type.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the artifact type.|
 
 ```yaml
 <artifact_type_name>:
@@ -7921,7 +7916,6 @@ The following shows an example artifact type definition:
 ```yaml
 my_artifact_type:
   description: Java Archive artifact type
-  derived_from: Root
   mime_type: application/java-archive
   file_ext: [ jar ]
   properties:
@@ -7969,7 +7963,7 @@ definition:
 |artifact_version|no|[string](#string)|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
 |checksum|no|[string](#string)|The checksum used to validate the integrity of the artifact.|
 |checksum_algorithm|no|[string](#string)|Algorithm used to calculate the artifact checksum (e.g. MD5, SHA [Ref]). Shall be specified if checksum is specified for an artifact.|
-|[properties]|(#property-definition)no|[map](#map) of property assignments|The optional map of property assignments associated with the artifact.|
+|[properties](#property-definition)|no|[map](#map) of property assignments|The optional map of property assignments associated with the artifact.|
 
 Artifact definitions have the following grammar:
 
@@ -10118,9 +10112,9 @@ group type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the group type.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute definitions|An optional map of attribute definitions for the group type.|
-|members |no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid (allowed) as members of the group type.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the group type.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute definitions|An optional map of attribute definitions for the group type.|
+|members|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid (allowed) as members of the group type.|
 
 Group types have the following grammar:
 ```yaml
@@ -10196,8 +10190,8 @@ TOSCA group definition:
 |[type](#group-types)|yes|[string](#string)|The mandatory name of the group type the group definition is based upon.|
 |[description](#description)|no|[string](#string)|The optional description for the group definition.|
 |[metadata](#metadata)|no|[map](#map) of YAML data|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)no|[map](#map) of property assignments|An optional map of property value assignments for the group definition.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute assignments|An optional map of attribute value assignments for the group definition.|
+|[properties](#property-definition)|no|[map](#map) of property assignments|An optional map of property value assignments for the group definition.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute value assignments for the group definition.|
 |members|no|[list](#list) of [string](#string)|The optional list of one or more node template names that are members of this group definition.|
 
 Group definitions have one the following grammars:
@@ -10241,7 +10235,7 @@ The following represents a group definition:
 ```yaml
 groups:
   my_app_placement_group:
-    type: Root
+    type: PlacementGroup
     description: My application’s logical component grouping for placement
     members: [ my_web_server, my_sql_database ]
 ```
@@ -10260,7 +10254,7 @@ policy type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the policy type.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the policy type.|
 |targets|no|[list](#list) of [string](#string)|An optional list of valid node types or group types the policy type can be applied to.|
 |[triggers](#trigger-definition)|no|[map](#map) of trigger definitions |An optional map of policy triggers for the policy type.|
 
@@ -10316,7 +10310,6 @@ The following represents a policy type definition:
 policy_types:
   placement.Container.Linux:
     description: My company’s placement policy for linux 
-    derived_from: Root
 ```
 ## 16.4 Policy Definition <a name=policy-definition></a>
 
@@ -10332,7 +10325,7 @@ definition:
 |[type](#policy-type)|yes|[string](#string)|The mandatory name of the policy type the policy definition is based upon.|
 |[description](#description)|no|[string](#string)|The optional description for the policy definition.|
 |[metadata](#metadata)|no|[map](#map) of string|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)no|[map](#map) of property assignments|An optional map of property value assignments for the policy definition.|
+|[properties](#property-definition)|no|[map](#map) of property assignments|An optional map of property value assignments for the policy definition.|
 |targets|no|[list](#list) of [string](#string)|An optional list of valid node templates or Groups the Policy can be applied to.|
 |[triggers](#trigger-definition)|no|[map](#map) of trigger definitions|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
 
@@ -10424,7 +10417,7 @@ have the following meaning:
   are performed in response to the event if the (optional) condition is
   met.
 
-# 17 Cloud Service Archive (CSAR) Format <a name=cloud-service-archive-(csar)-format></a>
+# 17 Cloud Service Archive (CSAR) Format <a name=cloud-service-archive-csar-format></a>
 
 This section defines the metadata of a cloud service archive as well as
 its overall structure.
@@ -10635,126 +10628,132 @@ The content in this section is normative unless otherwise labeled except:
   - the examples
   - references unless labelled as normative.
 
-> (Note: The [OASIS TC
-> Process](https://www.oasis-open.org/policies-guidelines/tc-process-2017-05-26/#wpComponentsConfClause)
-> requires that a specification approved by the TC at the Committee
-> Specification Public Review Draft, Committee Specification or OASIS
-> Standard level must include a separate section, listing a set of
-> numbered conformance clauses, to which any implementation of the
-> specification must adhere in order to claim conformance to the
-> specification (or any optional portion thereof). This is done by
-> listing the conformance clauses here.  For the definition of
-> "conformance clause," see [OASIS Defined
-> Terms](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2018-05-22/#dConformanceClause).
-
-> See "Guidelines to Writing Conformance Clauses":
-> https://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.
-
-> Remove this note before submitting for publication.)
-
 ## 18.1 Conformance Targets <a name=conformance-targets></a>
 
 The implementations subject to conformance are listed here:
 
-- [TOSCA YAML service template](#conformance-clause-1:-tosca-yaml-service-template)
+- [TOSCA file](#conformance-clause-1-tosca-file)
 
-- [TOSCA processor](#conformance-clause-2:-tosca-processor)
+- [TOSCA processor](#conformance-clause-2-tosca-processor)
 
-- [TOSCA orchestrator (also called orchestration engine)](#conformance-clause-3:-tosca-orchestrator)
+- [TOSCA orchestrator](#conformance-clause-3-tosca-orchestrator)
 
-- [TOSCA generator](#conformance-clause-4:-tosca-generator)
+- [TOSCA generator](#conformance-clause-4-tosca-generator)
 
-- [TOSCA archive](#conformance-clause-5:-tosca-archive)
+- [TOSCA archive](#conformance-clause-5-tosca-archive)
 
-## 18.2 Conformance Clause 1: TOSCA YAML Service Template <a name=conformance-clause-1:-tosca-yaml-service-template></a>
+## 18.2 Conformance Clause 1: TOSCA File <a name=conformance-clause-1-tosca-file></a>
 
-A document conforms to this specification as TOSCA YAML service template
+A document conforms to this specification as a TOSCA file
 if it satisfies all the statements below:
 
 1.  It is valid according to the grammar, rules and requirements defined
-    in section 3 “TOSCA definitions in YAML”.
+    in Section 6 [TOSCA File Definition](#tosca-file-definition).
 
-2.  When using functions defined in section 4 “TOSCA functions”, it is
+2.  When using functions defined in Section 10 [TOSCA Functions](#tosca-functions), it is
     valid according to the grammar specified for these functions.
 
-3.  When using or referring to data types, artifact types, capability
-    types, interface types, node types, relationship types, group types,
-    policy types defined in section 5 “TOSCA normative type
-    definitions”, it is valid according to the definitions given in
-    section 5.
+3.  When defining entities that use data types, artifact types,
+    capability types, interface types, node types, relationship types,
+    group types, or policy types, these entity definitions are valid
+    according to the definitions given in:
 
-## 18.3 Conformance Clause 2: TOSCA Processor <a name=conformance-clause-2:-tosca-processor></a>
+    - Section 7.1 [Node Type](#node-type)
+    - Section 7.3 [Relationship Type](#relationship-type)
+    - Section 8.1 [Capability Type](#capability-type)
+    - Section 9.2 [Data Type](#data-type)
+    - Section 11.1 [Interface Type](#interface-type)
+    - Section 12.1 [Artifact Type](#artifact-type)
+    - Section 16.1 [Group Type](#group-type)
+    - Section 16.3 [Policy Type](#policy-type)
+
+## 18.3 Conformance Clause 2: TOSCA Processor <a name=conformance-clause-2-tosca-processor></a>
 
 A processor or program conforms to this specification as TOSCA processor
 if it satisfies all the statements below:
 
-1.  It can parse and recognize the elements of any conforming TOSCA YAML
-    service template, and generates errors for those documents that fail
-    to conform as TOSCA YAML service template while clearly intending
+1.  It can parse and recognize the elements of any conforming TOSCA file
+    and generates errors for those documents that fail
+    to conform as a TOSCA file while clearly intending
     to.
 
 2.  It implements the requirements and semantics associated with the
-    definitions and grammar in section 3 “TOSCA definitions in YAML”,
-    including those listed in the “additional requirements” subsections.
+    definitions and grammar in Sections 5 through 16, 
+    including those listed in the *additional requirements* paragraphs.
 
-3.  It resolves the imports, either explicit or implicit, as described
-    in section 3 “TOSCA definitions in YAML”.
+3.  It resolves the imports as described
+    in Section 6.8.1 [Import Definitions](#import-definitions)
 
-4.  It generates errors as required in error cases described in sections
-    3.1 (TOSCA Namespace URI and alias), 3.2 (Parameter and property
-    type) and 3.6 (Type-specific definitions).
+4.  It generates errors as required in error cases described in Section
+    6.8.4 [Namespaces](#namespaces), Section 9.1 [TOSCA Built-In Types](#tosca-built-in-types)
+    and the type specific definitions in
+    - Section 7.1 [Node Type](#node-type)
+    - Section 7.3 [Relationship Type](#relationship-type)
+    - Section 8.1 [Capability Type](#capability-type)
+    - Section 9.2 [Data Type](#data-type)
+    - Section 11.1 [Interface Type](#interface-type)
+    - Section 12.1 [Artifact Type](#artifact-type)
+    - Section 16.1 [Group Type](#group-type)
+    - Section 16.3 [Policy Type](#policy-type)
 
-5.  It normalizes string values as described in section 5.4.9.3
-    (Additional Requirements)
+## 18.4 Conformance Clause 3: TOSCA Orchestrator <a name=conformance-clause-3-tosca-orchestrator></a>
 
-## 18.4 Conformance Clause 3: TOSCA Orchestrator <a name=conformance-clause-3:-tosca-orchestrator></a>
-
-A processor or program conforms to this specification as TOSCA
+A processor or program conforms to this specification as a TOSCA
 orchestrator if it satisfies all the statements below:
 
-1.  It is conforming as a TOSCA Processor as defined in conformance
-    clause 2: TOSCA Processor.
+1.  It can process TOSCA archives as intended in Section 17 [Cloud
+    Service Archive (CSAR) Format](#cloud-service-archive-csar-format)
+    and other related normative sections.
 
-2.  It can process all types of artifact described in section 5.3
-    “Artifact types” according to the rules and grammars in this
-    section.
+2.  It is conforming as a TOSCA Processor as defined in [Conformance
+    Clause 2: TOSCA Processor](#conformance-clause-2-tosca-processor).
 
-3.  It can process TOSCA archives as intended in section 6 “TOSCA Cloud
-    Service Archive (CSAR) format” and other related normative sections.
+3.  It can understand and process the functions defined in Section 10
+    [TOSCA Functions](#tosca-functions) according to their rules and
+    semantics.
 
-4. It can understand and process the functions defined in section 4
-    “TOSCA functions” according to their rules and semantics.
+4.  It can fulfill dangling requirements as defined in Section 8.5
+    [Requirement Assignment](#requirement-assignment), including
+    requirement assignments created automatically for mandatory
+    requirements. It can properly apply node filters as defined in
+    Section 8.6 [Node Filter Definition](#node-filter-definition) to
+    select appropriate target node candidates for fulfulling
+    requirements.
 
-5. It can understand and process the normative type definitions
-    according to their semantics and requirements as described in
-    section 5 “TOSCA normative type definitions”.
+5.  It can generate substituting services for substitutable nodes as
+    defined in Section 15 [Substitution](#substitution).  It can
+    properly apply substitution filters as defined in Section 15.1
+    [Substitution Mapping](#substitution-mapping) to select valid
+    substituting service template candidates based on which to create
+    the substituting service.
 
-6.  It can understand and process the networking types and semantics
-    defined in section 7 “TOSCA Networking”.
+6.  It can process artifacts used as operation implementations as
+    described in Section 11.5 [Operation
+    Assignment](#operation-assignment). Orchestrators are expected to
+    process implementing artifacts based on their type as defined in
+    Section 12.1 [Artifact Type](#artifact-type).
 
-7.  It generates errors as required in error cases described in sections
-    2.10 (Using node template substitution for chaining subsystems), 5.4
-    (Capabilities Types) and 5.7 (Interface Types).).
 
-## 18.5 Conformance Clause 4: TOSCA Generator <a name=conformance-clause-4:-tosca-generator></a>
+## 18.5 Conformance Clause 4: TOSCA Generator <a name=conformance-clause-4-tosca-generator></a>
 
-A processor or program conforms to this specification as TOSCA generator
+A processor or program conforms to this specification as a TOSCA generator
 if it satisfies at least one of the statements below:
 
-1.  When requested to generate a TOSCA service template, it always
-    produces a conforming TOSCA service template, as defined in Clause
-    1: TOSCA YAML service template,
+1.  When requested to generate a TOSCA file, it always
+    produces a conforming TOSCA file as defined in
+    [Conformance Clause 1: TOSCA File](#conformance-clause-1-tosca-file).
 
 2.  When requested to generate a TOSCA archive, it always produces a
-    conforming TOSCA archive, as defined in Clause 5: TOSCA archive.
+    conforming TOSCA archive as defined in
+    [Conformance Clause 5: TOSCA Archive](#conformance-clause-5-tosca-archive)
 
-## 18.6 Conformance Clause 5: TOSCA Archive <a name=conformance-clause-5:-tosca-archive></a>
+## 18.6 Conformance Clause 5: TOSCA Archive <a name=conformance-clause-5-tosca-archive></a>
 
 A package artifact conforms to this specification as TOSCA archive if it
 satisfies all the statements below:
 
-1.  It is valid according to the structure and rules defined in section
-    6 “TOSCA Cloud Service Archive (CSAR) format”.
+1.  It is valid according to the structure and rules defined in Section
+    17 [Cloud Service Archive (CSAR) Format](#cloud-service-archive-csar-format).
 
 # Appendix A. References
 
