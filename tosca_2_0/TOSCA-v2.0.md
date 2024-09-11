@@ -2648,9 +2648,9 @@ node type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[properties]|(#property-definition)no|map of property definitions|An optional map of property definitions for the node type.|
-|[attributes]|(#attribute-definition)no|map of attribute definitions|An optional map of attribute definitions for the node type.|
-|[capabilities]|(#capability-definition)no|map of capability definitions|An optional map of capability definitions for the node type.|
+|[properties](#property-definition)|no|map of property definitions|An optional map of property definitions for the node type.|
+|[attributes](#attribute-definition)|no|map of attribute definitions|An optional map of attribute definitions for the node type.|
+|[capabilities](#capability-definition)|no|map of capability definitions|An optional map of capability definitions for the node type.|
 |[requirements](#requirement-definition)|no|[list](#list) of requirement definitions|An optional list of requirement definitions for the node type.|
 |[interfaces](#interface-definition)|no|map of interface definitions|An optional map of interface definitions supported by the node type.|
 |[artifacts](#artifact-definition)|no|map of artifact definitions|An optional map of artifact definitions for the node type.|
@@ -2939,8 +2939,8 @@ relationship type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Definition/Type|Description|
 | :---- | :------ | :---- | :------ |
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the relationship type.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute definitions|An optional map of attribute definitions for the relationship type.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the relationship type.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute definitions|An optional map of attribute definitions for the relationship type.|
 |[interfaces](#interface-definition)|no|[map](#map) of interface definitions|An optional map of interface definitions supported by the relationship type.|
 |valid_[capability_types](#capability-types)|no|[list](#list) of [string](#string)|An optional list of one or more names of capability types that are valid targets for this relationship. If undefined, all capability types are valid.|
 |valid_target_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid targets for this relationship. If undefined, all node types are valid targets.|
@@ -3060,8 +3060,8 @@ relationship template definition:
 |[type](#relationship-types)|yes|[string](#string)|The mandatory name of the relationship type on which the relationship template is based.|
 |[description](#description)|no|[string](#string)|An optional description for the relationship template.|
 |[metadata](#metadata)|no|[map](#map) of string|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)|no|[map](#map) of property assignments|An optional map of property assignments for the relationship template.|
-|[attributes]|(#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute assignments for the relationship template.|
+|[properties](#property-definition)|no|[map](#map) of property assignments|An optional map of property assignments for the relationship template.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute assignments for the relationship template.|
 |[interfaces](#interface-assignment)|no|[map](#map) of interface assignments|An optional map of interface assignments for the relationship template.|
 |copy|no|[string](#string)|The optional (symbolic) name of another relationship template from which to copy all keynames and values into this relationship template.|
 
@@ -3143,8 +3143,8 @@ capability type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the capability type.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute definitions|An optional map of attribute definitions for the capability type.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the capability type.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute definitions|An optional map of attribute definitions for the capability type.|
 |valid_source_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources.|
 |valid_[relationship_types](#relationship-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid.|
 
@@ -3240,10 +3240,10 @@ definition:
 |[type](#capability-type)|yes|[string](#string)|The mandatory name of the capability type on which this capability definition is based.|
 |[description](#description)|no|[string](#string)|The optional description of the Capability definition.|
 |[metadata](#metadata)|no|[map](#map) of string|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)no|[map](#map) of property refinements|An optional map of property refinements for the capability definition. The referred properties must have been defined in the capability type definition referred by the type keyword. New properties may not be added.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute refinements|An optional map of attribute refinements for the capability definition. The referred attributes must have been defined in the capability type definition referred by the type keyword. New attributes may not be added.|
-|valid_source_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources. If valid_source_node_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
-|valid_[relationship_types](#relationship-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid. If valid_relationship_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
+|[properties](#property-definition)|no|[map](#map) of property refinements|An optional map of property refinements for the capability definition. The referred properties must have been defined in the capability type definition referred by the type keyword. New properties may not be added.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute refinements|An optional map of attribute refinements for the capability definition. The referred attributes must have been defined in the capability type definition referred by the type keyword. New attributes may not be added.|
+|valid_source_node_types|no|[list](#list) of [string](#string)|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources. If valid_source_node_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
+|valid_relationship_types|no|[list](#list) of [string](#string)|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid. If valid_relationship_types is defined in the capability type, each element in this list must either be or derived from an element in the list defined in the type.|
 
 Note that the `occurrences` keyname is deprecated in TOSCA 2.0. By
 default, the number of occurrences is UNBOUNDED, i.e. any number of
@@ -3364,8 +3364,8 @@ assignment:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[properties]|(#property-definition)no|[map](#map) of  property assignments|An optional map of property assignments for the capability definition.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute assignments|An optional map of attribute assignments for the capability definition.|
+|[properties](#property-definition)|no|[map](#map) of  property assignments|An optional map of property assignments for the capability definition.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute assignments for the capability definition.|
 |directives|no|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
 
 
@@ -3459,8 +3459,8 @@ support the following keynames:
 |[type](#relationship-types)|yes|[string](#string)|The mandatory keyname used to provide the name of the relationship type used for the relationship.|
 |[description](#description)|no|[string](#string)|The optional description of the relationship definition.|
 |[metadata](#metadata)|no|[map](#map) of string|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)no|[map](#map) of property refinements|An optional map of property refinements for the relationship definition. The referred properties must have been defined in the relationship type definition referred by the type keyword. New properties may not be added.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute refinements|An optional map of attribute refinements for the relationship definition. The referred attributes must have been defined in the relationship type definition referred by the type keyword. New attributes may not be added.|
+|[properties](#property-definition)|no|[map](#map) of property refinements|An optional map of property refinements for the relationship definition. The referred properties must have been defined in the relationship type definition referred by the type keyword. New properties may not be added.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute refinements|An optional map of attribute refinements for the relationship definition. The referred attributes must have been defined in the relationship type definition referred by the type keyword. New attributes may not be added.|
 |[interfaces](#interface-definition)|no|[map](#map) of interface refinements|The optional keyname used to define interface refinements for interfaces defined by the relationship type.|
 
 The keynames supported by requirement definitions and relationship
@@ -4905,7 +4905,7 @@ data type definition has the following recognized keynames:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |validation|no|[validation clause](#validation-clause)|The optional validation clause that must evaluate to True for values of this data type to be valid.|
-|[properties]|(#property-definition)no|[map](#map) of property definitions|The optional map property definitions that comprise the schema for a complex data type in TOSCA. |
+|[properties](#property-definition)|no|[map](#map) of property definitions|The optional map property definitions that comprise the schema for a complex data type in TOSCA. |
 |key_schema|conditional|schema definition|For data types that derive from the TOSCA map data type, the optional schema definition for the keys used to identify entries in properties of this data type. If not specified, the key_schema defaults to string. If present, the key_schema must derive from string. For data types that do not derive from the TOSCA map data type, the key_schema is not allowed.|
 |entry_schema|conditional|schema definition|For data types that derive from the TOSCA map or list data types, the mandatory schema definition for the entries in properties of this data type. For data types that do not derive from the TOSCA list or map data type, the entry_schema is not allowed.|
 
@@ -7868,7 +7868,7 @@ artifact type definition has the following recognized keynames:
 | :---- | :------ | :---- | :------ |
 |mime_type|no|[string](#string)|The optional mime type property for the artifact type.|
 |file_ext|no|[list](#list) of [string](#string)|The optional file extension property for the artifact type.|
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the artifact type.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the artifact type.|
 
 ```yaml
 <artifact_type_name>:
@@ -7965,7 +7965,7 @@ definition:
 |artifact_version|no|[string](#string)|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
 |checksum|no|[string](#string)|The checksum used to validate the integrity of the artifact.|
 |checksum_algorithm|no|[string](#string)|Algorithm used to calculate the artifact checksum (e.g. MD5, SHA [Ref]). Shall be specified if checksum is specified for an artifact.|
-|[properties]|(#property-definition)no|[map](#map) of property assignments|The optional map of property assignments associated with the artifact.|
+|[properties](#property-definition)|no|[map](#map) of property assignments|The optional map of property assignments associated with the artifact.|
 
 Artifact definitions have the following grammar:
 
@@ -10114,9 +10114,9 @@ group type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the group type.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute definitions|An optional map of attribute definitions for the group type.|
-|members |no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid (allowed) as members of the group type.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the group type.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute definitions|An optional map of attribute definitions for the group type.|
+|members|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid (allowed) as members of the group type.|
 
 Group types have the following grammar:
 ```yaml
@@ -10192,8 +10192,8 @@ TOSCA group definition:
 |[type](#group-types)|yes|[string](#string)|The mandatory name of the group type the group definition is based upon.|
 |[description](#description)|no|[string](#string)|The optional description for the group definition.|
 |[metadata](#metadata)|no|[map](#map) of YAML data|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)no|[map](#map) of property assignments|An optional map of property value assignments for the group definition.|
-|[attributes]|(#attribute-definition)no|[map](#map) of attribute assignments|An optional map of attribute value assignments for the group definition.|
+|[properties](#property-definition)|no|[map](#map) of property assignments|An optional map of property value assignments for the group definition.|
+|[attributes](#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute value assignments for the group definition.|
 |members|no|[list](#list) of [string](#string)|The optional list of one or more node template names that are members of this group definition.|
 
 Group definitions have one the following grammars:
@@ -10256,7 +10256,7 @@ policy type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[properties]|(#property-definition)no|[map](#map) of property definitions|An optional map of property definitions for the policy type.|
+|[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the policy type.|
 |targets|no|[list](#list) of [string](#string)|An optional list of valid node types or group types the policy type can be applied to.|
 |[triggers](#trigger-definition)|no|[map](#map) of trigger definitions |An optional map of policy triggers for the policy type.|
 
@@ -10327,7 +10327,7 @@ definition:
 |[type](#policy-type)|yes|[string](#string)|The mandatory name of the policy type the policy definition is based upon.|
 |[description](#description)|no|[string](#string)|The optional description for the policy definition.|
 |[metadata](#metadata)|no|[map](#map) of string|Defines a section used to declare additional metadata information. |
-|[properties]|(#property-definition)no|[map](#map) of property assignments|An optional map of property value assignments for the policy definition.|
+|[properties](#property-definition)|no|[map](#map) of property assignments|An optional map of property value assignments for the policy definition.|
 |targets|no|[list](#list) of [string](#string)|An optional list of valid node templates or Groups the Policy can be applied to.|
 |[triggers](#trigger-definition)|no|[map](#map) of trigger definitions|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
 
