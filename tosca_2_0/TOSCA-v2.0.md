@@ -5981,14 +5981,12 @@ the complex input data.
 ```yaml
 data_types:
   NetworkInfo:
-    derived_from: tosca.Data.Root
     properties:
       name:
         type: string
       gateway:
         type: string
   RouterInfo:
-    derived_from: tosca.Data.Root
     properties:
       ip:
         type: string
@@ -10237,7 +10235,7 @@ The following represents a group definition:
 ```yaml
 groups:
   my_app_placement_group:
-    type: Root
+    type: PlacementGroup
     description: My application’s logical component grouping for placement
     members: [ my_web_server, my_sql_database ]
 ```
