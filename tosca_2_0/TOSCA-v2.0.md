@@ -2592,7 +2592,7 @@ policies:
   - my_placement_policy:
       type: mycompany.placement
 ```
-### 6.9.10 Substitution Mapping <a name=substitution-mapping></a>
+### 6.9.10 Substitution Mappings <a name=substitution-mappings></a>
 
 The `substitution_mappings`section of a service template declares this
 service template as a candidate for substituting nodes marked with the
@@ -10685,7 +10685,7 @@ if it satisfies all the statements below:
     in Section 6.8.1 [Import Definitions](#import-definitions)
 
 4.  It generates errors as required in error cases described in Section
-    6.8.4 [Namespaces](#namespaces), Section 9.1 [TOSCA Built-In Types](tosca-built-in-types)
+    6.8.4 [Namespaces](#namespaces), Section 9.1 [TOSCA Built-In Types](#tosca-built-in-types)
     and the type specific definitions in
     - Section 7.1 [Node Type](#node-type)
     - Section 7.3 [Relationship Type](#relationship-type)
@@ -10716,7 +10716,7 @@ orchestrator if it satisfies all the statements below:
     [Requirement Assignment](#requirement-assignment), including
     requirement assignments created automatically for mandatory
     requirements. It can properly apply node filters as defined in
-    Section 8.6 [Node Filter Definition](node-filter-definition) to
+    Section 8.6 [Node Filter Definition](#node-filter-definition) to
     select appropriate target node candidates for fulfulling
     requirements.
 
