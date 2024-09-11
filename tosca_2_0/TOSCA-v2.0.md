@@ -2942,9 +2942,9 @@ relationship type definition has the following recognized keynames:
 |[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the relationship type.|
 |[attributes](#attribute-definition)|no|[map](#map) of attribute definitions|An optional map of attribute definitions for the relationship type.|
 |[interfaces](#interface-definition)|no|[map](#map) of interface definitions|An optional map of interface definitions supported by the relationship type.|
-|valid_[capability_types](#capability-types)|no|[list](#list) of [string](#string)|An optional list of one or more names of capability types that are valid targets for this relationship. If undefined, all capability types are valid.|
-|valid_target_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid targets for this relationship. If undefined, all node types are valid targets.|
-|valid_source_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid sources for this relationship. If undefined, all node types are valid sources.|
+|valid_capability_types|no|[list](#list) of [string](#string)|An optional list of one or more names of capability types that are valid targets for this relationship. If undefined, all capability types are valid.|
+|valid_target_node_types|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid targets for this relationship. If undefined, all node types are valid targets.|
+|valid_source_node_types|no|[list](#list) of [string](#string)|An optional list of one or more names of node types that are valid sources for this relationship. If undefined, all node types are valid sources.|
 
 These keynames can be used according to the following grammar:
 ```yaml
@@ -3145,8 +3145,8 @@ capability type definition has the following recognized keynames:
 | :---- | :------ | :---- | :------ |
 |[properties](#property-definition)|no|[map](#map) of property definitions|An optional map of property definitions for the capability type.|
 |[attributes](#attribute-definition)|no|[map](#map) of attribute definitions|An optional map of attribute definitions for the capability type.|
-|valid_source_[node_types](#node-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources.|
-|valid_[relationship_types](#relationship-types)|no|[list](#list) of [string](#string)|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid.|
+|valid_source_node_types|no|[list](#list) of [string](#string)|An optional list of one or more valid names of node types that are supported as valid sources of any relationship established to the declared capability type. If undefined, all node types are valid sources.|
+|valid_relationship_types|no|[list](#list) of [string](#string)|An optional list of one or more valid names of relationship types that are supported as valid types of any relationship established to the declared capability type. If undefined, all relationship types are valid.|
 
 These keynames can be used according to the following grammar:
 ```yaml
