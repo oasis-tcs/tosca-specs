@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 07
 
-## 10 September 2024
+## 18 September 2024
 
 &nbsp;
 
@@ -10796,15 +10796,23 @@ edition, 2006; updated in 2014\]*”,
 
 # Appendix B. Safety, Security and Privacy Considerations
 
-(Note: OASIS strongly recommends that Technical Committees consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
+This document defines a *language* for automating lifecycle management
+of systems and services. The language itself has no security
+impact. However, *implementations* that use the TOSCA language may
+need to address a number of security considerations:
 
-While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF [[RFC3552](#rfc3552)] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
+- Service designers that publish TOSCA files or CSAR archives may need
+  to guarantee the authenticity of their archives, files, and/or
+  artifacts by digitally signing them.
 
-In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks.
+- TOSCA Orchestrators may need credentials to authenticate with and
+  gain access to external implementations used by the services being
+  orchestrated. Such credentials must not be stored in TOSCA service
+  templates. Instead, Orchestrator implementations must provide
+  mechanisms to store such credentials securely and keep them private.
 
-We encourage editors and TC members concerned with this subject to read _Guidelines for Writing RFC Text on Security Considerations_, IETF [[RFC3552](#rfc3552)], for more information.
-
-Remove this note before submitting for publication.)
+Solutions for addressing these security considerations are
+implementation-specific and beyond the scope of this specification.
 
 -------
 
