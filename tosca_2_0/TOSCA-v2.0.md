@@ -10648,9 +10648,9 @@ A document conforms to this specification as a TOSCA file
 if it satisfies all the statements below:
 
 1.  It is valid according to the grammar, rules and requirements defined
-    in Section 6 [TOSCA File Definition](#tosca-file-definition).
+    in [TOSCA File Definition](#tosca-file-definition).
 
-2.  When using functions defined in Section 10 [TOSCA Functions](#tosca-functions), it is
+2.  When using functions defined in [TOSCA Functions](#tosca-functions), it is
     valid according to the grammar specified for these functions.
 
 3.  When defining entities that use data types, artifact types,
@@ -10658,14 +10658,14 @@ if it satisfies all the statements below:
     group types, or policy types, these entity definitions are valid
     according to the definitions given in:
 
-    - Section 7.1 [Node Type](#node-type)
-    - Section 7.3 [Relationship Type](#relationship-type)
-    - Section 8.1 [Capability Type](#capability-type)
-    - Section 9.2 [Data Type](#data-type)
-    - Section 11.1 [Interface Type](#interface-type)
-    - Section 12.1 [Artifact Type](#artifact-type)
-    - Section 16.1 [Group Type](#group-type)
-    - Section 16.3 [Policy Type](#policy-type)
+    - [Node Type](#node-type)
+    - [Relationship Type](#relationship-type)
+    - [Capability Type](#capability-type)
+    - [Data Type](#data-type)
+    - [Interface Type](#interface-type)
+    - [Artifact Type](#artifact-type)
+    - [Group Type](#group-type)
+    - [Policy Type](#policy-type)
 
 ## 18.3 Conformance Clause 2: TOSCA Processor <a name=conformance-clause-2-tosca-processor></a>
 
@@ -10682,57 +10682,56 @@ if it satisfies all the statements below:
     including those listed in the *additional requirements* paragraphs.
 
 3.  It resolves the imports as described
-    in Section 6.8.1 [Import Definitions](#import-definitions)
+    in [Import Definitions](#import-definitions)
 
-4.  It generates errors as required in error cases described in Section
-    6.8.4 [Namespaces](#namespaces), Section 9.1 [TOSCA Built-In Types](#tosca-built-in-types)
+4.  It generates errors as required in error cases described in 
+    [Namespaces](#namespaces), [TOSCA Built-In Types](#tosca-built-in-types)
     and the type specific definitions in
-    - Section 7.1 [Node Type](#node-type)
-    - Section 7.3 [Relationship Type](#relationship-type)
-    - Section 8.1 [Capability Type](#capability-type)
-    - Section 9.2 [Data Type](#data-type)
-    - Section 11.1 [Interface Type](#interface-type)
-    - Section 12.1 [Artifact Type](#artifact-type)
-    - Section 16.1 [Group Type](#group-type)
-    - Section 16.3 [Policy Type](#policy-type)
+    - [Node Type](#node-type)
+    - [Relationship Type](#relationship-type)
+    - [Capability Type](#capability-type)
+    - [Data Type](#data-type)
+    - [Interface Type](#interface-type)
+    - [Artifact Type](#artifact-type)
+    - [Group Type](#group-type)
+    - [Policy Type](#policy-type)
 
 ## 18.4 Conformance Clause 3: TOSCA Orchestrator <a name=conformance-clause-3-tosca-orchestrator></a>
 
 A processor or program conforms to this specification as a TOSCA
 orchestrator if it satisfies all the statements below:
 
-1.  It can process TOSCA archives as intended in Section 17 [Cloud
+1.  It can process TOSCA archives as intended in [Cloud
     Service Archive (CSAR) Format](#cloud-service-archive-csar-format)
     and other related normative sections.
 
 2.  It is conforming as a TOSCA Processor as defined in [Conformance
     Clause 2: TOSCA Processor](#conformance-clause-2-tosca-processor).
 
-3.  It can understand and process the functions defined in Section 10
+3.  It can understand and process the functions defined in
     [TOSCA Functions](#tosca-functions) according to their rules and
     semantics.
 
-4.  It can fulfill dangling requirements as defined in Section 8.5
+4.  It can fulfill dangling requirements as defined in
     [Requirement Assignment](#requirement-assignment), including
     requirement assignments created automatically for mandatory
     requirements. It can properly apply node filters as defined in
-    Section 8.6 [Node Filter Definition](#node-filter-definition) to
+    [Node Filter Definition](#node-filter-definition) to
     select appropriate target node candidates for fulfulling
     requirements.
 
 5.  It can generate substituting services for substitutable nodes as
-    defined in Section 15 [Substitution](#substitution).  It can
-    properly apply substitution filters as defined in Section 15.1
+    defined in [Substitution](#substitution). It can
+    properly apply substitution filters as defined in
     [Substitution Mapping](#substitution-mapping) to select valid
     substituting service template candidates based on which to create
     the substituting service.
 
 6.  It can process artifacts used as operation implementations as
-    described in Section 11.5 [Operation
+    described in [Operation
     Assignment](#operation-assignment). Orchestrators are expected to
     process implementing artifacts based on their type as defined in
-    Section 12.1 [Artifact Type](#artifact-type).
-
+    [Artifact Type](#artifact-type).
 
 ## 18.5 Conformance Clause 4: TOSCA Generator <a name=conformance-clause-4-tosca-generator></a>
 
@@ -10752,8 +10751,8 @@ if it satisfies at least one of the statements below:
 A package artifact conforms to this specification as TOSCA archive if it
 satisfies all the statements below:
 
-1.  It is valid according to the structure and rules defined in Section
-    17 [Cloud Service Archive (CSAR) Format](#cloud-service-archive-csar-format).
+1.  It is valid according to the structure and rules defined in
+    [Cloud Service Archive (CSAR) Format](#cloud-service-archive-csar-format).
 
 # Appendix A. References
 
