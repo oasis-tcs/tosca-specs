@@ -162,9 +162,94 @@ TOSCA 1.3. In particular:
 
 ## 1.2 Document Conventions <a name=document-conventions></a>
 
-- Naming conventions
-- Font colors and styles
-- Typographic conventions
+### 1.2.1 Specification Conventions
+
+#### 1.2.1.1 Code Snippets
+
+Within this document we use monospace font to denote code snippets, primarily
+for TOSCA (YAML), but also for other textual file formats (e.g. CSAR meta
+files). For example:
+
+```yaml
+MyMap:
+  property1: value
+  property2: [ value1, value2 ]
+```
+
+#### 1.2.1.2 Placeholders
+
+Within this document we use angle brackets (`<...>`) with snake case names to
+denote placeholders: values that must be provided by service template and
+profile authors. These are used both in the explanatory language of the specification
+as well as in the TOSCA (YAML) examples in monospace font. We use snake case in
+order to avoid spaces that could introduce rendering problems due to malformed code
+(e.g. YAML) parsing.
+
+The names in the angular brackets are a brief description of the value and
+sometimes also hint at the type of value when appropriate and helpful. Examples:
+`<relationship_template_name>`, `<node_filter_definition>`, `<directives_list>`.
+
+Note that if you copy a TOSCA code snippet that includes this notation you must
+replace the placeholders with your own content.
+
+Also note that while some placeholders are for specific primitive types (e.g.
+strings, numbers, booleans), some may allow for complex values (sequences and
+maps), and indeed allow for nested complex values. Refer to the explanations
+for details.
+
+Variations:
+
+* `<option_1> | <option_2>`: placeholder for one of several options.
+  There can be multiple pipes `|` if more than two options are possible. Note
+  that you should not use `|` in your value: pick just one option from those
+  specified. Example:
+  `<node_template_name> | <tuple_of_node_template_and_index> | <node_type_name>`.
+* `[<snake_case>, ...]`: placeholder for a sequence (list) of placeholders
+  of the same kind. Note that in some cases this may mean "one or more", but in
+  some some cases an empty list is also possible. See the explanatory text for
+  rules. Note that elements may have more than one option, noted with a `|`
+  as above. Example: `[<option_1> | <option_2>, ...]`
+* `<snake_case_1> ... <snake_case_n>`: alternate notation for sequences. <!-- TODO: remove these? -->
+* `<snake_case_*>`: alternate notation for sequences, used for brevity.  <!-- TODO: remove these? -->
+
+### 1.2.2 TOSCA Naming Conventions
+
+In the TOSCA examples included in this specification we adhere to a few
+conventions.
+
+Note that TOSCA parser should not normally enforce these conventions and you are
+generally free to use other conventions in your service templates and profiles.
+However, we encourage authors to adopt our conventions if possible in order to
+encourage consistent readability within the TOSCA ecosystem.
+
+* *TOSCA keynames*: snake case. Future versions of TOSCA, as well as forked
+  variants, will continue this convention when introducing new keynames.
+  Examples: `service_template`, `node_filter`, `valid_relationship_types`.
+* *TOSCA value names*: dash case (also called kebab case). This includes names of
+  properties, attributes, inputs, operations, capabilities, relationships, etc.
+  Dash case is preferred in order to differentiate these names from keynames.
+  Examples: `max-bandwidth`, `repository-url`, `deployment-host`,
+  `connection-pool-size`.                                                                 <!-- TODO: controversial, will require editing all our examples -->
+* *TOSCA entity type names*: camel case. This includes all TOSCA entity types:
+  nodes, relationships, capabilities, artifacts, data, etc. Examples: `Server`,
+  `BlockStorage`, `OperatingSystem`, `VirtualLink`. *All* words in the name should
+  be capitalized, *including prepositions*. Examples: `AddressAndPort`
+  `NetworkOrFile`. Acronyms and abbreviations should be treated as words, *except*
+  when the name is just a single acronym. Examples: `HttpEndpoint`, `TcpOrUdp`,
+  `TCP`, `DBMS`.
+* *TOSCA relationship type names*: prefer fragments that appear between nouns,
+  which usually are verbs in present simple form and may include a preposition.
+  Examples: `Includes`, `Rejects`, `DependsOn`, `LinksTo`, `RunAt`, `FromSource`.
+* *TOSCA capability type names*: these are commonly -able adjectives or other
+  typifying, characterizing, or modifying words. Examples: `Bindable`, `Linkable`,
+  `Scalable`, `Host`, `DataSource`, 
+* *TOSCA primitive type names*: we prefer single lower-case whole words: `string`,
+  `integer`, `float`, `boolean`. Note that previous versions of TOSCA also had types
+  with the `scalar-unit.` prefix, however we now prefer to to use single lower-case
+  words for these. See [`scalar-unit`](#9122-scalar-unit) for more examples.
+* *TOSCA function names*: snake case. This includes the built-in functions as well
+  as custom functions. Examples: `$greater_than`, `$has_any_key`,
+  `$my_custom_function`.
 
 ## 1.3 Glossary <a name=glossary></a>
 
@@ -2498,7 +2583,7 @@ relationship_templates:
     interfaces:
       Configure:
         inputs:
-          speed: { $$get_attribute: [ SELF, SOURCE, connect_speed ] }      
+          speed: { $get_attribute: [ SELF, SOURCE, connect_speed ] }      
 ```
 ### 6.9.5 Output Parameters <a name=output-parameters></a>
 
@@ -2600,7 +2685,7 @@ service template as a candidate for substituting nodes marked with the
 
 The grammar of a substitution_mapping is as follows:
 ```yaml
-substitution_mappings>:
+<substitution_mappings>:
   <substitution_mapping>
 ```
 The following code snippet shows an example substitution mapping.
@@ -4600,7 +4685,7 @@ data_types:
   length:
     derived_from: scalar-unit
     unit_symbol_map: *ISO80000 # First use of the YAML anchor and alias
-    unit_suffix: m  ## Note suffix is defined so will be appended to entries in the unit_symbol_map
+    unit_suffix: m  # Note suffix is defined so will be appended to entries in the unit_symbol_map
 
   mass:
     derived_from: scalar-unit
@@ -4616,7 +4701,7 @@ node_types:
         type: length
       width:
         type: length
-        validation: { $less_than: [ 15 cm ] } ## Validation is in centimeters
+        validation: { $less_than: [ 15 cm ] } # Validation is in centimeters
       throughput:
         type: bitrate
 service_template:
@@ -4626,7 +4711,7 @@ service_template:
       properties:
         weight: 10.0kg # No space
         height: 0.1 m
-        width: 125.3 mm ## Defintion is in millimeters, conversion of units within a scalar is performed by the parser
+        width: 125.3 mm # Defintion is in millimeters, conversion of units within a scalar is performed by the parser
         throughput: 10 KiB # Integer auto converted to float
 ```
 Derivation of scalar-types uses the following rules:
@@ -6698,8 +6783,8 @@ The *$product* function takes either:
 
 The $product function uses the following grammars:
 ```yaml
-$product: [ <scalar_type_arg1>, < int_or_float_type_arg2> ]
-$product: [ <int_or_float_type_arg1>, < int_or_float_type_arg2>, … ]
+$product: [ <scalar_type_arg1>, <int_or_float_type_arg2> ]
+$product: [ <int_or_float_type_arg1>, <int_or_float_type_arg2>, … ]
 ```
 #### 10.2.5.4 quotient <a name=quotient></a>
 
@@ -6718,7 +6803,7 @@ an integer or float type. The result is of
 
 The $quotient function uses the following grammar:
 ```yaml
-$quotient: [ <int_float_or_scalar_type_arg1>, < int_or_float_type_arg2> ]
+$quotient: [ <int_float_or_scalar_type_arg1>, <int_or_float_type_arg2> ]
 ```
 
 #### 10.2.5.5 remainder <a name=remainder></a>
