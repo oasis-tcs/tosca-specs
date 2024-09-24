@@ -246,7 +246,7 @@ encourage consistent readability within the TOSCA ecosystem.
 * *TOSCA primitive type names*: we prefer single lower-case whole words: `string`,
   `integer`, `float`, `boolean`. Note that previous versions of TOSCA also had types
   with the `scalar-unit.` prefix, however we now prefer to to use single lower-case
-  words for these. See [`scalar-unit`](#9122-scalar-unit) for more examples.
+  words for these. See [scalar-unit](#scalar-unit) for more examples.
 * *TOSCA function names*: snake case. This includes the built-in functions as well
   as custom functions. Examples: `$greater_than`, `$has_any_key`,
   `$my_custom_function`.
@@ -3323,7 +3323,7 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[type](#capability-type)|yes|[string](#string)|The mandatory name of the capability type on which this capability definition is based.|
+|type|yes|[string](#string)|The mandatory name of the [capability type](#capability-type) on which this capability definition is based.|
 |description|no|[string](#string)|The optional [description](#description) of the Capability definition.|
 |metadata|no|[map](#map) of string|Defines a section used to declare additional [metadata](#metadata) information. |
 |properties|no|[map](#map) of [property refinements](#property-definition)|An optional map of property refinements for the capability definition. The referred properties must have been defined in the capability type definition referred by the type keyword. New properties may not be added.|
@@ -3451,7 +3451,7 @@ assignment:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |properties|no|[map](#map) of  [property assignments](#property-definition)|An optional map of property assignments for the capability definition.|
-|[attributes](#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute assignments for the capability definition.|
+|attributes|no|[map](#map) of [attribute assignments](#attribute-definition)|An optional map of attribute assignments for the capability definition.|
 |directives|no|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
 
 
@@ -3542,12 +3542,12 @@ support the following keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[type](#relationship-types)|yes|[string](#string)|The mandatory keyname used to provide the name of the relationship type used for the relationship.|
+|type|yes|[string](#string)|The mandatory keyname used to provide the name of the [relationship type](#relationship-types) used for the relationship.|
 |description|no|[string](#string)|The optional [description](#description) of the relationship definition.|
 |metadata|no|[map](#map) of string|Defines a section used to declare additional [metadata](#metadata) information. |
 |properties|no|[map](#map) of [property refinements](#property-definition)|An optional map of property refinements for the relationship definition. The referred properties must have been defined in the relationship type definition referred by the type keyword. New properties may not be added.|
-|[attributes](#attribute-definition)|no|[map](#map) of [attribute refinements](#attribute-definition)|An optional map of attribute refinements for the relationship definition. The referred attributes must have been defined in the relationship type definition referred by the type keyword. New attributes may not be added.|
-|[interfaces](#interface-definition)|no|[map](#map) of interface refinements|The optional keyname used to define interface refinements for interfaces defined by the relationship type.|
+|attributes|no|[map](#map) of [attribute refinements](#attribute-definition)|An optional map of attribute refinements for the relationship definition. The referred attributes must have been defined in the relationship type definition referred by the type keyword. New attributes may not be added.|
+|interfaces|no|[map](#map) of [interface refinements](#interface-definition)|The optional keyname used to define interface refinements for interfaces defined by the relationship type.|
 
 The keynames supported by requirement definitions and relationship
 definitions can be used according to the following grammar:
@@ -3714,7 +3714,7 @@ assignment:
 |capability|no|[string](#string)|The optional keyname used to identify the target capability of the requirement. This can either be the name of a capability defined within a target node or the name of a target capability type that the TOSCA orchestrator will use to select a type-compatible target node to fulfill the requirement at runtime. |
 |relationship|conditional|relationship assignment or string|The conditional keyname used to provide values for the relationship definition in the corresponding requirement definition. This keyname can also be overloaded to define a symbolic name that references a relationship template defined elsewhere in the service template.|
 |allocation|no|allocation block|The optional keyname that allows the inclusion of an allocation block. The allocation block contains a map of property assignments that semantically represent *allocations* from the property with the same name in the target capability. The allocation acts as a *capacity filter* for the target capability in the target node. When the requirement is resolved, a capability in a node is a valid target for the requirement relationship if for each property of the target capability, the sum of all existing allocations plus the current allocation is less_or_equal to the property value.|
-|[count](#cardinality-of-relationships)|no|non-negative integer|An optional keyname that sets the cardinality of the requirement assignment, that is how many relationships must be established from this requirement assignment. If not defined, the default count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name. The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
+|count|no|non-negative integer|An optional keyname that sets the [cardinality of the requirement assignment](#cardinality-of-relationships), that is how many relationships must be established from this requirement assignment. If not defined, the default count for an assignment is 1. Note that there can be multiple requirement assignments for a requirement with a specific symbolic name. The sum of all count values of assignments for a requirement with a specific symbolic name must be within the count_range defined in the requirement definition. Moreover, the sum of all count values of non-optional assignments for a requirement with a specific symbolic name must also be within the count_range defined in the requirement definition.|
 |node_filter|no|[node filter](#node-filter-definition)|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill the requirement at runtime.|
 |directives|no|[list](#list) of [string](#string)|An optional list of directive values to provide processing instructions to orchestrators and tooling.|
 |optional|no|[boolean](#boolean)|Describes if the fulfillment of this requirement assignment is optional (true) or not (false).  If not specified, the requirement assignment must be fulfilled, i.e. the default value is false.  Note also, that non-optional requirements have precedence, thus during a service deployment, the optional requirements for all nodes should be resolved only after the non-optional requirements for all nodes have been resolved.|
@@ -3727,10 +3727,10 @@ support the following keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[type](#relationship-types)|no|[string](#string)|The optional keyname used to provide the name of the relationship type for the requirement assignment’s relationship.|
+|type|no|[string](#string)|The optional keyname used to provide the name of the [relationship type](#relationship-types) for the requirement assignment’s relationship.|
 |properties|no|[map](#map) of [property assignments](#property-definition)|An optional map of property assignments for the relationship.|
-|[attributes](#attribute-assignment)|no|[map](#map) of attribute assignments|An optional map of attribute assignments for the relationship.|
-|[interfaces](#interface-assignment)|no|[map](#map) of interface assignments|An optional map of interface assignments for the corresponding interface definitions in the relationship type.|
+|attributes|no|[map](#map) of [attribute assignments](#attribute-assignment)|An optional map of attribute assignments for the relationship.|
+|interfaces|no|[map](#map) of [interface assignments](#interface-assignment)|An optional map of interface assignments for the corresponding interface definitions in the relationship type.|
 
 ### 8.5.2 Requirement Assignment Grammar <a name=requirement-assignment-grammar></a>
 
@@ -4633,19 +4633,19 @@ A concrete scalar type is defined using the following grammar:
 ```
 In the above grammar, the pseudo values that appear in angle brackets have the following meaning:
 
-    <scalar-unit_type_name>: represents the mandatory name of the parent type which must be either scalar-unit or a data type derived from scalar-unit.
+<scalar-unit_type_name>: represents the mandatory name of the parent type which must be either scalar-unit or a data type derived from scalar-unit.
 
-    <data_type_name>: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA integer or derived from them.
+<data_type_name>: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA integer or derived from them.
 
-    <suffix>: An optional string. If not present then unit_symbol_name is equal to unit_symbol. If present then unit_symbol_name is equal to unit_symbol&&unit_suffix. It is provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for unit_symbol_name has an implict value of 1.0
+<suffix>: An optional string. If not present then unit_symbol_name is equal to unit_symbol. If present then unit_symbol_name is equal to unit_symbol&&unit_suffix. It is provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for unit_symbol_name has an implict value of 1.0
 
-    <unit_symbol> A name string, with no white space, used to identify the unit.
+<unit_symbol> A name string, with no white space, used to identify the unit.
 
-    <unit_symbol_multiplier> A value of type TOSCA float which MUST be used by a TOSCA parser to convert values with the symbol into values in the base unit.
+<unit_symbol_multiplier> A value of type TOSCA float which MUST be used by a TOSCA parser to convert values with the symbol into values in the base unit.
 
-    Note that unit_symbol_name, unit_symbol and unit_suffix are all case sensitive.
+Note that unit_symbol_name, unit_symbol and unit_suffix are all case sensitive.
 
-The following gives an example of the use of a scalar_units:
+The following gives an example of the use of scalar_units:
 ```yaml
 dsl_definitions:
   # Defined a reusable list of prefixes taken from ISO80000
@@ -5115,7 +5115,7 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[type](#data-types)|yes|[string](#string)|The mandatory data type for the key or entry. If this schema definition is for a map key, then the referred type must be derived originally from string.|
+|type|yes|[string](#string)|The mandatory [data type](#data-types) for the key or entry. If this schema definition is for a map key, then the referred type must be derived originally from string.|
 |description|no|[string](#string)|The optional [description](#description) for the schema.|
 |validation|no|[validation clause](#validation-clause)|The optional validation clause that must evaluate to True for the property.|
 |key_schema|no|schema definition|When the schema itself is of type map, the optional schema definition that is used to specify the type of the keys of that map’s entries (if key_schema is not defined it is assumed to be “string” by default). For other schema types, the key_schema must not be defined.|
@@ -5192,7 +5192,7 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[type](#data-type)|yes|[string](#string)|The mandatory data type for the property.|
+|type|yes|[string](#string)|The mandatory [data type](#data-type) for the property.|
 |description|no|[string](#string)|The optional [description](#description) for the property.|
 |metadata|no|[map](#map) of yaml values|Defines a section used to declare additional [metadata](#metadata) information. |
 |required|no|[boolean](#boolean)|An optional key that declares a property as required (true) or not (false). Defaults to true.|
@@ -5418,7 +5418,7 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[type](#data-type)|yes|[string](#string)|The mandatory data type for the attribute.|
+|type|yes|[string](#string)|The mandatory [data type](#data-type) for the attribute.|
 |description|no|[string](#string)|The optional [description](#description) for the attribute.|
 |metadata|no|[map](#map) of yaml data|Defines a section used to declare additional [metadata](#metadata) information. |
 |default|no|\<must match attribute type\>|An optional key that may provide a value to be used as a default if not provided by another means. This value SHALL be type compatible with the type declared by the attribute definition’s type keyname.|
@@ -5577,7 +5577,7 @@ definition with the following additional or changed keynames:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[type](#data-type)|no|[string](#string)|The data type of the parameter. While this keyname is mandatory for a TOSCA Property definition, it is not mandatory for a TOSCA parameter definition.|
+|type|no|[string](#string)|The [data type](#data-type) of the parameter. While this keyname is mandatory for a TOSCA Property definition, it is not mandatory for a TOSCA parameter definition.|
 |value|no|\<must match parameter type\>|The type-compatible value to assign to the parameter.  Parameter values may be provided as the result from the evaluation of an expression or a function. May only be defined for outgoing parameters. Mutually exclusive with the *mapping* keyname.|
 |mapping|no|attribute selection format|A mapping that specifies the node or relationship attribute into which the returned output value must be stored. May only be defined for incoming parameters. Mutually exclusive with the *value* keyname.|
 
@@ -6120,7 +6120,7 @@ following table:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ----- | 
-|[tosca_path](#tosca-path)|yes|a comma separated sequence of [string](#string) and non-negative [integer](#integer) as defined in [tosca_path](#tosca-path)|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path). |
+|tosca_path|yes|a comma separated sequence of [string](#string) and non-negative [integer](#integer) as defined in [tosca_path](#tosca-path)|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. We start from a specific node or relationship identified by its symbolic name (or by the SELF keyword representing the node or relationship containing the definition) and then we may further traverse the relationships and nodes of the representation graph (using a variable number of steps) until reaching the desired node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path). |
 |property_name|yes|[string](#string)|The name of the property definition from which the function will return the value.|
 |nested_property_name_or_index_*|no|[list](#list) of [string](#string) or [integer](#integer)|Some TOSCA properties are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.  Some properties represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
@@ -6242,7 +6242,7 @@ following table:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ----- | 
-|[tosca_path](#tosca-path)|yes|a comma separated sequence of [string](#string) and non-negative [integer](#integer) as defined in [tosca_path](#tosca-path)|Using the \<tosca_path> we can traverse the representation graph to extract information from a certain node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path).|
+|tosca_path|yes|a comma separated sequence of [string](#string) and non-negative [integer](#integer) as defined in [tosca_path](#tosca-path)|Using the \<tosca_path> we can traverse the representation graph to extract information from a certain node or relationship. The syntax is described in [the section TOSCA Path](#tosca-path).|
 |attribute_name|yes|The name of the attribute definition the function will return the value from.|
 |nested_attribute_name_or_index_*|no|[list](#list) of [string](#string) or [integer](#integer)|Some TOSCA attributes are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed.    Some attributes represent list types. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
@@ -6264,7 +6264,7 @@ following table:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ----- |
-|[tosca_path](#tosca-path)|yes|a comma separated sequence of [string](#string) and non-negative [integer](#integer) as defined in [tosca_path](#tosca-path)|Using the <tosca_path a TOSCA processor can traverse the representation graph to the node that contains the artifact. The syntax is described in [the section TOSCA Path](#tosca-path).|
+|tosca_path|yes|a comma separated sequence of [string](#string) and non-negative [integer](#integer) as defined in [tosca_path](#tosca-path)|Using the <tosca_path a TOSCA processor can traverse the representation graph to the node that contains the artifact. The syntax is described in [the section TOSCA Path](#tosca-path).|
 |artifact_name|yes|[string](#string)|The name of the artifact definition for which the function will return the location.|
 
 The following example uses a snippet of a WordPress
@@ -6354,7 +6354,7 @@ following table:
 
 |Argument|Mandatory|Type|Description|
 | ----- | ------- | ----- | ----- | 
-|[tosca_path](#tosca-path)|yes|a comma separated sequence of [string](#string) and non-negative [integer](#integer) as defined in [tosca_path](#tosca-path)|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. In this case the \<tosca_path\> must lead to a capability context. |
+|tosca_path|yes|a comma separated sequence of [string](#string) and non-negative [integer](#integer) as defined in [tosca_path](#tosca-path)|Using the \<tosca_path\> we can traverse the representation graph to extract information from a certain node or relationship. In this case the \<tosca_path\> must lead to a capability context. |
 |property_name|yes|[string](#string)|The name of the capability property definition from which the function will return the value. In this case it must be a allocatable property (i.e. of integer, float, or scalar property types).|
 
 Usage example:
@@ -6923,7 +6923,7 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 |:---- | :------ | :---- | :------ |
-|[signatures](#function-definitions)|yes|[map](#map) of signature definitions|The map of signature definitions.|
+|signatures|yes|[map](#map) of [signature definitions](#function-definitions)|The map of signature definitions.|
 |description|no|[string](#string)| The [description](#description) of the function.|
 |metadata|no|[map](#map) of metadata|Defines additional [metadata](#metadata) information.|
 
@@ -7251,8 +7251,8 @@ interface type definition has the following recognized keynames:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |inputs|no|[map](#map) of [parameter definitions](#input-parameters)|The optional map of input parameter definitions available to all operations defined for this interface.|
-|[operations](#operation-definition)|no|[map](#map) of operation definitions|The optional map of operations defined for this interface.|
-|[notifications](#notification-definition)|no|[map](#map) of notification definitions|The optional map of notifications defined for this interface.|
+|operations|no|[map](#map) of [operation definitions](#operation-definition)|The optional map of operations defined for this interface.|
+|notifications|no|[map](#map) of [notification definitions](#notification-definition)|The optional map of notifications defined for this interface.|
 
 These keynames can be used according to the following grammar:
 ```yaml
@@ -7329,12 +7329,12 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[type](#interface-types)|yes|[string](#string)|The mandatory name of the interface type on which this interface definition is based.|
+|type|yes|[string](#string)|The mandatory name of the [interface type](#interface-types) on which this interface definition is based.|
 |description|no|[string](#string)|The optional [description](#description) for this interface definition.|
 |metadata|no|[map](#map) of metadata|Defines additional [metadata](#metadata) information.|
 |inputs|no|[map](#map) of [parameter definitions and refinements](#input-parameters)|The optional map of input parameter refinements and new input parameter definitions available to all operations defined for this interface (the input parameters to be refined have been defined in the interface type definition).|
-|[operations](#operation-definition)|no|[map](#map) of operation refinements|The optional map of operations refinements for this interface. The referred operations must have been defined in the interface type definition.|
-|[notifications](#notification-definition)|no|[map](#map) of notification refinements|The optional map of notifications refinements for this interface. The referred operations must have been defined in the interface type definition.|
+|operations|no|[map](#map) of [operation refinements](#operation-definition)|The optional map of operations refinements for this interface. The referred operations must have been defined in the interface type definition.|
+|notifications|no|[map](#map) of [notification refinements](#notification-definition)|The optional map of notifications refinements for this interface. The referred operations must have been defined in the interface type definition.|
 
 Interface definitions in node or relationship type definitions have the
 following grammar:
@@ -7415,8 +7415,8 @@ assignment:
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |inputs|no|[map](#map) of [parameter value assignments](#input-parameters)|The optional map of input parameter assignments. Template authors MAY provide parameter assignments for interface inputs that are not defined in their corresponding interface type.|
-|[operations](#operation-definition)|no|[map](#map) of operation assignments|The optional map of operations assignments specified for this interface.|
-|[notifications](#notification-definition)|no|[map](#map) of notification assignments|The optional map of notifications assignments specified for this interface.|
+|operations|no|[map](#map) of [operation assignments](#operation-definition)|The optional map of operations assignments specified for this interface.|
+|notifications|no|[map](#map) of [notification assignments](#notification-definition)|The optional map of notifications assignments specified for this interface.|
 
 Interface assignments have the following grammar:
 ```yaml
@@ -8041,9 +8041,9 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[type](#artifact-type)|yes|[string](#string)|The mandatory artifact type for the artifact definition.|
+|type|yes|[string](#string)|The mandatory [artifact type](#artifact-type) for the artifact definition.|
 |file|yes|[string](#string)|The mandatory URI string (relative or absolute) that can be used to locate the artifact’s file.|
-|[repository](#repository-definitions)|no|[string](#string)|The optional name of the repository definition that contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.|
+|repository|no|[string](#string)|The optional name of the [repository definition](#repository-definitions) that contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.|
 |description|no|[string](#string)|The optional [description](#description) for the artifact definition.|
 |metadata|no|[map](#map) of metadata|Defines additional [metadata](#metadata) information.|
 |artifact_version|no|[string](#string)|The version of this artifact. One use of this artifact_version is to declare the particular version of this artifact type, in addition to its mime_type (that is declared in the artifact type definition). Together with the mime_type it may be used to select a particular artifact processor for this artifact. For example, a python interpreter that can interpret python version 2.7.0.|
@@ -8512,7 +8512,7 @@ The grammar for the `count` keyword is as follows:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|[count](#specifying-number-of-node-representations)|no|[integer](#integer)|The optional number of nodes in the representation graph that will be created from this node template. If not specified,  one single node is created.|
+|count|no|[integer](#integer)|The optional [number of nodes](#specifying-number-of-node-representations) in the representation graph that will be created from this node template. If not specified,  one single node is created.|
 
 It is expected that the value of the `count` is provided as an input
 to the service template. This enables the creation of a simplified
@@ -10273,11 +10273,11 @@ TOSCA group definition:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[type](#group-types)|yes|[string](#string)|The mandatory name of the group type the group definition is based upon.|
+|type|yes|[string](#string)|The mandatory name of the [group type](#group-types) the group definition is based upon.|
 |description|no|[string](#string)|The optional [description](#description) for the group definition.|
 |metadata|no|[map](#map) of YAML data|Defines a section used to declare additional [metadata](#metadata) information. |
 |properties|no|[map](#map) of [property assignments](#property-definition)|An optional map of property value assignments for the group definition.|
-|[attributes](#attribute-definition)|no|[map](#map) of attribute assignments|An optional map of attribute value assignments for the group definition.|
+|attributes|no|[map](#map) of [attribute assignments](#attribute-definition)|An optional map of attribute value assignments for the group definition.|
 |members|no|[list](#list) of [string](#string)|The optional list of one or more node template names that are members of this group definition.|
 
 Group definitions have one the following grammars:
@@ -10342,7 +10342,7 @@ policy type definition has the following recognized keynames:
 | ----- | ------- | ----- | ------- |
 |properties|no|[map](#map) of (property definitions)(#property-definition)|An optional map of property definitions for the policy type.|
 |targets|no|[list](#list) of [string](#string)|An optional list of valid node types or group types the policy type can be applied to.|
-|[triggers](#trigger-definition)|no|[map](#map) of trigger definitions |An optional map of policy triggers for the policy type.|
+|triggers|no|[map](#map) of [trigger definitions](#trigger-definition) |An optional map of policy triggers for the policy type.|
 
 Policy types have the following grammar:
 ```yaml
@@ -10408,12 +10408,12 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 | ----- | ------- | ----- | ------- |
-|[type](#policy-type)|yes|[string](#string)|The mandatory name of the policy type the policy definition is based upon.|
+|type|yes|[string](#string)|The mandatory name of the [policy type](#policy-type) the policy definition is based upon.|
 |description|no|[string](#string)|The optional [description](#description) for the policy definition.|
 |metadata|no|[map](#map) of string|Defines a section used to declare additional [metadata](#metadata) information. |
 |properties|no|[map](#map) of [property assignments](#property-definition)|An optional map of property value assignments for the policy definition.|
 |targets|no|[list](#list) of [string](#string)|An optional list of valid node templates or Groups the Policy can be applied to.|
-|[triggers](#trigger-definition)|no|[map](#map) of trigger definitions|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
+|triggers|no|[map](#map) of [trigger definitions](#trigger-definition)|An optional map of trigger definitions to invoke when the policy is applied by an orchestrator against the associated TOSCA entity. These triggers apply in addition to the triggers defined in the policy type.|
 
 Policy definitions have the following grammar:
 ```yaml
