@@ -10887,18 +10887,46 @@ of systems and services. The language itself has no security
 impact. However, *implementations* that use the TOSCA language may
 need to address a number of security considerations:
 
-- Service designers that publish TOSCA files or CSAR archives may need
-  to guarantee the authenticity of their archives, files, and/or
-  artifacts by digitally signing them.
+- *Authenticity Checks*: Service designers who publish TOSCA files or
+  CSAR archives may need to guarantee the authenticity of their
+  archives, files, and/or artifacts by digitally signing them.
+- *Integrity Checks*: Unauthorized modification of TOSCA files, CSAR
+  files, or associated artifacts can lead to security
+  vulnerabilities. TOSCA implementations may need to provide integrity
+  checks for those entities.
+- *Credentials Exposure*: TOSCA Orchestrators may need credentials to
+  authenticate with and gain access to external implementations used
+  by the services being orchestrated. Such credentials must not be
+  stored in TOSCA service templates. Instead, Orchestrator
+  implementations must provide mechanisms to store such credentials
+  securely and keep them private.
+- *Confidential Information Exposure*: Several TOSCA modeling
+  constructs, including artifacts, can be associated with confidential
+  information, making them vulnerable to unauthorized access or
+  exposure.
+- *Node Types Vulnerabilities*: Security requirements need to be
+  enforced at the level of Node Types, indicating that vulnerabilities
+  can arise from misconfigured or insecure Node Types in TOSCA
+  modeling.
+- *Policy Attachment Risks*: The attachment of security policies to
+  TOSCA entities introduces potential risks if the policies are not
+  correctly defined or enforced, which could lead to security
+  breaches.
+- *Artifact Management*: Artifacts in TOSCA can be manipulated or
+  mismanaged, which may compromise the security of the modeled
+  application files.
+- *CSAR Disassembly Risks*: During the import and export of CSAR
+  files, there is a risk that sensitive information may be exposed if
+  proper security measures are not implemented.
+- *Separation of Entities*: While separating TOSCA entities can ease
+  reusability, it also creates potential attack vectors if the
+  semantics and relationships among these entities are not
+  well-defined or secured.
 
-- TOSCA Orchestrators may need credentials to authenticate with and
-  gain access to external implementations used by the services being
-  orchestrated. Such credentials must not be stored in TOSCA service
-  templates. Instead, Orchestrator implementations must provide
-  mechanisms to store such credentials securely and keep them private.
-
-Solutions for addressing these security considerations are
-implementation-specific and beyond the scope of this specification.
+This list is by no means intended to be comprehensive, and other
+security challenges may exist. Solutions for addressing security
+considerations are implementation-specific and beyond the scope of
+this specification.
 
 -------
 
