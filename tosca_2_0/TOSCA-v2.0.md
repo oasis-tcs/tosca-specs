@@ -4633,17 +4633,17 @@ A concrete scalar type is defined using the following grammar:
 ```
 In the above grammar, the pseudo values that appear in angle brackets have the following meaning:
 
-<scalar-unit_type_name>: represents the mandatory name of the parent type which must be either scalar-unit or a data type derived from scalar-unit.
+`<scalar-unit_type_name>`: represents the mandatory name of the parent type which must be either scalar-unit or a data type derived from scalar-unit.
 
-<data_type_name>: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA integer or derived from them.
+`<data_type_name>`: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA integer or derived from them.
 
-<suffix>: An optional string. If not present then unit_symbol_name is equal to unit_symbol. If present then unit_symbol_name is equal to unit_symbol&&unit_suffix. It is provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for unit_symbol_name has an implict value of 1.0
+`<suffix>`: An optional string. If not present then `unit_symbol_name` is equal to `unit_symbol`. If present then `unit_symbol_name` is equal to `unit_symbol&&unit_suffix`. It is provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for `unit_symbol_name` has an implict value of 1.0
 
-<unit_symbol> A name string, with no white space, used to identify the unit.
+`<unit_symbol>`: A name string, with no white space, used to identify the unit.
 
-<unit_symbol_multiplier> A value of type TOSCA float which MUST be used by a TOSCA parser to convert values with the symbol into values in the base unit.
+`<unit_symbol_multiplier>`: A value of type TOSCA float which MUST be used by a TOSCA parser to convert values with the symbol into values in the base unit.
 
-Note that unit_symbol_name, unit_symbol and unit_suffix are all case sensitive.
+Note that `unit_symbol_name`, `unit_symbol` and `unit_suffix` are all case sensitive.
 
 The following gives an example of the use of scalar_units:
 ```yaml
@@ -4716,8 +4716,8 @@ service_template:
 ```
 Derivation of scalar-types uses the following rules:
 
-    - derived_from, data_value_type and unit_suffix may not be changed
-    - Additonal entries may be added to the unit_symbol_map
+    - `derived_from`, `data_value_type` and `unit_suffix` may not be changed
+    - Additonal entries may be added to the `unit_symbol_map`
 
 ##### 9.1.2.2.2 scalar-unit.time <a name=scalar-unit.time></a>
 
