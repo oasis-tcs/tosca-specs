@@ -10050,7 +10050,7 @@ presumably will map onto optional requirements in the substituting
 template). This is done independent of the order in which the
 requirement mappings are specified.
 
-### 15.5.5 Handling `UNBOUNDED` Requirement Count Ranges <a name=handling-`unbounded`-requirement-count-ranges></a>
+### 15.5.5 Handling `UNBOUNDED` Requirement Count Ranges <a name=handling-unbounded-requirement-count-ranges></a>
 In the case of `UNBOUNDED` count ranges, we must use unbounded grammar
 forms.
 
