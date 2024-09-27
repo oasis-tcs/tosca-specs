@@ -4660,6 +4660,8 @@ In the above grammar, the pseudo values that appear in angle brackets have the f
 
 - prefix_multiplier: A value which has the same type TOSCA data type as the parent_type. This MUST be used by a TOSCA parser to convert values with the prefix into values in the canonial unit. Normally positive but zero and negative values are allowed.
 
+Where prefix is used, the canonical unit is implictly the single unit name given in base_units.
+
 Note that base_unit, prefix and unit are all case sensitive.
 
 The following gives an example of the use of a scalar units:
