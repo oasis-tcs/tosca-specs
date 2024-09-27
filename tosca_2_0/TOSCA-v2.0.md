@@ -4266,6 +4266,8 @@ specify a default value.
 |[bytes](#bytes)|||
 |[nil](#nil)||
 
+See also [time](#time)
+
 ### 9.1.1 Primitive Types <a name=primitive-types></a>
 
 The TOSCA primitive types have been specified to allow for the
@@ -4737,7 +4739,7 @@ Scalarunit types may not be derived from scalarunit types and so there are no de
 
 ##### 9.1.2.2.2 time <a name=time></a>
 
-TOSCA no longer has an in-built date type for time but one can be defined using the scalarunit abstract class as shown in the following example:
+TOSCA no longer has an in-built date type for time but one can be defined using the scalarunit type as shown in the following example:
 ```yaml
 data_types:
   time:
