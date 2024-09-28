@@ -4602,12 +4602,12 @@ along with an associated unit.
 
 TOSCA scalarunit typed values have the following grammar:
 ```yaml
-<scalar> <unit>
+<value> <unit>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- scalar: is a mandatory scalar value
+- value: is a mandatory scalar value
 
 - unit: is a mandatory name string. 
 
@@ -4627,7 +4627,8 @@ scalar type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|derived_from|yes|[string](#string)|Mandatory parent type name from which this type derives|
+|derived_from|yes|[string](#string)|Mandatory parent type name from which the value element of this type derives|
+|validation|no|[validation clause](#validation-clause)|The optional validation clause that must evaluate to True for values of the value element of data type to be valid.|
 |base_units|yes|[map](#map) of base units|Defines at least one unit string and its associated multiplier. If prefixes is used then the map has only one entry and the multiplier is 1|
 |canonical_unit|no|[string](#string)|Instructs the TOSCA processor which of the base units to use for conversion. Cannot be used if prefixes is used.
 |prefixes|no|[map](#map) of prefixes|Defines at least one prefix and its associated multiplier. Where prefixes are defined they are prepended to the base_unit to obtain the unit string. This keyword provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes.
@@ -4636,6 +4637,7 @@ A scalar type is defined using the following grammar:
 ```yaml
 <scalar_unit_name>:
     derived_from: <parent_type_name>
+    validation: < validation_clause>
     base_units:
       <base_unit_1>: <base_unit_multiplier_1>
       ...
