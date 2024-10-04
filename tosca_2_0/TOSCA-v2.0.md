@@ -4619,18 +4619,16 @@ The following additional requirements apply:
 
 The scalar type is abstract and cannot be used directly in a valid TOSCA document, rather it must be refined into a concrete scalar type by means of a type definition. 
 
-A scalar type definition is a type of TOSCA type definition and as
-a result supports the common keynames listed in [the section Common Keynames in Type Definitions
-](#common-keynames-in-type-definitions) In addition, the
-scalar type definition has the following recognized keynames:
+A scalar type definition is a type of TOSCA type definition and as a result supports the common keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions) In addition, the scalar type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
 |derived_from|yes|scalar|Mandatory indicator that this is a scalar type definition.|
-|data_type|no|[float](#float)|[integer](#integer)|The data type of the number element of the scalar. Default value if not present is float.|
-|units|yes|[map](#map) of unit strings and multipliers|Defines at least one unit string and its associated multiplier. At least one entry MUST have a multiplier value of one. The multiplier MUST be an integer or a float. If the data_type is integer then the multiplier MUST be an integer. If prefixes is used then the map MUST only contain one entry which MUST have a multiplier value of one|
-|canonical_unit|no|[string](#string)|Imforms the TOSCA processor which of the possible units to use when computing and storing scalars of this type. MUST be present if units has more than one multiplier of one. If not present the unit with multipler of one is the default canonical_unit.
-|prefixes|no|[map](#map) of prefixes and multipliers|Defines at least one prefix and its associated multiplier. Where prefixes are defined they are prepended to the unit to obtain the unit string. This keyword provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes.
+|data_type|no|[float](#float) or [integer](#integer)|The data type of the number element of the scalar. Default value if not present is float.|
+|units|yes|[map](#map) of unit strings and multipliers|Defines at least one unit string and its associated multiplier. At least one entry MUST have a multiplier value of one. The multiplier MUST be an integer or a float. If the 'data_type' is integer then the multiplier MUST be an integer. If 'prefixes' is used then the map MUST only contain one entry which MUST have a multiplier value of one|
+|canonical_unit|no|[string](#string)|Informs the TOSCA processor which of the possible units to use when storing, computing and presenting scalars of this type. MUST be present if 'units has more than one multiplier of one. If not present the unit with multipler of one is the default canonical_unit.
+|prefixes|no|[map](#map) of prefixes and multipliers|Defines at least one prefix and its associated multiplier. Where prefixes are defined they are prepended to the unit to obtain the unit string. This keyword is provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes.
 
 A concrete scalar type is defined using the following grammar:
 ```yaml
@@ -5024,13 +5022,13 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - data_type_name: represents the mandatory symbolic name of the data
-  type as a string.
+  type as a string. 
 
 - existing_type_name: represents the optional name of a valid TOSCA
-  built-in type or data type from which this new data type derives.
+  built-in type or data type from which this new data type derives. 
 
 - validation_clause: represents the optional validation clause that must
-  evaluate to True for values of this data type to be valid.
+  evaluate to True for values of this data type to be valid. Validation clauses MUST NOT be applied to scalar types.
 
 - property_definitions: represents the optional map of one or more
   property definitions that provide the schema for the data type
