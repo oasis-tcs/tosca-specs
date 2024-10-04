@@ -4254,8 +4254,7 @@ The content in this section is normative unless otherwise labeled except:
 The following table summarizes the TOSCA built-in data types. All of
 these type names are reserved and cannot be used for custom data
 types. Note, however, that it is possible to derive a custom data type
-from a primitive type, for example to add a validation clause or to
-specify a default value.
+from a primitive type (except for scalar types), for example to add a validation clause or to specify a default value.
 
 |Primitive Types|Special Types|Collection Types|
 |:---|:---|:---|
@@ -4655,7 +4654,7 @@ In the above grammar, the pseudo values that appear in angle brackets have the f
 
 - unit_name: The name of the unit (including any prefix) which is to be used as the common unit for calculation and for presentation of results.
 
-Note that `unit` is case sensitive.
+Note that `unit` is case sensitive. Implementors may guard against word overflow when performing calculations on multipliers with many digits.  
 
 The following gives an example of the use of scalar:
 ```yaml
