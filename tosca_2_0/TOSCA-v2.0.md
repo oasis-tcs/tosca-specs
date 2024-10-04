@@ -246,7 +246,7 @@ encourage consistent readability within the TOSCA ecosystem.
 * *TOSCA primitive type names*: we prefer single lower-case whole words: `string`,
   `integer`, `float`, `boolean`. Note that previous versions of TOSCA also had types
   with the `scalar-unit.` prefix, however we now prefer to to use single lower-case
-  words for these. See [scalar-unit](#scalar-unit) for more examples.
+  words for these. See [scalar](#scalar) for more examples.
 * *TOSCA function names*: snake case. This includes the built-in functions as well
   as custom functions. Examples: `$greater_than`, `$has_any_key`,
   `$my_custom_function`.
@@ -1447,7 +1447,7 @@ where `<anchor_block>` defines a set of reusable YAML definitions (the
 `<anchor_definitions>`) for which `<anchor>` can be used as an alias
 elsewhere in the document.
 
-An example of defining and using a DSL definition, a YAML anchor, is given in [scalar-unit](#scalar-unit).
+An example of defining and using a DSL definition, a YAML anchor, is given in [scalar](#scalar).
 
 ## 6.4 Type Definitions <a name=type-definitions></a>
 
@@ -4260,11 +4260,13 @@ specify a default value.
 |Primitive Types|Special Types|Collection Types|
 |:---|:---|:---|
 |[string](#string)|[timestamp](#timestamp)|[list](#list)|
-|[integer](#integer)|[scalar-unit](#scalar-unit)|[map](#map)|
-|[float](#float)|[scalar-unit.time](#scalar-unit.time)||
+|[integer](#integer)|[scalar](#scalar)|[map](#map)|
+|[float](#float)|||
 |[boolean](#boolean)|[version](#version)||
 |[bytes](#bytes)|||
 |[nil](#nil)||
+
+See also [time](#time)
 
 ### 9.1.1 Primitive Types <a name=primitive-types></a>
 
@@ -4593,104 +4595,120 @@ Please note:
 - TOSCA does not specify a canonical representation for timestamps. The
   only requirement is that representations adhere to RFC 3339.
 
-#### 9.1.2.2 scalar-unit <a name=scalar-unit></a>
+#### 9.1.2.2 scalar <a name=scalar></a>
 
-The TOSCA *scalar-unit* types can be used to define scalar values
+The TOSCA *scalar* types can be used to define scalar values
 along with an associated unit.
 
-TOSCA scalar-unit typed values have the following grammar:
+TOSCA scalar types are represented as YAML strings and have the following grammar:
 ```yaml
-<scalar> <unit_symbol_name>
+<number> <unit>
 ```
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- scalar: is a mandatory scalar value
+- number: is a mandatory number in YAML notation preceeded by at whitespace. The number may be in any valid YAML format including hex, octal and scientific as well as float and integer.
 
-- unit_symbol_name: is a mandatory name string. 
+- unit: is a mandatory string preceeded by at least one white space. The string represents the name of unit in which the scalar is measured.
 
 The following additional requirements apply:
 
-- Any number of spaces (including zero or none) SHALL be allowed
-  between the scalar value and the unit symbol.
+- The unit string MUST be defined in a concrete scalar type definition.
 
-- The unit symbol MUST be defined in a concrete scalar type definition.
+- It SHALL be considered an error if either the scalar or unit  portion is missing on a property or attribute declaration using a scalar type.
 
-- It SHALL be considered an error if either the scalar or unit symbol portion is missing on a property or attribute declaration derived from any scalar-unit type.
+The scalar type is abstract and cannot be used directly in a valid TOSCA document, rather it must be refined into a concrete scalar type by means of a type definition. 
 
-The scalar-unit type is abstract and cannot be used 'as is' in a valid TOSCA document, rather it must be refined into a concrete scalar type by means of a type definition. Scalar type definitions use the common key names.
+A scalar type definition is a type of TOSCA type definition and as a result supports the common keynames listed in [the section Common Keynames in Type Definitions
+](#common-keynames-in-type-definitions) In addition, the scalar type definition has the following recognized keynames:
+
+|Keyname|Mandatory|Type|Description|
+| :---- | :------ | :---- | :------ |
+|derived_from|yes|scalar|Mandatory indicator that this is a scalar type definition.|
+|data_type|no|[float](#float) or [integer](#integer)|The data type of the number element of the scalar. Default value if not present is float.|
+|units|yes|[map](#map) of unit strings and multipliers|Defines at least one unit string and its associated multiplier. At least one entry MUST have a multiplier value of one. The multiplier MUST be an integer or a float. If the 'data_type' is integer then the multiplier MUST be an integer. If 'prefixes' is used then the map MUST only contain one entry which MUST have a multiplier value of one|
+|canonical_unit|no|[string](#string)|Informs the TOSCA processor which of the possible units to use when storing, computing and presenting scalars of this type. MUST be present if 'units has more than one multiplier of one. If not present the unit with multipler of one is the default canonical_unit.
+|prefixes|no|[map](#map) of prefixes and multipliers|Defines at least one prefix and its associated multiplier. Where prefixes are defined they are prepended to the unit to obtain the unit string. This keyword is provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes.
 
 A concrete scalar type is defined using the following grammar:
 ```yaml
-<scalar_unit_name>:
-    derived_from: <scalar-unit_type_name>
-    data_value_type: <data_type_name>
-    unit_suffix: <suffix>
-    unit_symbol_map:
-      <unit_symbol_1>: <unit_symbol_multiplier_1>
+<scalar_name>:
+    derived_from: scalar
+    data_type: <data_type_name>
+    units:
+      <unit_1>: <unit_multiplier_1>
       ...
-      <unit_symbol_n>: <unit_symbol_multiplier_n>
+      <unit_n>: <unit_multiplier_n>
+    canonical_unit: <unit_name>
+    prefixes:
+      <prefix_1>: <unit_multiplier_1>
+      ...
+      <prefix_n>: <unit_multiplier_n>
 ```
 In the above grammar, the pseudo values that appear in angle brackets have the following meaning:
 
-`<scalar-unit_type_name>`: represents the mandatory name of the parent type which must be either scalar-unit or a data type derived from scalar-unit.
+- data_type_name: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA integer or derived from them.
 
-`<data_type_name>`: The TOSCA data type of the scalar. MUST be either TOSCA float, TOSCA integer or derived from them.
+- unit: The YAML string, with no white space, of the unit element of the scalar.
 
-`<suffix>`: An optional string. If not present then `unit_symbol_name` is equal to `unit_symbol`. If present then `unit_symbol_name` is equal to `unit_symbol&&unit_suffix`. It is provided as a convenience so that metric units can use YAML anchor and alias to avoid repeating the table of SI prefixes. The multiplier for `unit_symbol_name` has an implict value of 1.0
+- multiplier: An integer or float which which MUST be used by a TOSCA processor to convert values with this unit into values in the canonical unit.
 
-`<unit_symbol>`: A name string, with no white space, used to identify the unit.
+- unit_name: The name of the unit (including any prefix) which is to be used as the common unit for calculation and for presentation of results.
 
-`<unit_symbol_multiplier>`: A value of type TOSCA float which MUST be used by a TOSCA parser to convert values with the symbol into values in the base unit.
+Note that `unit` is case sensitive.
 
-Note that `unit_symbol_name`, `unit_symbol` and `unit_suffix` are all case sensitive.
-
-The following gives an example of the use of scalar_units:
+The following gives an example of the use of scalar:
 ```yaml
 dsl_definitions:
-  # Defined a reusable list of prefixes taken from ISO80000
+  # Defined a reusable set of prefixes taken from ISO80000
    ISO_prefixes: &ISO80000
-         # symbols for smaller multipliers ommitted for brevity
+         # prefixes for smaller multipliers ommitted for brevity
       μ: 0.0001
       m: 0.001
       c: 0.01
       d: 0.1
-      da: 10 # symbols may be muliple characters
+      '': 1.0 # allows use of the base unit without any prefix
+      da: 10 # units may be muliple characters
       h: 100 # integer auto converted to float
       k: 1000
       M: 1000000
-      # symbols for larger multipliers omiited
+      # prefixes for larger multipliers omiited
 
 data_types:
-  non_negative_number:
-    derived_from: float
-    validation: { $greater_or_equal: [ $value,  0 ] }
+  positive_integer:
+    derived_from: integer
+    validation: { $greater_or_equal: [ $value,  1 ] }
 
   bitrate:
     version: '2.0'
-    description: bitrate allowing multiples of 1024 as well as 1000 but not including prefixes above 10^12
-    derived_from: scalar-unit
-    data_value_type: non_negative_number
-    unit_symbol_map:
-      B: 1 # No unit_suffix defined so base unit must be included in the list
-      kB: 1000 # No unit_suffix defined so unit_symbol includes the B character as well as the k
-      KiB: 1024
-      MB: 1000000
-      MiB: 1048576
-      GB:  1000000000
-      GiB: 1073741824
-      TB:  1000000000000
-      TiB: 1099511627776
+    description: data rate allowing multiples of 1024 as well as 1000 but not including prefixes above 10^12
+    derived_from: scalar
+    data_type: positive_integer
+    units: #
+      bits/s: 1 # This is the mandatory entry with multiplier one
+      bps: 1 # A second entry with multiplier one so a canonical_unit is required
+      kbits/s: 1000 # No prefix defined so unit includes the prefix 'k' and the base unit 'bits/s'
+      Kibits/s: 1024
+      Mbits/s: 1000000
+      Mibits/s: 1048576
+      Gbits/s:  1000000000
+      Gibits/s: 1073741824
+      Tbits/s:  1000000000000
+      Tibits/s: 1099511627776
+    canonical_unit: bits/s
 
   length:
-    derived_from: scalar-unit
-    unit_symbol_map: *ISO80000 # First use of the YAML anchor and alias
-    unit_suffix: m  # Note suffix is defined so will be appended to entries in the unit_symbol_map
+    derived_from: scalar
+    # data_type defaults to float
+    units: 
+      m: 1.0  # Just one entry which defines the base to which defined prefixes are applied
+    # Only one unit so no need for canonical_unit
+    prefixes: *ISO80000 # First use of the YAML anchor and alias
 
   mass:
-    derived_from: scalar-unit
-    unit_symbol_map: *ISO80000 # Note map is used by both length and mass by means of YAML anchor and alias
-    unit_suffix: g
+    derived_from: scalar
+    units: {g: 1} # Short notation. Integer automatically converted to float
+    prefixes: *ISO80000 # Note map of prefixes is used by both length and mass by means of YAML anchor and alias
 
 node_types:
   box:
@@ -4709,37 +4727,30 @@ service_template:
     node:
       type: box
       properties:
-        weight: 10.0kg # No space
+        weight: 10 kg # Automatic conversion to float
         height: 0.1 m
-        width: 125.3 mm # Defintion is in millimeters, conversion of units within a scalar is performed by the parser
-        throughput: 10 KiB # Integer auto converted to float
+        width: 125.3 mm # Definition is in millimeters, conversion of units within a scalar is performed by the parser
+        throughput: 10 Kibits/s
 ```
-Derivation of scalar-types uses the following rules:
+Note that scalars cannot be derived from scalars and so there are no derivation rules.
 
-    - `derived_from`, `data_value_type` and `unit_suffix` may not be changed
-    - Additonal entries may be added to the `unit_symbol_map`
+##### 9.1.2.2.2 time <a name=time></a>
 
-##### 9.1.2.2.2 scalar-unit.time <a name=scalar-unit.time></a>
-
-TOSCA no longer has an in-built date type for time but one can be defined using the scalar-unit abstract class as shown in the following example:
+TOSCA no longer has an in-built date type for time but one can be defined using the scalar abstract class as shown in the following example:
 ```yaml
 data_types:
-  scalar-unit.time:
+  Time:
     version: '2.0'
-    description: Time including non-SI units accepted for use with the SI units
-    derived_from: scalar-unit
-    data_value_type: float
-    unit_symbol_map:
+    description: Time including some selected SI units and non-SI units accepted for use with the SI units
+    derived_from: scalar
+    units:
       # symbols for smaller multipliers ommitted for brevity
       μs: 0.0001
       ms: 0.001
-      cs: 0.01
-      ds: 0.1
-      das: 10
-      hs: 100
+      s: 1
       ks: 1000
       Ms: 1000000
-      min: 60 
+      min: 60
       h: 3600 # hour
       d: 86400 # day
       # symbols for larger multipliers omiited
@@ -5011,13 +5022,13 @@ In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
 - data_type_name: represents the mandatory symbolic name of the data
-  type as a string.
+  type as a string. 
 
 - existing_type_name: represents the optional name of a valid TOSCA
-  built-in type or data type from which this new data type derives.
+  built-in type or data type from which this new data type derives. 
 
 - validation_clause: represents the optional validation clause that must
-  evaluate to True for values of this data type to be valid.
+  evaluate to True for values of this data type to be valid. Validation clauses MUST NOT be applied to scalar types.
 
 - property_definitions: represents the optional map of one or more
   property definitions that provide the schema for the data type
@@ -5871,12 +5882,12 @@ data_types:
     derived_from: integer
     validation: { $greater_or_equal: [ $value, 0 ] }
   # Full function syntax with arguments
-  FrequencyRange:
+  SizeRange:
     properties:
       low:
-        type: scalar-unit.frequency
+        type: float
       high:
-        type: scalar-unit.frequency
+        type: float
     validation:
       $greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] } ]
 ```
