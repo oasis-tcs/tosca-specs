@@ -4254,7 +4254,7 @@ The content in this section is normative unless otherwise labeled except:
 The following table summarizes the TOSCA built-in data types. All of
 these type names are reserved and cannot be used for custom data
 types. Note, however, that it is possible to derive a custom data type
-from a primitive type (except for scalar types), for example to add a validation clause or to specify a default value.
+from a primitive type, for example to add a validation clause or to specify a default value.
 
 |Primitive Types|Special Types|Collection Types|
 |:---|:---|:---|
@@ -4606,7 +4606,7 @@ TOSCA scalar types are represented as YAML strings and have the following gramma
 In the above grammar, the pseudo values that appear in angle brackets
 have the following meaning:
 
-- number: is a mandatory number in YAML notation preceeded by at whitespace. The number may be in any valid YAML format including hex, octal and scientific as well as float and integer.
+- number: is a mandatory number in YAML notation preceded by at whitespace. The number may be in any valid YAML format including hex, octal and scientific as well as float and integer.
 
 - unit: is a mandatory string preceeded by at least one white space. The string represents the name of unit in which the scalar is measured.
 
@@ -4668,7 +4668,7 @@ dsl_definitions:
       c: 0.01
       d: 0.1
       '': 1.0 # allows use of the base unit without any prefix
-      da: 10 # units may be muliple characters
+      da: 10 # units may be multiple characters
       h: 100 # integer auto converted to float
       k: 1000
       M: 1000000
@@ -4719,7 +4719,7 @@ node_types:
         type: length
       width:
         type: length
-        validation: { $less_than: [ 15 cm ] } # Validation is in centimeters
+        validation: { $less_than: [ $value, '15 cm' ] } # Validation is in centimeters
       throughput:
         type: bitrate
 service_template:
@@ -4744,7 +4744,7 @@ data_types:
     description: Time including some selected SI units and non-SI units accepted for use with the SI units
     derived_from: scalar
     units:
-      # symbols for smaller multipliers ommitted for brevity
+      # symbols for smaller multipliers omitted for brevity
       μs: 0.0001
       ms: 0.001
       s: 1
@@ -4753,7 +4753,7 @@ data_types:
       min: 60
       h: 3600 # hour
       d: 86400 # day
-      # symbols for larger multipliers omiited
+      # symbols for larger multipliers omitited
 ```
 
 #### 9.1.2.3 version <a name=version></a>
