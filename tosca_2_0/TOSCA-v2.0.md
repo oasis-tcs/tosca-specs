@@ -4816,7 +4816,7 @@ The content in this section is normative unless otherwise labeled except:
 The following table summarizes the TOSCA built-in data types. All of
 these type names are reserved and cannot be used for custom data
 types. Note, however, that it is possible to derive a custom data type
-from a primitive type (except for scalar types), for example to add a validation clause or to specify a default value.
+from a primitive type, for example to add a validation clause or to specify a default value.
 
 |Primitive Types|Special Types|Collection Types|
 |:---|:---|:---|
@@ -5257,7 +5257,7 @@ dsl_definitions:
     h: 100 # integer auto-converted to float
     k: 1000
     M: 1000000
-    # prefixes for larger multipliers omiited
+    # prefixes for larger multipliers omitted
 
 data_types:
   PositiveInteger:
@@ -5304,7 +5304,7 @@ node_types:
         type: Length
       width:
         type: Length
-        validation: { $less_than: [ 15 cm ] } # Validation is in centimeters
+        validation: { $less_than: [ $value, 15 cm ] } # Validation is in centimeters
       throughput:
         type: Bitrate
 
@@ -5333,7 +5333,7 @@ data_types:
     description: Time including some selected SI units and non-SI units accepted for use with the SI units
     derived_from: scalar
     units:
-      # symbols for smaller multipliers ommitted for brevity
+      # symbols for smaller multipliers omitted for brevity
       μs: 0.0001
       ms: 0.001
       s: 1
@@ -5342,7 +5342,7 @@ data_types:
       min: 60
       h: 3600 # hour
       d: 86400 # day
-      # symbols for larger multipliers omiited
+      # symbols for larger multipliers omitited
 ```
 
 #### 9.1.2.3 `version` <a name=version></a>
