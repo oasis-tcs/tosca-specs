@@ -5319,7 +5319,17 @@ service_template:
         throughput: 10 Kibits/s
 ```
 
-Note that scalars cannot be derived from scalars and so there are no derivation rules.
+During scalar type derivation the keyname definitions follow these
+rules in addition to the rules which apply to all data type derivations:
+
+- `data_type`: The MUST NOT be modified.
+
+- `units`:  Entries may be added to the units map.
+
+- `cannonical_unit`: MUST NOT be added and an existing value MUST NOT be modified.
+
+- `prefixes`: Entries may be added to an existing prefixes map.
+ 
 
 ##### 9.1.2.2.2 Time <a name=time></a>
 
@@ -7179,8 +7189,7 @@ $equal: [ <any_type_arg1>, <any_type_arg2> ]
 ##### 10.2.2.2.2 `$greater_than` <a name=greater_than></a>
 
 The `$greater_than` function takes two arguments of `integer`, `float`,
-`string`, `timestamp`, `version`, any `scalar` type, or their derivations. It
-evaluates to true if both arguments are of the same type, and if the
+`string`, `timestamp`, `version`, any `scalar` type, or their derivations. It evaluates to true if both arguments are of the same type, and if the
 first argument is greater than the second argument and evaluates to
 false otherwise. The `$greater_than` function uses the following
 grammar:
