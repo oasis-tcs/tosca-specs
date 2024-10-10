@@ -6,21 +6,21 @@
 
 ## Committee Specification Draft 07
 
-## 18 September 2024
+## 9 October 2024
 
 &nbsp;
 
 #### This Stage
 
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.md (Authoritative) \
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.html \
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.pdf
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd07/TOSCA-v2.0-csd07.md (Authoritative) \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd07/TOSCA-v2.0-csd07.html \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd07/TOSCA-v2.0-csd07.pdf
 
 #### Previous Stage
 
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd05/TOSCA-v2.0-csd05.docx (Authoritative) \
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd05/TOSCA-v2.0-csd05.html \
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd05/TOSCA-v2.0-csd05.pdf
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.docx (Authoritative) \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.html \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.pdf
 
 #### Latest Stage
 
@@ -79,9 +79,9 @@ When referencing this specification the following citation format should be used
 
 _TOSCA Version 2.0_.
 Edited by Chris Lauwers and Calin Curescu.
-20 June 2024.
+9 October 2024.
 OASIS Committee Specification Draft 06.
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd06/TOSCA-v2.0-csd06.html.
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd07/TOSCA-v2.0-csd07.html.
 Latest stage: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.html.
 
 #### Notices
@@ -12410,6 +12410,7 @@ assistance:
 |TOSCA-v2.0-csd04|16 June 2022|Chris Lauwers and Calin Curescu|Introduce *TOSCA Operational Model*. Formalize TOSCA Path syntax.|
 |TOSCA-v2.0-csd05|19 January 2023|Chris Lauwers and Calin Curescu|Formalize function syntax and introduce support for user-defined functions. Harmonize constraint syntax, filter syntax, and condition syntax using boolean functions.|
 |TOSCA-v2.0-csd06|12 July 2024|Chris Lauwers and Calin Curescu|Extend operational model with support for updating and upgrading running services. Enhance and formalize *Substitution Mapping* syntax.|
+|TOSCA-v2.0-csd07|9 October 2024|Chris Lauwers and Calin Curescu|Edits for consistency and completeness.|
 
 -------
 
