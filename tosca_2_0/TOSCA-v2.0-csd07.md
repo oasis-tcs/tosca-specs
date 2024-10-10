@@ -8,8 +8,6 @@
 
 ## 9 October 2024
 
-&nbsp;
-
 #### This Stage
 
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd07/TOSCA-v2.0-csd07.md (Authoritative) \
