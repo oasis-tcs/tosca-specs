@@ -5204,7 +5204,7 @@ type definition has the following recognized keynames:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|`derived_from`|yes|str|Equals `scalar`. Indicates that this is a scalar type definition.|
+|`derived_from`|yes|str|The string `scalar` or the name of a scalar unit.|
 |`data_type`|no|str|The data type of the number element of the scalar. Default value if not present is `float`.|
 |`units`|yes|map of strs to floats or ints|Defines at least one unit string and its associated multiplier. At least one entry MUST have a multiplier value of one. The multiplier MUST be an integer or a float. If the `data_type` is integer then the multiplier MUST be an integer. If `prefixes` is used then the map MUST only contain one entry which MUST have a multiplier value of one|
 |`canonical_unit`|no|str|Informs the TOSCA processor which of the possible units to use when storing, computing and presenting scalars of this type. MUST be present if 'units has more than one multiplier of one. If not present the unit with multipler of one is the default canonical_unit.
@@ -5214,7 +5214,7 @@ A concrete scalar type is defined using the following grammar:
 
 ```yaml
 <scalar_name>:
-  derived_from: scalar
+  derived_from: <scalar_name>
   data_type: <data_type_name>
   units:
     <unit_1>: <unit_multiplier_1>
@@ -5228,6 +5228,8 @@ A concrete scalar type is defined using the following grammar:
 ```
 
 In the above grammar, the placeholders that appear in angle brackets have the following meaning:
+
+- `<scalar_name>`: The YAML string `scalar` or the name of a TOSCA scalar type.
 
 - `<data_type_name>`: The TOSCA data type of the scalar. MUST be either TOSCA `float`, TOSCA `integer` or derived from them.
 
