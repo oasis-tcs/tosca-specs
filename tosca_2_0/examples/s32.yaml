@@ -1,0 +1,13 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s32","action":"start"} -->
+tosca_definitions_version: tosca_2_0
+description: TOSCA File B
+  
+node_types:
+  MyNode:
+    derived_from: SoftwareComponent
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+# EDITOR_TAG:{"type":"example","id":"s32","action":"end"} -->

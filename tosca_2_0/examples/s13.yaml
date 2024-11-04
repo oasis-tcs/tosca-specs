@@ -1,0 +1,16 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s13","action":"start"} -->
+relationship_types:
+  HostedOn:
+    properties:
+      # more details ...
+
+  MyCustomClientServer:
+    derived_from: HostedOn
+    properties:
+      # more details ...
+
+  MyCustomConnectionType:
+    properties:
+      # more details ...
+# EDITOR_TAG:{"type":"example","id":"s13","action":"end"} -->

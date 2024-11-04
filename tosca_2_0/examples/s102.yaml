@@ -1,0 +1,34 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s102","action":"start"} -->
+node_templates:  
+  mysql-database:
+    type: Database
+    ...
+    capabilities:
+      database-endpoint:
+        properties:
+          port: 3306
+
+  wordpress:
+    type: WordPress
+    requirements:
+      ...
+      - database-endpoint: mysql-database
+    interfaces:
+      standard:
+        create: wordpress_install.sh
+        configure: 
+          implementation: wordpress_configure.sh            
+          inputs:
+            ...
+            host-dbms-admin-credential:
+              $get_property:
+              - SELF
+              - RELATIONSHIP
+              - database_endpoint
+              - TARGET
+              - RELATIONSHIP
+              - host
+              - TARGET
+              - admin_credential
+# EDITOR_TAG:{"type":"example","id":"s102","action":"end"} -->

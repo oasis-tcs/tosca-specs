@@ -1,0 +1,20 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s125","action":"start"} -->
+tosca_definitions_version: tosca_2_0
+description: Template for deploying SD-WAN with a variable number of sites.
+
+service_template:
+  inputs:
+    number-of-sites:
+      type: integer
+
+  node_templates:
+    sdwan:
+      type: VPN
+
+    site:
+      type: VPNSite
+      count: { $get_input: number-of-sites }
+      requirements:
+      - vpn: sdwan
+# EDITOR_TAG:{"type":"example","id":"s125","action":"end"} -->

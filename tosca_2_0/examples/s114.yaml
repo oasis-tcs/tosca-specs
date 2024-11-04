@@ -1,0 +1,22 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s114","action":"start"} -->
+functions:
+  union:
+    signatures:
+    - arguments:
+      - type: list
+        entry_schema: integer
+      variadic: true
+      result:
+        type: list
+        entry_schema: integer
+      implementation: scripts/libpi.py
+    - arguments:
+      - type: list
+        entry_schema: float
+      variadic: true
+      result:
+        type: list
+        entry_schema: float
+      implementation: scripts/libpi.py
+# EDITOR_TAG:{"type":"example","id":"s114","action":"end"} -->

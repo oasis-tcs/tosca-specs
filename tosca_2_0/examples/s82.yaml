@@ -1,0 +1,11 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s82","action":"start"} -->
+PhoneNumber:
+  properties:
+    country-code:
+      type: integer
+    area-code:
+      type: integer
+    number:
+      type: integer
+# EDITOR_TAG:{"type":"example","id":"s82","action":"end"} -->

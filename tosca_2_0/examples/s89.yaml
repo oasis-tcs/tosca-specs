@@ -1,0 +1,7 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s89","action":"start"} -->
+outputs:
+  server-ip:
+    description: The private IP address of the provisioned server.
+    value: { $get_attribute: [ my-server, private-address ] }
+# EDITOR_TAG:{"type":"example","id":"s89","action":"end"} -->

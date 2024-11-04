@@ -1,0 +1,10 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s112","action":"start"} -->
+functions:
+  my_func_with_different_argument_types:
+    signatures:
+    - arguments: [ MyType1, string, string, MyType2 ]
+      variadic: true
+      result: MyTypeRez
+    implementation: scripts/my.py
+# EDITOR_TAG:{"type":"example","id":"s112","action":"end"} -->

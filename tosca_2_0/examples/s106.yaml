@@ -1,0 +1,10 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s106","action":"start"} -->
+outputs:
+  example1:
+    # Result: prefix_1111_suffix
+    value: { $join: [ [ "prefix", 1111, "suffix" ], "_" ] }
+  example2:
+    # Result: 9.12.1.10,9.12.1.20
+    value: { $join: [ { $get_input: my-ips }, "," ] } 
+# EDITOR_TAG:{"type":"example","id":"s106","action":"end"} -->

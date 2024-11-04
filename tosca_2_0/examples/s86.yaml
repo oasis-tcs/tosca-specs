@@ -1,0 +1,8 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s86","action":"start"} -->
+Endpoint.Admin:
+  derived_from: Endpoint
+  # Change Endpoint secure indicator to true from its default of false
+  properties:
+    secure: true
+# EDITOR_TAG:{"type":"example","id":"s86","action":"end"} -->

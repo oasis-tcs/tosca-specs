@@ -1,0 +1,10 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s56","action":"start"} -->
+service_template:
+  node_templates:
+    my-application:
+      type: WebApplication
+      requirements:
+      - host: 
+          node: WebServer
+# EDITOR_TAG:{"type":"example","id":"s56","action":"end"} -->

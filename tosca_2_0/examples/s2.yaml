@@ -1,0 +1,7 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s2","action":"start"} -->
+metadata:
+  <metadata_name_1>: <metadata_value_1>
+  <metadata_name_2>: <metadata_value_2>
+  ...
+# EDITOR_TAG:{"type":"example","id":"s2","action":"end"} -->

@@ -1,0 +1,4 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s54","action":"start"} -->
+some-capability: MyCapabilityTypeName
+# EDITOR_TAG:{"type":"example","id":"s54","action":"end"} -->

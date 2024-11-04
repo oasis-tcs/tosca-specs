@@ -1,0 +1,19 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s111","action":"start"} -->
+functions:
+  my_func_with_different_argument_types:
+    signatures:
+    - arguments:
+      - type: MyType1
+        description: "this is the first argument ..."
+      - type: string
+        description: "this is the second argument ..."
+      - type: string
+        description: "this is the third argument ..."
+      - type: MyType2
+        description: "this is the argument that can be repeated ..."
+      variadic: true
+      result: 
+        type: MyTypeRez
+      implementation: scripts/my.py
+# EDITOR_TAG:{"type":"example","id":"s111","action":"end"} -->

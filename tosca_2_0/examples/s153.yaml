@@ -1,0 +1,8 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s153","action":"start"} -->
+groups:
+  my-app-placement:
+    type: Placement
+    description: My application's logical component grouping for placement
+    members: [ my-web-server, my-sql-database ]
+# EDITOR_TAG:{"type":"example","id":"s153","action":"end"} -->

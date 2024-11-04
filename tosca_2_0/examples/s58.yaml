@@ -1,0 +1,12 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s58","action":"start"} -->
+service_template:
+  node_templates:
+    my-application:
+      type: WebApplication
+      requirements:
+      - database: 
+          node: my-database
+          capability: Endpoint.Database
+          relationship: CustomDbConnection
+# EDITOR_TAG:{"type":"example","id":"s58","action":"end"} -->

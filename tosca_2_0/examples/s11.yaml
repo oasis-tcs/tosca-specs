@@ -1,0 +1,17 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s11","action":"start"} -->
+capability_types:
+  MyGenericFeature:
+    properties:
+      # more details ...
+
+  MyFirstCustomFeature:
+    derived_from: MyGenericFeature
+    properties:
+      # more details ...
+
+  TransactSQL:
+    derived_from: MyGenericFeature
+    properties:
+      # more details ...
+# EDITOR_TAG:{"type":"example","id":"s11","action":"end"} -->

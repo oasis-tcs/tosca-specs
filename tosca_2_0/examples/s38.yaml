@@ -1,0 +1,39 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s38","action":"start"} -->
+service_template:
+  description: <template_description>
+  metadata:
+    <metadata_name_1>: <metadata_value_1>
+    <metadata_name_2>: <metadata_value_2>
+    ...
+  inputs:
+    <input_parameter_def_1>
+    <input_parameter_def_2>
+    ...
+  outputs:
+    <output_parameter_def_1>
+    <output_parameter_def_2>
+    ...
+  node_templates:
+    <node_template_def_1>
+    <node_template_def_2>
+    ...
+  relationship_templates: 
+    <relationship_template_def_1>
+    <relationship_template_def_2>
+    ...
+  groups:
+    <group_def_1>
+    <group_def_2>
+    ...
+  policies: 
+  - <policy_def_1>
+  - <policy_def_2>
+  - ...
+  substitution_mappings:
+    <substitution_mappings>
+  workflows:
+    <workflow_def_1>
+    <workflow_def_2>
+    ...
+# EDITOR_TAG:{"type":"example","id":"s38","action":"end"} -->

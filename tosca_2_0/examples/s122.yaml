@@ -1,0 +1,17 @@
+tosca_definitions_version: tosca_2_0
+# EDITOR_TAG:{"type":"example","id":"s122","action":"start"} -->
+artifacts:
+  sw-image:
+    description: Image for virtual machine
+    type: Deployment.Image.VM
+    file: http://10.10.86.141/images/Juniper_vSRX_15.1x49_D80_preconfigured.qcow2
+    checksum: ba411cafee2f0f702572369da0b765e2
+    version: '3.2'
+    checksum_algorithm: MD5
+    properties:
+      name: vSRX
+      container-format: BARE
+      disk-format: QCOW2
+      min-disk: 1 GB
+      size: 649 MB
+# EDITOR_TAG:{"type":"example","id":"s122","action":"end"} -->
