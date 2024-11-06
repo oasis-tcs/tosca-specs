@@ -250,8 +250,8 @@ For complete copyright information please see the full Notices section in [Appen
   - [7.1 Node Type ](#node-type)
   - [7.2 Node Template
     ](#node-template)
-    - [7.2.1 Node Template Directives\<a
-      name=node-template-directives](#node-template-directivesa-namenode-template-directives)
+    - [7.2.1 Node Template Directives
+      ](#node-template-directives)
   - [7.3 Relationship Type
     ](#relationship-type)
   - [7.4 Relationship Template
@@ -262,14 +262,14 @@ For complete copyright information please see the full Notices section in [Appen
     ](#capability-type)
   - [8.2 Capability Definition
     ](#capability-definition)
-  - [8.2.1 Capability Refinement
-    ](#capability-refinement)
+    - [8.2.1 Capability Refinement
+      ](#capability-refinement)
   - [8.3 Capability Assignment
     ](#capability-assignment)
   - [8.4 Requirement Definition
     ](#requirement-definition)
-  - [8.4.1 Requirement Refinement
-    ](#requirement-refinement)
+    - [8.4.1 Requirement Refinement
+      ](#requirement-refinement)
   - [8.5 Requirement Assignment
     ](#requirement-assignment)
     - [8.5.1 Supported Keynames
