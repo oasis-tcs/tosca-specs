@@ -96,8 +96,465 @@ For complete copyright information please see the full Notices section in [Appen
 
 # Table of Contents
 
-> Provide later
-[[TOC will be inserted here]]
+- [1 Introduction ](#introduction)
+  - [1.1 Changes from Earlier Versions
+    ](#changes-from-earlier-versions)
+  - [1.2 Document Conventions
+    ](#document-conventions)
+    - [1.2.1 Specification Conventions](#specification-conventions)
+      - [1.2.1.1 Code Snippets](#code-snippets)
+      - [1.2.1.2 Placeholders](#placeholders)
+    - [1.2.2 TOSCA Naming Conventions](#tosca-naming-conventions)
+  - [1.3 Glossary ](#glossary)
+    - [1.3.1 Definitions of Terms
+      ](#definitions-of-terms)
+    - [1.3.2 Acronyms and Abbreviations
+      ](#acronyms-and-abbreviations)
+- [2 TOSCA Overview
+  ](#tosca-overview)
+  - [2.1 Objectives ](#objectives)
+  - [2.2 TOSCA Features and Benefits
+    ](#tosca-features-and-benefits)
+    - [2.2.1 TOSCA Is Model-Driven
+      ](#tosca-is-model-driven)
+    - [2.2.2 TOSCA Models Are Graphs
+      ](#tosca-models-are-graphs)
+    - [2.2.3 TOSCA Promotes Reuse and Modularity
+      ](#tosca-promotes-reuse-and-modularity)
+    - [2.2.4 TOSCA Is Domain-Independent
+      ](#tosca-is-domain-independent)
+  - [2.3 TOSCA Core Concepts
+    ](#tosca-core-concepts)
+  - [2.4 Using TOSCA ](#using-tosca)
+    - [2.4.1 TOSCA Files
+      ](#tosca-files)
+    - [2.4.2 Archive Format for Cloud Applications
+      ](#archive-format-for-cloud-applications)
+- [3 TOSCA Language Abstractions
+  ](#tosca-language-abstractions)
+  - [3.1 Service Templates, Node Templates, and Relationship Templates
+    ](#service-templates-node-templates-and-relationship-templates)
+  - [3.2 Requirements and Capabilities
+    ](#requirements-and-capabilities)
+  - [3.3 Decomposition of Node Representations
+    ](#decomposition-of-node-representations)
+  - [3.4 Interfaces, Operations, and Artifacts
+    ](#interfaces-operations-and-artifacts)
+  - [3.5 Workflows ](#workflows)
+  - [3.6 Policies ](#policies)
+- [4 TOSCA Operational Model
+  ](#tosca-operational-model)
+  - [4.1 TOSCA Functional Architecture
+    ](#tosca-functional-architecture)
+  - [4.2 TOSCA Processor
+    ](#tosca-processor)
+    - [4.2.1 Parser ](#parser)
+    - [4.2.2 Resolver ](#resolver)
+  - [4.3 Orchestrator
+    ](#orchestrator)
+  - [4.4 Changes in the Representation Graph
+    ](#changes-in-the-representation-graph)
+- [5 TOSCA Grammar Overview
+  ](#tosca-grammar-overview)
+  - [5.1 TOSCA Modeling Concepts
+    ](#tosca-modeling-concepts)
+    - [5.1.1 Type Definitions and Entity Definitions
+      ](#type-definitions-and-entity-definitions)
+    - [5.1.2 Templates and Entity Assignments
+      ](#templates-and-entity-assignments)
+    - [5.1.3 Type Derivation, Augmentation, and Refinement
+      ](#type-derivation-augmentation-and-refinement)
+    - [5.1.4 TOSCA File Reuse
+      ](#tosca-file-reuse)
+  - [5.2 Mandatory Keynames
+    ](#mandatory-keynames)
+  - [5.3 Common Keynames
+    ](#common-keynames)
+    - [5.3.1 `metadata` ](#metadata)
+    - [5.3.2 `description`
+      ](#description)
+- [6 TOSCA File Definition
+  ](#tosca-file-definition)
+  - [6.1 Keynames ](#keynames)
+  - [6.2 TOSCA Definitions Version
+    ](#tosca-definitions-version)
+  - [6.3 DSL Definitions
+    ](#dsl-definitions)
+  - [6.4 Type Definitions
+    ](#type-definitions)
+    - [6.4.1 Common Keynames in Type Definitions
+      ](#common-keynames-in-type-definitions)
+    - [6.4.2 Type Derivation
+      ](#type-derivation)
+    - [6.4.3 Types of Types
+      ](#types-of-types)
+      - [6.4.3.1 Artifact Types
+        ](#artifact-types)
+      - [6.4.3.2 Data Types
+        ](#data-types)
+      - [6.4.3.3 Capability Types
+        ](#capability-types)
+      - [6.4.3.4 Interface Types
+        ](#interface-types)
+      - [6.4.3.5 Relationship Types
+        ](#relationship-types)
+      - [6.4.3.6 Node Types
+        ](#node-types)
+      - [6.4.3.7 Group Types
+        ](#group-types)
+      - [6.4.3.8 Policy Types
+        ](#policy-types)
+  - [6.5 Repository Definitions
+    ](#repository-definitions)
+  - [6.6 Function Definitions
+    ](#function-definitions)
+  - [6.7 Profiles ](#profiles)
+    - [6.7.1 Grammar ](#grammar)
+    - [6.7.2 TOSCA Simple Profile
+      <span id="tosca-simple-profile"></span>10](#tosca-simple-profile)
+    - [6.7.3 Profile Versions
+      ](#profile-versions)
+  - [6.8 Imports and Namespaces
+    ](#imports-and-namespaces)
+    - [6.8.1 Import Definitions
+      ](#import-definitions)
+    - [6.8.2 Import Processing Rules
+      ](#import-processing-rules)
+      - [6.8.2.1 Importing Profiles
+        ](#importing-profiles)
+      - [6.8.2.2 Importing a TOSCA File
+        ](#importing-a-tosca-file)
+    - [6.8.3 Examples ](#examples)
+    - [6.8.4 Namespaces ](#namespaces)
+  - [6.9 Service Template Definition
+    ](#service-template-definition)
+    - [6.9.1 Service Template Grammar
+      ](#service-template-grammar)
+    - [6.9.2 Input Parameters
+      ](#input-parameters)
+    - [6.9.3 Node Templates
+      ](#node-templates)
+    - [6.9.4 Relationship Templates
+      ](#relationship-templates)
+    - [6.9.5 Output Parameters
+      ](#output-parameters)
+    - [6.9.6 Workflow Definitions
+      ](#workflow-definitions)
+    - [6.9.7 Group Definitions
+      ](#group-definitions)
+    - [6.9.8 Policy Definitions
+      ](#policy-definitions)
+    - [6.9.10 Substitution Mappings
+      ](#substitution-mappings)
+- [7 Nodes and Relationships
+  ](#nodes-and-relationships)
+  - [7.1 Node Type ](#node-type)
+  - [7.2 Node Template
+    ](#node-template)
+    - [7.2.1 Node Template Directives\<a
+      name=node-template-directives](#node-template-directivesa-namenode-template-directives)
+  - [7.3 Relationship Type
+    ](#relationship-type)
+  - [7.4 Relationship Template
+    ](#relationship-template)
+- [8 Capabilities and Requirements
+  ](#capabilities-and-requirements)
+  - [8.1 Capability Type
+    ](#capability-type)
+  - [8.2 Capability Definition
+    ](#capability-definition)
+  - [8.2.1 Capability Refinement
+    ](#capability-refinement)
+  - [8.3 Capability Assignment
+    ](#capability-assignment)
+  - [8.4 Requirement Definition
+    ](#requirement-definition)
+  - [8.4.1 Requirement Refinement
+    ](#requirement-refinement)
+  - [8.5 Requirement Assignment
+    ](#requirement-assignment)
+    - [8.5.1 Supported Keynames
+      ](#supported-keynames)
+    - [8.5.2 Requirement Assignment Grammar
+      ](#requirement-assignment-grammar)
+    - [8.5.4 Requirement Count
+      ](#requirement-count)
+    - [8.5.5 Capability Allocation
+      ](#capability-allocation)
+  - [8.6 Node Filter Definition
+    ](#node-filter-definition)
+- [9 Properties, Attributes, and Parameters
+  ](#properties-attributes-and-parameters)
+  - [9.1 TOSCA Built-In Types
+    ](#tosca-built-in-types)
+    - [9.1.1 Primitive Types
+      ](#primitive-types)
+      - [9.1.1.1 `string` ](#string)
+      - [9.1.1.2 `integer` ](#integer)
+      - [9.1.1.3 `float` ](#float)
+      - [9.1.1.4 `boolean` ](#boolean)
+      - [9.1.1.5 `bytes` ](#bytes)
+      - [9.1.1.6 `nil` ](#nil)
+    - [9.1.2 Special Types
+      ](#special-types)
+      - [9.1.2.1 `timestamp`
+        ](#timestamp)
+      - [9.1.2.2 `scalar` ](#scalar)
+        - [9.1.2.2.2 Examples ](#examples)
+      - [9.1.2.3 `version` ](#version)
+    - [9.1.3 Collection Types
+      ](#collection-types)
+      - [9.1.3.1 `list` ](#list)
+      - [9.1.3.2 `map` ](#map)
+  - [9.2 Data Type ](#data-type)
+  - [9.3 Schema Definition
+    ](#schema-definition)
+  - [9.3 Property Definition
+    ](#property-definition)
+  - [9.4 Property Assignment
+    ](#property-assignment)
+  - [9.5 Attribute Definition
+    ](#attribute-definition)
+  - [9.6 Attribute Assignment
+    ](#attribute-assignment)
+  - [9.7 Parameter Definition
+    ](#parameter-definition)
+  - [9.8 Parameter Value Assignment
+    ](#parameter-value-assignment)
+  - [9.9 Parameter Mapping Assignment
+    ](#parameter-mapping-assignment)
+  - [9.10 Validation Clause
+    ](#validation-clause)
+- [10 TOSCA Functions
+  ](#tosca-functions)
+  - [10.1 Function Syntax
+    ](#function-syntax)
+  - [10.2 TOSCA Built-In Functions
+    <span id="tosca-built-in-functions"></span>20](#tosca-built-in-functions)
+    - [10.2.1 Representation Graph Query Functions
+      <span id="representation-graph-query-functions"></span>20](#representation-graph-query-functions)
+      - [10.2.1.1 `$get_input`
+        ](#get_input)
+      - [10.2.1.2 `$get_property`
+        ](#get_property)
+      - [10.2.1.3 `$get_attribute`
+        ](#get_attribute)
+      - [10.2.1.4 get_artifact
+        ](#get_artifact)
+      - [10.2.1.5 `$value` ](#value)
+      - [10.2.1.6 node_index
+        ](#node_index)
+      - [10.2.1.7 `$relationship_index`
+        ](#relationship_index)
+      - [10.2.1.8 `$available_allocation`
+        ](#available_allocation)
+    - [10.2.2 Boolean Functions
+      ](#boolean-functions)
+      - [10.2.2.1 Boolean Logic Functions
+        ](#boolean-logic-functions)
+        - [10.2.2.1.1 `$and` ](#and)
+        - [10.2.2.1.2 `$or` ](#or)
+        - [10.2.2.1.3 not ](#not)
+        - [10.2.2.1.4 `$xor` ](#xor)
+      - [10.2.2.2 Comparison Functions
+        ](#comparison-functions)
+        - [10.2.2.2.1 `$equal` ](#equal)
+        - [10.2.2.2.2 `$greater_than`
+          ](#greater_than)
+        - [10.2.2.2.3 `$greater_or_equal`
+          ](#greater_or_equal)
+        - [10.2.2.2.4 `$less_than`
+          ](#less_than)
+        - [10.2.2.2.5 `$less_or_equal`
+          ](#less_or_equal)
+        - [10.2.2.2.6 `$valid_values`
+          ](#valid_values)
+        - [10.2.2.2.7 `$matches`
+          ](#matches)
+      - [10.2.2.3 Boolean List, Map and String Functions
+        ](#boolean-list-map-and-string-functions)
+        - [10.2.2.3.1 `$has_suffix`
+          ](#has_suffix)
+        - [10.2.2.3.2 `$has_prefix`
+          ](#has_prefix)
+        - [10.2.2.3.3 `$contains`
+          ](#contains)
+        - [10.2.2.3.4 `$has_entry`
+          ](#has_entry)
+        - [10.2.2.3.5 `$has_key`
+          ](#has_key)
+        - [10.2.2.3.6 `$has_all_entries`
+          ](#has_all_entries)
+        - [10.2.2.3.7 `$has_all_keys`
+          ](#has_all_keys)
+        - [10.2.2.3.8 `$has_any_entry`
+          ](#has_any_entry)
+        - [10.2.2.3.9 `$has_any_key`
+          ](#has_any_key)
+    - [10.2.3 String, List, and Map Functions
+      ](#string-list-and-map-functions)
+      - [10.2.3.1 `$length` ](#length)
+      - [10.2.3.2 `$concat` ](#concat)
+      - [10.2.3.3 `$join` ](#join)
+      - [10.2.3.4 `$token` ](#token)
+    - [10.2.4 Set Functions
+      ](#set-functions)
+      - [10.2.4.1 `$union` ](#union)
+      - [10.2.4.2 `$intersection`
+        ](#intersection)
+    - [10.2.5 Arithmetic Functions
+      ](#arithmetic-functions)
+      - [10.2.5.1 `$sum` ](#sum)
+      - [10.2.5.2 `$difference`
+        ](#difference)
+      - [10.2.5.3 `$product`
+        ](#product)
+      - [10.2.5.4 `$quotient`
+        ](#quotient)
+      - [10.2.5.5 `$remainder`
+        ](#remainder)
+      - [10.2.5.6 `$round` ](#round)
+      - [10.2.5.7 `$floor` ](#floor)
+      - [10.2.5.8 `$ceil` ](#ceil)
+  - [10.3 TOSCA Path ](#tosca-path)
+  - [10.4 Function Definitions
+    ](#function-definitions)
+- [11 Interfaces, Operations, and Notifications
+  ](#interfaces-operations-and-notifications)
+  - [11.1 Interface Type
+    ](#interface-type)
+  - [11.2 Interface Definition
+    ](#interface-definition)
+  - [11.3 Interface Assignment
+    ](#interface-assignment)
+  - [11.4 Operation Definition
+    ](#operation-definition)
+  - [11.5 Operation Assignment
+    ](#operation-assignment)
+  - [11.6 Notification Definition
+    ](#notification-definition)
+  - [11.7 Notification Assignment
+    ](#notification-assignment)
+  - [11.8 Operation and Notification Implementations
+    ](#operation-and-notification-implementations)
+- [12 Artifacts ](#artifacts)
+  - [12.1 Artifact Type
+    ](#artifact-type)
+  - [12.2 Artifact Definition
+    ](#artifact-definition)
+- [13 Workflows ](#workflows)
+  - [13.1 Declarative Workflows
+    ](#declarative-workflows)
+  - [13.2 Imperative Workflows
+    ](#imperative-workflows)
+    - [13.2.1 Workflow Precondition Definition
+      ](#workflow-precondition-definition)
+    - [13.2.2 Workflow Step Definition
+      ](#workflow-step-definition)
+    - [13.2.3 Activity Definition
+      ](#activity-definition)
+      - [13.2.3.1 Delegate Workflow Activity Definition
+        ](#delegate-workflow-activity-definition)
+      - [13.2.3.2 Set State Activity Definition
+        ](#set-state-activity-definition)
+      - [13.2.3.3 Call Operation Activity Definition
+        ](#call-operation-activity-definition)
+      - [13.2.3.4 Inline Workflow Activity Definition
+        ](#inline-workflow-activity-definition)
+- [14 Creating Multiple Representations from Templates
+  ](#creating-multiple-representations-from-templates)
+  - [14.1 Specifying Number of Node Representations
+    ](#specifying-number-of-node-representations)
+  - [14.2 Node-Specific Input Values
+    ](#node-specific-input-values)
+  - [14.3 Cardinality of Relationships
+    ](#cardinality-of-relationships)
+    - [14.3.1 Many-to-One Relationships
+      ](#many-to-one-relationships)
+    - [14.3.2 One-to-Many Relationships
+      ](#one-to-many-relationships)
+    - [14.3.3 Full Mesh ](#full-mesh)
+    - [14.3.4 Matched Pairs
+      ](#matched-pairs)
+    - [14.3.5 Random Pairs
+      ](#random-pairs)
+    - [14.3.6 Many-to-Many Relationships
+      ](#many-to-many-relationships)
+- [15 Substitution ](#substitution)
+  - [15.1 Substitution Mapping
+    ](#substitution-mapping)
+  - [15.2 Property Mapping
+    ](#property-mapping)
+  - [15.3 Attribute Mapping
+    ](#attribute-mapping)
+  - [15.4 Capability Mapping
+    ](#capability-mapping)
+  - [15.5 Requirement Mapping
+    ](#requirement-mapping)
+    - [15.5.1 Mapping Multiple Requirements with the Same Name
+      ](#mapping-multiple-requirements-with-the-same-name)
+    - [15.5.2 Mapping a Requirement Multiple Times
+      ](#mapping-a-requirement-multiple-times)
+    - [15.5.3 Requirement Mapping and Selectable Nodes
+      ](#requirement-mapping-and-selectable-nodes)
+    - [15.5.4 Requirement Mapping Rules
+      ](#requirement-mapping-rules)
+    - [15.5.5 Handling "UNBOUNDED" Requirement Count Ranges
+      ](#handling-unbounded-requirement-count-ranges)
+  - [15.6 Interface Mapping
+    ](#interface-mapping)
+- [16 Groups and Policies
+  ](#groups-and-policies)
+  - [16.1 Group Type ](#group-type)
+  - [16.2 Group Definition
+    ](#group-definition)
+  - [16.3 Policy Type ](#policy-type)
+  - [16.4 Policy Definition
+    ](#policy-definition)
+  - [16.5 Trigger Definition
+    ](#trigger-definition)
+- [17 Cloud Service Archive (CSAR) Format
+  ](#cloud-service-archive-csar-format)
+  - [17.1 Overall Structure of a CSAR
+    ](#overall-structure-of-a-csar)
+    - [17.1.1 CSAR Archiving Formats
+      ](#csar-archiving-formats)
+      - [17.1.1.1 Tarballs
+        ](#tarballs)
+      - [17.1.1.2 Zip Files
+        ](#zip-files)
+  - [17.2 "TOSCA.meta" File
+    ](#toscameta-file)
+    - [17.2.1 Block 0 Keynames in the "TOSCA.meta" File
+      ](#block-0-keynames-in-the-toscameta-file)
+    - [17.2.2 Custom Keynames in the "TOSCA.meta" File
+      ](#custom-keynames-in-the-toscameta-file)
+  - [17.3 CSAR Without a "TOSCA.meta" File
+    ](#csar-without-a-toscameta-file)
+- [18 Conformance ](#conformance)
+  - [18.1 Conformance Targets
+    ](#conformance-targets)
+  - [18.2 Conformance Clause 1: TOSCA File
+    ](#conformance-clause-1-tosca-file)
+  - [18.3 Conformance Clause 2: TOSCA Processor
+    ](#conformance-clause-2-tosca-processor)
+  - [18.4 Conformance Clause 3: TOSCA Orchestrator
+    ](#conformance-clause-3-tosca-orchestrator)
+  - [18.5 Conformance Clause 4: TOSCA Generator
+    ](#conformance-clause-4-tosca-generator)
+  - [18.6 Conformance Clause 5: TOSCA Archive
+    ](#conformance-clause-5-tosca-archive)
+- [Appendix A. References](#a-references)
+  - [A.1 Normative References](#a1-normative-references)
+  - [A.2 Informative References](#a2-informative-references)
+- [Appendix B. Safety, Security and Privacy
+  Considerations](#appendix-b-safety-security-and-privacy-considerations)
+- [Appendix C. Acknowledgments](#appendix-c-acknowledgments)
+  - [C.1 Special Thanks](#c1-special-thanks)
+  - [C.2 Participants](#c2-participants)
+- [Appendix D. Revision History](#appendix-d-revision-history)
+- [Appendix E. Notices
+  ](#appendix-e-notices)
 
 -------
 
