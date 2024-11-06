@@ -250,8 +250,7 @@ For complete copyright information please see the full Notices section in [Appen
   - [7.1 Node Type ](#node-type)
   - [7.2 Node Template
     ](#node-template)
-    - [7.2.1 Node Template Directives
-      ](#node-template-directives)
+    - [7.2.1 Node Template Directives](#node-template-directives)
   - [7.3 Relationship Type
     ](#relationship-type)
   - [7.4 Relationship Template
