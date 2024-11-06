@@ -3837,7 +3837,7 @@ node_templates:
           configure: scripts/my_own_configure.sh
 ```
 
-### 7.2.1 Node Template Directives <a name=node-template-directives</a>
+### 7.2.1 Node Template Directives <a name=node-template-directives></a>
 
 As described in the section above, a node template supports the following 3 directives 
 used by the TOSCA resolver to populate nodes in the representation graph:
