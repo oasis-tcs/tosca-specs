@@ -96,8 +96,461 @@ For complete copyright information please see the full Notices section in [Appen
 
 # Table of Contents
 
-> Provide later
-[[TOC will be inserted here]]
+- [1 Introduction ](#introduction)
+  - [1.1 Changes from Earlier Versions
+    ](#changes-from-earlier-versions)
+  - [1.2 Document Conventions
+    ](#document-conventions)
+    - [1.2.1 Specification Conventions](#specification-conventions)
+      - [1.2.1.1 Code Snippets](#code-snippets)
+      - [1.2.1.2 Placeholders](#placeholders)
+    - [1.2.2 TOSCA Naming Conventions](#tosca-naming-conventions)
+  - [1.3 Glossary ](#glossary)
+    - [1.3.1 Definitions of Terms
+      ](#definitions-of-terms)
+    - [1.3.2 Acronyms and Abbreviations
+      ](#acronyms-and-abbreviations)
+- [2 TOSCA Overview
+  ](#tosca-overview)
+  - [2.1 Objectives ](#objectives)
+  - [2.2 TOSCA Features and Benefits
+    ](#tosca-features-and-benefits)
+    - [2.2.1 TOSCA Is Model-Driven
+      ](#tosca-is-model-driven)
+    - [2.2.2 TOSCA Models Are Graphs
+      ](#tosca-models-are-graphs)
+    - [2.2.3 TOSCA Promotes Reuse and Modularity
+      ](#tosca-promotes-reuse-and-modularity)
+    - [2.2.4 TOSCA Is Domain-Independent
+      ](#tosca-is-domain-independent)
+  - [2.3 TOSCA Core Concepts
+    ](#tosca-core-concepts)
+  - [2.4 Using TOSCA ](#using-tosca)
+    - [2.4.1 TOSCA Files
+      ](#tosca-files)
+    - [2.4.2 Archive Format for Cloud Applications
+      ](#archive-format-for-cloud-applications)
+- [3 TOSCA Language Abstractions
+  ](#tosca-language-abstractions)
+  - [3.1 Service Templates, Node Templates, and Relationship Templates
+    ](#service-templates-node-templates-and-relationship-templates)
+  - [3.2 Requirements and Capabilities
+    ](#requirements-and-capabilities)
+  - [3.3 Decomposition of Node Representations
+    ](#decomposition-of-node-representations)
+  - [3.4 Interfaces, Operations, and Artifacts
+    ](#interfaces-operations-and-artifacts)
+  - [3.5 Workflows ](#workflows)
+  - [3.6 Policies ](#policies)
+- [4 TOSCA Operational Model
+  ](#tosca-operational-model)
+  - [4.1 TOSCA Functional Architecture
+    ](#tosca-functional-architecture)
+  - [4.2 TOSCA Processor
+    ](#tosca-processor)
+    - [4.2.1 Parser ](#parser)
+    - [4.2.2 Resolver ](#resolver)
+  - [4.3 Orchestrator
+    ](#orchestrator)
+  - [4.4 Changes in the Representation Graph
+    ](#changes-in-the-representation-graph)
+- [5 TOSCA Grammar Overview
+  ](#tosca-grammar-overview)
+  - [5.1 TOSCA Modeling Concepts
+    ](#tosca-modeling-concepts)
+    - [5.1.1 Type Definitions and Entity Definitions
+      ](#type-definitions-and-entity-definitions)
+    - [5.1.2 Templates and Entity Assignments
+      ](#templates-and-entity-assignments)
+    - [5.1.3 Type Derivation, Augmentation, and Refinement
+      ](#type-derivation-augmentation-and-refinement)
+    - [5.1.4 TOSCA File Reuse
+      ](#tosca-file-reuse)
+  - [5.2 Mandatory Keynames
+    ](#mandatory-keynames)
+  - [5.3 Common Keynames
+    ](#common-keynames)
+    - [5.3.1 `metadata` ](#metadata)
+    - [5.3.2 `description`
+      ](#description)
+- [6 TOSCA File Definition
+  ](#tosca-file-definition)
+  - [6.1 Keynames ](#keynames)
+  - [6.2 TOSCA Definitions Version
+    ](#tosca-definitions-version)
+  - [6.3 DSL Definitions
+    ](#dsl-definitions)
+  - [6.4 Type Definitions
+    ](#type-definitions)
+    - [6.4.1 Common Keynames in Type Definitions
+      ](#common-keynames-in-type-definitions)
+    - [6.4.2 Type Derivation
+      ](#type-derivation)
+    - [6.4.3 Types of Types
+      ](#types-of-types)
+      - [6.4.3.1 Artifact Types
+        ](#artifact-types)
+      - [6.4.3.2 Data Types
+        ](#data-types)
+      - [6.4.3.3 Capability Types
+        ](#capability-types)
+      - [6.4.3.4 Interface Types
+        ](#interface-types)
+      - [6.4.3.5 Relationship Types
+        ](#relationship-types)
+      - [6.4.3.6 Node Types
+        ](#node-types)
+      - [6.4.3.7 Group Types
+        ](#group-types)
+      - [6.4.3.8 Policy Types
+        ](#policy-types)
+  - [6.5 Repository Definitions
+    ](#repository-definitions)
+  - [6.6 Function Definitions
+    ](#function-definitions)
+  - [6.7 Profiles ](#profiles)
+    - [6.7.1 Grammar ](#grammar)
+    - [6.7.2 TOSCA Simple Profile](#tosca-simple-profile)
+    - [6.7.3 Profile Versions
+      ](#profile-versions)
+  - [6.8 Imports and Namespaces
+    ](#imports-and-namespaces)
+    - [6.8.1 Import Definitions
+      ](#import-definitions)
+    - [6.8.2 Import Processing Rules
+      ](#import-processing-rules)
+      - [6.8.2.1 Importing Profiles
+        ](#importing-profiles)
+      - [6.8.2.2 Importing a TOSCA File
+        ](#importing-a-tosca-file)
+    - [6.8.3 Examples ](#examples)
+    - [6.8.4 Namespaces ](#namespaces)
+  - [6.9 Service Template Definition
+    ](#service-template-definition)
+    - [6.9.1 Service Template Grammar
+      ](#service-template-grammar)
+    - [6.9.2 Input Parameters
+      ](#input-parameters)
+    - [6.9.3 Node Templates
+      ](#node-templates)
+    - [6.9.4 Relationship Templates
+      ](#relationship-templates)
+    - [6.9.5 Output Parameters
+      ](#output-parameters)
+    - [6.9.6 Workflow Definitions
+      ](#workflow-definitions)
+    - [6.9.7 Group Definitions
+      ](#group-definitions)
+    - [6.9.8 Policy Definitions
+      ](#policy-definitions)
+    - [6.9.9 Substitution Mappings
+      ](#substitution-mappings)
+- [7 Nodes and Relationships
+  ](#nodes-and-relationships)
+  - [7.1 Node Type ](#node-type)
+  - [7.2 Node Template
+    ](#node-template)
+    - [7.2.1 Node Template Directives](#node-template-directives)
+  - [7.3 Relationship Type
+    ](#relationship-type)
+  - [7.4 Relationship Template
+    ](#relationship-template)
+- [8 Capabilities and Requirements
+  ](#capabilities-and-requirements)
+  - [8.1 Capability Type
+    ](#capability-type)
+  - [8.2 Capability Definition
+    ](#capability-definition)
+    - [8.2.1 Capability Refinement
+      ](#capability-refinement)
+  - [8.3 Capability Assignment
+    ](#capability-assignment)
+  - [8.4 Requirement Definition
+    ](#requirement-definition)
+    - [8.4.1 Requirement Refinement
+      ](#requirement-refinement)
+  - [8.5 Requirement Assignment
+    ](#requirement-assignment)
+    - [8.5.1 Supported Keynames
+      ](#supported-keynames)
+    - [8.5.2 Requirement Assignment Grammar
+      ](#requirement-assignment-grammar)
+    - [8.5.4 Requirement Count
+      ](#requirement-count)
+    - [8.5.5 Capability Allocation
+      ](#capability-allocation)
+  - [8.6 Node Filter Definition
+    ](#node-filter-definition)
+- [9 Properties, Attributes, and Parameters
+  ](#properties-attributes-and-parameters)
+  - [9.1 TOSCA Built-In Types
+    ](#tosca-built-in-types)
+    - [9.1.1 Primitive Types
+      ](#primitive-types)
+      - [9.1.1.1 `string` ](#string)
+      - [9.1.1.2 `integer` ](#integer)
+      - [9.1.1.3 `float` ](#float)
+      - [9.1.1.4 `boolean` ](#boolean)
+      - [9.1.1.5 `bytes` ](#bytes)
+      - [9.1.1.6 `nil` ](#nil)
+    - [9.1.2 Special Types
+      ](#special-types)
+      - [9.1.2.1 `timestamp`
+        ](#timestamp)
+      - [9.1.2.2 `scalar` ](#scalar)
+        - [9.1.2.2.2 Examples ](#examples)
+      - [9.1.2.3 `version` ](#version)
+    - [9.1.3 Collection Types
+      ](#collection-types)
+      - [9.1.3.1 `list` ](#list)
+      - [9.1.3.2 `map` ](#map)
+  - [9.2 Data Type ](#data-type)
+  - [9.3 Schema Definition
+    ](#schema-definition)
+  - [9.4 Property Definition
+    ](#property-definition)
+  - [9.5 Property Assignment
+    ](#property-assignment)
+  - [9.6 Attribute Definition
+    ](#attribute-definition)
+  - [9.7 Attribute Assignment
+    ](#attribute-assignment)
+  - [9.8 Parameter Definition
+    ](#parameter-definition)
+  - [9.9 Parameter Value Assignment
+    ](#parameter-value-assignment)
+  - [9.10 Parameter Mapping Assignment
+    ](#parameter-mapping-assignment)
+  - [9.11 Validation Clause
+    ](#validation-clause)
+- [10 TOSCA Functions
+  ](#tosca-functions)
+  - [10.1 Function Syntax
+    ](#function-syntax)
+  - [10.2 TOSCA Built-In Functions](#tosca-built-in-functions)
+    - [10.2.1 Representation Graph Query Functions](#representation-graph-query-functions)
+      - [10.2.1.1 `$get_input`
+        ](#get_input)
+      - [10.2.1.2 `$get_property`
+        ](#get_property)
+      - [10.2.1.3 `$get_attribute`
+        ](#get_attribute)
+      - [10.2.1.4 `$get_artifact`
+        ](#get_artifact)
+      - [10.2.1.5 `$value` ](#value)
+      - [10.2.1.6 `$node_index`
+        ](#node_index)
+      - [10.2.1.7 `$relationship_index`
+        ](#relationship_index)
+      - [10.2.1.8 `$available_allocation`
+        ](#available_allocation)
+    - [10.2.2 Boolean Functions
+      ](#boolean-functions)
+      - [10.2.2.1 Boolean Logic Functions
+        ](#boolean-logic-functions)
+        - [10.2.2.1.1 `$and` ](#and)
+        - [10.2.2.1.2 `$or` ](#or)
+        - [10.2.2.1.3 `$not` ](#not)
+        - [10.2.2.1.4 `$xor` ](#xor)
+      - [10.2.2.2 Comparison Functions
+        ](#comparison-functions)
+        - [10.2.2.2.1 `$equal` ](#equal)
+        - [10.2.2.2.2 `$greater_than`
+          ](#greater_than)
+        - [10.2.2.2.3 `$greater_or_equal`
+          ](#greater_or_equal)
+        - [10.2.2.2.4 `$less_than`
+          ](#less_than)
+        - [10.2.2.2.5 `$less_or_equal`
+          ](#less_or_equal)
+        - [10.2.2.2.6 `$valid_values`
+          ](#valid_values)
+        - [10.2.2.2.7 `$matches`
+          ](#matches)
+      - [10.2.2.3 Boolean List, Map and String Functions
+        ](#boolean-list-map-and-string-functions)
+        - [10.2.2.3.1 `$has_suffix`
+          ](#has_suffix)
+        - [10.2.2.3.2 `$has_prefix`
+          ](#has_prefix)
+        - [10.2.2.3.3 `$contains`
+          ](#contains)
+        - [10.2.2.3.4 `$has_entry`
+          ](#has_entry)
+        - [10.2.2.3.5 `$has_key`
+          ](#has_key)
+        - [10.2.2.3.6 `$has_all_entries`
+          ](#has_all_entries)
+        - [10.2.2.3.7 `$has_all_keys`
+          ](#has_all_keys)
+        - [10.2.2.3.8 `$has_any_entry`
+          ](#has_any_entry)
+        - [10.2.2.3.9 `$has_any_key`
+          ](#has_any_key)
+    - [10.2.3 String, List, and Map Functions
+      ](#string-list-and-map-functions)
+      - [10.2.3.1 `$length` ](#length)
+      - [10.2.3.2 `$concat` ](#concat)
+      - [10.2.3.3 `$join` ](#join)
+      - [10.2.3.4 `$token` ](#token)
+    - [10.2.4 Set Functions
+      ](#set-functions)
+      - [10.2.4.1 `$union` ](#union)
+      - [10.2.4.2 `$intersection`
+        ](#intersection)
+    - [10.2.5 Arithmetic Functions
+      ](#arithmetic-functions)
+      - [10.2.5.1 `$sum` ](#sum)
+      - [10.2.5.2 `$difference`
+        ](#difference)
+      - [10.2.5.3 `$product`
+        ](#product)
+      - [10.2.5.4 `$quotient`
+        ](#quotient)
+      - [10.2.5.5 `$remainder`
+        ](#remainder)
+      - [10.2.5.6 `$round` ](#round)
+      - [10.2.5.7 `$floor` ](#floor)
+      - [10.2.5.8 `$ceil` ](#ceil)
+  - [10.3 TOSCA Path ](#tosca-path)
+  - [10.4 Function Definitions
+    ](#function-definitions)
+- [11 Interfaces, Operations, and Notifications
+  ](#interfaces-operations-and-notifications)
+  - [11.1 Interface Type
+    ](#interface-type)
+  - [11.2 Interface Definition
+    ](#interface-definition)
+  - [11.3 Interface Assignment
+    ](#interface-assignment)
+  - [11.4 Operation Definition
+    ](#operation-definition)
+  - [11.5 Operation Assignment
+    ](#operation-assignment)
+  - [11.6 Notification Definition
+    ](#notification-definition)
+  - [11.7 Notification Assignment
+    ](#notification-assignment)
+  - [11.8 Operation and Notification Implementations
+    ](#operation-and-notification-implementations)
+- [12 Artifacts ](#artifacts)
+  - [12.1 Artifact Type
+    ](#artifact-type)
+  - [12.2 Artifact Definition
+    ](#artifact-definition)
+- [13 Workflows ](#workflows)
+  - [13.1 Declarative Workflows
+    ](#declarative-workflows)
+  - [13.2 Imperative Workflows
+    ](#imperative-workflows)
+    - [13.2.1 Workflow Precondition Definition
+      ](#workflow-precondition-definition)
+    - [13.2.2 Workflow Step Definition
+      ](#workflow-step-definition)
+    - [13.2.3 Activity Definition
+      ](#activity-definition)
+      - [13.2.3.1 Delegate Workflow Activity Definition
+        ](#delegate-workflow-activity-definition)
+      - [13.2.3.2 Set State Activity Definition
+        ](#set-state-activity-definition)
+      - [13.2.3.3 Call Operation Activity Definition
+        ](#call-operation-activity-definition)
+      - [13.2.3.4 Inline Workflow Activity Definition
+        ](#inline-workflow-activity-definition)
+- [14 Creating Multiple Representations from Templates
+  ](#creating-multiple-representations-from-templates)
+  - [14.1 Specifying Number of Node Representations
+    ](#specifying-number-of-node-representations)
+  - [14.2 Node-Specific Input Values
+    ](#node-specific-input-values)
+  - [14.3 Cardinality of Relationships
+    ](#cardinality-of-relationships)
+    - [14.3.1 Many-to-One Relationships
+      ](#many-to-one-relationships)
+    - [14.3.2 One-to-Many Relationships
+      ](#one-to-many-relationships)
+    - [14.3.3 Full Mesh ](#full-mesh)
+    - [14.3.4 Matched Pairs
+      ](#matched-pairs)
+    - [14.3.5 Random Pairs
+      ](#random-pairs)
+    - [14.3.6 Many-to-Many Relationships
+      ](#many-to-many-relationships)
+- [15 Substitution ](#substitution)
+  - [15.1 Substitution Mapping
+    ](#substitution-mapping)
+  - [15.2 Property Mapping
+    ](#property-mapping)
+  - [15.3 Attribute Mapping
+    ](#attribute-mapping)
+  - [15.4 Capability Mapping
+    ](#capability-mapping)
+  - [15.5 Requirement Mapping
+    ](#requirement-mapping)
+    - [15.5.1 Mapping Multiple Requirements with the Same Name
+      ](#mapping-multiple-requirements-with-the-same-name)
+    - [15.5.2 Mapping a Requirement Multiple Times
+      ](#mapping-a-requirement-multiple-times)
+    - [15.5.3 Requirement Mapping and Selectable Nodes
+      ](#requirement-mapping-and-selectable-nodes)
+    - [15.5.4 Requirement Mapping Rules
+      ](#requirement-mapping-rules)
+    - [15.5.5 Handling `UNBOUNDED` Requirement Count Ranges
+      ](#handling-unbounded-requirement-count-ranges)
+  - [15.6 Interface Mapping
+    ](#interface-mapping)
+- [16 Groups and Policies
+  ](#groups-and-policies)
+  - [16.1 Group Type ](#group-type)
+  - [16.2 Group Definition
+    ](#group-definition)
+  - [16.3 Policy Type ](#policy-type)
+  - [16.4 Policy Definition
+    ](#policy-definition)
+  - [16.5 Trigger Definition
+    ](#trigger-definition)
+- [17 Cloud Service Archive (CSAR) Format
+  ](#cloud-service-archive-csar-format)
+  - [17.1 Overall Structure of a CSAR
+    ](#overall-structure-of-a-csar)
+    - [17.1.1 CSAR Archiving Formats
+      ](#csar-archiving-formats)
+      - [17.1.1.1 Tarballs
+        ](#tarballs)
+      - [17.1.1.2 Zip Files
+        ](#zip-files)
+  - [17.2 `TOSCA.meta` File
+    ](#toscameta-file)
+    - [17.2.1 Block 0 Keynames in the `TOSCA.meta` File
+      ](#block-0-keynames-in-the-toscameta-file)
+    - [17.2.2 Custom Keynames in the `TOSCA.meta` File
+      ](#custom-keynames-in-the-toscameta-file)
+  - [17.3 CSAR Without a `TOSCA.meta` File
+    ](#csar-without-a-toscameta-file)
+- [18 Conformance ](#conformance)
+  - [18.1 Conformance Targets
+    ](#conformance-targets)
+  - [18.2 Conformance Clause 1: TOSCA File
+    ](#conformance-clause-1-tosca-file)
+  - [18.3 Conformance Clause 2: TOSCA Processor
+    ](#conformance-clause-2-tosca-processor)
+  - [18.4 Conformance Clause 3: TOSCA Orchestrator
+    ](#conformance-clause-3-tosca-orchestrator)
+  - [18.5 Conformance Clause 4: TOSCA Generator
+    ](#conformance-clause-4-tosca-generator)
+  - [18.6 Conformance Clause 5: TOSCA Archive
+    ](#conformance-clause-5-tosca-archive)
+- [Appendix A. References](#appendix-a-references)
+  - [A.1 Normative References](#a1-normative-references)
+  - [A.2 Informative References](#a2-informative-references)
+- [Appendix B. Safety, Security and Privacy
+  Considerations](#appendix-b-safety-security-and-privacy-considerations)
+- [Appendix C. Acknowledgments](#appendix-c-acknowledgments)
+  - [C.1 Special Thanks](#c1-special-thanks)
+  - [C.2 Participants](#c2-participants)
+- [Appendix D. Revision History](#appendix-d-revision-history)
+- [Appendix E. Notices
+  ](#appendix-e-notices)
 
 -------
 
@@ -180,9 +633,9 @@ TOSCA 1.3. In particular:
 
 ## 1.2 Document Conventions <a name=document-conventions></a>
 
-### 1.2.1 Specification Conventions
+### 1.2.1 Specification Conventions <a name=specification-conventions></a>
 
-#### 1.2.1.1 Code Snippets
+#### 1.2.1.1 Code Snippets <a name=code-snippets></a>
 
 Within this document we use monospace font sections to denote code snippets,
 primarily for TOSCA (YAML), but also for other textual file formats (e.g. CSAR
@@ -194,7 +647,7 @@ MyMap:
   property2: [ value1, value2 ]
 ```
 
-#### 1.2.1.2 Placeholders
+#### 1.2.1.2 Placeholders <a name=placeholders></a>
 
 Within this document we use angle brackets (`<...>`) with snake case names in
 monospace font to denote specification placeholders: values that must be provided
@@ -713,7 +1166,7 @@ different file types. These files are typically organized in several
 subdirectories, each of which contains related files (and possibly other
 subdirectories etc.). The organization into subdirectories and their
 content is specific for a particular cloud application. CSARs are zip or tar
-files, typically compressed. A CSAR may contain a file called TOSCA.meta
+files, typically compressed. A CSAR may contain a file called `TOSCA.meta`
 that describes the organization of the CSAR.
 
 -------
@@ -735,7 +1188,7 @@ closed-loop automation.
 
 The content in this section is non-normative.
 
-## 3.1 Service Templates, Node Templates, and Relationship Templates <a name=service-templates,-node-templates,-and-relationship-templates></a>
+## 3.1 Service Templates, Node Templates, and Relationship Templates <a name=service-templates-node-templates-and-relationship-templates></a>
 
 Within a TOSCA file, a **service template** defines the topology model
 of a service as a directed graph. Each node in this graph is
@@ -884,7 +1337,7 @@ templates, one for a single node application server tier and another for a
 clustered application server tier, and the appropriate
 option can be selected on a deployment-by-deployment basis.
 
-## 3.4 Interfaces, Operations, and Artifacts <a name=interfaces,-operations,-and-artifacts></a>
+## 3.4 Interfaces, Operations, and Artifacts <a name=interfaces-operations-and-artifacts></a>
 
 Both node types and relationship types may define lifecycle **operations**
 that define the actions an orchestration engine can invoke when
@@ -1326,7 +1779,7 @@ representation graph. Entity assignments make sure that the service
 template can be used to generate a complete representation of the
 system under management.
 
-### 5.1.3 Type Derivation, Augmentation, and Refinement <a name=type-derivation,-augmentation,-and-refinement></a>
+### 5.1.3 Type Derivation, Augmentation, and Refinement <a name=type-derivation-augmentation-and-refinement></a>
 
 The TOSCA type system supports *inheritance* which means that types
 can be derived from a parent type. A parent type can in turn be
@@ -2362,7 +2815,7 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|`url`|conditional|str|The [url](#importing-tosca-file) that references a TOSCA file to be imported. An import statement must include either a URL or a profile, but not both.|
+|`url`|conditional|str|The [url](#importing-a-tosca-file) that references a TOSCA file to be imported. An import statement must include either a URL or a profile, but not both.|
 |`profile`|conditional|str|The [profile](#profiles) name that references a named type profile to be imported. An import statement must include either a URL or a profile, but not both.|
 |`repository`|conditional|str|The optional symbolic name of the [repository definition](#repository-definitions) where the imported file can be found as a string. The repository name can only be used when a URL is specified.|
 |`namespace`|no|str|The optional name of the [namespace](#namespaces) into which to import the type definitions from the imported template or profile.|
@@ -2431,7 +2884,7 @@ TOSCA processor SHOULD attempt to import the profile by name:
 - If `<profile_name>` is not known, the import SHOULD be considered a
   failure.
 
-#### 6.8.2.2 Importing a TOSCA File <a name=importing-tosca-file></a>
+#### 6.8.2.2 Importing a TOSCA File <a name=importing-a-tosca-file></a>
 
 If the `url` keyname is used, the TOSCA processor SHOULD attempt to
 import the file referenced by `<file_uri>` as follows:
@@ -2723,7 +3176,7 @@ definitions:
 - Group Types (`group_types`)
 - Function definitions (`functions`)
 
-## 6.9 Service Template Definition <a name=service-template-def></a>
+## 6.9 Service Template Definition <a name=service-template-definition></a>
 
 This section defines the service template of a TOSCA file. The main
 ingredients of the service template are node templates representing
@@ -3051,7 +3504,7 @@ policies:
     type: Placement
 ```
 
-### 6.9.10 Substitution Mappings <a name=substitution-mappings></a>
+### 6.9.9 Substitution Mappings <a name=substitution-mappings></a>
 
 The `substitution_mappings`section of a service template declares this
 service template as a candidate for substituting nodes marked with the
@@ -3384,7 +3837,7 @@ node_templates:
           configure: scripts/my_own_configure.sh
 ```
 
-### 7.2.1 Node Template Directives<a name=node-template-directives</a>
+### 7.2.1 Node Template Directives <a name=node-template-directives></a>
 
 As described in the section above, a node template supports the following 3 directives 
 used by the TOSCA resolver to populate nodes in the representation graph:
@@ -3776,7 +4229,7 @@ MyFeature:
   - MyCompanyNodes
 ```
 
-## 8.2 Capability Definition <a name=capability-def></a>
+## 8.2 Capability Definition <a name=capability-definition></a>
 
 A *capability definition* defines a typed set of data that a node can
 expose and that is used to describe a relevant feature of the
@@ -3800,7 +4253,7 @@ definition:
 
 Note that the `occurrences` keyname that was present in previous versions
 of TOSCA is deprecated in TOSCA 2.0. By default, the number of occurrences is
-"UNBOUNDED", i.e. any number of relationships can be created with a certain
+`UNBOUNDED`, i.e. any number of relationships can be created with a certain
 capability as a target. To constrain the creation of a relationship to a target
 capability, the new `allocation` keyname is used within a requirement assignment.
 
@@ -3883,7 +4336,7 @@ The following shows a capability definition using single-line grammar:
 some-capability: MyCapabilityTypeName
 ```
 
-## 8.2.1 Capability Refinement <a name=capability-refinement></a>
+### 8.2.1 Capability Refinement <a name=capability-refinement></a>
 
 If a node type defines a capability with the same name as a capability
 that is already defined in one of its parent node types, then that
@@ -3934,7 +4387,7 @@ assignment:
 
 Note that the `occurrences` keyname that was present in previous versions
 of TOSCA is deprecated in TOSCA 2.0. By default, the number of occurrences is
-"UNBOUNDED", i.e. any number of relationships can be created with a certain
+`UNBOUNDED`, i.e. any number of relationships can be created with a certain
 capability as a target. To constrain the creation of a relationship to a target
 capability, the new `allocation` keyname is used within a requirement assignment.
 
@@ -3999,7 +4452,7 @@ node_templates:
           limit: 100
 ```
 
-## 8.4 Requirement Definition <a name=requirement-def></a>
+## 8.4 Requirement Definition <a name=requirement-definition></a>
 
 The *requirement definition* describes a requirement of a TOSCA node
 that needs to be fulfilled by a matching capability declared by
@@ -4137,7 +4590,7 @@ have the following meaning:
     count_range: [ 0, UNBOUNDED ]
     ```
 
-## 8.4.1 Requirement Refinement <a name=requirement-refinement></a>
+### 8.4.1 Requirement Refinement <a name=requirement-refinement></a>
 
 If a node type defines a requirement with the same name as a requirement
 that is already defined in one of its parent node types, then that
@@ -4719,7 +5172,7 @@ service_template:
             mem-size: 128 MB
 ```
 
-## 8.6 Node Filter Definition <a name=node-filter-def></a>
+## 8.6 Node Filter Definition <a name=node-filter-definition></a>
 
 A node filter definition may be provided in the following two situations:
 
@@ -4794,7 +5247,7 @@ service_template:
                 - 512 MB 
 ```
 
-# 9 Properties, Attributes, and Parameters <a name=properties,-attributes,-and-parameters></a>
+# 9 Properties, Attributes, and Parameters <a name=properties-attributes-and-parameters></a>
 
 This section presents how data are handled in TOSCA via properties,
 attributes, and parameters. As with other entities in TOSCA, all data
@@ -5484,12 +5937,11 @@ configured using the `list` data type.
 
 Note that all entries in a list must be of the same type. The type
 (for simple entries) or schema (for complex entries) is defined by the
-mandatory entry_schema attribute of the respective
-[property definition](#_Schema_Definition),
-[attribute definitions](#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition),
-or input or output [parameter definitions](#parameter-definition).
-Schema definitions can be arbitrarily complex (they may themselves
-define a list).
+mandatory entry_schema attribute of the respective [property
+definition](#schema-definition), [attribute
+definitions](#attribute-definition), or input or output [parameter
+definitions](#parameter-definition).  Schema definitions can be
+arbitrarily complex (they may themselves define a list).
 
 TOSCA list values are represented as YAML sequences. They support the
 square bracket notation as follows:
@@ -5777,7 +6229,7 @@ ExtendPhoneNumber:
       validation: { $less_or_equal: [ $value, 128 ] }
 ```
 
-## 9.3 Schema Definition <a name=schema-def></a>
+## 9.3 Schema Definition <a name=schema-definition></a>
 
 All entries in a `list` or `map` for one property or parameter must be of
 the same type. Similarly, all keys for map entries for one property or
@@ -5870,7 +6322,7 @@ the containing entity type is derived:
 - `entry_schema`: may be refined (recursively) according to schema
   refinement rules.
 
-## 9.3 Property Definition <a name=property-def></a>
+## 9.4 Property Definition <a name=property-definition></a>
 
 A *property definition* defines a named, typed value and related data
 that can be associated with an entity defined in this specification
@@ -6054,7 +6506,7 @@ Endpoint.Admin:
     secure: true
 ```
 
-## 9.4 Property Assignment <a name=property-assignment></a>
+## 9.5 Property Assignment <a name=property-assignment></a>
 
 A *property assignment* is used to assign a value to a property within a
 TOSCA template. A TOSCA property assignment has no keynames. Property
@@ -6091,7 +6543,7 @@ The following requirements apply:
 - A non-required property that is not assigned stays undefined, thus
   the `default` keyname is irrelevant for a non-required property.
 
-## 9.5 Attribute Definition <a name=attribute-def></a>
+## 9.6 Attribute Definition <a name=attribute-definition></a>
 
 An *attribute definition* defines a named, typed value that can be
 associated with an entity defined in this specification (e.g., a node,
@@ -6212,7 +6664,7 @@ actual_cpus:
   description: Actual number of CPUs allocated to the node instance.
 ```
 
-## 9.6 Attribute Assignment <a name=attribute-assignment></a>
+## 9.7 Attribute Assignment <a name=attribute-assignment></a>
 
 An attribute assignment is used to assign a value to an attribute
 within a TOSCA template.  A TOSCA attribute assignment has no
@@ -6240,7 +6692,7 @@ Note that attributes that are the target of a parameter mapping
 assignment cannot also be assigned a value using an attribute
 assignment.
 
-## 9.7 Parameter Definition <a name=parameter-def></a>
+## 9.8 Parameter Definition <a name=parameter-definition></a>
 
 A *parameter definition* defines a named, typed value and related data that
 may be used to exchange values between the TOSCA orchestrator and the
@@ -6504,7 +6956,7 @@ The following requirements apply:
   undefined, thus the `default` keyname is irrelevant for a non-required
   parameter.
 
-## 9.9 Parameter Mapping Assignment <a name=parameter-mapping-assignment></a>
+## 9.10 Parameter Mapping Assignment <a name=parameter-mapping-assignment></a>
 
 A *parameter mapping assignment* is used to define the mapping of an
 *incoming* parameter value (e.g. an output value that is expected to
@@ -6561,7 +7013,7 @@ Note that parameters that have a mapping defined during their
 definition or during a subsequent refinement may not be assigned (as
 their mapping is already set).
 
-## 9.10 Validation Clause <a name=validation-clause></a>
+## 9.11 Validation Clause <a name=validation-clause></a>
 
 A *validation clause* is a Boolean expression that must evaluate to True
 if the value for the entity it references is considered valid.
@@ -7016,7 +7468,7 @@ The `$get_attribute` function is used in the same way as the equivalent
 `$get_property` functions described above. Please see their examples and
 replace `$get_property` with the `$get_attribute` function name.
 
-#### 10.2.1.4 get_artifact <a name=get_artifact></a>
+#### 10.2.1.4 `$get_artifact` <a name=get_artifact></a>
 
 The `$get_artifact` function is used to retrieve the location of
 artifacts defined by modelable entities in a service template. It uses
@@ -7081,7 +7533,7 @@ It takes the arguments shown in the following table:
 | ----- | ------- | ----- | ----- | 
 |`<nested_value_name_or_index>`|no|seq of strs or ints|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed. Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
-#### 10.2.1.6 node_index <a name=node_index></a>
+#### 10.2.1.6 `$node_index` <a name=node_index></a>
 
 This function is used to return the runtime index of the current node 
 representation in the list of node representations created from the same 
@@ -7186,7 +7638,7 @@ Note that the evaluation of the arguments in the `$or` function may stop
 as soon as a true argument is encountered, and the function may return
 immediately without evaluating the rest of the arguments.
 
-##### 10.2.2.1.3 not <a name=not></a>
+##### 10.2.2.1.3 `$not` <a name=not></a>
 
 The `$not` function takes one Boolean argument. It evaluates to true if
 its argument evaluates to false and evaluates to false if its argument
@@ -7312,7 +7764,7 @@ expressions and reference an appropriate standardized grammar.
 Note also that if ones means that the whole string is to be matched, the
 regular expression must start with a caret `^` and end with a `$`.
 
-#### 10.2.2.3 Boolean List, Map and String Functions <a name=boolean-list,-map-and-string-functions></a>
+#### 10.2.2.3 Boolean List, Map and String Functions <a name=boolean-list-map-and-string-functions></a>
 
 ##### 10.2.2.3.1 `$has_suffix` <a name=has_suffix></a>
 
@@ -8197,7 +8649,7 @@ MyConfigure:
       description: post-configure operation for my service
 ```
 
-## 11.2 Interface Definition <a name=interface-def></a>
+## 11.2 Interface Definition <a name=interface-definition></a>
 
 An *interface definition* defines an interface (containing operations
 and notifications definitions) that can be associated with
@@ -8350,7 +8802,7 @@ have the following meaning:
 - `<notification_assignment_*>`: represents the optional map of notification
   assignments for notifications defined in the interface definition.
 
-## 11.4 Operation Definition <a name=operation-def></a>
+## 11.4 Operation Definition <a name=operation-definition></a>
 
 An *operation definition* defines a function or procedure to which an
 operation implementation can be bound.
@@ -8601,7 +9053,7 @@ The following additional requirements apply:
   file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
   file.
 
-## 11.6 Notification Definition <a name=notification-def></a>
+## 11.6 Notification Definition <a name=notification-definition></a>
 
 A *notification definition* defines an asynchronous notification or
 incoming message that can be associated with an interface. The
@@ -8999,7 +9451,7 @@ that serve different purposes:
   to assist with proper processing of the artifact. These informational
   elements are described through artifact properties.
 
-## 12.2 Artifact Definition <a name=artifact-def></a>
+## 12.2 Artifact Definition <a name=artifact-definition></a>
 
 An *artifact definition* defines a named, typed file that can be
 associated with a node type or node template and used by a TOSCA
@@ -9175,14 +9627,14 @@ have the following meaning:
   implementations (i.e. artifacts) and associated mappings that specify
   the attribute into which this output value must be stored.
 
-### 13.2.1 Workflow Precondition Definition <a name=workflow-precondition-def></a>
+### 13.2.1 Workflow Precondition Definition <a name=workflow-precondition-definition></a>
 
 A *workflow precondition* defines a condition clause that checks if a
 workflow can be processed or not based on the state of the instances of
 a TOSCA service deployment. If the condition is not met, the workflow
 will not be triggered.
 
-### 13.2.2 Workflow Step Definition <a name=workflow-step-def></a>
+### 13.2.2 Workflow Step Definition <a name=workflow-step-definition></a>
 
 A *workflow step* allows to define one or multiple sequenced activities in
 a workflow and how they are connected to other steps in the workflow.
@@ -9237,7 +9689,7 @@ have the following meaning:
 - `<target_step_name>`: represents the name of another step of the
   workflow.
 
-### 13.2.3 Activity Definition <a name=activity-def></a>
+### 13.2.3 Activity Definition <a name=activity-definition></a>
 
 An *activity* defines an operation to be performed in a TOSCA workflow
 step or in an action body of a policy trigger. Activity definitions can
@@ -9268,7 +9720,7 @@ be of the following types:
     reusability). The definition includes the name of a workflow to be
     inlined and optional workflow input assignments.
 
-#### 13.2.3.1 Delegate Workflow Activity Definition <a name=delegate-workflow-activity-def></a>
+#### 13.2.3.1 Delegate Workflow Activity Definition <a name=delegate-workflow-activity-definition></a>
 
 The following is a list of recognized keynames for a *delegate activity
 definition*.
@@ -9307,7 +9759,7 @@ have the following meaning:
   assignments for passing parameters as inputs to this workflow
   delegation.
 
-#### 13.2.3.2 Set State Activity Definition <a name=set-state-activity-def></a>
+#### 13.2.3.2 Set State Activity Definition <a name=set-state-activity-definition></a>
 
 This activity sets the state of the target node.
 
@@ -9330,7 +9782,7 @@ have the following meaning:
 - `<new_node_state>`: represents the state that will be affected to the node
   once the activity is performed.
 
-#### 13.2.3.3 Call Operation Activity Definition <a name=call-operation-activity-def></a>
+#### 13.2.3.3 Call Operation Activity Definition <a name=call-operation-activity-definition></a>
 
 This activity is used to call an operation on the target node. Operation
 input assignments can be optionally provided.
@@ -9375,7 +9827,7 @@ have the following meaning:
   assignments for passing parameters as inputs to this workflow
   delegation.
 
-#### 13.2.3.4 Inline Workflow Activity Definition <a name=inline-workflow-activity-def></a>
+#### 13.2.3.4 Inline Workflow Activity Definition <a name=inline-workflow-activity-definition></a>
 
 This activity is used to inline a workflow in the activities sequence.
 The definition includes the name of the inlined workflow and optional
@@ -10432,11 +10884,11 @@ have the following meaning:
 
 - `<count>`: is the number of assignments of a requirement mapped to the
   same target requirement(s). It can be either a non-negetive integer or
-  the value "UNBOUNDED", which represents all the remaining assignments.
+  the value `UNBOUNDED`, which represents all the remaining assignments.
   Note that mappings with count can interspread mappings without count
   for the same requirement_name, however no other assignment for the
   same requirement_name should not be used after one containing an
-  "UNBOUNDED" count.
+  `UNBOUNDED` count.
 
 The following subsections illustrate this grammar in the context of
 various use cases.
@@ -11336,9 +11788,9 @@ presumably will map onto optional requirements in the substituting
 template). This is done independent of the order in which the
 requirement mappings are specified.
 
-### 15.5.5 Handling "UNBOUNDED" Requirement Count Ranges <a name=handling-unbounded-requirement-count-ranges></a>
+### 15.5.5 Handling `UNBOUNDED` Requirement Count Ranges <a name=handling-unbounded-requirement-count-ranges></a>
 
-In the case of "UNBOUNDED" count ranges, we must use unbounded grammar
+In the case of `UNBOUNDED` count ranges, we must use unbounded grammar
 forms.
 
 In the following case all "service" requirements of the substituted node
@@ -11587,7 +12039,7 @@ group_types:
     members: [ Software ]
 ```
 
-## 16.2 Group Definition <a name=group-def></a>
+## 16.2 Group Definition <a name=group-definition></a>
 
 Collections of nodes in a service template may be grouped together
 using a *group definition* in that same service template. A group
@@ -11748,7 +12200,7 @@ policy_types:
     description: My company's placement policy for linux 
 ```
 
-## 16.4 Policy Definition <a name=policy-def></a>
+## 16.4 Policy Definition <a name=policy-definition></a>
 
 A *policy definition* defines a policy that can be associated with a TOSCA
 service or top-level entity definition (e.g., group definition, node
@@ -11823,7 +12275,7 @@ The following represents a policy definition:
     # remainder of policy definition omitted for brevity
 ```
 
-## 16.5 Trigger Definition <a name=trigger-def></a>
+## 16.5 Trigger Definition <a name=trigger-definition></a>
 
 A *trigger definition* defines an *event, condition, action* tuple
 associated with a policy.
@@ -11893,10 +12345,10 @@ CSARs can be used to package service templates and/or profiles.
 The service template or profile root TOSCA YAML file can be specified
 in one of two ways:
 
-- If a "TOSCA.meta" file is present (see below) it may specify the root
-  TOSCA YAML file. The "TOSCA.meta" file may be located either at the
+- If a `TOSCA.meta` file is present (see below) it may specify the root
+  TOSCA YAML file. The `TOSCA.meta` file may be located either at the
   root of the archive or inside a "TOSCA-Metadata" directory. The CSAR
-  may contain only one "TOSCA.meta" file.
+  may contain only one `TOSCA.meta` file.
 
 - Otherwise, if a single valid TOSCA YAML file (named with a ".yaml" or
   ".yml" extension) is located at the root of the archive, it will be used
@@ -11945,9 +12397,9 @@ instead.
 The Zip format supported by TOSCA is specified in
 [ISO/IEC 21320-1 "Document Container File — Part 1: Core"](https://www.iso.org/standard/60101.html). 
 
-## 17.2 "TOSCA.meta" File <a name=tosca-meta-file></a>
+## 17.2 `TOSCA.meta` File <a name=toscameta-file></a>
 
-A "TOSCA.meta" file consists of keyname/value pairs. The keyname of a
+A `TOSCA.meta` file consists of keyname/value pairs. The keyname of a
 keyname/value pair is followed by a colon, followed by a space, followed by
 the value of the keyname/value pair. The keyname MUST NOT contain a
 colon. Values that represent binary data MUST be base64 encoded. Values
@@ -11964,12 +12416,12 @@ pairs, i.e. a list of consecutive keyname/value pairs is called a block.
 Blocks are separated by an empty line. The first block, called "block_0",
 contains metadata about the CSAR itself and is further defined below.
 Other blocks may be used to represent custom generic metadata or
-metadata pertaining to files in the CSAR. A "TOSCA.meta" file is only
+metadata pertaining to files in the CSAR. A `TOSCA.meta` file is only
 required to include "block_0".
 
-### 17.2.1 Block 0 Keynames in the "TOSCA.meta" File <a name=block-0-keynames-in-the-tosca.meta-file></a>
+### 17.2.1 Block 0 Keynames in the `TOSCA.meta` File <a name=block-0-keynames-in-the-toscameta-file></a>
 
-The structure of "block_0" in the "TOSCA.meta" file is as follows:
+The structure of "block_0" in the `TOSCA.meta` file is as follows:
 
 ```
 CSAR-Version: digit.digit
@@ -11982,7 +12434,7 @@ The keyname/value pairs are as follows:
 
 - `CSAR-Version`: This is the version number of the CSAR
   specification. It defines the structure of the CSAR and the format of
-  the "TOSCA.meta" file. The value MUST be "2.0" for this version of
+  the `TOSCA.meta` file. The value MUST be "2.0" for this version of
   the CSAR specification.
 
 - `Created-By`: The person or organization that created the CSAR.
@@ -12013,7 +12465,7 @@ included in the CSAR are fully described and referred via relative path
 names in artifact definitions in the respective TOSCA definitions files
 contained in the CSAR.
 
-The following listing represents a valid "TOSCA.meta" file according
+The following listing represents a valid `TOSCA.meta` file according
 to this TOSCA specification.
 
 ```
@@ -12023,7 +12475,7 @@ Entry-Definitions: tosca_elk.yaml
 Other-Definitions: definitions/tosca_moose.yaml definitions/tosca_deer.yaml
 ```
 
-This "TOSCA.meta" file indicates its structure (as well as the overall
+This `TOSCA.meta` file indicates its structure (as well as the overall
 CSAR structure) by means of the `CSAR-Version` keyname with value
 "2.0". The `Entry-Definitions` keyname points to a TOSCA definitions
 YAML file with the name "tosca_elk.yaml" which is contained in the
@@ -12032,15 +12484,15 @@ templates can be found in the files "tosca_moose.yaml" and
 "tosca_deer.yaml" found in the directory called "definitions" in the
 root of the CSAR file.
 
-### 17.2.2 Custom Keynames in the "TOSCA.meta" File <a name=custom-keynames-in-the-tosca.meta-file></a>
+### 17.2.2 Custom Keynames in the `TOSCA.meta` File <a name=custom-keynames-in-the-toscameta-file></a>
 
-Users can populate other blocks than "block_0" in the "TOSCA.meta" file with
+Users can populate other blocks than "block_0" in the `TOSCA.meta` file with
 custom name/value pairs that follow the entry syntax defined above and
 have names that are different from the normative keynames (e.g.
 `CSAR-Version`, `Created-By`, `Entry-Definitions`, `Other-Definitions`). These
 custom name/value pairs are outside the scope of the TOSCA
 specification. Nevertheless, future versions of the TOSCA specification
-may add definitions of new keynames to be used in the "TOSCA.meta"
+may add definitions of new keynames to be used in the `TOSCA.meta`
 file. In case of a keyname collision (with a custom keyname) the TOSCA
 specification definitions take precedence.
 
@@ -12049,9 +12501,9 @@ of keynames prefixed with "TOSCA" and "tosca". It is recommended as a good
 practice to use a specific prefix (e.g. identifying the organization,
 scope, etc.) when using custom keynames.
 
-## 17.3 CSAR Without a "TOSCA.meta" File <a name=csar-without-tosca.meta></a>
+## 17.3 CSAR Without a `TOSCA.meta` File <a name=csar-without-a-toscameta-file></a>
 
-In case the archive doesn't contains a "TOSCA.meta" file the archive
+In case the archive doesn't contains a `TOSCA.meta` file the archive
 is required to contains a single YAML file at the root of the archive
 (other templates may exist in sub-directories).
 
@@ -12061,12 +12513,12 @@ Entry-Definitions file. The `CSAR-Version` is inferred from the
 `tosca_definitions_version: tosca_2_0` and onwards, the corresponding
 `CSAR-Version` is "2.0" unless further defined.
 
-Note that in a CSAR without a "TOSCA.meta" file it is not possible to
+Note that in a CSAR without a `TOSCA.meta` file it is not possible to
 unambiguously include definitions for substitution templates as we can
 have only one service template defined in a YAML file.
 
 The following represents a valid TOSCA template file acting as the CSAR
-`Entry-Definitions` file in an archive without a "TOSCA.meta" file.
+`Entry-Definitions` file in an archive without a `TOSCA.meta` file.
 
 ```yaml
 tosca_definitions_version: tosca_2_0
