@@ -5038,7 +5038,7 @@ help you convert arbitrary data to Base64.
 Example:
 
 ```yaml
-ode_types:
+node_types:
   Node:
     properties:
       preamble:
