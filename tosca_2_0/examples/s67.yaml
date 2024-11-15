@@ -1,19 +1,16 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s67","action":"start"} -->
-ode_types:
+# tag::s67[]
+node_types:
   Node:
     properties:
-      preamble:
-        type: bytes
+      nothing:
+        type: nil
+        required: true
 
 service_template:
   node_templates:
-    node:
+    my-node:
       type: Node
       properties:
-        preamble: "\
-R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\
-OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\
-+f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC\
-AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
-# EDITOR_TAG:{"type":"example","id":"s67","action":"end"} -->
+        nothing: null
+# end::s67[]

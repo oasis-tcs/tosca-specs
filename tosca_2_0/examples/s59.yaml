@@ -1,26 +1,26 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s59","action":"start"} -->
-capability_types:
-  Service:
-    description: >-
-      Ability to provide service.
+# tag::s59[]
+tosca_definitions_version: tosca_2_0
 
-relationship_types:
-  ServedBy:
-    description: >-
-      Connection to a service.
+imports:
+- types.yaml
 
-node_types:
-  Client:
-    requirements:
-    - service:
-        capability: Service
-        relationship: ServedBy
-        node: Server
-        count_range: [ 1, 4 ]
+service_template:
+  node_templates:
+    server1:
+      type: Server
 
-  Server:
-    capabilities:
-      service:
-        type: Service
-# EDITOR_TAG:{"type":"example","id":"s59","action":"end"} -->
+    server2:
+      type: Server
+
+    server3:
+      type: Server
+
+    client:
+      type: Client
+      directives: [ substitute ]
+      requirements:
+      - service: server1
+      - service: server2
+      - service: server3
+# end::s59[]

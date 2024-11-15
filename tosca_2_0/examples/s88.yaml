@@ -1,8 +1,7 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s88","action":"start"} -->
-inputs:
-  cpus:
-    type: integer
-    description: Number of CPUs for the server.
-    validation: { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
-# EDITOR_TAG:{"type":"example","id":"s88","action":"end"} -->
+# tag::s88[]
+outputs:
+  server-ip:
+    description: The private IP address of the provisioned server.
+    value: { $get_attribute: [ my-server, private-address ] }
+# end::s88[]

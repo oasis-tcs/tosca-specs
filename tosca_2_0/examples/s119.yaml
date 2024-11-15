@@ -1,12 +1,6 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s119","action":"start"} -->
+# tag::s119[]
 interfaces:
-  configure:
-    pre-configure-source:
-      implementation: 
-        primary: scripts/pre_configure_source.sh
-        dependencies: 
-        - scripts/setup.sh
-        - binaries/library.rpm
-        - scripts/register.py
-# EDITOR_TAG:{"type":"example","id":"s119","action":"end"} -->
+  standard:
+    start: scripts/start_server.sh
+# end::s119[]

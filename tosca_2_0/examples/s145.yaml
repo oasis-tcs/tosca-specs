@@ -1,32 +1,28 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s145","action":"start"} -->
+# tag::s145[]
 tosca_definitions_version: tosca_2_0
 
-imports:
-- types.yaml
+capability_types:
+  Service:
+    description: >-
+      Ability to provide service.
+
+relationship_types:
+  ServedBy:
+    description: >-
+      Connection to a service.
 
 node_types:
-  ClientSoftware:
+  Client:
     requirements:
-    - host:
-        capability: Host
-        relationship: HostedOn
-        count_range: [ 1, 1 ]
+    - service:
+        capability: Service
+        relationship: ServedBy
+        node: Server
+        count_range: [ 1, 4 ]
 
-service_template:
-  substitution_mappings:
-    node_type: Client
-    requirements:
-    - host: compute
-
-  node_templates:
-    software1:
-      type: ClientSoftware
-
-    software2:
-      type: ClientSoftware
-
-    compute:
-      type: Compute
-      directives: [select]
-# EDITOR_TAG:{"type":"example","id":"s145","action":"end"} -->
+  Server:
+    capabilities:
+      service:
+        type: Service
+# end::s145[]

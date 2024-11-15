@@ -1,5 +1,5 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s132","action":"start"} -->
+# tag::s132[]
 service_template:
   node_templates:
     right:
@@ -8,7 +8,7 @@ service_template:
       capabilities:
         feature:
           properties:
-            target-count: 1
+            target-count: 3
 
     left:
       type: Left
@@ -19,4 +19,4 @@ service_template:
           count: 2
           allocations:
             target-count: 1
-# EDITOR_TAG:{"type":"example","id":"s132","action":"end"} -->
+# end::s132[]

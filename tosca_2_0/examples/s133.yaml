@@ -1,22 +1,20 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s133","action":"start"} -->
+# tag::s133[]
 service_template:
+  inputs:
+    number-of-right:
+      type: integer
+    number-of-left:
+      type: integer
+
   node_templates:
     right:
       type: Right
-      count: 6
-      capabilities:
-        feature:
-          properties:
-            target-count: 3
+      count: { $get_input: number-of-right }
 
     left:
       type: Left
-      count: 6
+      count: { $get_input: number-of-left }
       requirements:
-      - uses:
-          node: right
-          count: 2
-          allocations:
-            target-count: 1
-# EDITOR_TAG:{"type":"example","id":"s133","action":"end"} -->
+        - uses: [ right, { $remainder: [ $node_index, { $get_input: number-of-right } ] } ]
+# end::s133[]

@@ -1,9 +1,6 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s29","action":"start"} -->
-# Short notation and long notation supported
+# tag::s29[]
+# Root file
 imports:
-- relative_path/my_defns/my_typesdefs_1.yaml
-- url: my_defns/my_typesdefs_2.yaml    
-  repository: my-company-repo
-  namespace: mycompany
-# EDITOR_TAG:{"type":"example","id":"s29","action":"end"} -->
+- url: /base.yaml
+# end::s29[]

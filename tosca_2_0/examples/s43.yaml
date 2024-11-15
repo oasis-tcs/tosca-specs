@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s43","action":"start"} -->
-outputs:
-  server-address:
-    description: The first private IP address for the provisioned server.
-    value: { $get_attribute: [ node5, networks, private, addresses, 0 ] }
-# EDITOR_TAG:{"type":"example","id":"s43","action":"end"} -->
+# tag::s43[]
+workflows:
+  scaling-workflow:
+    steps:
+      TO BE PROVIDED
+# end::s43[]

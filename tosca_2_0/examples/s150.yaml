@@ -1,5 +1,5 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s150","action":"start"} -->
+# tag::s150[]
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -34,18 +34,20 @@ service_template:
     node_type: Client
     requirements:
     - service: [ software1, service ]
+    - service: [ software2, service ]
+    - [ service, UNBOUNDED ]: [ software1, service ]
 
-  node_templates:
-    software1:
-      type: ClientSoftware
-      requirements:
-      - host: compute
+node_templates:
+  software1:
+    type: ClientSoftware
+    requirements:
+    - host: compute
 
-    software2:
-      type: ClientSoftware
-      requirements:
-      - host: compute
+  software2:
+    type: ClientSoftware
+    requirements:
+    - host: compute
 
-    compute:
-      type: Compute
-# EDITOR_TAG:{"type":"example","id":"s150","action":"end"} -->
+  compute:
+    type: Compute
+# end::s150[]

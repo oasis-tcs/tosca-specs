@@ -1,7 +1,13 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s116","action":"start"} -->
-properties:
-  integer_union: { $union: [ [1, 7], [3, 4, 9], [15, 16] ] }
-  float_union: { $union: [ [3.5, 8.8], [1.3] ] }
-  rnd: { $get_random_nr: [] }
-# EDITOR_TAG:{"type":"example","id":"s116","action":"end"} -->
+# tag::s116[]
+MyConfigure:
+  description: My custom configure interface type
+  inputs:
+    mode:
+      type: string
+  operations:
+    pre-configure-service:
+      description: pre-configure operation for my service
+    post-configure-service:
+      description: post-configure operation for my service
+# end::s116[]

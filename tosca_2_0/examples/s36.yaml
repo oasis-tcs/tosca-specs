@@ -1,14 +1,16 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s36","action":"start"} -->
+# tag::s36[]
 tosca_definitions_version: tosca_2_0
-description: mytypes.yaml
+description: main.yaml
 
 imports:
-- profile: io.kubernetes:1.30
-  namespace: k8s
+- url: mytypes.yaml
+  namespace: my
 
-node_types:
-  MyNode: {}
-  SuperPod:
-    derived_from: k8s:Pod
-# EDITOR_TAG:{"type":"example","id":"s36","action":"end"} -->
+service_template:
+  node_templates:
+    my-node:
+      type: my:MyType
+    pod:
+      type: my:k8s:Pod
+# end::s36[]

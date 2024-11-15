@@ -1,16 +1,20 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s13","action":"start"} -->
-relationship_types:
-  HostedOn:
-    properties:
-      # more details ...
+# tag::s13[]
+node_types:
+  Database:
+    description: A generic node type for all databases
 
-  MyCustomClientServer:
-    derived_from: HostedOn
-    properties:
-      # more details ...
+  WebApplication:
+    description: A generic node type
 
-  MyCustomConnectionType:
+  MyWebApplication:
+    derived_from: WebApplication
     properties:
-      # more details ...
-# EDITOR_TAG:{"type":"example","id":"s13","action":"end"} -->
+      my-port:
+        type: integer
+
+  MyDatabase:
+    derived_from: Database
+    capabilities:
+      TransactSQL
+# end::s13[]

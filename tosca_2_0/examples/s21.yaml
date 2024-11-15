@@ -1,13 +1,15 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s21","action":"start"} -->
+# tag::s21[]
 tosca_definitions_version: tosca_2_0
-profile: org.base:v1
+profile: org.platform
 
-capability_types:
-  Host:
-    description: Hosting capability
+imports:
+- profile: org.base:v1
+  namespace: p1
 
-relationship_types:
-  HostedOn:
-    valid_capability_types: [ Host ]
-# EDITOR_TAG:{"type":"example","id":"s21","action":"end"} -->
+node_types:
+  Platform:
+    capabilities:
+      host:
+        type: p1:Host
+# end::s21[]

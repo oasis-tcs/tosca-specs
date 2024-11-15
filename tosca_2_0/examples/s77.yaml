@@ -1,5 +1,7 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s77","action":"start"} -->
-# notation option for shorter maps
-user-name-to-id: { user1: 1001, user2: 1002 }
-# EDITOR_TAG:{"type":"example","id":"s77","action":"end"} -->
+# tag::s77[]
+# notation for longer maps
+user-name-to-id:
+  user1: 1001
+  user2: 1002
+# end::s77[]

@@ -1,39 +1,20 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s124","action":"start"} -->
+# tag::s124[]
 tosca_definitions_version: tosca_2_0
-description: Template for deploying SD-WAN with three sites.
+description: Template for deploying SD-WAN with a variable number of sites.
 
 service_template:
   inputs:
-    location1:
-      type: Location
-    location2:
-      type: Location
-    location3:
-      type: Location
+    number-of-sites:
+      type: integer
 
-node_templates:
-  sdwan:
-    type: VPN
+  node_templates:
+    sdwan:
+      type: VPN
 
-  site1:
-    type: VPNSite
-    properties:
-      location: { $get_input: location1 }
-    requirements:
-    - vpn: sdwan
-
-  site2:
-    type: VPNSite
-    properties:
-      location: { $get_input: location2 }
-    requirements:
-    - vpn: sdwan
-
-  site3:
-    type: VPNSite
-    properties:
-      location: { $get_input: location3 }
-    requirements:
-    - vpn: sdwan
-# EDITOR_TAG:{"type":"example","id":"s124","action":"end"} -->
+    site:
+      type: VPNSite
+      count: { $get_input: number-of-sites }
+      requirements:
+      - vpn: sdwan
+# end::s124[]

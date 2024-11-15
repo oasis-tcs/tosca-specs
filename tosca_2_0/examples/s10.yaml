@@ -1,6 +1,17 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s10","action":"start"} -->
-artifact_types:
-  MyFile:
-    derived_from: foobar:File
-# EDITOR_TAG:{"type":"example","id":"s10","action":"end"} -->
+# tag::s10[]
+capability_types:
+  MyGenericFeature:
+    properties:
+      # more details ...
+
+  MyFirstCustomFeature:
+    derived_from: MyGenericFeature
+    properties:
+      # more details ...
+
+  TransactSQL:
+    derived_from: MyGenericFeature
+    properties:
+      # more details ...
+# end::s10[]

@@ -1,12 +1,4 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s72","action":"start"} -->
-# basic version strings
-"6.1"
-2.0.1
-
-# version string with optional qualifier
-3.1.0.beta
-
-# version string with optional qualifier and build version
-1.0.0.alpha-10
-# EDITOR_TAG:{"type":"example","id":"s72","action":"end"} -->
+# tag::s72[]
+listen-ports: [ 80, 8080 ]
+# end::s72[]

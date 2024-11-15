@@ -1,12 +1,26 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s58","action":"start"} -->
-service_template:
-  node_templates:
-    my-application:
-      type: WebApplication
-      requirements:
-      - database: 
-          node: my-database
-          capability: Endpoint.Database
-          relationship: CustomDbConnection
-# EDITOR_TAG:{"type":"example","id":"s58","action":"end"} -->
+# tag::s58[]
+capability_types:
+  Service:
+    description: >-
+      Ability to provide service.
+
+relationship_types:
+  ServedBy:
+    description: >-
+      Connection to a service.
+
+node_types:
+  Client:
+    requirements:
+    - service:
+        capability: Service
+        relationship: ServedBy
+        node: Server
+        count_range: [ 1, 4 ]
+
+  Server:
+    capabilities:
+      service:
+        type: Service
+# end::s58[]

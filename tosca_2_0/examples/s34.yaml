@@ -1,5 +1,5 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s34","action":"start"} -->
+# tag::s34[]
 tosca_definitions_version: tosca_2_0
 description: TOSCA file A
 
@@ -17,5 +17,5 @@ node_types:
 service_template:
   node_templates:
     my-node:
-      type: fileB:MyNode
-# EDITOR_TAG:{"type":"example","id":"s34","action":"end"} -->
+      type: MyNode
+# end::s34[]

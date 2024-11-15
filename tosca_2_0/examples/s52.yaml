@@ -1,12 +1,8 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s52","action":"start"} -->
-MyFeature:
-  description: A custom feature of my company's application
+# tag::s52[]
+some-capability: 
+  type: MyCapabilityTypeName
   properties:
-    my-feature-setting:
-      type: string
-    my-feature-value:
-      type: integer
-  valid_source_node_types:
-  - MyCompanyNodes
-# EDITOR_TAG:{"type":"example","id":"s52","action":"end"} -->
+    limit: 
+      default: 100
+# end::s52[]

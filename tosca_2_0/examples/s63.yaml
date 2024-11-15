@@ -1,17 +1,15 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s63","action":"start"} -->
+# tag::s63[]
+node_types:
+  Node:
+    properties:
+      name:
+        type: string
+
 service_template:
   node_templates:
-    my-node:
-      # other details omitted for brevity
-      requirements:
-      - host:
-          node_filter:
-            $and:
-              - $in_range:
-                - $get_property: [ SELF, CAPABILITY, num-cpus ]
-                - [ 1, 4 ]
-              - $greater_or_equal:
-                - $get_property: [ SELF, CAPABILITY, mem-size ]
-                - 512 MB 
-# EDITOR_TAG:{"type":"example","id":"s63","action":"end"} -->
+    node:
+      type: Node
+      properties:
+        name: "0.1"
+# end::s63[]

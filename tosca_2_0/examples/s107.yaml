@@ -1,7 +1,5 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s107","action":"start"} -->
-outputs:
-  webserver_port:
-    description: the port provided at the end of my server's endpoint's IP address
-    value: { $token: [ $get_attribute: [ my-server, data-endpoint, ip-address ], ":", 1 ] }
-# EDITOR_TAG:{"type":"example","id":"s107","action":"end"} -->
+# tag::s107[]
+properties:
+  rnd-nr: { $namespace1:random_generator: [ seed ] }
+# end::s107[]

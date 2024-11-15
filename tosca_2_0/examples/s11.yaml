@@ -1,17 +1,10 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s11","action":"start"} -->
-capability_types:
-  MyGenericFeature:
-    properties:
-      # more details ...
-
-  MyFirstCustomFeature:
-    derived_from: MyGenericFeature
-    properties:
-      # more details ...
-
-  TransactSQL:
-    derived_from: MyGenericFeature
-    properties:
-      # more details ...
-# EDITOR_TAG:{"type":"example","id":"s11","action":"end"} -->
+# tag::s11[]
+interface_types:
+  Signal:
+    operations:
+      signal-begin-receive:
+        description: Operation to signal start of some message processing.
+      signal-end-receive:
+        description: Operation to signal end of some message processed.
+# end::s11[]

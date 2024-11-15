@@ -1,23 +1,26 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s90","action":"start"} -->
-data_types:
-  # Full function syntax for the $value function
-  Count1:
-    derived_from: integer
-    validation: { $greater_or_equal: [ { $value: [] }, 0 ] }
-
-  # Simple function syntax for the $value function
-  Count2:
-    derived_from: integer
-    validation: { $greater_or_equal: [ $value, 0 ] }
-
-  # Full function syntax with arguments
-  SizeRange:
+# tag::s90[]
+node_types:
+  Scalable:
     properties:
-      low:
-        type: float
-      high:
-        type: float
-    validation:
-      $greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] } ]
-# EDITOR_TAG:{"type":"example","id":"s90","action":"end"} -->
+      minimum-instances:
+        type: integer
+        validation: { $greater_or_equal: [ $value,  0 ] } 
+      maximum-instances:
+        type: integer
+        validation: 
+          $greater_or_equal:
+          - $value
+          - $get_property: [ SELF, minimum-instances ]
+      default-instances:
+        type: integer
+        validation:
+          $and:
+          - $greater_or_equal: 
+            - $value
+            - $get_property: [ SELF, minimum-instances ]
+          - $less_or_equal: 
+            - $value
+            - $get_property: [ SELF, maximum-instances ]
+        required: false
+# end::s90[]

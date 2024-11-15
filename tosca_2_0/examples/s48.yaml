@@ -1,23 +1,15 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s48","action":"start"} -->
-MyApp:
-  derived_from: SoftwareComponent
-  description: My company's custom application
-  properties:
-    my-app-password:
-      type: string
-      description: Application password
-      validation:
-        $and: 
-        - { $greater_or_equal: [ $value, 6 ] }
-        - { $less_or_equal: [ $value, 10 ] }
-  attributes:
-    my-app-port:
-      type: integer
-      description: Application port number
-  requirements:
-  - some-database:
-      capability: EndPoint.Database
-      node: Database    
-      relationship: ConnectsTo
-# EDITOR_TAG:{"type":"example","id":"s48","action":"end"} -->
+# tag::s48[]
+node_templates:
+  mysql:
+    type: DBMS.MySQL
+    properties:
+      root-password: { $get_input: my-mysql-rootpw }
+      port: { $get_input: my-mysql-port }
+    requirements:
+    - host: db-server
+    interfaces:
+      standard:
+        operations:
+          configure: scripts/my_own_configure.sh
+# end::s48[]

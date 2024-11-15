@@ -1,19 +1,32 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s23","action":"start"} -->
+# tag::s23[]
 tosca_definitions_version: tosca_2_0
-profile: org.base:v2
 
-capability_types:
-  Host:
-    description: Hosting capability
+imports:
+- profile: org.base:v2
+  namespace: p2
+- profile: org.platform
+  namespace: pl
 
-relationship_types:
-  HostedOn:
-    valid_capability_types: [ Host ]
-
-data_types:
-  Credential:
+node_types:
+  Service:
     properties:
-      key:
-        type: string
-# EDITOR_TAG:{"type":"example","id":"s23","action":"end"} -->
+      credential:
+        type: p2:Credential
+    requirements:
+    - host:
+        capability: p2:Host
+        relationship: p2:HostedOn
+
+service_template:
+  node_templates:
+    service:
+      type: Service
+      properties:
+        credential:
+          key: password
+      requirements:
+      - host: platform
+    platform:
+      type: pl:Platform
+# end::s23[]

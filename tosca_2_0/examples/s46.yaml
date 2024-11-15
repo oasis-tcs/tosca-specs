@@ -1,6 +1,29 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s46","action":"start"} -->
-policies:
-- my-placement:
-    type: Placement
-# EDITOR_TAG:{"type":"example","id":"s46","action":"end"} -->
+# tag::s46[]
+service_template:
+  inputs:
+   cpus: 
+     type: integer
+     validation: { $less_than: [ $value, 5 ] }
+
+  substitution_mappings:
+    node_type: MyService
+    properties:  
+      num-cpus: cpus
+    capabilities:
+      bar: [ some-service, bar ]
+    requirements:
+      foo: [ some-service, foo ]
+
+  node_templates:
+    some-service:
+      type: MyService
+      properties: 
+        rate: 100
+      capabilities:
+        bar:
+          ...
+      requirements:
+      - foo: 
+          ...
+# end::s46[]

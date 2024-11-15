@@ -1,7 +1,13 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s31","action":"start"} -->
-# External repository
-imports:
-- url: types/mytypes.yaml
-  repository: my-repository
-# EDITOR_TAG:{"type":"example","id":"s31","action":"end"} -->
+# tag::s31[]
+tosca_definitions_version: tosca_2_0
+description: TOSCA File B
+  
+node_types:
+  MyNode:
+    derived_from: SoftwareComponent
+    properties:
+      # omitted here for brevity 
+    capabilities:
+      # omitted here for brevity
+# end::s31[]

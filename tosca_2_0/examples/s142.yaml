@@ -1,18 +1,30 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s142","action":"start"} -->
+# tag::s142[]
 tosca_definitions_version: tosca_2_0
 
 imports:
 - types.yaml
 
-service_template:
-  node_templates:
-    compute:
-      type: Compute
+node_types:
+  ClientSoftware:
+    requirements:
+      - host:
+          capability: Host
+          relationship: HostedOn
+          count_range: [ 1, 1 ]
 
-    client:
-      type: Client
-      directives: [ substitute ]
-      requirements:
-      - host: compute
-# EDITOR_TAG:{"type":"example","id":"s142","action":"end"} -->
+service_template:
+  substitution_mappings:
+    node_type: Client
+    requirements:
+    - host:
+      - [ software1, host ]
+      - [ software2, host ]
+
+  node_templates:
+    software1:
+      type: ClientSoftware
+
+    software2:
+      type: ClientSoftware
+# end::s142[]

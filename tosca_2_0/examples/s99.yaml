@@ -1,17 +1,10 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s99","action":"start"} -->
-node_templates:
-  mysql-database:
-    type: Database
-    properties:
-      name: sql_database1
-
-  wordpress:
-    type: WordPress
-    ...
+# tag::s99[]
+relationship_templates:
+  my-connection:
+    type: ConnectsTo
     interfaces:
-      standard:
-        configure: 
-          inputs:
-            wp-db-name: { $get_property: [ mysql-database, name ] }
-# EDITOR_TAG:{"type":"example","id":"s99","action":"end"} -->
+      configure:
+        inputs: 
+          targets_value: { $get_property: [ SELF, TARGET, value ] }
+# end::s99[]

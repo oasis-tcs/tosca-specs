@@ -1,16 +1,8 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s85","action":"start"} -->
-Endpoint:
+# tag::s85[]
+Endpoint.Admin:
+  derived_from: Endpoint
+  # Change Endpoint secure indicator to true from its default of false
   properties:
-    protocol:
-      type: string
-      required: true
-      default: tcp
-    port:
-      type: PortDef
-      required: false
-    secure:
-      type: boolean
-      required: false
-      default: false
-# EDITOR_TAG:{"type":"example","id":"s85","action":"end"} -->
+    secure: true
+# end::s85[]

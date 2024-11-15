@@ -1,14 +1,7 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s115","action":"start"} -->
-functions:
-  complex_arg_function:
-    signatures:
-      - arguments: 
-        - type: map
-          key_schema: string
-          entry_schema:
-            type: list
-            entry_schema: MyType
-        result: string
-        implementation: scripts/complex.py
-# EDITOR_TAG:{"type":"example","id":"s115","action":"end"} -->
+# tag::s115[]
+properties:
+  integer_union: { $union: [ [1, 7], [3, 4, 9], [15, 16] ] }
+  float_union: { $union: [ [3.5, 8.8], [1.3] ] }
+  rnd: { $get_random_nr: [] }
+# end::s115[]

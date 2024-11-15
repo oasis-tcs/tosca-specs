@@ -1,21 +1,6 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s45","action":"start"} -->
-node_templates:
-  server1:
-    type: Compute
-    # more details ...
-
-  server2:
-    type: Compute
-    # more details ...
-
-  server3:
-    type: Compute
-    # more details ...
-
-groups:
-  # server2 and server3 are part of the same group
-  servers:
-    type: MyScaling
-    members: [ server2, server3 ]
-# EDITOR_TAG:{"type":"example","id":"s45","action":"end"} -->
+# tag::s45[]
+policies:
+- my-placement:
+    type: Placement
+# end::s45[]

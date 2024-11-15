@@ -1,7 +1,23 @@
 tosca_definitions_version: tosca_2_0
-# EDITOR_TAG:{"type":"example","id":"s89","action":"start"} -->
-outputs:
-  server-ip:
-    description: The private IP address of the provisioned server.
-    value: { $get_attribute: [ my-server, private-address ] }
-# EDITOR_TAG:{"type":"example","id":"s89","action":"end"} -->
+# tag::s89[]
+data_types:
+  # Full function syntax for the $value function
+  Count1:
+    derived_from: integer
+    validation: { $greater_or_equal: [ { $value: [] }, 0 ] }
+
+  # Simple function syntax for the $value function
+  Count2:
+    derived_from: integer
+    validation: { $greater_or_equal: [ $value, 0 ] }
+
+  # Full function syntax with arguments
+  SizeRange:
+    properties:
+      low:
+        type: float
+      high:
+        type: float
+    validation:
+      $greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] } ]
+# end::s89[]
