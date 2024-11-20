@@ -3,7 +3,7 @@ import unittest
 import subprocess
 
 def generate_test_classes():
-    directory = 'tosca_2_0/examples'
+    directory = 'tosca_2_1/examples'
     test_classes = {}
 
     for root, dirs, files in os.walk(directory):
