@@ -1,0 +1,17 @@
+tosca_definitions_version: tosca_2_0
+# tag::s62[]
+service_template:
+  node_templates:
+    my-node:
+      # other details omitted for brevity
+      requirements:
+      - host:
+          node_filter:
+            $and:
+              - $in_range:
+                - $get_property: [ SELF, CAPABILITY, num-cpus ]
+                - [ 1, 4 ]
+              - $greater_or_equal:
+                - $get_property: [ SELF, CAPABILITY, mem-size ]
+                - 512 MB 
+# end::s62[]

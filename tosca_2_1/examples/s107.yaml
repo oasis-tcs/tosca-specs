@@ -1,0 +1,5 @@
+tosca_definitions_version: tosca_2_0
+# tag::s107[]
+properties:
+  rnd-nr: { $namespace1:random_generator: [ seed ] }
+# end::s107[]

@@ -1,0 +1,10 @@
+tosca_definitions_version: tosca_2_0
+# tag::s41[]
+relationship_templates:
+  my-connects-to:
+    type: ConnectsTo
+    interfaces:
+      configure:
+        inputs:
+          speed: { $get_attribute: [ SELF, SOURCE, connect-speed ] }      
+# end::s41[]

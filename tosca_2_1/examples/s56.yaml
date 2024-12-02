@@ -1,0 +1,11 @@
+tosca_definitions_version: tosca_2_0
+# tag::s56[]
+service_template:
+  node_templates:
+    my-application:
+      type: WebApplication
+      count: 3
+      requirements:
+      - host: 
+          node: [ tomcat-server, $node_index ]
+# end::s56[]

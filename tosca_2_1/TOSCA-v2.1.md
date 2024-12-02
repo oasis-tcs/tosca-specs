@@ -96,461 +96,8 @@ For complete copyright information please see the full Notices section in [Appen
 
 # Table of Contents
 
-- [1 Introduction ](#introduction)
-  - [1.1 Changes from Earlier Versions
-    ](#changes-from-earlier-versions)
-  - [1.2 Document Conventions
-    ](#document-conventions)
-    - [1.2.1 Specification Conventions](#specification-conventions)
-      - [1.2.1.1 Code Snippets](#code-snippets)
-      - [1.2.1.2 Placeholders](#placeholders)
-    - [1.2.2 TOSCA Naming Conventions](#tosca-naming-conventions)
-  - [1.3 Glossary ](#glossary)
-    - [1.3.1 Definitions of Terms
-      ](#definitions-of-terms)
-    - [1.3.2 Acronyms and Abbreviations
-      ](#acronyms-and-abbreviations)
-- [2 TOSCA Overview
-  ](#tosca-overview)
-  - [2.1 Objectives ](#objectives)
-  - [2.2 TOSCA Features and Benefits
-    ](#tosca-features-and-benefits)
-    - [2.2.1 TOSCA Is Model-Driven
-      ](#tosca-is-model-driven)
-    - [2.2.2 TOSCA Models Are Graphs
-      ](#tosca-models-are-graphs)
-    - [2.2.3 TOSCA Promotes Reuse and Modularity
-      ](#tosca-promotes-reuse-and-modularity)
-    - [2.2.4 TOSCA Is Domain-Independent
-      ](#tosca-is-domain-independent)
-  - [2.3 TOSCA Core Concepts
-    ](#tosca-core-concepts)
-  - [2.4 Using TOSCA ](#using-tosca)
-    - [2.4.1 TOSCA Files
-      ](#tosca-files)
-    - [2.4.2 Archive Format for Cloud Applications
-      ](#archive-format-for-cloud-applications)
-- [3 TOSCA Language Abstractions
-  ](#tosca-language-abstractions)
-  - [3.1 Service Templates, Node Templates, and Relationship Templates
-    ](#service-templates-node-templates-and-relationship-templates)
-  - [3.2 Requirements and Capabilities
-    ](#requirements-and-capabilities)
-  - [3.3 Decomposition of Node Representations
-    ](#decomposition-of-node-representations)
-  - [3.4 Interfaces, Operations, and Artifacts
-    ](#interfaces-operations-and-artifacts)
-  - [3.5 Workflows ](#workflows)
-  - [3.6 Policies ](#policies)
-- [4 TOSCA Operational Model
-  ](#tosca-operational-model)
-  - [4.1 TOSCA Functional Architecture
-    ](#tosca-functional-architecture)
-  - [4.2 TOSCA Processor
-    ](#tosca-processor)
-    - [4.2.1 Parser ](#parser)
-    - [4.2.2 Resolver ](#resolver)
-  - [4.3 Orchestrator
-    ](#orchestrator)
-  - [4.4 Changes in the Representation Graph
-    ](#changes-in-the-representation-graph)
-- [5 TOSCA Grammar Overview
-  ](#tosca-grammar-overview)
-  - [5.1 TOSCA Modeling Concepts
-    ](#tosca-modeling-concepts)
-    - [5.1.1 Type Definitions and Entity Definitions
-      ](#type-definitions-and-entity-definitions)
-    - [5.1.2 Templates and Entity Assignments
-      ](#templates-and-entity-assignments)
-    - [5.1.3 Type Derivation, Augmentation, and Refinement
-      ](#type-derivation-augmentation-and-refinement)
-    - [5.1.4 TOSCA File Reuse
-      ](#tosca-file-reuse)
-  - [5.2 Mandatory Keynames
-    ](#mandatory-keynames)
-  - [5.3 Common Keynames
-    ](#common-keynames)
-    - [5.3.1 `metadata` ](#metadata)
-    - [5.3.2 `description`
-      ](#description)
-- [6 TOSCA File Definition
-  ](#tosca-file-definition)
-  - [6.1 Keynames ](#keynames)
-  - [6.2 TOSCA Definitions Version
-    ](#tosca-definitions-version)
-  - [6.3 DSL Definitions
-    ](#dsl-definitions)
-  - [6.4 Type Definitions
-    ](#type-definitions)
-    - [6.4.1 Common Keynames in Type Definitions
-      ](#common-keynames-in-type-definitions)
-    - [6.4.2 Type Derivation
-      ](#type-derivation)
-    - [6.4.3 Types of Types
-      ](#types-of-types)
-      - [6.4.3.1 Artifact Types
-        ](#artifact-types)
-      - [6.4.3.2 Data Types
-        ](#data-types)
-      - [6.4.3.3 Capability Types
-        ](#capability-types)
-      - [6.4.3.4 Interface Types
-        ](#interface-types)
-      - [6.4.3.5 Relationship Types
-        ](#relationship-types)
-      - [6.4.3.6 Node Types
-        ](#node-types)
-      - [6.4.3.7 Group Types
-        ](#group-types)
-      - [6.4.3.8 Policy Types
-        ](#policy-types)
-  - [6.5 Repository Definitions
-    ](#repository-definitions)
-  - [6.6 Function Definitions
-    ](#function-definitions)
-  - [6.7 Profiles ](#profiles)
-    - [6.7.1 Grammar ](#grammar)
-    - [6.7.2 TOSCA Simple Profile](#tosca-simple-profile)
-    - [6.7.3 Profile Versions
-      ](#profile-versions)
-  - [6.8 Imports and Namespaces
-    ](#imports-and-namespaces)
-    - [6.8.1 Import Definitions
-      ](#import-definitions)
-    - [6.8.2 Import Processing Rules
-      ](#import-processing-rules)
-      - [6.8.2.1 Importing Profiles
-        ](#importing-profiles)
-      - [6.8.2.2 Importing a TOSCA File
-        ](#importing-a-tosca-file)
-    - [6.8.3 Examples ](#examples)
-    - [6.8.4 Namespaces ](#namespaces)
-  - [6.9 Service Template Definition
-    ](#service-template-definition)
-    - [6.9.1 Service Template Grammar
-      ](#service-template-grammar)
-    - [6.9.2 Input Parameters
-      ](#input-parameters)
-    - [6.9.3 Node Templates
-      ](#node-templates)
-    - [6.9.4 Relationship Templates
-      ](#relationship-templates)
-    - [6.9.5 Output Parameters
-      ](#output-parameters)
-    - [6.9.6 Workflow Definitions
-      ](#workflow-definitions)
-    - [6.9.7 Group Definitions
-      ](#group-definitions)
-    - [6.9.8 Policy Definitions
-      ](#policy-definitions)
-    - [6.9.9 Substitution Mappings
-      ](#substitution-mappings)
-- [7 Nodes and Relationships
-  ](#nodes-and-relationships)
-  - [7.1 Node Type ](#node-type)
-  - [7.2 Node Template
-    ](#node-template)
-    - [7.2.1 Node Template Directives](#node-template-directives)
-  - [7.3 Relationship Type
-    ](#relationship-type)
-  - [7.4 Relationship Template
-    ](#relationship-template)
-- [8 Capabilities and Requirements
-  ](#capabilities-and-requirements)
-  - [8.1 Capability Type
-    ](#capability-type)
-  - [8.2 Capability Definition
-    ](#capability-definition)
-    - [8.2.1 Capability Refinement
-      ](#capability-refinement)
-  - [8.3 Capability Assignment
-    ](#capability-assignment)
-  - [8.4 Requirement Definition
-    ](#requirement-definition)
-    - [8.4.1 Requirement Refinement
-      ](#requirement-refinement)
-  - [8.5 Requirement Assignment
-    ](#requirement-assignment)
-    - [8.5.1 Supported Keynames
-      ](#supported-keynames)
-    - [8.5.2 Requirement Assignment Grammar
-      ](#requirement-assignment-grammar)
-    - [8.5.4 Requirement Count
-      ](#requirement-count)
-    - [8.5.5 Capability Allocation
-      ](#capability-allocation)
-  - [8.6 Node Filter Definition
-    ](#node-filter-definition)
-- [9 Properties, Attributes, and Parameters
-  ](#properties-attributes-and-parameters)
-  - [9.1 TOSCA Built-In Types
-    ](#tosca-built-in-types)
-    - [9.1.1 Primitive Types
-      ](#primitive-types)
-      - [9.1.1.1 `string` ](#string)
-      - [9.1.1.2 `integer` ](#integer)
-      - [9.1.1.3 `float` ](#float)
-      - [9.1.1.4 `boolean` ](#boolean)
-      - [9.1.1.5 `bytes` ](#bytes)
-      - [9.1.1.6 `nil` ](#nil)
-    - [9.1.2 Special Types
-      ](#special-types)
-      - [9.1.2.1 `timestamp`
-        ](#timestamp)
-      - [9.1.2.2 `scalar` ](#scalar)
-        - [9.1.2.2.2 Examples ](#examples)
-      - [9.1.2.3 `version` ](#version)
-    - [9.1.3 Collection Types
-      ](#collection-types)
-      - [9.1.3.1 `list` ](#list)
-      - [9.1.3.2 `map` ](#map)
-  - [9.2 Data Type ](#data-type)
-  - [9.3 Schema Definition
-    ](#schema-definition)
-  - [9.4 Property Definition
-    ](#property-definition)
-  - [9.5 Property Assignment
-    ](#property-assignment)
-  - [9.6 Attribute Definition
-    ](#attribute-definition)
-  - [9.7 Attribute Assignment
-    ](#attribute-assignment)
-  - [9.8 Parameter Definition
-    ](#parameter-definition)
-  - [9.9 Parameter Value Assignment
-    ](#parameter-value-assignment)
-  - [9.10 Parameter Mapping Assignment
-    ](#parameter-mapping-assignment)
-  - [9.11 Validation Clause
-    ](#validation-clause)
-- [10 TOSCA Functions
-  ](#tosca-functions)
-  - [10.1 Function Syntax
-    ](#function-syntax)
-  - [10.2 TOSCA Built-In Functions](#tosca-built-in-functions)
-    - [10.2.1 Representation Graph Query Functions](#representation-graph-query-functions)
-      - [10.2.1.1 `$get_input`
-        ](#get_input)
-      - [10.2.1.2 `$get_property`
-        ](#get_property)
-      - [10.2.1.3 `$get_attribute`
-        ](#get_attribute)
-      - [10.2.1.4 `$get_artifact`
-        ](#get_artifact)
-      - [10.2.1.5 `$value` ](#value)
-      - [10.2.1.6 `$node_index`
-        ](#node_index)
-      - [10.2.1.7 `$relationship_index`
-        ](#relationship_index)
-      - [10.2.1.8 `$available_allocation`
-        ](#available_allocation)
-    - [10.2.2 Boolean Functions
-      ](#boolean-functions)
-      - [10.2.2.1 Boolean Logic Functions
-        ](#boolean-logic-functions)
-        - [10.2.2.1.1 `$and` ](#and)
-        - [10.2.2.1.2 `$or` ](#or)
-        - [10.2.2.1.3 `$not` ](#not)
-        - [10.2.2.1.4 `$xor` ](#xor)
-      - [10.2.2.2 Comparison Functions
-        ](#comparison-functions)
-        - [10.2.2.2.1 `$equal` ](#equal)
-        - [10.2.2.2.2 `$greater_than`
-          ](#greater_than)
-        - [10.2.2.2.3 `$greater_or_equal`
-          ](#greater_or_equal)
-        - [10.2.2.2.4 `$less_than`
-          ](#less_than)
-        - [10.2.2.2.5 `$less_or_equal`
-          ](#less_or_equal)
-        - [10.2.2.2.6 `$valid_values`
-          ](#valid_values)
-        - [10.2.2.2.7 `$matches`
-          ](#matches)
-      - [10.2.2.3 Boolean List, Map and String Functions
-        ](#boolean-list-map-and-string-functions)
-        - [10.2.2.3.1 `$has_suffix`
-          ](#has_suffix)
-        - [10.2.2.3.2 `$has_prefix`
-          ](#has_prefix)
-        - [10.2.2.3.3 `$contains`
-          ](#contains)
-        - [10.2.2.3.4 `$has_entry`
-          ](#has_entry)
-        - [10.2.2.3.5 `$has_key`
-          ](#has_key)
-        - [10.2.2.3.6 `$has_all_entries`
-          ](#has_all_entries)
-        - [10.2.2.3.7 `$has_all_keys`
-          ](#has_all_keys)
-        - [10.2.2.3.8 `$has_any_entry`
-          ](#has_any_entry)
-        - [10.2.2.3.9 `$has_any_key`
-          ](#has_any_key)
-    - [10.2.3 String, List, and Map Functions
-      ](#string-list-and-map-functions)
-      - [10.2.3.1 `$length` ](#length)
-      - [10.2.3.2 `$concat` ](#concat)
-      - [10.2.3.3 `$join` ](#join)
-      - [10.2.3.4 `$token` ](#token)
-    - [10.2.4 Set Functions
-      ](#set-functions)
-      - [10.2.4.1 `$union` ](#union)
-      - [10.2.4.2 `$intersection`
-        ](#intersection)
-    - [10.2.5 Arithmetic Functions
-      ](#arithmetic-functions)
-      - [10.2.5.1 `$sum` ](#sum)
-      - [10.2.5.2 `$difference`
-        ](#difference)
-      - [10.2.5.3 `$product`
-        ](#product)
-      - [10.2.5.4 `$quotient`
-        ](#quotient)
-      - [10.2.5.5 `$remainder`
-        ](#remainder)
-      - [10.2.5.6 `$round` ](#round)
-      - [10.2.5.7 `$floor` ](#floor)
-      - [10.2.5.8 `$ceil` ](#ceil)
-  - [10.3 TOSCA Path ](#tosca-path)
-  - [10.4 Function Definitions
-    ](#function-definitions)
-- [11 Interfaces, Operations, and Notifications
-  ](#interfaces-operations-and-notifications)
-  - [11.1 Interface Type
-    ](#interface-type)
-  - [11.2 Interface Definition
-    ](#interface-definition)
-  - [11.3 Interface Assignment
-    ](#interface-assignment)
-  - [11.4 Operation Definition
-    ](#operation-definition)
-  - [11.5 Operation Assignment
-    ](#operation-assignment)
-  - [11.6 Notification Definition
-    ](#notification-definition)
-  - [11.7 Notification Assignment
-    ](#notification-assignment)
-  - [11.8 Operation and Notification Implementations
-    ](#operation-and-notification-implementations)
-- [12 Artifacts ](#artifacts)
-  - [12.1 Artifact Type
-    ](#artifact-type)
-  - [12.2 Artifact Definition
-    ](#artifact-definition)
-- [13 Workflows ](#workflows)
-  - [13.1 Declarative Workflows
-    ](#declarative-workflows)
-  - [13.2 Imperative Workflows
-    ](#imperative-workflows)
-    - [13.2.1 Workflow Precondition Definition
-      ](#workflow-precondition-definition)
-    - [13.2.2 Workflow Step Definition
-      ](#workflow-step-definition)
-    - [13.2.3 Activity Definition
-      ](#activity-definition)
-      - [13.2.3.1 Delegate Workflow Activity Definition
-        ](#delegate-workflow-activity-definition)
-      - [13.2.3.2 Set State Activity Definition
-        ](#set-state-activity-definition)
-      - [13.2.3.3 Call Operation Activity Definition
-        ](#call-operation-activity-definition)
-      - [13.2.3.4 Inline Workflow Activity Definition
-        ](#inline-workflow-activity-definition)
-- [14 Creating Multiple Representations from Templates
-  ](#creating-multiple-representations-from-templates)
-  - [14.1 Specifying Number of Node Representations
-    ](#specifying-number-of-node-representations)
-  - [14.2 Node-Specific Input Values
-    ](#node-specific-input-values)
-  - [14.3 Cardinality of Relationships
-    ](#cardinality-of-relationships)
-    - [14.3.1 Many-to-One Relationships
-      ](#many-to-one-relationships)
-    - [14.3.2 One-to-Many Relationships
-      ](#one-to-many-relationships)
-    - [14.3.3 Full Mesh ](#full-mesh)
-    - [14.3.4 Matched Pairs
-      ](#matched-pairs)
-    - [14.3.5 Random Pairs
-      ](#random-pairs)
-    - [14.3.6 Many-to-Many Relationships
-      ](#many-to-many-relationships)
-- [15 Substitution ](#substitution)
-  - [15.1 Substitution Mapping
-    ](#substitution-mapping)
-  - [15.2 Property Mapping
-    ](#property-mapping)
-  - [15.3 Attribute Mapping
-    ](#attribute-mapping)
-  - [15.4 Capability Mapping
-    ](#capability-mapping)
-  - [15.5 Requirement Mapping
-    ](#requirement-mapping)
-    - [15.5.1 Mapping Multiple Requirements with the Same Name
-      ](#mapping-multiple-requirements-with-the-same-name)
-    - [15.5.2 Mapping a Requirement Multiple Times
-      ](#mapping-a-requirement-multiple-times)
-    - [15.5.3 Requirement Mapping and Selectable Nodes
-      ](#requirement-mapping-and-selectable-nodes)
-    - [15.5.4 Requirement Mapping Rules
-      ](#requirement-mapping-rules)
-    - [15.5.5 Handling `UNBOUNDED` Requirement Count Ranges
-      ](#handling-unbounded-requirement-count-ranges)
-  - [15.6 Interface Mapping
-    ](#interface-mapping)
-- [16 Groups and Policies
-  ](#groups-and-policies)
-  - [16.1 Group Type ](#group-type)
-  - [16.2 Group Definition
-    ](#group-definition)
-  - [16.3 Policy Type ](#policy-type)
-  - [16.4 Policy Definition
-    ](#policy-definition)
-  - [16.5 Trigger Definition
-    ](#trigger-definition)
-- [17 Cloud Service Archive (CSAR) Format
-  ](#cloud-service-archive-csar-format)
-  - [17.1 Overall Structure of a CSAR
-    ](#overall-structure-of-a-csar)
-    - [17.1.1 CSAR Archiving Formats
-      ](#csar-archiving-formats)
-      - [17.1.1.1 Tarballs
-        ](#tarballs)
-      - [17.1.1.2 Zip Files
-        ](#zip-files)
-  - [17.2 `TOSCA.meta` File
-    ](#toscameta-file)
-    - [17.2.1 Block 0 Keynames in the `TOSCA.meta` File
-      ](#block-0-keynames-in-the-toscameta-file)
-    - [17.2.2 Custom Keynames in the `TOSCA.meta` File
-      ](#custom-keynames-in-the-toscameta-file)
-  - [17.3 CSAR Without a `TOSCA.meta` File
-    ](#csar-without-a-toscameta-file)
-- [18 Conformance ](#conformance)
-  - [18.1 Conformance Targets
-    ](#conformance-targets)
-  - [18.2 Conformance Clause 1: TOSCA File
-    ](#conformance-clause-1-tosca-file)
-  - [18.3 Conformance Clause 2: TOSCA Processor
-    ](#conformance-clause-2-tosca-processor)
-  - [18.4 Conformance Clause 3: TOSCA Orchestrator
-    ](#conformance-clause-3-tosca-orchestrator)
-  - [18.5 Conformance Clause 4: TOSCA Generator
-    ](#conformance-clause-4-tosca-generator)
-  - [18.6 Conformance Clause 5: TOSCA Archive
-    ](#conformance-clause-5-tosca-archive)
-- [Appendix A. References](#appendix-a-references)
-  - [A.1 Normative References](#a1-normative-references)
-  - [A.2 Informative References](#a2-informative-references)
-- [Appendix B. Safety, Security and Privacy
-  Considerations](#appendix-b-safety-security-and-privacy-considerations)
-- [Appendix C. Acknowledgments](#appendix-c-acknowledgments)
-  - [C.1 Special Thanks](#c1-special-thanks)
-  - [C.2 Participants](#c2-participants)
-- [Appendix D. Revision History](#appendix-d-revision-history)
-- [Appendix E. Notices
-  ](#appendix-e-notices)
+> Provide later
+[[TOC will be inserted here]]
 
 -------
 
@@ -633,23 +180,21 @@ TOSCA 1.3. In particular:
 
 ## 1.2 Document Conventions <a name=document-conventions></a>
 
-### 1.2.1 Specification Conventions <a name=specification-conventions></a>
+### 1.2.1 Specification Conventions
 
-#### 1.2.1.1 Code Snippets <a name=code-snippets></a>
+#### 1.2.1.1 Code Snippets
 
 Within this document we use monospace font sections to denote code snippets,
 primarily for TOSCA (YAML), but also for other textual file formats (e.g. CSAR
 meta files). For example:
 
-<!-- EDITOR_TAG{"type":"example","id":"s1","action":"start"} -->
-```yaml
+```yaml #s1
 MyMap:
   property1: value
   property2: [ value1, value2 ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s1","action":"end"} -->
 
-#### 1.2.1.2 Placeholders <a name=placeholders></a>
+#### 1.2.1.2 Placeholders
 
 Within this document we use angle brackets (`<...>`) with snake case names in
 monospace font to denote specification placeholders: values that must be provided
@@ -1168,7 +713,7 @@ different file types. These files are typically organized in several
 subdirectories, each of which contains related files (and possibly other
 subdirectories etc.). The organization into subdirectories and their
 content is specific for a particular cloud application. CSARs are zip or tar
-files, typically compressed. A CSAR may contain a file called `TOSCA.meta`
+files, typically compressed. A CSAR may contain a file called TOSCA.meta
 that describes the organization of the CSAR.
 
 -------
@@ -1190,7 +735,7 @@ closed-loop automation.
 
 The content in this section is non-normative.
 
-## 3.1 Service Templates, Node Templates, and Relationship Templates <a name=service-templates-node-templates-and-relationship-templates></a>
+## 3.1 Service Templates, Node Templates, and Relationship Templates <a name=service-templates,-node-templates,-and-relationship-templates></a>
 
 Within a TOSCA file, a **service template** defines the topology model
 of a service as a directed graph. Each node in this graph is
@@ -1339,7 +884,7 @@ templates, one for a single node application server tier and another for a
 clustered application server tier, and the appropriate
 option can be selected on a deployment-by-deployment basis.
 
-## 3.4 Interfaces, Operations, and Artifacts <a name=interfaces-operations-and-artifacts></a>
+## 3.4 Interfaces, Operations, and Artifacts <a name=interfaces,-operations,-and-artifacts></a>
 
 Both node types and relationship types may define lifecycle **operations**
 that define the actions an orchestration engine can invoke when
@@ -1781,7 +1326,7 @@ representation graph. Entity assignments make sure that the service
 template can be used to generate a complete representation of the
 system under management.
 
-### 5.1.3 Type Derivation, Augmentation, and Refinement <a name=type-derivation-augmentation-and-refinement></a>
+### 5.1.3 Type Derivation, Augmentation, and Refinement <a name=type-derivation,-augmentation,-and-refinement></a>
 
 The TOSCA type system supports *inheritance* which means that types
 can be derived from a parent type. A parent type can in turn be
@@ -1887,14 +1432,12 @@ map of keynames with values that can use all types supported by
 the [\[YAML-1.2\] chapter 10 recommended schemas](https://yaml.org/spec/1.2.2/#chapter-10-recommended-schemas)
 as follows:
 
-<!-- EDITOR_TAG{"type":"example","id":"s2","action":"start"} -->
 ```yaml
 metadata:
   <metadata_name_1>: <metadata_value_1>
   <metadata_name_2>: <metadata_value_2>
   ...
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s2","action":"end"} -->
 
 Specifically, the following YAML types can be used for metadata
 values: "!!map", "!!seq", "!!str", "!!null", "!!bool", "!!int", "!!float".
@@ -1902,14 +1445,12 @@ values: "!!map", "!!seq", "!!str", "!!null", "!!bool", "!!int", "!!float".
 The following shows an example that uses `metadata` to track revision
 status of a TOSCA file:
 
-<!-- EDITOR_TAG{"type":"example","id":"s3","action":"start"} -->
-```yaml
+``` { .yang #s1 }
 metadata: 
   creation-date: 2024-04-14
   date-updated: 2024-05-01
   status: developmental  
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s3","action":"end"} -->
 
 Data provided within metadata, wherever it appears, MAY be ignored by
 TOSCA Orchestrators and SHOULD NOT affect runtime behavior.
@@ -1920,37 +1461,30 @@ This optional keyname provides a means to include single or multiline
 descriptions within a TOSCA element as a *YAML string value*, as
 follows:
 
-<!-- EDITOR_TAG{"type":"example","id":"s4","action":"start"} -->
-```yaml
+```yaml #s3
 description: <description_string>
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s4","action":"end"} -->
 
 Standard YAML block and flow formats are supported for the description
 string. Simple descriptions are treated as a single literal that includes
 the entire contents of the line that immediately follows the description
 keyname:
 
-<!-- EDITOR_TAG{"type":"example","id":"s5","action":"start"} -->
-```yaml
+```yaml #s4
 description: This is an example of a single line description (no folding). 
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s5","action":"end"} -->
 
 The following shows a multiline flow example:
 
-<!-- EDITOR_TAG{"type":"example","id":"s6","action":"start"} -->
-```yaml
+```yaml #s5
 description: "A multiline description 
 using a quoted string"
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s6","action":"end"} -->
 
 The YAML *folded* format may also be used for multiline descriptions,
 which *folds* line breaks as space characters:
 
-<!-- EDITOR_TAG{"type":"example","id":"s7","action":"start"} -->
-```yaml
+```yaml #s6
 description: >
   This is an example of a multi-line description using YAML. It permits for line        
   breaks for easier readability...
@@ -1958,7 +1492,6 @@ description: >
   if needed.  However, (multiple) line breaks are folded into a single space   
   character when processed into a single string value.
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s7","action":"end"} -->
 
 # 6 TOSCA File Definition <a name=tosca-file-def></a>
 
@@ -2022,11 +1555,9 @@ keynames and associated grammars used in a TOSCA file definition.
 The mandatory `tosca_definitions_version` keyname provides a means to
 specify the TOSCA version used within the TOSCA file as follows:
 
-<!-- EDITOR_TAG{"type":"example","id":"s8","action":"start"} -->
-```yaml
+```yaml #s7
 tosca_definitions_version: <tosca_version> 
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s8","action":"end"} -->
 
 It is an indicator for the version of the TOSCA grammar that MUST be
 used to parse the remainder of the TOSCA file. TOSCA uses the
@@ -2045,11 +1576,9 @@ The version for this specification is `tosca_2_0`. The following
 shows an example `tosca_definitions_version` in a TOSCA file created
 using the TOSCA Version 2.0 specification:
 
-<!-- EDITOR_TAG{"type":"example","id":"s9","action":"start"} -->
-```yaml
+```yaml #s8
 tosca_definitions_version: tosca_2_0
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s9","action":"end"} -->
 
 Note that it is not mandatory for TOSCA Version 2.0 implementations to
 support older versions of the TOSCA specifications.
@@ -2225,13 +1754,11 @@ artifact_types:
 
 The following code snippet shows an example artifact type definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s10","action":"start"} -->
-```yaml
+```yaml #s9
 artifact_types:
   MyFile:
     derived_from: foobar:File
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s10","action":"end"} -->
 
 A detailed description of the artifact type definition grammar is
 provided in the [Artifacts chapter](#artifacts).
@@ -2293,8 +1820,7 @@ capability_types:
 
 The following code snippet shows example capability type definitions:
 
-<!-- EDITOR_TAG{"type":"example","id":"s11","action":"start"} -->
-```yaml
+```yaml #s10
 capability_types:
   MyGenericFeature:
     properties:
@@ -2310,7 +1836,6 @@ capability_types:
     properties:
       # more details ...
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s11","action":"end"} -->
 
 A detailed description of the capability type definition grammar is
 provided in the [Capability Type section](#capability-type).
@@ -2329,8 +1854,7 @@ interface_types:
 
 The following code snippet shows an example interface type definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s12","action":"start"} -->
-```yaml
+```yaml #s11
 interface_types:
   Signal:
     operations:
@@ -2339,7 +1863,6 @@ interface_types:
       signal-end-receive:
         description: Operation to signal end of some message processed.
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s12","action":"end"} -->
 
 A detailed description of the interface type definition grammar is
 provided in the [Interface Type section](#interface-type).
@@ -2358,8 +1881,7 @@ relationship_types:
 
 The following code snippet shows example relationship type definitions:
 
-<!-- EDITOR_TAG{"type":"example","id":"s13","action":"start"} -->
-```yaml
+```yaml #s12
 relationship_types:
   HostedOn:
     properties:
@@ -2374,7 +1896,6 @@ relationship_types:
     properties:
       # more details ...
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s13","action":"end"} -->
 
 A detailed description of the relationship type definition grammar is
 provided in the [Interface Type section](#relationship-type).
@@ -2393,8 +1914,7 @@ node_types:
 
 The following code snippet shows example node type definitions:
 
-<!-- EDITOR_TAG{"type":"example","id":"s14","action":"start"} -->
-```yaml
+```yaml #s13
 node_types:
   Database:
     description: A generic node type for all databases
@@ -2413,7 +1933,6 @@ node_types:
     capabilities:
       TransactSQL
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s14","action":"end"} -->
 
 A detailed description of the node type definition grammar is
 provided in the [Node Type section](#node-type).
@@ -2432,13 +1951,11 @@ group_types:
 
 The following code snippet shows an example group type definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s15","action":"start"} -->
-```yaml
+```yaml #s14
 group_types:
   MyScalingGroup:
     derived_from: foobar:MyGroup
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s15","action":"end"} -->
 
 A detailed description of the group type definition grammar is
 provided in the [Group Type section](#group-type).
@@ -2457,13 +1974,11 @@ policy_types:
 
 The following code snippet shows an example policy type definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s16","action":"start"} -->
-```yaml
+```yaml #s15
 policy_types:
   MyScalingPolicy:
     derived_from: foobar:Scaling
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s16","action":"end"} -->
 
 A detailed description of the policy type definition grammar is
 provided in the [Policy Type section](#policy-type).
@@ -2529,8 +2044,7 @@ also use a single-line grammar as follows:
 The following example show repository definitions using both
 multiline as well as single-line grammars.
 
-<!-- EDITOR_TAG{"type":"example","id":"s17","action":"start"} -->
-```yaml
+```yaml #s16
 repositories:
   my-project:
     description: My project's code repository in GitHub
@@ -2538,7 +2052,6 @@ repositories:
 
   external-repo: https://foo.bar
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s17","action":"end"} -->
 
 ## 6.6 Function Definitions <a name=function-definitions></a>
 
@@ -2556,8 +2069,7 @@ functions:
 
 The following example shows the definition of a square root function:
 
-<!-- EDITOR_TAG{"type":"example","id":"s18","action":"start"} -->
-```yaml
+```yaml #s17
 functions:
   sqrt:
     signatures:
@@ -2578,7 +2090,6 @@ functions:
       the argument is either integer or float and the function
       returns the square root as a float.
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s18","action":"end"} -->
 
 ## 6.7 Profiles <a name=profiles></a>
 
@@ -2628,19 +2139,15 @@ notation with version as a best-practice convention. For example, the
 following profile statement is used to define Version 2.0 of a set of 
 definitions suitable for describing cloud computing in an example company:
 
-<!-- EDITOR_TAG{"type":"example","id":"s19","action":"start"} -->
-```yaml
+```yaml #s18
 profile: com.example.tosca_profiles.cloud_computing:2.0 
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s19","action":"end"} -->
 
 The following defines a domain-specific profile for Kubernetes:
 
-<!-- EDITOR_TAG{"type":"example","id":"s20","action":"start"} -->
-```yaml
+```yaml #s19
 profile: io.kubernetes:1.30
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s20","action":"end"} -->
 
 TOSCA parsers MUST process profile definitions according to the
 following rules:
@@ -2704,8 +2211,7 @@ Assume a profile designer creates version 1 of a base profile that
 defines (among other things) a "Host" capability type and a
 corresponding "HostedOn" relationship type as follows:
 
-<!-- EDITOR_TAG{"type":"example","id":"s21","action":"start"} -->
-```yaml
+```yaml #s20
 tosca_definitions_version: tosca_2_0
 profile: org.base:v1
 
@@ -2717,7 +2223,6 @@ relationship_types:
   HostedOn:
     valid_capability_types: [ Host ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s21","action":"end"} -->
 
 Now let's assume a different profile designer creates a
 platform-specific profile that defines (among other things) a
@@ -2726,8 +2231,7 @@ type "Host". Since the "Host" capability is defined in the
 "org.base:v1" profile, that profile must be imported as shown in the
 snippet below:
 
-<!-- EDITOR_TAG{"type":"example","id":"s22","action":"start"} -->
-```yaml
+```yaml #s21
 tosca_definitions_version: tosca_2_0
 profile: org.platform
 
@@ -2741,7 +2245,6 @@ node_types:
       host:
         type: p1:Host
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s22","action":"end"} -->
 
 At some later point in time, the original profile designer updates the
 "org.base" profile to Version 2. The updated version of this profile
@@ -2749,8 +2252,7 @@ just adds a "Credential" data type (in addition to defining the
 "Host" capability type and the "HostedOn" relationship type), as
 follows:
 
-<!-- EDITOR_TAG{"type":"example","id":"s23","action":"start"} -->
-```yaml
+```yaml #s22
 tosca_definitions_version: tosca_2_0
 profile: org.base:v2
 
@@ -2768,7 +2270,6 @@ data_types:
       key:
         type: string
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s23","action":"end"} -->
 
 Finally, let's assume a service designer creates a template for a
 service that is to be hosted on the platform defined in the
@@ -2777,8 +2278,7 @@ type that has a requirement for the platform's "Host" capability. It
 also has a credential property of type "Credential" as defined in
 "org.base:v2":
 
-<!-- EDITOR_TAG{"type":"example","id":"s24","action":"start"} -->
-```yaml
+```yaml #s23
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -2809,7 +2309,6 @@ service_template:
     platform:
       type: pl:Platform
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s24","action":"end"} -->
 
 This service template is invalid, since the "platform" node template
 does not define a capability of a type that is compatible with the
@@ -2863,7 +2362,7 @@ definition:
 
 |Keyname|Mandatory|Type|Description|
 | :---- | :------ | :---- | :------ |
-|`url`|conditional|str|The [url](#importing-a-tosca-file) that references a TOSCA file to be imported. An import statement must include either a URL or a profile, but not both.|
+|`url`|conditional|str|The [url](#importing-tosca-file) that references a TOSCA file to be imported. An import statement must include either a URL or a profile, but not both.|
 |`profile`|conditional|str|The [profile](#profiles) name that references a named type profile to be imported. An import statement must include either a URL or a profile, but not both.|
 |`repository`|conditional|str|The optional symbolic name of the [repository definition](#repository-definitions) where the imported file can be found as a string. The repository name can only be used when a URL is specified.|
 |`namespace`|no|str|The optional name of the [namespace](#namespaces) into which to import the type definitions from the imported template or profile.|
@@ -2932,7 +2431,7 @@ TOSCA processor SHOULD attempt to import the profile by name:
 - If `<profile_name>` is not known, the import SHOULD be considered a
   failure.
 
-#### 6.8.2.2 Importing a TOSCA File <a name=importing-a-tosca-file></a>
+#### 6.8.2.2 Importing a TOSCA File <a name=importing-tosca-file></a>
 
 If the `url` keyname is used, the TOSCA processor SHOULD attempt to
 import the file referenced by `<file_uri>` as follows:
@@ -2978,53 +2477,44 @@ import the file referenced by `<file_uri>` as follows:
 The first example shows how to use an import definition import a
 well-known profile by name:
 
-<!-- EDITOR_TAG{"type":"example","id":"s25","action":"start"} -->
-```yaml
+```yaml #s24
 # Importing a profile
 imports:
 - profile: org.oasis-open.tosca.simple:2.0
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s25","action":"end"} -->
 
 The next example shows an import definition used to import a
 network-accessible resource using the https protocol:
 
-<!-- EDITOR_TAG{"type":"example","id":"s26","action":"start"} -->
-```yaml
+```yaml #s25
 # Absolute URL with scheme
 imports:
 - url: https://myorg.org/tosca/types/mytypes.yaml
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s26","action":"end"} -->
 
 The following shows an import definition used to import a TOSCA file
 located in the same repository as the importing file. The file to be
 imported is referenced using a path name that is relative to the
 location of the importing file. This example shows the short notation:
 
-<!-- EDITOR_TAG{"type":"example","id":"s27","action":"start"} -->
-```yaml
+```yaml #s26
 # Short notation supported
 imports:
 - ../types/mytypes.yaml 
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s27","action":"end"} -->
 
 The following shows the same example but using the long notation:
 
-<!-- EDITOR_TAG{"type":"example","id":"s28","action":"start"} -->
-```yaml
+```yaml #s27
 # Long notation
 imports:
 - url: ../types/mytypes.yaml
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s28","action":"end"} -->
 
 The following example mixes short-notation and
 long-notation import definitions:
 
-<!-- EDITOR_TAG{"type":"example","id":"s29","action":"start"} -->
-```yaml
+```yaml #s28
 # Short notation and long notation supported
 imports:
 - relative_path/my_defns/my_typesdefs_1.yaml
@@ -3032,31 +2522,26 @@ imports:
   repository: my-company-repo
   namespace: mycompany
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s29","action":"end"} -->
 
 The following example shows how to import TOSCA files using absolute
 path names (i.e. path names that start at the root of the repository):
 
-<!-- EDITOR_TAG{"type":"example","id":"s30","action":"start"} -->
-```yaml
+```yaml #s29
 # Root file
 imports:
 - url: /base.yaml
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s30","action":"end"} -->
 
 And finally, the following shows how to import TOSCA files from a
 repository that is different than the repository that contains the
 importing TOSCA file:
 
-<!-- EDITOR_TAG{"type":"example","id":"s31","action":"start"} -->
-```yaml
+```yaml #s30
 # External repository
 imports:
 - url: types/mytypes.yaml
   repository: my-repository
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s31","action":"end"} -->
 
 ### 6.8.4 Namespaces <a name=namespaces></a>
 
@@ -3070,8 +2555,7 @@ contain a node type definition for "MyNode":
 
 **TOSCA File B**
 
-<!-- EDITOR_TAG{"type":"example","id":"s32","action":"start"} -->
-```yaml
+```yaml #s31
 tosca_definitions_version: tosca_2_0
 description: TOSCA File B
   
@@ -3083,12 +2567,10 @@ node_types:
     capabilities:
       # omitted here for brevity
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s32","action":"end"} -->
 
 **TOSCA File A**
 
-<!-- EDITOR_TAG{"type":"example","id":"s33","action":"start"} -->
-```yaml
+```yaml #s32
 tosca_definitions_version: tosca_2_0
 description: TOSCA File A
 
@@ -3107,7 +2589,6 @@ service_template:
     my-node:
       type: MyNode
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s33","action":"end"} -->
 
 As you can see, TOSCA file A imports TOSCA file B which results in
 duplicate definitions of the MyNode node type. In this example, it is
@@ -3135,8 +2616,7 @@ disambiguate between the two "MyNode" type definitions. This first snippet
 shows the scenario where the "MyNode" definition from TOSCA file B is
 intended to be used:
 
-<!-- EDITOR_TAG{"type":"example","id":"s34","action":"start"} -->
-```yaml
+```yaml #s33
 tosca_definitions_version: tosca_2_0
 description: TOSCA file A
 
@@ -3156,13 +2636,11 @@ service_template:
     my-node:
       type: fileB:MyNode
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s34","action":"end"} -->
 
 The second snippet shows the scenario where the "MyNode" definition from
 TOSCA file A is intended to be used:
 
-<!-- EDITOR_TAG{"type":"example","id":"s35","action":"start"} -->
-```yaml
+```yaml #s34
 tosca_definitions_version: tosca_2_0
 description: TOSCA file A
 
@@ -3182,7 +2660,6 @@ service_template:
     my-node:
       type: MyNode
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s35","action":"end"} -->
 
 In many scenarios, imported TOSCA files may in turn import their own
 TOSCA files, and introduce their own namespaces to avoid name
@@ -3194,8 +2671,7 @@ Kubernetes profile into the "k8s" namespace. It defines a "SuperPod" node
 type that derives from the "Pod" node type defined in that Kubernetes
 profile:
 
-<!-- EDITOR_TAG{"type":"example","id":"s36","action":"start"} -->
-```yaml
+```yaml #s35
 tosca_definitions_version: tosca_2_0
 description: mytypes.yaml
 
@@ -3208,15 +2684,13 @@ node_types:
   SuperPod:
     derived_from: k8s:Pod
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s36","action":"end"} -->
 
 The "mytypes.yaml" file is then imported into the main.yaml TOSCA
 file, which defines both a node template of type "SuperPod" as well as a
 node template of type "Pod". Nested namespace names are used to identify
 the "Pod" node type from the Kubernetes profile:
 
-<!-- EDITOR_TAG{"type":"example","id":"s37","action":"start"} -->
-```yaml
+```yaml #s36
 tosca_definitions_version: tosca_2_0
 description: main.yaml
 
@@ -3231,7 +2705,6 @@ service_template:
     pod:
       type: my:k8s:Pod
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s37","action":"end"} -->
 
 Within each namespace (including the unnamed root namespace), names
 must be unique. This means that duplicate local names (i.e., within
@@ -3250,7 +2723,7 @@ definitions:
 - Group Types (`group_types`)
 - Function definitions (`functions`)
 
-## 6.9 Service Template Definition <a name=service-template-definition></a>
+## 6.9 Service Template Definition <a name=service-template-def></a>
 
 This section defines the service template of a TOSCA file. The main
 ingredients of the service template are node templates representing
@@ -3283,8 +2756,7 @@ The overall grammar of the service_template section is shown
 below. Detailed grammar definitions are provided in subsequent
 subsections.
 
-<!-- EDITOR_TAG{"type":"example","id":"s38","action":"start"} -->
-```yaml
+```yaml #s37
 service_template:
   description: <template_description>
   metadata:
@@ -3322,7 +2794,6 @@ service_template:
     <workflow_def_2>
     ...
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s38","action":"end"} -->
 
 In the above grammar, the placeholders that appear in angle brackets
 have the following meaning:
@@ -3390,21 +2861,18 @@ inputs:
 The following code snippet shows a simple `inputs` example without any
 validation clause:
 
-<!-- EDITOR_TAG{"type":"example","id":"s39","action":"start"} -->
-```yaml
+```yaml #s38
 inputs:
   foo-name:
     type: string
     description: Simple string parameter without a validation clause.
     default: bar
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s39","action":"end"} -->
 
 The following is an example of input parameter definitions with a
 validation clause:
 
-<!-- EDITOR_TAG{"type":"example","id":"s40","action":"start"} -->
-```yaml
+```yaml #s39
 inputs:
   site-name:
     type: string
@@ -3412,7 +2880,6 @@ inputs:
     default: My Site
     validation: { $greater_or_equal: [ $value, 9 ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s40","action":"end"} -->
 
 ### 6.9.3 Node Templates <a name=node-templates></a>
 
@@ -3431,8 +2898,7 @@ node_templates:
 
 The following code snippet shows an example of a `node_templates` section:
 
-<!-- EDITOR_TAG{"type":"example","id":"s41","action":"start"} -->
-```yaml
+```yaml #s40
 node_templates:
   my-webapp:
     type: WebApplication
@@ -3440,7 +2906,6 @@ node_templates:
   my-database:
     type: Database
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s41","action":"end"} -->
 
 ### 6.9.4 Relationship Templates <a name=relationship-templates></a>
 
@@ -3463,8 +2928,7 @@ relationship_templates:
 The following code snippet shows an example of a `relationship_templates`
 section:
 
-<!-- EDITOR_TAG{"type":"example","id":"s42","action":"start"} -->
-```yaml
+```yaml #s41
 relationship_templates:
   my-connects-to:
     type: ConnectsTo
@@ -3473,7 +2937,6 @@ relationship_templates:
         inputs:
           speed: { $get_attribute: [ SELF, SOURCE, connect-speed ] }      
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s42","action":"end"} -->
 
 ### 6.9.5 Output Parameters <a name=output-parameters></a>
 
@@ -3494,14 +2957,12 @@ outputs:
 
 The following code snippet shows an example of the `outputs` section:
 
-<!-- EDITOR_TAG{"type":"example","id":"s43","action":"start"} -->
-```yaml
+```yaml #s42
 outputs:
   server-address:
     description: The first private IP address for the provisioned server.
     value: { $get_attribute: [ node5, networks, private, addresses, 0 ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s43","action":"end"} -->
 
 ### 6.9.6 Workflow Definitions <a name=workflow-definitions></a>
 
@@ -3520,14 +2981,12 @@ workflows:
 
 The following example shows the definition of a workflow:
 
-<!-- EDITOR_TAG{"type":"example","id":"s44","action":"start"} -->
-```yaml
+```yaml #s43
 workflows:
   scaling-workflow:
     steps:
       TO BE PROVIDED
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s44","action":"end"} -->
 
 ### 6.9.7 Group Definitions <a name=group-definitions></a>
 
@@ -3549,8 +3008,7 @@ The following example shows the definition of three "Compute" nodes in the
 `node_templates` section of a `service_template` as well as the grouping of
 two of the "Compute" nodes in group "servers":
 
-<!-- EDITOR_TAG{"type":"example","id":"s45","action":"start"} -->
-```yaml
+```yaml #s44
 node_templates:
   server1:
     type: Compute
@@ -3570,7 +3028,6 @@ groups:
     type: MyScaling
     members: [ server2, server3 ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s45","action":"end"} -->
 
 ### 6.9.8 Policy Definitions <a name=policy-definitions></a>
 
@@ -3588,15 +3045,13 @@ policies:
 
 The following example shows the definition of a placement policy:
 
-<!-- EDITOR_TAG{"type":"example","id":"s46","action":"start"} -->
-```yaml
+```yaml #s45
 policies:
 - my-placement:
     type: Placement
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s46","action":"end"} -->
 
-### 6.9.9 Substitution Mappings <a name=substitution-mappings></a>
+### 6.9.10 Substitution Mappings <a name=substitution-mappings></a>
 
 The `substitution_mappings`section of a service template declares this
 service template as a candidate for substituting nodes marked with the
@@ -3611,8 +3066,7 @@ substitution_mappings:
 
 The following code snippet shows an example substitution mapping:
 
-<!-- EDITOR_TAG{"type":"example","id":"s47","action":"start"} -->
-```yaml
+```yaml #s46
 service_template:
   inputs:
    cpus: 
@@ -3640,7 +3094,6 @@ service_template:
       - foo: 
           ...
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s47","action":"end"} -->
 
 # 7 Nodes and Relationships <a name=nodes-and-relationships></a>
 
@@ -3772,8 +3225,7 @@ During node type derivation, the keynames follow these rules:
 
 The following code snippet shows an example node type definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s48","action":"start"} -->
-```yaml
+```yaml #s47
 MyApp:
   derived_from: SoftwareComponent
   description: My company's custom application
@@ -3795,7 +3247,6 @@ MyApp:
       node: Database    
       relationship: ConnectsTo
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s48","action":"end"} -->
 
 ## 7.2 Node Template <a name=node-template></a>
 
@@ -3918,8 +3369,7 @@ have the following meaning:
 
 The following code snippet shows an example node template definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s49","action":"start"} -->
-```yaml
+```yaml #s48
 node_templates:
   mysql:
     type: DBMS.MySQL
@@ -3933,9 +3383,8 @@ node_templates:
         operations:
           configure: scripts/my_own_configure.sh
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s49","action":"end"} -->
 
-### 7.2.1 Node Template Directives <a name=node-template-directives></a>
+### 7.2.1 Node Template Directives<a name=node-template-directives</a>
 
 As described in the section above, a node template supports the following 3 directives 
 used by the TOSCA resolver to populate nodes in the representation graph:
@@ -4106,13 +3555,11 @@ rules:
 
 The following code snippet shows an example relationship type definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s50","action":"start"} -->
-```yaml
+```yaml #s49
 AppDependency:
   derived_from: DependsOn
   valid_capability_types: [ SomeAppFeature ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s50","action":"end"} -->
 
 ## 7.4 Relationship Template <a name=relationship-template></a>
 
@@ -4210,15 +3657,13 @@ have the following meaning:
 
 The following code snippet shows an example relationship template definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s51","action":"start"} -->
-```yaml
+```yaml #s50
 relationship_templates:
   storage-attachment:
     type: AttachesTo
     properties:
       location: /my_mount_point
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s51","action":"end"} -->
 
 # 8 Capabilities and Requirements <a name=capabilities-and-requirements></a>
 
@@ -4319,8 +3764,7 @@ rules:
 The following code snippet shows an example capability type
 definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s52","action":"start"} -->
-```yaml
+```yaml #s51
 MyFeature:
   description: A custom feature of my company's application
   properties:
@@ -4331,9 +3775,8 @@ MyFeature:
   valid_source_node_types:
   - MyCompanyNodes
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s52","action":"end"} -->
 
-## 8.2 Capability Definition <a name=capability-definition></a>
+## 8.2 Capability Definition <a name=capability-def></a>
 
 A *capability definition* defines a typed set of data that a node can
 expose and that is used to describe a relevant feature of the
@@ -4357,7 +3800,7 @@ definition:
 
 Note that the `occurrences` keyname that was present in previous versions
 of TOSCA is deprecated in TOSCA 2.0. By default, the number of occurrences is
-`UNBOUNDED`, i.e. any number of relationships can be created with a certain
+"UNBOUNDED", i.e. any number of relationships can be created with a certain
 capability as a target. To constrain the creation of a relationship to a target
 capability, the new `allocation` keyname is used within a requirement assignment.
 
@@ -4426,25 +3869,21 @@ in the capability type:
 
 The following code snippet shows an example capability definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s53","action":"start"} -->
-```yaml
+```yaml #s52
 some-capability: 
   type: MyCapabilityTypeName
   properties:
     limit: 
       default: 100
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s53","action":"end"} -->
 
 The following shows a capability definition using single-line grammar:
 
-<!-- EDITOR_TAG{"type":"example","id":"s54","action":"start"} -->
-```yaml
+```yaml #s53
 some-capability: MyCapabilityTypeName
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s54","action":"end"} -->
 
-### 8.2.1 Capability Refinement <a name=capability-refinement></a>
+## 8.2.1 Capability Refinement <a name=capability-refinement></a>
 
 If a node type defines a capability with the same name as a capability
 that is already defined in one of its parent node types, then that
@@ -4495,7 +3934,7 @@ assignment:
 
 Note that the `occurrences` keyname that was present in previous versions
 of TOSCA is deprecated in TOSCA 2.0. By default, the number of occurrences is
-`UNBOUNDED`, i.e. any number of relationships can be created with a certain
+"UNBOUNDED", i.e. any number of relationships can be created with a certain
 capability as a target. To constrain the creation of a relationship to a target
 capability, the new `allocation` keyname is used within a requirement assignment.
 
@@ -4551,8 +3990,7 @@ have the following meaning:
 
 The following code snippet shows an example capability assignment:
 
-<!-- EDITOR_TAG{"type":"example","id":"s55","action":"start"} -->
-```yaml
+```yaml #s54
 node_templates:
   my-node:
     capabilities:
@@ -4560,9 +3998,8 @@ node_templates:
         properties:
           limit: 100
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s55","action":"end"} -->
 
-## 8.4 Requirement Definition <a name=requirement-definition></a>
+## 8.4 Requirement Definition <a name=requirement-def></a>
 
 The *requirement definition* describes a requirement of a TOSCA node
 that needs to be fulfilled by a matching capability declared by
@@ -4700,7 +4137,7 @@ have the following meaning:
     count_range: [ 0, UNBOUNDED ]
     ```
 
-### 8.4.1 Requirement Refinement <a name=requirement-refinement></a>
+## 8.4.1 Requirement Refinement <a name=requirement-refinement></a>
 
 If a node type defines a requirement with the same name as a requirement
 that is already defined in one of its parent node types, then that
@@ -5040,8 +4477,7 @@ defines a web application node template named
 a requirement named "host" that needs to be fulfilled by any node that
 derives from the node type "WebServer":
 
-<!-- EDITOR_TAG{"type":"example","id":"s56","action":"start"} -->
-```yaml
+```yaml #s55
 service_template:
   node_templates:
     my-application:
@@ -5050,7 +4486,6 @@ service_template:
       - host: 
           node: WebServer
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s56","action":"end"} -->
 
 In this case, it is assumed that the "WebApplication" type defines a "host"
 requirement that uses relationship type "HostedOn" to relate to the target node.
@@ -5060,8 +4495,7 @@ be the specific target of the requirement in the target node.
 The following example targets a "WebServer" created from the "tomcat-server"
 template that has the same multiplicity index as the actual "my-application" node.
 
-<!-- EDITOR_TAG{"type":"example","id":"s57","action":"start"} -->
-```yaml
+```yaml #s56
 service_template:
   node_templates:
     my-application:
@@ -5071,7 +4505,6 @@ service_template:
       - host: 
           node: [ tomcat-server, $node_index ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s57","action":"end"} -->
 
 The following example shows a requirement named "database" that
 describes a requirement for a connection to a capability of type
@@ -5079,8 +4512,7 @@ describes a requirement for a connection to a capability of type
 the connection requires a custom relationship type
 ("CustomDbConnection") declared on the `relationship` keyname.
 
-<!-- EDITOR_TAG{"type":"example","id":"s58","action":"start"} -->
-```yaml
+```yaml #s57
 service_template:
   node_templates:
     my-application:
@@ -5091,7 +4523,6 @@ service_template:
           capability: Endpoint.Database
           relationship: CustomDbConnection
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s58","action":"end"} -->
 
 ### 8.5.4 Requirement Count <a name=requirement-count></a>
 
@@ -5126,8 +4557,7 @@ for handling requirement counts:
 The following example illustrates requirement assignment count
 rules. It uses the types defined in the following code snippet:
 
-<!-- EDITOR_TAG{"type":"example","id":"s59","action":"start"} -->
-```yaml
+```yaml #s58
 capability_types:
   Service:
     description: >-
@@ -5152,7 +4582,6 @@ node_types:
       service:
         type: Service
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s59","action":"end"} -->
 
 In this example, the "Client" node type defines a "service"
 requirement with a `count_range` of "[ 1, 4 ]". This means that a client
@@ -5169,8 +4598,7 @@ to the upper bound of the count range.
 The following shows a valid service template that uses `Client` and
 `Server` nodes:
 
-<!-- EDITOR_TAG{"type":"example","id":"s60","action":"start"} -->
-```yaml
+```yaml #s59
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -5195,14 +4623,12 @@ service_template:
       - service: server2
       - service: server3
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s60","action":"end"} -->
 
 In this example, the requirement assignments specify the target nodes
 directly, but it is also valid to leave requirements dangling as in
 the following example:
 
-<!-- EDITOR_TAG{"type":"example","id":"s61","action":"start"} -->
-```yaml
+```yaml #s60
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -5229,7 +4655,6 @@ service_template:
       - service:
           optional: true
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s61","action":"end"} -->
 
 In this example, only the first "service" assignment is non-optional. The
 next two are optional. However, after the orchestrator *fulfills* the
@@ -5282,8 +4707,7 @@ Another node with "num-cpu" with value 2 could not be a valid target since
 value which is 2. Of course, similar calculations must be done for the
 "mem-size" allocation.
 
-<!-- EDITOR_TAG{"type":"example","id":"s62","action":"start"} -->
-```yaml
+```yaml #s61
 service_template:
   node_templates:
     my-application:
@@ -5294,9 +4718,8 @@ service_template:
             num-cpu: 2
             mem-size: 128 MB
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s62","action":"end"} -->
 
-## 8.6 Node Filter Definition <a name=node-filter-definition></a>
+## 8.6 Node Filter Definition <a name=node-filter-def></a>
 
 A node filter definition may be provided in the following two situations:
 
@@ -5354,8 +4777,7 @@ support a specific range of CPUs (i.e., "num-cpus" value between 1 and 4)
 and memory size (i.e., "mem-size" of 2 or greater) from its declared
 "host" capability.
 
-<!-- EDITOR_TAG{"type":"example","id":"s63","action":"start"} -->
-```yaml
+```yaml #s62
 service_template:
   node_templates:
     my-node:
@@ -5371,9 +4793,8 @@ service_template:
                 - $get_property: [ SELF, CAPABILITY, mem-size ]
                 - 512 MB 
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s63","action":"end"} -->
 
-# 9 Properties, Attributes, and Parameters <a name=properties-attributes-and-parameters></a>
+# 9 Properties, Attributes, and Parameters <a name=properties,-attributes,-and-parameters></a>
 
 This section presents how data are handled in TOSCA via properties,
 attributes, and parameters. As with other entities in TOSCA, all data
@@ -5455,8 +4876,7 @@ otherwise interpret as other types.
 This following example would be invalid if there were no quotation marks
 around "0.1":
 
-<!-- EDITOR_TAG{"type":"example","id":"s64","action":"start"} -->
-```yaml
+```yaml #s63
 node_types:
   Node:
     properties:
@@ -5470,7 +4890,6 @@ service_template:
       properties:
         name: "0.1"
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s64","action":"end"} -->
 
 Please note:
 
@@ -5523,14 +4942,12 @@ enforce most of these variations using data type [validation clauses](#validatio
 For example, this would be a custom data type for unsigned 16-bit
 integers:
 
-<!-- EDITOR_TAG{"type":"example","id":"s65","action":"start"} -->
-```yaml
+```yaml #s64
 data_types:
   UInt16:
     derived_from: integer
     validation: { $in_range: [ $value, [ 0, 0xFFFF ] ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s65","action":"end"} -->
 
 YAML allows for the standard decimal notation as well as hexadecimal and
 octal notations [\[YAML-1.2\] example
@@ -5567,8 +4984,7 @@ integers that must be floats.
 
 Thus following example MUST NOT result in an error:
 
-<!-- EDITOR_TAG{"type":"example","id":"s66","action":"start"} -->
-```yaml
+```yaml #s65
 node_types:
   Node:
     properties:
@@ -5582,7 +4998,6 @@ service_template:
       properties:
         speed: 10
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s66","action":"end"} -->
 
 Please note:
 
@@ -5622,8 +5037,7 @@ help you convert arbitrary data to Base64.
 
 Example:
 
-<!-- EDITOR_TAG{"type":"example","id":"s67","action":"start"} -->
-```yaml
+```yaml #s66
 node_types:
   Node:
     properties:
@@ -5641,7 +5055,6 @@ OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\
 +f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC\
 AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s67","action":"end"} -->
 
 Please note:
 
@@ -5667,8 +5080,7 @@ word "null".
 
 Example:
 
-<!-- EDITOR_TAG{"type":"example","id":"s68","action":"start"} -->
-```yaml
+```yaml #s67
 node_types:
   Node:
     properties:
@@ -5683,7 +5095,6 @@ service_template:
       properties:
         nothing: null
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s68","action":"end"} -->
 
 Note that a `nil`-typed value is *distinct* from an unassigned value. For
 consistency TOSCA *requires* you to assign null values even though their
@@ -5692,8 +5103,7 @@ specify the null value for the property at the node template.
 
 Following is a valid example of *not* assigning a value:
 
-<!-- EDITOR_TAG{"type":"example","id":"s69","action":"start"} -->
-```yaml
+```yaml #s68
 node_types:
   Node:
     properties:
@@ -5706,7 +5116,6 @@ service_template:
     my-node:
       type: Node
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s69","action":"end"} -->
 
 ### 9.1.2 Special Types <a name=special-types></a>
 
@@ -5834,8 +5243,7 @@ Note that `<unit>` is case sensitive. Implementors may guard against word overfl
 
 The following gives an example of the use of scalar:
 
-<!-- EDITOR_TAG{"type":"example","id":"s70","action":"start"} -->
-```yaml
+```yaml #s69
 dsl_definitions:
   # Defined a reusable set of prefixes taken from ISO80000
   iso-prefixes: &ISO80000
@@ -5910,7 +5318,6 @@ service_template:
         width: 125.3 mm # Definition is in millimeters, conversion of units within a scalar is performed by the parser
         throughput: 10 Kibits/s
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s70","action":"end"} -->
 
 During scalar type derivation the keyname definitions follow these
 rules in addition to the rules which apply to all data type derivations:
@@ -5931,8 +5338,7 @@ that existed in previous versions of the TOSCA specification, such that
 these might work as drop-in replacements. Note that our versions here are all
 case-sensitive.
 
-<!-- EDITOR_TAG{"type":"example","id":"s71","action":"start"} -->
-```yaml
+```yaml #s70
 dsl_definitions:
   iso-prefixes: &ISO80000
     "": 1
@@ -5989,7 +5395,6 @@ data_types:
       d:  86400
     validation: { $greater_or_equal: [ $value, 0.0 ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s71","action":"end"} -->
 
 #### 9.1.2.3 `version` <a name=version></a>
 
@@ -6056,8 +5461,7 @@ comparison as follows:
 
 The following are examples of valid TOSCA version strings:
 
-<!-- EDITOR_TAG{"type":"example","id":"s72","action":"start"} -->
-```yaml
+```yaml #s71
 # basic version strings
 "6.1"
 2.0.1
@@ -6068,7 +5472,6 @@ The following are examples of valid TOSCA version strings:
 # version string with optional qualifier and build version
 1.0.0.alpha-10
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s72","action":"end"} -->
 
 ### 9.1.3 Collection Types <a name=collection-types></a>
 
@@ -6081,11 +5484,12 @@ configured using the `list` data type.
 
 Note that all entries in a list must be of the same type. The type
 (for simple entries) or schema (for complex entries) is defined by the
-mandatory entry_schema attribute of the respective [property
-definition](#schema-definition), [attribute
-definitions](#attribute-definition), or input or output [parameter
-definitions](#parameter-definition).  Schema definitions can be
-arbitrarily complex (they may themselves define a list).
+mandatory entry_schema attribute of the respective
+[property definition](#_Schema_Definition),
+[attribute definitions](#to-implement-this-throughout-the-specification.-default-can-have-also-value_expression-i-think-we-might-need-also-an-attribute-value_expresssion-keyname-that-allows-to-define-an-attribute-as-a-function-of-a-different-attribute-of-the-same-entity-that-we-can-define-when-creating-noderelationship-types-even-before-template-design-time.attribute-definition),
+or input or output [parameter definitions](#parameter-definition).
+Schema definitions can be arbitrarily complex (they may themselves
+define a list).
 
 TOSCA list values are represented as YAML sequences. They support the
 square bracket notation as follows:
@@ -6110,29 +5514,24 @@ have the following meaning:
 The following example shows a list assignment using the square bracket
 notation:
 
-<!-- EDITOR_TAG{"type":"example","id":"s73","action":"start"} -->
-```yaml
+```yaml #s72
 listen-ports: [ 80, 8080 ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s73","action":"end"} -->
 
 The following example shows the same list assignment using the
 bulleted list notation:
 
-<!-- EDITOR_TAG{"type":"example","id":"s74","action":"start"} -->
-```yaml
+```yaml #s73
 listen-ports:
 - 80
 - 8080
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s74","action":"end"} -->
 
 The following example shows a list declaration with an entry schema
 based upon a simple integer type (which has an additional validation
 clause):
 
-<!-- EDITOR_TAG{"type":"example","id":"s75","action":"start"} -->
-```yaml
+```yaml #s74
 <some_entity>:
   ...
   properties:  
@@ -6143,13 +5542,11 @@ clause):
         type: integer
         validation: { $less_or_equal: [ $value, 128 ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s75","action":"end"} -->
 
 The following example shows a list declaration with an entry schema
 based upon a complex type:
 
-<!-- EDITOR_TAG{"type":"example","id":"s76","action":"start"} -->
-```yaml
+```yaml #s75
 <some_entity>:
   ...
   properties:  
@@ -6159,7 +5556,6 @@ based upon a complex type:
         description: Product information entry (complex type) defined elsewhere
         type: ProductInfo
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s76","action":"end"} -->
 
 #### 9.1.3.2 `map` <a name=map></a>
 
@@ -6207,32 +5603,27 @@ have the following meaning:
 The following example shows the single-line option which is useful
 for only short maps with simple entries:
 
-<!-- EDITOR_TAG{"type":"example","id":"s77","action":"start"} -->
-```yaml
+```yaml #s76
 # notation option for shorter maps
 user-name-to-id: { user1: 1001, user2: 1002 }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s77","action":"end"} -->
 
 The next example shows the multi-line option where each map entry is
 on a separate line; this option is typically useful or more readable
 if there is a large number of entries, or if the entries are complex.
 
-<!-- EDITOR_TAG{"type":"example","id":"s78","action":"start"} -->
-```yaml
+```yaml #s77
 # notation for longer maps
 user-name-to-id:
   user1: 1001
   user2: 1002
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s78","action":"end"} -->
 
 The following example shows a declaration of a property of type map
 with an entry schema definition based upon the built-in string type
 (which has an additional validation clause):
 
-<!-- EDITOR_TAG{"type":"example","id":"s79","action":"start"} -->
-```yaml
+```yaml #s78
 <some_entity>:
   ...
   properties:  
@@ -6243,13 +5634,11 @@ with an entry schema definition based upon the built-in string type
         type: string
         validation: { $less_or_equal: [ $value, 128 ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s79","action":"end"} -->
 
 The next example shows a map with an entry schema definition for
 contact information:
 
-<!-- EDITOR_TAG{"type":"example","id":"s80","action":"start"} -->
-```yaml
+```yaml #s79
 <some_entity>:
   ...
   properties:  
@@ -6259,7 +5648,6 @@ contact information:
         description: simple contact information
         type: ContactInfo
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s80","action":"end"} -->
 
 ## 9.2 Data Type <a name=data-type></a>
 
@@ -6358,18 +5746,15 @@ During data type derivation the keyname definitions follow these rules:
 The following code snippet shows an example data type definition that
 derives from the built-in "string" type:
 
-<!-- EDITOR_TAG{"type":"example","id":"s81","action":"start"} -->
-```yaml
+```yaml #s80
 ShortString:
   derived_from: string
   validation: { $less_or_equal: [ $value, 16 ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s81","action":"end"} -->
 
 The next example defines a complex data type that represents a phone number:
 
-<!-- EDITOR_TAG{"type":"example","id":"s82","action":"start"} -->
-```yaml
+```yaml #s81
 PhoneNumber:
   properties:
     country-code:
@@ -6379,13 +5764,11 @@ PhoneNumber:
     number:
       type: integer
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s82","action":"end"} -->
 
 The following example shows a complex data type that derives from and
 extends a previously defined complex data type:
 
-<!-- EDITOR_TAG{"type":"example","id":"s83","action":"start"} -->
-```yaml
+```yaml #s82
 ExtendPhoneNumber:
   derived_from: PhoneNumber
   properties:
@@ -6393,9 +5776,8 @@ ExtendPhoneNumber:
       type: string
       validation: { $less_or_equal: [ $value, 128 ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s83","action":"end"} -->
 
-## 9.3 Schema Definition <a name=schema-definition></a>
+## 9.3 Schema Definition <a name=schema-def></a>
 
 All entries in a `list` or `map` for one property or parameter must be of
 the same type. Similarly, all keys for map entries for one property or
@@ -6488,7 +5870,7 @@ the containing entity type is derived:
 - `entry_schema`: may be refined (recursively) according to schema
   refinement rules.
 
-## 9.4 Property Definition <a name=property-definition></a>
+## 9.3 Property Definition <a name=property-def></a>
 
 A *property definition* defines a named, typed value and related data
 that can be associated with an entity defined in this specification
@@ -6631,8 +6013,7 @@ definitions together:
 The following code snippet shows an example property definition with a
 validation clause:
 
-<!-- EDITOR_TAG{"type":"example","id":"s84","action":"start"} -->
-```yaml
+```yaml #s83
 properties:
   num-cpus:
     type: integer
@@ -6641,13 +6022,11 @@ properties:
     required: true
     validation: { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s84","action":"end"} -->
 
 The following shows an example of a property refinement. Consider the
 definition of an Endpoint capability type:
 
-<!-- EDITOR_TAG{"type":"example","id":"s85","action":"start"} -->
-```yaml
+```yaml #s84
 Endpoint:
   properties:
     protocol:
@@ -6662,23 +6041,20 @@ Endpoint:
       required: false
       default: false
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s85","action":"end"} -->
 
 The "Endpoint.Admin" capability type refines the secure property of the
 "Endpoint" capability type from which it derives by forcing its value to
 always be true:
 
-<!-- EDITOR_TAG{"type":"example","id":"s86","action":"start"} -->
-```yaml
+```yaml #s85
 Endpoint.Admin:
   derived_from: Endpoint
   # Change Endpoint secure indicator to true from its default of false
   properties:
     secure: true
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s86","action":"end"} -->
 
-## 9.5 Property Assignment <a name=property-assignment></a>
+## 9.4 Property Assignment <a name=property-assignment></a>
 
 A *property assignment* is used to assign a value to a property within a
 TOSCA template. A TOSCA property assignment has no keynames. Property
@@ -6715,7 +6091,7 @@ The following requirements apply:
 - A non-required property that is not assigned stays undefined, thus
   the `default` keyname is irrelevant for a non-required property.
 
-## 9.6 Attribute Definition <a name=attribute-definition></a>
+## 9.5 Attribute Definition <a name=attribute-def></a>
 
 An *attribute definition* defines a named, typed value that can be
 associated with an entity defined in this specification (e.g., a node,
@@ -6830,15 +6206,13 @@ following refinement rules when the containing entity type is derived:
 
 The following represents a mandatory attribute definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s87","action":"start"} -->
-```yaml
+```yaml #s86
 actual_cpus:
   type: integer
   description: Actual number of CPUs allocated to the node instance.
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s87","action":"end"} -->
 
-## 9.7 Attribute Assignment <a name=attribute-assignment></a>
+## 9.6 Attribute Assignment <a name=attribute-assignment></a>
 
 An attribute assignment is used to assign a value to an attribute
 within a TOSCA template.  A TOSCA attribute assignment has no
@@ -6866,7 +6240,7 @@ Note that attributes that are the target of a parameter mapping
 assignment cannot also be assigned a value using an attribute
 assignment.
 
-## 9.8 Parameter Definition <a name=parameter-definition></a>
+## 9.7 Parameter Definition <a name=parameter-def></a>
 
 A *parameter definition* defines a named, typed value and related data that
 may be used to exchange values between the TOSCA orchestrator and the
@@ -7075,27 +6449,23 @@ the containing entity type is derived:
 The following represents an example of an input parameter definition
 with a validation clause:
 
-<!-- EDITOR_TAG{"type":"example","id":"s88","action":"start"} -->
-```yaml
+```yaml #s87
 inputs:
   cpus:
     type: integer
     description: Number of CPUs for the server.
     validation: { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s88","action":"end"} -->
 
 The following represents an example of an (untyped) output parameter
 definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s89","action":"start"} -->
-```yaml
+```yaml #s88
 outputs:
   server-ip:
     description: The private IP address of the provisioned server.
     value: { $get_attribute: [ my-server, private-address ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s89","action":"end"} -->
 
 ## 9.8 Parameter Value Assignment <a name=parameter-value-assignment></a>
 
@@ -7134,7 +6504,7 @@ The following requirements apply:
   undefined, thus the `default` keyname is irrelevant for a non-required
   parameter.
 
-## 9.10 Parameter Mapping Assignment <a name=parameter-mapping-assignment></a>
+## 9.9 Parameter Mapping Assignment <a name=parameter-mapping-assignment></a>
 
 A *parameter mapping assignment* is used to define the mapping of an
 *incoming* parameter value (e.g. an output value that is expected to
@@ -7191,7 +6561,7 @@ Note that parameters that have a mapping defined during their
 definition or during a subsequent refinement may not be assigned (as
 their mapping is already set).
 
-## 9.11 Validation Clause <a name=validation-clause></a>
+## 9.10 Validation Clause <a name=validation-clause></a>
 
 A *validation clause* is a Boolean expression that must evaluate to True
 if the value for the entity it references is considered valid.
@@ -7218,8 +6588,7 @@ The following shows an example of validation clauses used in data type
 definitions. They also illustrate the various alternatives for the
 `$value` function syntax:
 
-<!-- EDITOR_TAG{"type":"example","id":"s90","action":"start"} -->
-```yaml
+```yaml #s89
 data_types:
   # Full function syntax for the $value function
   Count1:
@@ -7241,13 +6610,11 @@ data_types:
     validation:
       $greater_or_equal: [ { $value: [ high ] }, { $value: [ low ] } ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s90","action":"end"} -->
 
 The following shows an example of validation clauses used in property
 definitions:
 
-<!-- EDITOR_TAG{"type":"example","id":"s91","action":"start"} -->
-```yaml
+```yaml #s90
 node_types:
   Scalable:
     properties:
@@ -7272,7 +6639,6 @@ node_types:
             - $get_property: [ SELF, maximum-instances ]
         required: false
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s91","action":"end"} -->
 
 # 10 TOSCA Functions <a name=tosca-functions></a>
 
@@ -7320,14 +6686,12 @@ second \$ character. For example, the following is a valid map where the
 function "keygen" is called three times and the returned values are used
 as keys in the hint map:
 
-<!-- EDITOR_TAG{"type":"example","id":"s92","action":"start"} -->
-```yaml
+```yaml #s91
 hint:
   { $keygen: [ UUID ] }: 34
   { $keygen$1: [ UUID ] }: 56
   { $keygen$2: [ UUID ] }: 78
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s92","action":"end"} -->
 
 TOSCA functions may be used wherever a value is expected, such as:
 
@@ -7346,36 +6710,30 @@ on the provided function arguments.
 The following snippet shows an example of a node template that uses a
 function to retrieve a security context at runtime:
 
-<!-- EDITOR_TAG{"type":"example","id":"s93","action":"start"} -->
-```yaml
+```yaml #s92
 properties:
   context: { $get_security_context: { env: staging, role: admin } }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s93","action":"end"} -->
 
 Nested functions are supported, that is, functions can be used in the
 arguments of another function. The result of the internal function will
 be passed as an argument to the outer function:
 
-<!-- EDITOR_TAG{"type":"example","id":"s94","action":"start"} -->
-```yaml
+```yaml #s93
 properties:
   nested: { $outer_func: [ { $inner_func: [ iarg1, iarg2 ] }, oarg2 ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s94","action":"end"} -->
 
 The following snippet shows escaped strings in a map that
 do not represent function calls:
 
-<!-- EDITOR_TAG{"type":"example","id":"s95","action":"start"} -->
-```yaml
+```yaml #s94
 properties:
   prop1:
    $$myid1: myval1
    myid2: $$myval2
    $$myid3: $$myval3
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s95","action":"end"} -->
 
 The arguments to the functions can be arbitrary TOSCA data, although
 TOSCA defines a number of built-in functions that define
@@ -7418,11 +6776,9 @@ $get_input: <input_parameter_name>
 
 or
 
-<!-- EDITOR_TAG{"type":"example","id":"s96","action":"start"} -->
-```yaml
+```yaml #s95
 $get_input: [ <input_parameter_name>, <nested_input_parameter_name_or_index_1>, <nested_input_parameter_name_or_index_2>, ... ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s96","action":"end"} -->
 
 Note that the signature shown in the first grammar does not conform to
 the custom function definition, but it does not have to as it is a
@@ -7438,8 +6794,7 @@ table:
 
 The following snippet shows an example of the simple `$get_input` grammar:
 
-<!-- EDITOR_TAG{"type":"example","id":"s97","action":"start"} -->
-```yaml
+```yaml #s96
 inputs:
   cpus:
     type: integer
@@ -7452,15 +6807,13 @@ node_templates:
         properties:
           num-cpus: { $get_input: cpus }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s97","action":"end"} -->
 
 The following template shows an example of the nested get_input grammar.
 The template expects two input values, each of which has a complex data
 type. The get_input function is used to retrieve individual fields from
 the complex input data.
 
-<!-- EDITOR_TAG{"type":"example","id":"s98","action":"start"} -->
-```yaml
+```yaml #s97
 data_types:
   NetworkInfo:
     properties:
@@ -7498,7 +6851,6 @@ service_template:
             capability: VirtualBind
         - mgmt-net: mgmt-net
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s98","action":"end"} -->
 
 #### 10.2.1.2 `$get_property` <a name=get_property></a>
 
@@ -7529,8 +6881,7 @@ following table:
 The following example shows how to use the get_property function with an
 actual node template name:
 
-<!-- EDITOR_TAG{"type":"example","id":"s99","action":"start"} -->
-```yaml
+```yaml #s98
 node_templates:
   mysql-database:
     type: Database
@@ -7546,13 +6897,11 @@ node_templates:
           inputs:
             wp-db-name: { $get_property: [ mysql-database, name ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s99","action":"end"} -->
 
 The following example shows how to use the `$get_property` function
 traversing from the relationship to its target node:
 
-<!-- EDITOR_TAG{"type":"example","id":"s100","action":"start"} -->
-```yaml
+```yaml #s99
 relationship_templates:
   my-connection:
     type: ConnectsTo
@@ -7561,7 +6910,6 @@ relationship_templates:
         inputs: 
           targets_value: { $get_property: [ SELF, TARGET, value ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s100","action":"end"} -->
 
 The following example shows how to use the get_property function using
 the "SELF" value, and traversing from a wordpress node (via the first
@@ -7569,8 +6917,7 @@ relationship of the database_endpoint requirement to the target
 capability in the target node) and accessing the port property of that
 capability:
 
-<!-- EDITOR_TAG{"type":"example","id":"s101","action":"start"} -->
-```yaml
+```yaml #s100
 node_templates:  
   mysql-database:
     type: Database
@@ -7601,15 +6948,13 @@ wordpress:
                - CAPABILITY
                - port
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s101","action":"end"} -->
 
 The following example shows how to use the `$get_property` function to
 traverse over two requirement relationships, from the "wordpress" node to
 its database node and further to its "DBMS" host to get its
 "admin-credential" property:
 
-<!-- EDITOR_TAG{"type":"example","id":"s102","action":"start"} -->
-```yaml
+```yaml #s101
 node_templates:  
   mysql-database:
     type: Database
@@ -7642,7 +6987,6 @@ node_templates:
               - TARGET
               - admin_credential
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s102","action":"end"} -->
 
 #### 10.2.1.3 `$get_attribute` <a name=get_attribute></a>
 
@@ -7672,7 +7016,7 @@ The `$get_attribute` function is used in the same way as the equivalent
 `$get_property` functions described above. Please see their examples and
 replace `$get_property` with the `$get_attribute` function name.
 
-#### 10.2.1.4 `$get_artifact` <a name=get_artifact></a>
+#### 10.2.1.4 get_artifact <a name=get_artifact></a>
 
 The `$get_artifact` function is used to retrieve the location of
 artifacts defined by modelable entities in a service template. It uses
@@ -7694,8 +7038,7 @@ The following example uses a snippet of a WordPress
 [\[WordPress\]](#CIT_WORDPRESS) web application to show how to use the
 get_artifact function with an actual node template name:
 
-<!-- EDITOR_TAG{"type":"example","id":"s103","action":"start"} -->
-```yaml
+```yaml #s102
 node_templates:
   wordpress:
     type: WordPress
@@ -7710,7 +7053,6 @@ node_templates:
     artifacts:
       zip: /data/wordpress.zip
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s103","action":"end"} -->
 
 In such implementation the TOSCA orchestrator may provide the
 "wordpress.zip" archive as
@@ -7739,7 +7081,7 @@ It takes the arguments shown in the following table:
 | ----- | ------- | ----- | ----- | 
 |`<nested_value_name_or_index>`|no|seq of strs or ints|Some TOSCA data are complex (i.e., composed as nested structures).  These parameters are used to dereference into the names of these nested structures when needed. Some data represent lists. In these cases, an index may be provided to reference a specific entry in the list (as identified by the previous parameter) to return. |
 
-#### 10.2.1.6 `$node_index` <a name=node_index></a>
+#### 10.2.1.6 node_index <a name=node_index></a>
 
 This function is used to return the runtime index of the current node 
 representation in the list of node representations created from the same 
@@ -7791,8 +7133,7 @@ following table:
 
 Usage example:
 
-<!-- EDITOR_TAG{"type":"example","id":"s104","action":"start"} -->
-```yaml
+```yaml #s103
 service_template:
   node_templates:
     my-node:
@@ -7806,7 +7147,6 @@ service_template:
           - $available_allocation: [ SELF, CAPABILITY, host, mem-size ]
           - 256 MB
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s104","action":"end"} -->
                   
 ### 10.2.2 Boolean Functions <a name=boolean-functions></a>
 
@@ -7846,7 +7186,7 @@ Note that the evaluation of the arguments in the `$or` function may stop
 as soon as a true argument is encountered, and the function may return
 immediately without evaluating the rest of the arguments.
 
-##### 10.2.2.1.3 `$not` <a name=not></a>
+##### 10.2.2.1.3 not <a name=not></a>
 
 The `$not` function takes one Boolean argument. It evaluates to true if
 its argument evaluates to false and evaluates to false if its argument
@@ -7972,7 +7312,7 @@ expressions and reference an appropriate standardized grammar.
 Note also that if ones means that the whole string is to be matched, the
 regular expression must start with a caret `^` and end with a `$`.
 
-#### 10.2.2.3 Boolean List, Map and String Functions <a name=boolean-list-map-and-string-functions></a>
+#### 10.2.2.3 Boolean List, Map and String Functions <a name=boolean-list,-map-and-string-functions></a>
 
 ##### 10.2.2.3.1 `$has_suffix` <a name=has_suffix></a>
 
@@ -8120,8 +7460,7 @@ $concat: [<string_or_list_type_arg1>, ... ]
 
 The following code snippet shows an example of a `$concat` function:
 
-<!-- EDITOR_TAG{"type":"example","id":"s105","action":"start"} -->
-```yaml
+```yaml #s104
 outputs:
   description: Concatenate the URL for a server from other template values
   server-url:
@@ -8130,7 +7469,6 @@ outputs:
                      ':', 
                      $get_attribute: [ server, port ] ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s105","action":"end"} -->
 
 #### 10.2.3.3 `$join` <a name=join></a>
 
@@ -8154,8 +7492,7 @@ Argument|Mandatory|Type|Description
 
 The following code snippet shows example `$join` functions:
 
-<!-- EDITOR_TAG{"type":"example","id":"s106","action":"start"} -->
-```yaml
+```yaml #s105
 outputs:
   example1:
     # Result: prefix_1111_suffix
@@ -8164,7 +7501,6 @@ outputs:
     # Result: 9.12.1.10,9.12.1.20
     value: { $join: [ { $get_input: my-ips }, "," ] } 
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s106","action":"end"} -->
 
 #### 10.2.3.4 `$token` <a name=token></a>
 
@@ -8187,14 +7523,12 @@ Argument|Mandatory|Type|Description
 
 The following code snippet shows an example use of the `$token` function:
 
-<!-- EDITOR_TAG{"type":"example","id":"s107","action":"start"} -->
-```yaml
+```yaml #s106
 outputs:
   webserver_port:
     description: the port provided at the end of my server's endpoint's IP address
     value: { $token: [ $get_attribute: [ my-server, data-endpoint, ip-address ], ":", 1 ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s107","action":"end"} -->
 
 ### 10.2.4 Set Functions <a name=set-functions></a>
 
@@ -8570,12 +7904,10 @@ The functions section can be defined both outside and/or inside a
   - Note that in that case the `$` (dollar sign) character will be put in
     front of the namespace name. For example:
 
-<!-- EDITOR_TAG{"type":"example","id":"s108","action":"start"} -->
-```yaml
+```yaml #s107
 properties:
   rnd-nr: { $namespace1:random_generator: [ seed ] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s108","action":"end"} -->
 
 - Function definitions inside a service_template that have the
   same `<function_name>` are considered a refinement of the homonymous
@@ -8620,8 +7952,7 @@ refinement rules:
 
 The following example shows the definition of a square root function:
 
-<!-- EDITOR_TAG{"type":"example","id":"s109","action":"start"} -->
-```yaml
+```yaml #s108
 functions:
   sqrt:
     signatures:
@@ -8642,13 +7973,11 @@ functions:
       the argument is either integer or float and the function
       returns the square root as a float.
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s109","action":"end"} -->
 
 The next `$sqrt` is similar to above, but uses a simplified type notation
 (in this short form no validation clause can be expressed):
 
-<!-- EDITOR_TAG{"type":"example","id":"s110","action":"start"} -->
-```yaml
+```yaml #s109
 functions:
   sqrt:
     signatures:
@@ -8663,13 +7992,11 @@ functions:
       the argument is either integer or float and the function
       returns the suare root as a float
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s110","action":"end"} -->
 
 The following example shows a function that takes a list of arguments
 with different types:
 
-<!-- EDITOR_TAG{"type":"example","id":"s111","action":"start"} -->
-```yaml
+```yaml #s110
 functions:
   my_func_with_different_argument_types:
     signatures:
@@ -8687,13 +8014,11 @@ functions:
         type: MyTypeRez
       implementation: scripts/my.py
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s111","action":"end"} -->
 
 The following snippet defines the same function as the example above,
 but in compact notation:
 
-<!-- EDITOR_TAG{"type":"example","id":"s112","action":"start"} -->
-```yaml
+```yaml #s111
 functions:
   my_func_with_different_argument_types:
     signatures:
@@ -8702,26 +8027,22 @@ functions:
       result: MyTypeRez
     implementation: scripts/my.py
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s112","action":"end"} -->
 
 The arguments list can be empty or completely missing. In such a case,
 when using the function the arguments will be an empty list:
 
-<!-- EDITOR_TAG{"type":"example","id":"s113","action":"start"} -->
-```yaml
+```yaml #s112
 functions:
   get_random_nr:
     signatures:
     - result: float
       implementation: scripts/myrnd.py
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s113","action":"end"} -->
 
 The following shows function signatures with polymorphic arguments and
 result lists:
 
-<!-- EDITOR_TAG{"type":"example","id":"s114","action":"start"} -->
-```yaml
+```yaml #s113
 functions:
   union:
     signatures:
@@ -8742,13 +8063,11 @@ functions:
         entry_schema: float
       implementation: scripts/libpi.py
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s114","action":"end"} -->
 
 The following shows the use of an argument that is a map of lists of
 MyType:
 
-<!-- EDITOR_TAG{"type":"example","id":"s115","action":"start"} -->
-```yaml
+```yaml #s114
 functions:
   complex_arg_function:
     signatures:
@@ -8761,7 +8080,6 @@ functions:
         result: string
         implementation: scripts/complex.py
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s115","action":"end"} -->
 
 The following shows more examples of function usage. Note that in the
 usage of the polymorphic union function, the TOSCA parser knows to
@@ -8769,14 +8087,12 @@ identify the right signature via the types of the function arguments.
 Also note the usage of a user-defined function with no parameters; an
 empty list is used for the arguments.
 
-<!-- EDITOR_TAG{"type":"example","id":"s116","action":"start"} -->
-```yaml
+```yaml #s115
 properties:
   integer_union: { $union: [ [1, 7], [3, 4, 9], [15, 16] ] }
   float_union: { $union: [ [3.5, 8.8], [1.3] ] }
   rnd: { $get_random_nr: [] }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s116","action":"end"} -->
 
 # 11 Interfaces, Operations, and Notifications <a name=interfaces-operations-and-notifications></a>
 
@@ -8868,8 +8184,7 @@ implementations for defined operations or notifications; that is, the
 The following example shows a custom interface used to define multiple
 configure operations.
 
-<!-- EDITOR_TAG{"type":"example","id":"s117","action":"start"} -->
-```yaml
+```yaml #s116
 MyConfigure:
   description: My custom configure interface type
   inputs:
@@ -8881,9 +8196,8 @@ MyConfigure:
     post-configure-service:
       description: post-configure operation for my service
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s117","action":"end"} -->
 
-## 11.2 Interface Definition <a name=interface-definition></a>
+## 11.2 Interface Definition <a name=interface-def></a>
 
 An *interface definition* defines an interface (containing operations
 and notifications definitions) that can be associated with
@@ -9036,7 +8350,7 @@ have the following meaning:
 - `<notification_assignment_*>`: represents the optional map of notification
   assignments for notifications defined in the interface definition.
 
-## 11.4 Operation Definition <a name=operation-definition></a>
+## 11.4 Operation Definition <a name=operation-def></a>
 
 An *operation definition* defines a function or procedure to which an
 operation implementation can be bound.
@@ -9150,8 +8464,7 @@ The following additional requirements apply:
 
 The following code snippet shows an example operation definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s118","action":"start"} -->
-```yaml
+```yaml #s117
 interfaces:
   configure:
     pre-configure-source:
@@ -9165,12 +8478,10 @@ interfaces:
           type : Bash
           repository : my_service_catalog
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s118","action":"end"} -->
 
 The next example shows single-line grammar for the operation implementation:
 
-<!-- EDITOR_TAG{"type":"example","id":"s119","action":"start"} -->
-```yaml
+```yaml #s118
 interfaces:
   configure:
     pre-configure-source:
@@ -9181,18 +8492,15 @@ interfaces:
         - binaries/library.rpm
         - scripts/register.py
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s119","action":"end"} -->
 
 The following code snippet shows an example of the single-line grammar
 for the entire operation definitions:
 
-<!-- EDITOR_TAG{"type":"example","id":"s120","action":"start"} -->
-```yaml
+```yaml #s119
 interfaces:
   standard:
     start: scripts/start_server.sh
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s120","action":"end"} -->
 
 ## 11.5 Operation Assignment <a name=operation-assignment></a>
 
@@ -9293,7 +8601,7 @@ The following additional requirements apply:
   file itself when packaged within a TOSCA Cloud Service Archive (CSAR)
   file.
 
-## 11.6 Notification Definition <a name=notification-definition></a>
+## 11.6 Notification Definition <a name=notification-def></a>
 
 A *notification definition* defines an asynchronous notification or
 incoming message that can be associated with an interface. The
@@ -9661,8 +8969,7 @@ rules:
 
 The following shows an example artifact type definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s121","action":"start"} -->
-```yaml
+```yaml #s120
 JavaArchive:
   description: Java Archive artifact type
   mime_type: application/java-archive
@@ -9677,7 +8984,6 @@ JavaArchive:
       type: string
       required: false
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s121","action":"end"} -->
 
 Information about artifacts can be broadly classified in two categories
 that serve different purposes:
@@ -9693,7 +8999,7 @@ that serve different purposes:
   to assist with proper processing of the artifact. These informational
   elements are described through artifact properties.
 
-## 12.2 Artifact Definition <a name=artifact-definition></a>
+## 12.2 Artifact Definition <a name=artifact-def></a>
 
 An *artifact definition* defines a named, typed file that can be
 associated with a node type or node template and used by a TOSCA
@@ -9777,8 +9083,7 @@ redefined.
 The following example represents an artifact definition with property
 assignments:
 
-<!-- EDITOR_TAG{"type":"example","id":"s122","action":"start"} -->
-```yaml
+```yaml #s121
 artifacts:
   sw-image:
     description: Image for virtual machine
@@ -9794,7 +9099,6 @@ artifacts:
       min-disk: 1 GB
       size: 649 MB
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s122","action":"end"} -->
 
 # 13 Workflows <a name=workflows></a>
 
@@ -9871,14 +9175,14 @@ have the following meaning:
   implementations (i.e. artifacts) and associated mappings that specify
   the attribute into which this output value must be stored.
 
-### 13.2.1 Workflow Precondition Definition <a name=workflow-precondition-definition></a>
+### 13.2.1 Workflow Precondition Definition <a name=workflow-precondition-def></a>
 
 A *workflow precondition* defines a condition clause that checks if a
 workflow can be processed or not based on the state of the instances of
 a TOSCA service deployment. If the condition is not met, the workflow
 will not be triggered.
 
-### 13.2.2 Workflow Step Definition <a name=workflow-step-definition></a>
+### 13.2.2 Workflow Step Definition <a name=workflow-step-def></a>
 
 A *workflow step* allows to define one or multiple sequenced activities in
 a workflow and how they are connected to other steps in the workflow.
@@ -9933,7 +9237,7 @@ have the following meaning:
 - `<target_step_name>`: represents the name of another step of the
   workflow.
 
-### 13.2.3 Activity Definition <a name=activity-definition></a>
+### 13.2.3 Activity Definition <a name=activity-def></a>
 
 An *activity* defines an operation to be performed in a TOSCA workflow
 step or in an action body of a policy trigger. Activity definitions can
@@ -9964,7 +9268,7 @@ be of the following types:
     reusability). The definition includes the name of a workflow to be
     inlined and optional workflow input assignments.
 
-#### 13.2.3.1 Delegate Workflow Activity Definition <a name=delegate-workflow-activity-definition></a>
+#### 13.2.3.1 Delegate Workflow Activity Definition <a name=delegate-workflow-activity-def></a>
 
 The following is a list of recognized keynames for a *delegate activity
 definition*.
@@ -10003,7 +9307,7 @@ have the following meaning:
   assignments for passing parameters as inputs to this workflow
   delegation.
 
-#### 13.2.3.2 Set State Activity Definition <a name=set-state-activity-definition></a>
+#### 13.2.3.2 Set State Activity Definition <a name=set-state-activity-def></a>
 
 This activity sets the state of the target node.
 
@@ -10026,7 +9330,7 @@ have the following meaning:
 - `<new_node_state>`: represents the state that will be affected to the node
   once the activity is performed.
 
-#### 13.2.3.3 Call Operation Activity Definition <a name=call-operation-activity-definition></a>
+#### 13.2.3.3 Call Operation Activity Definition <a name=call-operation-activity-def></a>
 
 This activity is used to call an operation on the target node. Operation
 input assignments can be optionally provided.
@@ -10071,7 +9375,7 @@ have the following meaning:
   assignments for passing parameters as inputs to this workflow
   delegation.
 
-#### 13.2.3.4 Inline Workflow Activity Definition <a name=inline-workflow-activity-definition></a>
+#### 13.2.3.4 Inline Workflow Activity Definition <a name=inline-workflow-activity-def></a>
 
 This activity is used to inline a workflow in the activities sequence.
 The definition includes the name of the inlined workflow and optional
@@ -10116,14 +9420,12 @@ have the following meaning:
 The following represents a list of activity definitions (using the short
 notation):
 
-<!-- EDITOR_TAG{"type":"example","id":"s123","action":"start"} -->
-```yaml
+```yaml #s122
 - delegate: deploy
 - set_state: started
 - call_operation: standard.start
 - inline: my-workflow
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s123","action":"end"} -->
 
 # 14 Creating Multiple Representations from Templates <a name=creating-multiple-representations-from-templates></a>
 
@@ -10185,8 +9487,7 @@ flowchart
 The following code snippet shows a possible TOSCA service template from which
 this service could be deployed:
 
-<!-- EDITOR_TAG{"type":"example","id":"s124","action":"start"} -->
-```yaml
+```yaml #s123
 tosca_definitions_version: tosca_2_0
 description: Template for deploying SD-WAN with three sites.
 
@@ -10224,7 +9525,6 @@ node_templates:
     requirements:
     - vpn: sdwan
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s124","action":"end"} -->
 
 As defined here, this template can only be used to deploy an SD-WAN
 with three sites. To deploy a different number of sites, additional
@@ -10264,8 +9564,7 @@ flowchart
 An implementation of such a service template is shown in the following
 code snippet:
 
-<!-- EDITOR_TAG{"type":"example","id":"s125","action":"start"} -->
-```yaml
+```yaml #s124
 tosca_definitions_version: tosca_2_0
 description: Template for deploying SD-WAN with a variable number of sites.
 
@@ -10284,7 +9583,6 @@ service_template:
       requirements:
       - vpn: sdwan
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s125","action":"end"} -->
 
 ## 14.2 Node-Specific Input Values <a name=node-specific-input-values></a>
 
@@ -10312,8 +9610,7 @@ The following service template shows how the `$node_index` function is
 used to retrieve specific values from a list of input values in a
 service template:
 
-<!-- EDITOR_TAG{"type":"example","id":"s126","action":"start"} -->
-```yaml
+```yaml #s125
 tosca_definitions_version: tosca_2_0
 description: Template for deploying SD-WAN with a variable number of sites.
 
@@ -10337,7 +9634,6 @@ service_template:
       requirements:
       - vpn: sdwan
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s126","action":"end"} -->
 
 ## 14.3 Cardinality of Relationships <a name=cardinality-of-relationships></a>
 
@@ -10377,8 +9673,7 @@ flowchart LR
 This scenario is supported using existing relationship syntax as
 shown in the following code snippet:
 
-<!-- EDITOR_TAG{"type":"example","id":"s127","action":"start"} -->
-```yaml
+```yaml #s126
 service_template:
   inputs:
     number-of-left:
@@ -10394,7 +9689,6 @@ service_template:
       requirements:
       - uses: right
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s127","action":"end"} -->
 
 This template specifies that all four node representations created
 from the "left" node template must use the one node representation
@@ -10429,8 +9723,7 @@ easily be accommodated using existing TOSCA grammar, as long as the
 requirement in the single node specifies the appropriate `count`
 value. This is shown in the following code snippet:
 
-<!-- EDITOR_TAG{"type":"example","id":"s128","action":"start"} -->
-```yaml
+```yaml #s127
 service_template:
   inputs:
     number-of-right:
@@ -10448,7 +9741,6 @@ service_template:
           node: right
           count: { $get_input: number-of-right }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s128","action":"end"} -->
 
 In this example, a total number of `count` relationships will be
 created from the single "left" node to the group of "right" nodes. The
@@ -10492,8 +9784,7 @@ the number of nodes on the right side is 1.
 As before, the full mesh scenario can easily be defined using existing
 requirement syntax as shown in the following code snippet:
 
-<!-- EDITOR_TAG{"type":"example","id":"s129","action":"start"} -->
-```yaml
+```yaml #s128
 service_template:
   inputs:
     number-of-left:
@@ -10514,7 +9805,6 @@ service_template:
           node: right
           count: { $get_input: number-of-right }
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s129","action":"end"} -->
 
 ### 14.3.4 Matched Pairs <a name=matched-pairs></a>
 
@@ -10570,8 +9860,7 @@ its source node. This following code snippet shows requirement
 definition grammar that uses the `$node_index` function to uniquely 
 identify target nodes:
 
-<!-- EDITOR_TAG{"type":"example","id":"s130","action":"start"} -->
-```yaml
+```yaml #s129
 service_template:
   inputs:
     number-of-nodes:
@@ -10588,7 +9877,6 @@ service_template:
       requirements:
       - uses: [ right, $node_index ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s130","action":"end"} -->
 
 ### 14.3.5 Random Pairs <a name=random-pairs></a>
 
@@ -10623,8 +9911,7 @@ source nodes, as long as each target node is only used once. To make
 sure each target node is only used once, the `allocations` keyname in
 the requirement can be used as shown in the following code snippet:
 
-<!-- EDITOR_TAG{"type":"example","id":"s131","action":"start"} -->
-```yaml
+```yaml #s130
 service_template:
   inputs:
     number-of-nodes:
@@ -10648,7 +9935,6 @@ service_template:
           allocations:
             target-count: 1
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s131","action":"end"} -->
 
 This scenario works as follows:
 
@@ -10703,8 +9989,7 @@ flowchart LR
 
 This pattern can be accomplished using the following code snippet:
 
-<!-- EDITOR_TAG{"type":"example","id":"s132","action":"start"} -->
-```yaml
+```yaml #s131
 service_template:
   node_templates:
     right:
@@ -10725,7 +10010,6 @@ service_template:
           allocations:
             target-count: 1
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s132","action":"end"} -->
 
 The following figure shows a 3:2 pattern:
 
@@ -10763,8 +10047,7 @@ flowchart LR
 
 This pattern can be implemented using the following code snippet:
 
-<!-- EDITOR_TAG{"type":"example","id":"s133","action":"start"} -->
-```yaml
+```yaml #s132
 service_template:
   node_templates:
     right:
@@ -10785,7 +10068,6 @@ service_template:
           allocations:
             target-count: 1
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s133","action":"end"} -->
 
 Finally, there may be scenarios where the multiplicity of the left
 nodes and the multiplicity of the right nodes do not allow clean
@@ -10796,8 +10078,7 @@ on the left than on the right. The following code snippet
 shows a *mismatched pairs* example where the orchestrator may have to
 cycle through the target nodes multiple times:
 
-<!-- EDITOR_TAG{"type":"example","id":"s134","action":"start"} -->
-```yaml
+```yaml #s133
 service_template:
   inputs:
     number-of-right:
@@ -10816,7 +10097,6 @@ service_template:
       requirements:
         - uses: [ right, { $remainder: [ $node_index, { $get_input: number-of-right } ] } ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s134","action":"end"} -->
 
 To allow specific input values to be matched with specific
 relationship representations, each relationship representation is
@@ -11152,11 +10432,11 @@ have the following meaning:
 
 - `<count>`: is the number of assignments of a requirement mapped to the
   same target requirement(s). It can be either a non-negetive integer or
-  the value `UNBOUNDED`, which represents all the remaining assignments.
+  the value "UNBOUNDED", which represents all the remaining assignments.
   Note that mappings with count can interspread mappings without count
   for the same requirement_name, however no other assignment for the
   same requirement_name should not be used after one containing an
-  `UNBOUNDED` count.
+  "UNBOUNDED" count.
 
 The following subsections illustrate this grammar in the context of
 various use cases.
@@ -11168,8 +10448,7 @@ The following example shows a "Client" node type that defines a
 that nodes of type "Client" need exactly two "service" relationships
 to nodes of type "Server".
 
-<!-- EDITOR_TAG{"type":"example","id":"s135","action":"start"} -->
-```yaml
+```yaml #s134
 tosca_definitions_version: tosca_2_0
 
 capability_types:
@@ -11196,7 +10475,6 @@ node_types:
       service:
         type: Service
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s135","action":"end"} -->
 
 This following figure shows a service that consists of one such client
 node connected to two server nodes.
@@ -11215,8 +10493,7 @@ dummy((.)) ~~~  client
 This service can be implemented using the following TOSCA service
 template:
 
-<!-- EDITOR_TAG{"type":"example","id":"s136","action":"start"} -->
-```yaml
+```yaml #s135
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11237,7 +10514,6 @@ service_template:
       - service: server1
       - service: server2
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s136","action":"end"} -->
 
 In this template, the "client" node is annotated with the
 "substitute" directive, which means that a substituting template must
@@ -11272,8 +10548,7 @@ requirements of the two software nodes in the substituting
 template. The substitution mapping code in the following substituting
 service template shows how this is accomplished:
 
-<!-- EDITOR_TAG{"type":"example","id":"s137","action":"start"} -->
-```yaml
+```yaml #s136
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11329,7 +10604,6 @@ service_template:
     compute2:
       type: Compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s137","action":"end"} -->
 
 The following figure shows an alternative substitution where both
 "service" requirements of the substituted "client" node are mapped to
@@ -11361,8 +10635,7 @@ The requirement mapping syntax for this template distributes the two
 same* software node in the substituting template using two identical
 mappings for the two "service" requirements as follows:
 
-<!-- EDITOR_TAG{"type":"example","id":"s138","action":"start"} -->
-```yaml
+```yaml #s137
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11410,7 +10683,6 @@ service_template:
     compute:
       type: Compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s138","action":"end"} -->
 
 As a convenience feature, it is possible to *group* identical mapping
 statements using the syntax in the following example. This syntax
@@ -11418,8 +10690,7 @@ states that two "service" requirements of the substituted node are
 mapped to two corresponding "service" requirements of the "software"
 node in the substituting template.
 
-<!-- EDITOR_TAG{"type":"example","id":"s139","action":"start"} -->
-```yaml
+```yaml #s138
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11466,7 +10737,6 @@ service_template:
     compute:
       type: Compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s139","action":"end"} -->
 
 As a further convenience feature, if all of the requirement assignments
 are mapped to the same target requirement(s) is possible to drop the 
@@ -11474,8 +10744,7 @@ grammar using the count. This syntax states that all "service" requirements
 of the substituted node are mapped to the corresponding "service"
 requirements of the "software" node in the substituting template.
 
-<!-- EDITOR_TAG{"type":"example","id":"s140","action":"start"} -->
-```yaml
+```yaml #s139
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11522,15 +10791,13 @@ service_template:
     compute:
       type: Compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s140","action":"end"} -->
 
 ### 15.5.2 Mapping a Requirement Multiple Times <a name=mapping-a-requirement-multiple-times></a>
 
 Imagine a scenario where nodes of type "Client" need to be hosted on
 nodes of type "Compute" as shown by the following type definitions:
 
-<!-- EDITOR_TAG{"type":"example","id":"s141","action":"start"} -->
-```yaml
+```yaml #s140
 tosca_definitions_version: tosca_2_0
 
 capability_types:
@@ -11557,7 +10824,6 @@ node_types:
       host:
         type: Host
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s141","action":"end"} -->
 
 The following figure shows a service that contains one node of type
 "Client", one node of type "Compute", and the "host" relationship
@@ -11574,8 +10840,7 @@ flowchart RL
 
 This example can be implemented using the following service template:
 
-<!-- EDITOR_TAG{"type":"example","id":"s142","action":"start"} -->
-```yaml
+```yaml #s141
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11592,7 +10857,6 @@ service_template:
       requirements:
       - host: compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s142","action":"end"} -->
 
 The following figure shows a substituting topology that *decomposes*
 the node of type "Client" into two software components, each of which
@@ -11623,8 +10887,7 @@ accomplished by mapping the "host" requirement of the "client" node
 twice, once to the "host" requirement of the "software1" node and once
 to the "host" requirement of the "software2" node.
 
-<!-- EDITOR_TAG{"type":"example","id":"s143","action":"start"} -->
-```yaml
+```yaml #s142
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11653,7 +10916,6 @@ service_template:
     software2:
       type: ClientSoftware
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s143","action":"end"} -->
 
 Using this syntax, the target of the requirement mapping is a *list*
 of target requirements rather than a single requirement.
@@ -11690,8 +10952,7 @@ flowchart RL
 
 The following service template shows an implementation of this example:
 
-<!-- EDITOR_TAG{"type":"example","id":"s144","action":"start"} -->
-```yaml
+```yaml #s143
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11708,7 +10969,6 @@ service_template:
       requirements:
       - host: compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s144","action":"end"} -->
 
 The following figure shows a substituting topology that *decomposes*
 the node of type "Client" into two software components, each of which
@@ -11753,8 +11013,7 @@ flowchart RL
 This can trivially be done using the syntax shown in the following
 code snippet:
 
-<!-- EDITOR_TAG{"type":"example","id":"s145","action":"start"} -->
-```yaml
+```yaml #s144
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11785,7 +11044,6 @@ service_template:
       type: Compute
       directives: [select]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s145","action":"end"} -->
 
 The substitution mapping code in this service template provides an
 elegant mechanism for expressing that the target node of the "host"
@@ -11819,8 +11077,7 @@ the `count_range` in the corresponding requirement definition.
 The types defined in the following code snippet are used to illustrate
 these rules:
 
-<!-- EDITOR_TAG{"type":"example","id":"s146","action":"start"} -->
-```yaml
+```yaml #s145
 tosca_definitions_version: tosca_2_0
 
 capability_types:
@@ -11847,7 +11104,6 @@ node_types:
       service:
         type: Service
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s146","action":"end"} -->
 
 In this example, the "Client" node type defines a "service"
 requirement with a `count_range` of `[1, 4]`. This means that a client
@@ -11857,8 +11113,7 @@ one of those is mandatory.
 The following code snippet shows a valid substituting template for the
 "client" node in the template shown above:
 
-<!-- EDITOR_TAG{"type":"example","id":"s147","action":"start"} -->
-```yaml
+```yaml #s146
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11905,7 +11160,6 @@ service_template:
     compute:
       type: Compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s147","action":"end"} -->
 
 While the substituted "client" node in the template above has three
 requirement assigments with target nodes, only one of those
@@ -11920,8 +11174,7 @@ substitution mapping defines three requirement mappings for the
 "service" requirements of the "software" nodes in the substituting
 template.
 
-<!-- EDITOR_TAG{"type":"example","id":"s148","action":"start"} -->
-```yaml
+```yaml #s147
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -11986,7 +11239,6 @@ service_template:
     compute3:
       type: Compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s148","action":"end"} -->
 
 Unfortunately, this substituting template is invalid. Since the
 "service" requirement of each "software" node is mandatory, this
@@ -11998,8 +11250,7 @@ means that only such requirement is guaranteed to exist.
 
 The following shows a corrected version of this substituting template:
 
-<!-- EDITOR_TAG{"type":"example","id":"s149","action":"start"} -->
-```yaml
+```yaml #s148
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -12066,7 +11317,6 @@ service_template:
     compute3:
       type: Compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s149","action":"end"} -->
 
 In this template, the "service" requirement of the "ClientSoftware"
 node type is defined with a `count_range` of "[0, 1]", which means the
@@ -12086,9 +11336,9 @@ presumably will map onto optional requirements in the substituting
 template). This is done independent of the order in which the
 requirement mappings are specified.
 
-### 15.5.5 Handling `UNBOUNDED` Requirement Count Ranges <a name=handling-unbounded-requirement-count-ranges></a>
+### 15.5.5 Handling "UNBOUNDED" Requirement Count Ranges <a name=handling-unbounded-requirement-count-ranges></a>
 
-In the case of `UNBOUNDED` count ranges, we must use unbounded grammar
+In the case of "UNBOUNDED" count ranges, we must use unbounded grammar
 forms.
 
 In the following case all "service" requirements of the substituted node
@@ -12096,8 +11346,7 @@ are mapped to the corresponding "service" requirements of the "software1"
 node in the substituting template. This allows for the follwing compact
 syntax:
 
-<!-- EDITOR_TAG{"type":"example","id":"s150","action":"start"} -->
-```yaml
+```yaml #s149
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -12147,7 +11396,6 @@ service_template:
     compute:
       type: Compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s150","action":"end"} -->
 
 In the next case the "service" requirements of the substituted node
 are mapped to the corresponding "service" requirements of both the
@@ -12159,8 +11407,7 @@ node, then the rest of the "service" requirements of the substituted
 node are mapped again to the "service" requirement of the "software1"
 node:
 
-<!-- EDITOR_TAG{"type":"example","id":"s151","action":"start"} -->
-```yaml
+```yaml #s150
 tosca_definitions_version: tosca_2_0
 
 imports:
@@ -12212,7 +11459,6 @@ node_templates:
   compute:
     type: Compute
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s151","action":"end"} -->
 
 ## 15.6 Interface Mapping <a name=interface-mapping></a>
 
@@ -12334,16 +11580,14 @@ During group type derivation the keyname definitions follow these rules:
 
 The following represents an example group type definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s152","action":"start"} -->
-```yaml
+```yaml #s151
 group_types:
   Placement:
     description: My company's group type for placing nodes of type Software
     members: [ Software ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s152","action":"end"} -->
 
-## 16.2 Group Definition <a name=group-definition></a>
+## 16.2 Group Definition <a name=group-def></a>
 
 Collections of nodes in a service template may be grouped together
 using a *group definition* in that same service template. A group
@@ -12411,15 +11655,13 @@ have the following meaning:
 
 The following represents a group definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s153","action":"start"} -->
-```yaml
+```yaml #s152
 groups:
   my-app-placement:
     type: Placement
     description: My application's logical component grouping for placement
     members: [ my-web-server, my-sql-database ]
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s153","action":"end"} -->
 
 ## 16.3 Policy Type <a name=policy-type></a>
 
@@ -12500,15 +11742,13 @@ rules:
 
 The following represents a policy type definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s154","action":"start"} -->
-```yaml
+```yaml #s153
 policy_types:
   Placement.Container.Linux:
     description: My company's placement policy for linux 
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s154","action":"end"} -->
 
-## 16.4 Policy Definition <a name=policy-definition></a>
+## 16.4 Policy Definition <a name=policy-def></a>
 
 A *policy definition* defines a policy that can be associated with a TOSCA
 service or top-level entity definition (e.g., group definition, node
@@ -12575,17 +11815,15 @@ have the following meaning:
 
 The following represents a policy definition:
 
-<!-- EDITOR_TAG{"type":"example","id":"s155","action":"start"} -->
-```yaml
+```yaml #s154
 - my-compute-placement:
     type: Placement
     description: Apply my placement policy to my application's servers
     targets: [ my_server_1, my_server_2 ]
     # remainder of policy definition omitted for brevity
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s155","action":"end"} -->
 
-## 16.5 Trigger Definition <a name=trigger-definition></a>
+## 16.5 Trigger Definition <a name=trigger-def></a>
 
 A *trigger definition* defines an *event, condition, action* tuple
 associated with a policy.
@@ -12655,10 +11893,10 @@ CSARs can be used to package service templates and/or profiles.
 The service template or profile root TOSCA YAML file can be specified
 in one of two ways:
 
-- If a `TOSCA.meta` file is present (see below) it may specify the root
-  TOSCA YAML file. The `TOSCA.meta` file may be located either at the
+- If a "TOSCA.meta" file is present (see below) it may specify the root
+  TOSCA YAML file. The "TOSCA.meta" file may be located either at the
   root of the archive or inside a "TOSCA-Metadata" directory. The CSAR
-  may contain only one `TOSCA.meta` file.
+  may contain only one "TOSCA.meta" file.
 
 - Otherwise, if a single valid TOSCA YAML file (named with a ".yaml" or
   ".yml" extension) is located at the root of the archive, it will be used
@@ -12707,9 +11945,9 @@ instead.
 The Zip format supported by TOSCA is specified in
 [ISO/IEC 21320-1 "Document Container File — Part 1: Core"](https://www.iso.org/standard/60101.html). 
 
-## 17.2 `TOSCA.meta` File <a name=toscameta-file></a>
+## 17.2 "TOSCA.meta" File <a name=tosca-meta-file></a>
 
-A `TOSCA.meta` file consists of keyname/value pairs. The keyname of a
+A "TOSCA.meta" file consists of keyname/value pairs. The keyname of a
 keyname/value pair is followed by a colon, followed by a space, followed by
 the value of the keyname/value pair. The keyname MUST NOT contain a
 colon. Values that represent binary data MUST be base64 encoded. Values
@@ -12726,12 +11964,12 @@ pairs, i.e. a list of consecutive keyname/value pairs is called a block.
 Blocks are separated by an empty line. The first block, called "block_0",
 contains metadata about the CSAR itself and is further defined below.
 Other blocks may be used to represent custom generic metadata or
-metadata pertaining to files in the CSAR. A `TOSCA.meta` file is only
+metadata pertaining to files in the CSAR. A "TOSCA.meta" file is only
 required to include "block_0".
 
-### 17.2.1 Block 0 Keynames in the `TOSCA.meta` File <a name=block-0-keynames-in-the-toscameta-file></a>
+### 17.2.1 Block 0 Keynames in the "TOSCA.meta" File <a name=block-0-keynames-in-the-tosca.meta-file></a>
 
-The structure of "block_0" in the `TOSCA.meta` file is as follows:
+The structure of "block_0" in the "TOSCA.meta" file is as follows:
 
 ```
 CSAR-Version: digit.digit
@@ -12744,7 +11982,7 @@ The keyname/value pairs are as follows:
 
 - `CSAR-Version`: This is the version number of the CSAR
   specification. It defines the structure of the CSAR and the format of
-  the `TOSCA.meta` file. The value MUST be "2.0" for this version of
+  the "TOSCA.meta" file. The value MUST be "2.0" for this version of
   the CSAR specification.
 
 - `Created-By`: The person or organization that created the CSAR.
@@ -12775,7 +12013,7 @@ included in the CSAR are fully described and referred via relative path
 names in artifact definitions in the respective TOSCA definitions files
 contained in the CSAR.
 
-The following listing represents a valid `TOSCA.meta` file according
+The following listing represents a valid "TOSCA.meta" file according
 to this TOSCA specification.
 
 ```
@@ -12785,7 +12023,7 @@ Entry-Definitions: tosca_elk.yaml
 Other-Definitions: definitions/tosca_moose.yaml definitions/tosca_deer.yaml
 ```
 
-This `TOSCA.meta` file indicates its structure (as well as the overall
+This "TOSCA.meta" file indicates its structure (as well as the overall
 CSAR structure) by means of the `CSAR-Version` keyname with value
 "2.0". The `Entry-Definitions` keyname points to a TOSCA definitions
 YAML file with the name "tosca_elk.yaml" which is contained in the
@@ -12794,15 +12032,15 @@ templates can be found in the files "tosca_moose.yaml" and
 "tosca_deer.yaml" found in the directory called "definitions" in the
 root of the CSAR file.
 
-### 17.2.2 Custom Keynames in the `TOSCA.meta` File <a name=custom-keynames-in-the-toscameta-file></a>
+### 17.2.2 Custom Keynames in the "TOSCA.meta" File <a name=custom-keynames-in-the-tosca.meta-file></a>
 
-Users can populate other blocks than "block_0" in the `TOSCA.meta` file with
+Users can populate other blocks than "block_0" in the "TOSCA.meta" file with
 custom name/value pairs that follow the entry syntax defined above and
 have names that are different from the normative keynames (e.g.
 `CSAR-Version`, `Created-By`, `Entry-Definitions`, `Other-Definitions`). These
 custom name/value pairs are outside the scope of the TOSCA
 specification. Nevertheless, future versions of the TOSCA specification
-may add definitions of new keynames to be used in the `TOSCA.meta`
+may add definitions of new keynames to be used in the "TOSCA.meta"
 file. In case of a keyname collision (with a custom keyname) the TOSCA
 specification definitions take precedence.
 
@@ -12811,9 +12049,9 @@ of keynames prefixed with "TOSCA" and "tosca". It is recommended as a good
 practice to use a specific prefix (e.g. identifying the organization,
 scope, etc.) when using custom keynames.
 
-## 17.3 CSAR Without a `TOSCA.meta` File <a name=csar-without-a-toscameta-file></a>
+## 17.3 CSAR Without a "TOSCA.meta" File <a name=csar-without-tosca.meta></a>
 
-In case the archive doesn't contains a `TOSCA.meta` file the archive
+In case the archive doesn't contains a "TOSCA.meta" file the archive
 is required to contains a single YAML file at the root of the archive
 (other templates may exist in sub-directories).
 
@@ -12823,15 +12061,14 @@ Entry-Definitions file. The `CSAR-Version` is inferred from the
 `tosca_definitions_version: tosca_2_0` and onwards, the corresponding
 `CSAR-Version` is "2.0" unless further defined.
 
-Note that in a CSAR without a `TOSCA.meta` file it is not possible to
+Note that in a CSAR without a "TOSCA.meta" file it is not possible to
 unambiguously include definitions for substitution templates as we can
 have only one service template defined in a YAML file.
 
 The following represents a valid TOSCA template file acting as the CSAR
-`Entry-Definitions` file in an archive without a `TOSCA.meta` file.
+`Entry-Definitions` file in an archive without a "TOSCA.meta" file.
 
-<!-- EDITOR_TAG{"type":"example","id":"s156","action":"start"} -->
-```yaml
+```yaml #s155
 tosca_definitions_version: tosca_2_0
 
 metadata:
@@ -12839,7 +12076,6 @@ metadata:
   template_author: OASIS TOSCA TC
   template_version: '1.0'
 ```
-<!-- EDITOR_TAG{"type":"example","id":"s156","action":"end"} -->
 
 -------
 
