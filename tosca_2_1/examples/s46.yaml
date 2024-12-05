@@ -1,10 +1,29 @@
 tosca_definitions_version: tosca_2_0
+capability_types:
+  Endpoint:
+    properties:
+      port:
+        type: integer
+        required: false
+node_types:
+  MyService:
+    properties:
+      num-cpus:
+        type: integer
+    capabilities:
+      bar:
+        type: Endpoint
+    requirements:
+      - foo:
+          capability: some-service.foo
+          node: some-service
+          relationship: some-service.foo
 # tag::s46[]
 service_template:
   inputs:
-   cpus: 
-     type: integer
-     validation: { $less_than: [ $value, 5 ] }
+    cpus:
+      type: integer
+      validation: { $less_than: [ $value, 5 ] }
 
   substitution_mappings:
     node_type: MyService
@@ -22,8 +41,10 @@ service_template:
         rate: 100
       capabilities:
         bar:
-          ...
+          properties:
+            property-1: 80
       requirements:
-      - foo: 
-          ...
+        - foo: 
+            ...
 # end::s46[]
+

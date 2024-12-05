@@ -1445,7 +1445,7 @@ values: "!!map", "!!seq", "!!str", "!!null", "!!bool", "!!int", "!!float".
 The following shows an example that uses `metadata` to track revision
 status of a TOSCA file:
 
-``` { .yang #s1 }
+``` .yang #s2
 metadata: 
   creation-date: 2024-04-14
   date-updated: 2024-05-01
@@ -1555,7 +1555,7 @@ keynames and associated grammars used in a TOSCA file definition.
 The mandatory `tosca_definitions_version` keyname provides a means to
 specify the TOSCA version used within the TOSCA file as follows:
 
-```yaml #s7
+```yaml
 tosca_definitions_version: <tosca_version> 
 ```
 
@@ -2570,7 +2570,7 @@ node_types:
 
 **TOSCA File A**
 
-```yaml #s32
+```yaml
 tosca_definitions_version: tosca_2_0
 description: TOSCA File A
 
@@ -2756,7 +2756,7 @@ The overall grammar of the service_template section is shown
 below. Detailed grammar definitions are provided in subsequent
 subsections.
 
-```yaml #s37
+```yaml
 service_template:
   description: <template_description>
   metadata:

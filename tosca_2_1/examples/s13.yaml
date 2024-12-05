@@ -1,4 +1,8 @@
 tosca_definitions_version: tosca_2_0
+capability_types:
+  TransactSQL:
+    description: >
+      This capability indicates an entity that supports SQL
 # tag::s13[]
 node_types:
   Database:
@@ -16,5 +20,6 @@ node_types:
   MyDatabase:
     derived_from: Database
     capabilities:
-      TransactSQL
+      SQL:
+        type: TransactSQL
 # end::s13[]

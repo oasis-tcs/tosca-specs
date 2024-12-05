@@ -1,21 +1,23 @@
-tosca_definitions_version: tosca_2_0
 # tag::s33[]
 tosca_definitions_version: tosca_2_0
 description: TOSCA file A
 
 imports:
-- url: /templates/TOSCAFileB.yaml
+- url: TOSCAFileB.yaml
   namespace: fileB
 
 node_types:
   MyNode:
     properties:
-      # omitted here for brevity 
-    capabilities:
-      # omitted here for brevity
+      first-property:
+        type: string
 
 service_template:
   node_templates:
     my-node:
       type: fileB:MyNode
+      properties:
+        first-property: 100
+        # An integer as defined in FileB, not a string as defined in this file
 # end::s33[]
+
