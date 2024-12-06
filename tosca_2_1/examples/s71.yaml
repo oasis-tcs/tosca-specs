@@ -1,0 +1,12 @@
+tosca_definitions_version: tosca_2_0
+# tag::s71[]
+# basic version strings
+"6.1"
+2.0.1
+
+# version string with optional qualifier
+3.1.0.beta
+
+# version string with optional qualifier and build version
+1.0.0.alpha-10
+# end::s71[]

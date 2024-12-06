@@ -1,0 +1,14 @@
+tosca_definitions_version: tosca_2_0
+# tag::s96[]
+inputs:
+  cpus:
+    type: integer
+
+node_templates:
+  my-server:
+    type: Compute
+    capabilities:
+      host:
+        properties:
+          num-cpus: { $get_input: cpus }
+# end::s96[]

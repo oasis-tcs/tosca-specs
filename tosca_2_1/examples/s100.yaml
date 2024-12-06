@@ -1,0 +1,32 @@
+tosca_definitions_version: tosca_2_0
+# tag::s100[]
+node_templates:  
+  mysql-database:
+    type: Database
+    ...
+    capabilities:
+      database-endpoint:
+        properties:
+          port: 3306
+
+wordpress:
+    type: WordPress
+    requirements:
+      ...
+      - database-endpoint: mysql-database
+    interfaces:
+      standard:
+        create: wordpress_install.sh
+        configure: 
+          implementation: wordpress_configure.sh            
+          inputs:
+            ...
+            wp-db-port:
+              $get_property:
+               - SELF
+               - RELATIONSHIP
+               - database-endpoint
+               - 0
+               - CAPABILITY
+               - port
+# end::s100[]

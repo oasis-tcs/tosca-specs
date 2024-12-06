@@ -1,0 +1,4 @@
+tosca_definitions_version: tosca_2_0
+# tag::s95[]
+$get_input: [ <input_parameter_name>, <nested_input_parameter_name_or_index_1>, <nested_input_parameter_name_or_index_2>, ... ]
+# end::s95[]
