@@ -1,0 +1,11 @@
+tosca_definitions_version: tosca_2_0
+capability_types:
+  service_capability:
+    description: A service capability
+node_types:
+  Server:
+    description: A server
+  Client:
+    description: A client
+    requirements:
+      - service: service_capability

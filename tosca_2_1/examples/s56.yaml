@@ -1,11 +1,28 @@
 tosca_definitions_version: tosca_2_0
-# tag::s56[]
+capability_types:
+  host:
+    description: Hosting capability
+node_types:
+  WebApplication:
+    description: A web app
+    requirements:
+      - host: host
+  WebServer:
+    description: A web server
+    capabilities:
+      server:
+        type: host
 service_template:
+  #TODO The tomcat-server node template needs checking and possibly moving into the snippet
   node_templates:
+    tomcat-server:
+      count: 3
+      type: WebServer
+# tag::s56[]
     my-application:
       type: WebApplication
       count: 3
       requirements:
-      - host: 
-          node: [ tomcat-server, $node_index ]
+        - host: 
+            node: [ tomcat-server, $node_index ]
 # end::s56[]

@@ -1,7 +1,33 @@
 tosca_definitions_version: tosca_2_0
+data_types:
+  UserName:
+    description: A user name
+    derived_from: string
+    constraints:
+      - length: { min_length: 1, max_length: 10 }
+  UserId:
+    description: A user ID
+    derived_from: integer
+    constraints:
+      - in_range: [ 1000, 9999 ]
+node_types:
+  OperatingSystem:
+    description: An OS
+    properties:
+      user-name-to-id:
+        type: map
+        key_schema:
+          type: UserName
+        entry_schema:
+          type: UserId
+service_template:
+  node_templates:
+    my-os:
+      type: OperatingSystem
+      properties:
 # tag::s77[]
 # notation for longer maps
-user-name-to-id:
-  user1: 1001
-  user2: 1002
+        user-name-to-id:
+          user1: 1001
+          user2: 1002
 # end::s77[]

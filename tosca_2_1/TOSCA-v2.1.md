@@ -6776,7 +6776,7 @@ $get_input: <input_parameter_name>
 
 or
 
-```yaml #s95
+```yaml
 $get_input: [ <input_parameter_name>, <nested_input_parameter_name_or_index_1>, <nested_input_parameter_name_or_index_2>, ... ]
 ```
 
