@@ -10,7 +10,7 @@ service_template:
       type: Compute
 
     client:
-      type: Client
+      type: ClientSoftware
       directives: [ substitute ]
       requirements:
       - host: compute

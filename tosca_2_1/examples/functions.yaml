@@ -1,0 +1,14 @@
+tosca_definitions_version: tosca_2_0
+functions:
+  random_generator:
+    signatures:
+      arguments:
+        - seed:
+            type: integer
+            description: Seed for random number generator
+      result:
+        type: integer
+        description: Random number generated
+      implementation:
+        primary: random_generator.sh
+    description: Generate a random number

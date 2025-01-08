@@ -1,34 +1,71 @@
 tosca_definitions_version: tosca_2_0
-# tag::s101[]
-node_templates:  
-  mysql-database:
-    type: Database
-    ...
+capability_types:
+  DatabaseEndpoint:
+    properties:
+      port:
+        type: integer
+        default: 1433
+interface_types:
+  WpInterface:
+    operations:
+      create:
+        description: Create a WordPress instance
+      configure:
+        description: Configure a WordPress instance
+        inputs:
+          wp-db-port:
+            type: integer
+            description: The port of the database
+            default: 1433
+#TODO Note puccini parses the service template even if the following input is not defined
+          host-dbms-admin-credential:
+            type: string
+            description: The admin credential of the database
+            default: admin:admin
+
+
+node_types:
+  Database:
     capabilities:
       database-endpoint:
-        properties:
-          port: 3306
+        type: DatabaseEndpoint
 
-  wordpress:
-    type: WordPress
-    requirements:
-      ...
-      - database-endpoint: mysql-database
+  WordPress:
     interfaces:
-      standard:
-        create: wordpress_install.sh
-        configure: 
-          implementation: wordpress_configure.sh            
-          inputs:
-            ...
-            host-dbms-admin-credential:
-              $get_property:
-              - SELF
-              - RELATIONSHIP
-              - database_endpoint
-              - TARGET
-              - RELATIONSHIP
-              - host
-              - TARGET
-              - admin_credential
+      WpStandard:
+        type: WpInterface
+    requirements:
+      - database-endpoint: DatabaseEndpoint
+
+service_template:
+# tag::s101[]
+  node_templates:  
+    mysql-database:
+      type: Database
+      capabilities:
+        database-endpoint:
+          properties:
+            port: 3306
+
+    wordpress:
+      type: WordPress
+      requirements:
+        - database-endpoint: mysql-database
+      interfaces:
+        WpStandard:
+          operations:
+            create: wordpress_install.sh
+            configure: 
+              implementation: wordpress_configure.sh            
+              inputs:
+                host-dbms-admin-credential:
+                  $get_property:
+                  - SELF
+                  - RELATIONSHIP
+                  - database_endpoint
+                  - TARGET
+                  - RELATIONSHIP
+                  - host
+                  - TARGET
+                  - admin_credential
 # end::s101[]

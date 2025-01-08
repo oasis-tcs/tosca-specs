@@ -1,5 +1,18 @@
 tosca_definitions_version: tosca_2_0
+imports:
+  - url: functions.yaml
+    namespace: namespace1
+node_types:
+  Compute:
+    properties:
+      rnd-nr:
+        type: integer
+        required: false
+service_template:
+  node_templates:
+    my-server:
+      type: Compute
 # tag::s107[]
-properties:
-  rnd-nr: { $namespace1:random_generator: [ seed ] }
+      properties:
+        rnd-nr: { $namespace1:random_generator: [ seed ] }
 # end::s107[]

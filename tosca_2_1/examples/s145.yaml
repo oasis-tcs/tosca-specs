@@ -1,15 +1,8 @@
 # tag::s145[]
 tosca_definitions_version: tosca_2_0
 
-capability_types:
-  Service:
-    description: >-
-      Ability to provide service.
-
-relationship_types:
-  ServedBy:
-    description: >-
-      Connection to a service.
+imports:
+- types.yaml  
 
 node_types:
   Client:

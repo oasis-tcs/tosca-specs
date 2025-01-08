@@ -1,7 +1,22 @@
 tosca_definitions_version: tosca_2_0
+ 
 capability_types:
   service_capability:
     description: A service capability
+  Compute:
+    description: Ability to compute.
+  Host:
+    description: >-
+      Ability to host software.
+  Service:
+    description: Ability to provide a service.
+
+relationship_types:
+  HostedOn:
+    description: >-
+      Relationship to a host.
+  ServedBy: 
+    description: Relationship to a service.
 node_types:
   Server:
     description: A server
@@ -9,3 +24,18 @@ node_types:
     description: A client
     requirements:
       - service: service_capability
+
+  YellowBox:
+    description: A yellow box on a mermaid diagram
+  Left:
+    derived_from: YellowBox
+  Right:
+    derived_from: YellowBox
+
+  Compute:
+    description: A compute node
+
+  ClientSoftware:
+    description: An software application
+    requirements:
+      - host: Compute

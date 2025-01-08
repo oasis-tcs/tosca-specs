@@ -36,17 +36,17 @@ service_template:
     - service: [ software2, service ]
     - [ service, UNBOUNDED ]: [ software1, service ]
 
-node_templates:
-  software1:
-    type: ClientSoftware
-    requirements:
-    - host: compute
+  node_templates:
+    software1:
+      type: ClientSoftware
+      requirements:
+      - host: compute
 
-  software2:
-    type: ClientSoftware
-    requirements:
-    - host: compute
+    software2:
+      type: ClientSoftware
+      requirements:
+      - host: compute
 
-  compute:
-    type: Compute
+    compute:
+      type: Compute
 # end::s150[]

@@ -28,6 +28,10 @@ node_types:
       host:
         type: Host
 
+  Server:
+    capabilities:
+      service:
+        type: Service
 service_template:
   substitution_mappings:
     node_type: Client

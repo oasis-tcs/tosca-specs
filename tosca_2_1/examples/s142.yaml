@@ -16,9 +16,9 @@ service_template:
   substitution_mappings:
     node_type: Client
     requirements:
-    - host:
-      - [ software1, host ]
-      - [ software2, host ]
+      - host:
+        - [ software1, host ]
+        - [ software2, host ]
 
   node_templates:
     software1:

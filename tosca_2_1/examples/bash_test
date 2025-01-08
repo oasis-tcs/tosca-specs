@@ -3,7 +3,7 @@ good=0
 bad=0
 first_bad=""
 
-for file in tosca_2_0/examples/*.yaml; do
+for file in tosca_2_1/examples/*.yaml; do
   if puccini-tosca parse "$file" --quiet; then
     good=$((good+1))
   else

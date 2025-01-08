@@ -9,12 +9,13 @@ interface_types:
   WpInterface:
     operations:
       create:
-        description: Create a database
+        description: Create a WordPress instance
       configure:
-        description: Configure a database
+        description: Configure a WordPress instance
         inputs:
           wp-db-port:
             type: integer
+            description: The port of the database 
 
 
 node_types:

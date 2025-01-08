@@ -1,16 +1,34 @@
 tosca_definitions_version: tosca_2_0
-# tag::s102[]
-node_templates:
-  wordpress:
-    type: WordPress
-    ...
+interface_types:
+  WpInterface:
+    operations:
+      create:
+        description: Create a WordPress instance
+
+artifact_types:
+  WpZip:
+    description: WordPress zip file
+
+node_types:
+
+  WordPress:
     interfaces:
-      standard:
-        configure: 
-          create:
-            implementation: wordpress_install.sh
-            inputs:
-              wp-zip: { $get_artifact: [ SELF, zip ] }
-    artifacts:
-      zip: /data/wordpress.zip
+      WpStandard:
+        type: WpInterface
+service_template:
+# tag::s102[]
+  node_templates:
+    wordpress:
+      type: WordPress
+      interfaces:
+        WpStandard:
+          operations:
+            create:
+              implementation: wordpress_install.sh
+              inputs:
+                wp-zip: { $get_artifact: [ SELF, zip ] }
+      artifacts:
+        zip:
+          file: wordpress.zip
+          type: WpZip
 # end::s102[]
