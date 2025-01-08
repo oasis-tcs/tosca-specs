@@ -1,6 +1,17 @@
 # tag::s125[]
 tosca_definitions_version: tosca_2_0
 description: Template for deploying SD-WAN with a variable number of sites.
+data_types:
+  Location:
+    description: A location
+    properties:
+      name: 
+        type: string
+node_types:
+  VPN:
+    description: A VPN service
+  VPNSite:
+    description: A VPN site
 
 service_template:
   inputs:

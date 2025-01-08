@@ -1,15 +1,36 @@
 tosca_definitions_version: tosca_2_0
+artifact_types:
+  Bash:
+    mime_type: text/x-shellscript
+interface_types:
+  ConfigureInterfaceType:
+    description: Interface for configuring a service
+    operations:
+      pre-configure-source:
+        description: Operation to execute before configuring the source
+node_types:
+  Database:
+    description: A database
+    interfaces:
+      configure:
+        type: ConfigureInterfaceType
+service_template:
+  node_templates:
+    my_database_template:
+      type: Database
 # tag::s117[]
-interfaces:
-  configure:
-    pre-configure-source:
-      implementation: 
-        primary: 
-          file: scripts/pre_configure_source.sh
-          type: Bash
-          repository: my_service_catalog
-        dependencies:
-        - file : scripts/setup.sh
-          type : Bash
-          repository : my_service_catalog
+      interfaces:
+        configure:
+          operations:
+            pre-configure-source:
+              implementation: 
+                primary: 
+                  file: scripts/pre_configure_source.sh
+                  type: Bash
+                  repository: my_service_catalog
+                dependencies:
+                  - setup_script:
+                      file : scripts/setup.sh
+                      type : Bash
+                      repository : my_service_catalog
 # end::s117[]

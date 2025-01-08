@@ -1,3 +1,4 @@
+#TODO: check naming conventions is applied to all yaml files
 tosca_definitions_version: tosca_2_0
 artifact_types:
   File:
