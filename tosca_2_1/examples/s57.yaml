@@ -25,6 +25,6 @@ service_template:
       requirements:
       - database: 
           node: my-database
-          capability: Endpoint.Database
+          capability: endpoint
           relationship: CustomDbConnection
 # end::s57[]

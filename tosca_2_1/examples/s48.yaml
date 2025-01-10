@@ -1,4 +1,6 @@
 tosca_definitions_version: tosca_2_0
+relationship_types:
+  HostedOn: {}
 interface_types:
   control:
     operations:
@@ -37,7 +39,9 @@ node_types:
                 type: string
                 default: scripts/configure_mysql.sh
     requirements:
-      - host: db-server
+      - host:
+          capability: db-server
+          relationship: HostedOn
   db-server:
     properties:
       num_cpus:
@@ -45,8 +49,13 @@ node_types:
         description: Number of CPUs
     capabilities:
       host:
-        type: compute
+        type: db-server
 service_template:
+  inputs:
+    my-mysql-rootpw:
+      type: string
+    my-mysql-port:
+      type: integer
 # tag::s48[]
   node_templates:
     mysql:

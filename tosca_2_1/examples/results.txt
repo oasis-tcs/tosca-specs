@@ -1,0 +1,99 @@
+s1.yaml		pass
+s2.yaml		pass
+s3.yaml		pass
+s4.yaml		pass
+s5.yaml		pass
+s6.yaml		pass
+s7.yaml		NO SUCH FILE
+s8.yaml		NO SUCH FILE
+s9.yaml		pass
+s10.yaml	pass
+s11.yaml	pass
+s12.yaml	pass
+s13.yaml	pass
+s14.yaml	pass
+s15.yaml	pass
+s16.yaml	pass
+s17.yaml	REQUIRES DISCUSSION (see Issue 297)
+s18.yaml	pass
+s19.yaml	pass
+s20.yaml	requires s20.yaml, s21.yaml, s22.yaml, and s23.yaml
+s21.yaml	requires s20.yaml, s21.yaml, s22.yaml, and s23.yaml
+s22.yaml	requires s20.yaml, s21.yaml, s22.yaml, and s23.yaml
+s23.yaml	requires s20.yaml, s21.yaml, s22.yaml, and s23.yaml
+s24.yaml	profile org.oasis-open.tosca.simple:2.0 not found
+s25.yaml	"https://myorg.org/tosca/types/mytypes.yaml": "file not found"
+s26.yaml	"../types/mytypes.yaml": "file not found"
+s27.yaml	"../types/mytypes.yaml": "file not found"
+s28.yaml	"repository": "'my-company-repo' not found"
+s29.yaml	"/base.yaml": "file not found"
+s30.yaml	"repository": "'my-repository' not found"
+s31.yaml	pass
+s32.yaml	NO SUCH FILE
+s33.yaml	pass
+s34.yaml	pass
+s35.yaml	profile io.kubernetes:1.3 not found
+s36.yaml	pass
+s37.yaml	NO SUCH FILE
+s38.yaml	pass
+s39.yaml	FIXED (was: function '$greater_or_equal': no matching signature found)
+s40.yaml	pass
+s41.yaml	FIXED (fixed multiple errors)
+s42.yaml	FIXED (added missing node type, data type, and node template)
+s43.yaml	FIXED (added mandatory "activities" to workflow step)
+s44.yaml	pass
+s45.yaml	pass
+s46.yaml	FIXED (use different node types for substituted and substituting nodes)
+s47.yaml	FIXED (added missing node type, capability type, and relationship type; fixed validation clause)
+s48.yaml	"'/scripts/my_own_configure.sh' not found"
+s49.yaml	FIXED (added missing capability type and relationship type)
+s50.yaml	pass
+s51.yaml	pass
+s52.yaml	FIXED (added missing 'limit' property definition to capability type definition)
+s53.yaml	pass
+s54.yaml	FIXED (moved 'limit' property definition to capability type definition)
+s55.yaml	pass
+s56.yaml	FIXED (added relationship type to requirement definition)
+s57.yaml	REQUIRES DISCUSSION (see Issue 298)
+s58.yaml	pass
+s59.yaml	FIXED (fixed types.yaml)
+s60.yaml	pass
+s61.yaml	NOT IMPLEMENTED
+s62.yaml	NOT IMPLEMENTED
+s63.yaml	pass
+s64.yaml	pass
+s65.yaml	UBICITY BUG (need to convert int to float)
+s66.yaml	pass
+s67.yaml	pass
+s68.yaml	pass
+s69.yaml	NOT IMPLEMENTED
+s70.yaml	NOT IMPLEMENTED
+s71.yaml	pass
+s72.yaml	pass
+s73.yaml	pass
+s74.yaml	pass
+s75.yaml	pass
+s76.yaml	FIXED (replaced "constraints" with "validation")
+s77.yaml	FIXED (replaced "constraints" with "validation")
+s78.yaml	FIXED (fix "validation" statement)
+s79.yaml	pass
+s80.yaml	FIXED (fix "validation" statement)
+s81.yaml	pass
+s82.yaml	FIXED (fix "validation" statement)
+s83.yaml	pass
+s84.yaml	FIXED ($in_range is not a valid function)
+s86.yaml	FIXED (use proper syntax to assign fixed value)
+s87.yaml	pass
+s88.yaml	FIXED (add missing node type and node template)
+s89.yaml	pass
+s90.yaml	pass
+s91.yaml	UBICITY BUG (map keys must be strings)
+s92.yaml	FIXED (fix function definition and use correct function syntax)
+s94.yaml	pass
+s95.yaml	NO SUCH FILE
+s96.yaml	pass
+s97.yaml	UBICITY BUG (input definition with "default" flagged as optional)
+s98.yaml	pass
+s99.yaml	pass
+s100.yaml	"file": "'/wordpress_create.sh' not found"
+s101.yaml	FIXED (add type definitions and fix TOSCA Path expression)

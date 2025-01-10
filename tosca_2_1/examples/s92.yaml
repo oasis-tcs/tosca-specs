@@ -1,4 +1,11 @@
 tosca_definitions_version: tosca_2_0
+data_types:
+  ContextInfo:
+    properties:
+      env:
+        type: string
+      role:
+        type: string
 node_types:
   Compute:
     properties:
@@ -9,10 +16,9 @@ functions:
     description: Get security context
     signatures:
       - arguments:
-        - type: string
-        - type: string
+        - type: ContextInfo
         result:
-          - type: string
+          type: string
         implementation: scripts/get_context.sh
 service_template:
   node_templates:
@@ -21,5 +27,5 @@ service_template:
 #TODO s92 example passes arguments by name but 108 passes arguments by position
 # tag::s92[]
       properties:
-        context: { $get_security_context: { env: staging, role: admin } }
+        context: { $get_security_context: [ { env: staging, role: admin } ] }
 # end::s92[]
