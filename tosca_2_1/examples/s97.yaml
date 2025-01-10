@@ -1,4 +1,6 @@
 tosca_definitions_version: tosca_2_0
+relationship_types:
+  BindsTo: {}
 capability_types:
   NetworkBindable:
     description: >
@@ -20,7 +22,10 @@ node_types:
     requirements:
       - lan-port:
           capability: NetworkBindable
-      - mgmt-net: MgmtNet
+          relationship: BindsTo
+      - mgmt-net:
+          capability: MgmtNet
+          relationship: BindsTo
   HostWithNet:
     properties:
       name:
@@ -34,6 +39,9 @@ node_types:
         type: string
       gateway:
         type: string
+    capabilities:
+      mgmt:
+        type: MgmtNet
 # tag::s97[]
 data_types:
   NetworkInfo:
@@ -70,7 +78,7 @@ service_template:
 
     bono-main:
       type: vRouter
-      directives: [ substitutable ]
+      directives: [ substitute ]
       properties:
         mgmt-net-name: { $get_input: [ management-network, name ] }
         mgmt-cp-v4-fixed-ip: { $get_input: [ router, ip ] }

@@ -14,5 +14,5 @@ data_types:
     properties:
       phone-description:
         type: string
-        validation: { $less_or_equal: [ $value, 128 ] }
+        validation: { $less_or_equal: [ { $length: [ $value ] }, 128 ] }
 # end::s82[]

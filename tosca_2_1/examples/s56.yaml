@@ -1,17 +1,21 @@
 tosca_definitions_version: tosca_2_0
 capability_types:
-  host:
+  Host:
     description: Hosting capability
+relationship_types:
+  HostedOn: {}
 node_types:
   WebApplication:
     description: A web app
     requirements:
-      - host: host
+      - host:
+          capability: Host
+          relationship: HostedOn
   WebServer:
     description: A web server
     capabilities:
       server:
-        type: host
+        type: Host
 service_template:
   #TODO The tomcat-server node template needs checking and possibly moving into the snippet
   node_templates:

@@ -9,10 +9,13 @@ node_types:
         type: integer
         required: false
 service_template:
+  inputs:
+    seed:
+      type: integer
   node_templates:
     my-server:
       type: Compute
 # tag::s107[]
       properties:
-        rnd-nr: { $namespace1:random_generator: [ seed ] }
+        rnd-nr: { $namespace1:random_generator: [ { $get_input: [ seed ] } ] }
 # end::s107[]

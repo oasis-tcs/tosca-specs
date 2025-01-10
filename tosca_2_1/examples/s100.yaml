@@ -15,22 +15,22 @@ interface_types:
         inputs:
           wp-db-port:
             type: integer
-            description: The port of the database 
-
-
+            description: The port of the database
+relationship_types:
+  ConnectsTo: {}
 node_types:
   Database:
     capabilities:
       database-endpoint:
         type: DatabaseEndpoint
-
   WordPress:
     interfaces:
       WpStandard:
         type: WpInterface
     requirements:
-      - database-endpoint: DatabaseEndpoint
-
+      - database-endpoint:
+          capability: DatabaseEndpoint
+          relationship: ConnectsTo
 service_template:
 # tag::s100[]
   node_templates:
@@ -40,7 +40,6 @@ service_template:
         database-endpoint:
           properties:
             port: 3306
-
     wordpress:
         type: WordPress
         requirements:

@@ -4,7 +4,9 @@ interface_types:
     operations:
       create:
         description: Create a WordPress instance
-
+        inputs:
+          wp-zip:
+            type: string
 artifact_types:
   WpZip:
     description: WordPress zip file

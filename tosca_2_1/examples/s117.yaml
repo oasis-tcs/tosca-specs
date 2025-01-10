@@ -1,4 +1,8 @@
 tosca_definitions_version: tosca_2_0
+repositories:
+  my_service_catalog:
+    url: http://localhost/tmp/
+
 artifact_types:
   Bash:
     mime_type: text/x-shellscript
@@ -29,8 +33,7 @@ service_template:
                   type: Bash
                   repository: my_service_catalog
                 dependencies:
-                  - setup_script:
-                      file : scripts/setup.sh
-                      type : Bash
-                      repository : my_service_catalog
+                  - file : scripts/setup.sh
+                    type : Bash
+                    repository : my_service_catalog
 # end::s117[]

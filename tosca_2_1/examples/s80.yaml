@@ -3,5 +3,5 @@ data_types:
 # tag::s80[]
   ShortString:
     derived_from: string
-    validation: { $less_or_equal: [ $value, 16 ] }
+    validation: { $less_or_equal: [ { $length: [ $value ] }, 16 ] }
 # end::s80[]

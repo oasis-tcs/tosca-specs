@@ -4,7 +4,10 @@ data_types:
     properties:
       port:
         type: integer
-        validation:  { $in_range: [ $value, 1, 65535 ] }
+        validation:
+          $and:
+            - $greater_or_equal: [ $value, 1 ]
+            - $less_or_equal: [ $value, 65535 ] 
 capability_types:
 # tag::s84[]
   Endpoint:

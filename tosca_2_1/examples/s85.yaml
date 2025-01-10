@@ -4,7 +4,10 @@ data_types:
     properties:
       port:
         type: integer
-        validation:  { $in_range: [ $value, 1, 65535 ] }
+        validation: 
+          $and:
+            - $greater_or_equal: [ $value, 1 ]
+            - $less_or_equal: [ $value, 65535 ] 
 capability_types:
   Endpoint:
     properties:
@@ -26,22 +29,20 @@ capability_types:
     derived_from: Endpoint
     # Change Endpoint secure indicator to true from its default of false
     properties:
-      secure: 
-        default: true
-        validation: { $equal: true}
+      secure: true
 # Or in a node definition.
 node_types:
   WebServer:
     description: A web server
     capabilities:
-      ConnectionPoint:
+      connection-point:
         type: Endpoint
 service_template:
   node_templates:
     my_server:
       type: WebServer
       capabilities:
-        ConnectionPoint:
+        connection-point:
           properties:
             secure: true
 # end::s85[]

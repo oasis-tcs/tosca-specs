@@ -3,13 +3,17 @@ data_types:
   UserName:
     description: A user name
     derived_from: string
-    constraints:
-      - length: { min_length: 1, max_length: 10 }
+    validation:
+      $and:
+        - $greater_or_equal: [ { $length: [ $value ] }, 1 ]
+        - $less_or_equal: [ { $length: [ $value ] }, 10 ] 
   UserId:
     description: A user ID
     derived_from: integer
-    constraints:
-      - in_range: [ 1000, 9999 ]
+    validation:
+      $and:
+        - $greater_or_equal: [ $value, 1000 ]
+        - $less_or_equal: [ $value, 9999 ]
 node_types:
   OperatingSystem:
     description: An OS

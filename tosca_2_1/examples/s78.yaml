@@ -8,5 +8,5 @@ node_types:
         entry_schema:
           description: basic email address
           type: string
-          validation: { $less_or_equal: [ $value, 128 ] }
+          validation: { $less_or_equal: [ { $length: [ $value ] }, 128 ] }
 # end::s78[]
