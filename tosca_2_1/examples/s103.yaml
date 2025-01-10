@@ -18,7 +18,7 @@ service_template:
   node_templates:
     my-node:
       type: Compute
-      directive: [ select ]
+      directives: [ select ]
       node_filter:
         $and:
         - $greater_or_equal:

@@ -8,9 +8,8 @@ service_template:
   node_templates:
     compute:
       type: Compute
-
     client:
-      type: Client
+      type: ClientSoftware
       directives: [ substitute ]
       requirements:
       - host: compute

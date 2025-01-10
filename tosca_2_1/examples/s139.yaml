@@ -21,8 +21,8 @@ node_types:
         capability: Host
         relationship: HostedOn
     - service:
-        capability: Service
-        relationship: ServedBy
+        capability: ServiceCapability
+        relationship: Uses
         count_range: [ 2, 2 ]
 
   Compute:
