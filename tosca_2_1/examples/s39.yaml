@@ -5,6 +5,6 @@ service_template:
     site-name:
       type: string
       description: String parameter with validation clause.
-      default: My Site
-      validation: { $greater_or_equal: [ $value, 9 ] }
+      default: Headquarters
+      validation: { $greater_or_equal: [ { $length: [ $value] }, 9 ] }
 # end::s39[]
