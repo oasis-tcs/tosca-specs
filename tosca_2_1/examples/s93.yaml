@@ -12,7 +12,7 @@ functions:
         - type: string
         - type: string
         result:
-          - type: string
+          type: string
         implementation: scripts/outer.sh
   inner_func:
     description: Inner function
@@ -21,7 +21,7 @@ functions:
         - type: string
         - type: string
         result:
-          - type: string
+          type: string
         implementation: scripts/inner.sh
 service_template:
   node_templates:
