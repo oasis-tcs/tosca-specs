@@ -570,14 +570,13 @@ connections, compositions) drives the automated processes.
 The content in this section is non-normative.
 
 ## 1.1 Changes from Earlier Versions <a name=changes-from-earlier-versions></a>
-
 This version of the specification includes significant changes from
 TOSCA 1.3. In particular:
 
 1. TOSCA v2.0 removes the *Simple Profile* type definitions from the
    standard. These type definitions are now managed as an open source
    project in the
-   [tosca-community-contributions](https://github.com/oasis-open/tosca-community-contributions)
+   [TOSCA Discussion](#tosca-discussion)
    github repository.
 
 2. Rather than bundling Profiles with the TOSCA standard, TOSCA v2.0
