@@ -7767,14 +7767,13 @@ $relationship_index
 #### 10.2.1.8 `$available_allocation` <a name=available_allocation></a>
 
 The `$available_allocation` function is used to retrieve the available
-allocation for capablity properties that can be target to an allocation
-semantic when a relationship is established to the capability.
-The main intended usage is to use this function within the conditon clause
-in a `node_filter` of a node with a "select" directive; this allows to 
-accept only nodes that have a certain available capacity that for 
-example can accomodate the expected allocations when used as a target
-for a relationship. The `$available_allocation` function uses the following 
-grammar:
+allocation for capablity properties that can be targeted by
+relationships to the capability.  The main intended usage is to use
+this function within the condition clause in a `node_filter` of a node
+with a `select` directive; this allows to *select* only nodes that
+have a certain available capacity that for example can accomodate the
+expected allocations when used as a target for a relationship. The
+`$available_allocation` function uses the following grammar:
 
 ```yaml
 $available_allocation: [ <tosca_path>, <property_name> ]
