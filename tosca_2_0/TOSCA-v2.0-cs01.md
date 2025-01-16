@@ -4,9 +4,9 @@
 
 # TOSCA Version 2.0
 
-## Committee Specification Draft 07
+## Committee Specification 01
 
-## 9 October 2024
+## 5 December 2024
 
 #### This Stage
 
@@ -77,10 +77,10 @@ When referencing this specification the following citation format should be used
 
 _TOSCA Version 2.0_.
 Edited by Chris Lauwers and Calin Curescu.
-9 October 2024.
-OASIS Committee Specification Draft 06.
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd07/TOSCA-v2.0-csd07.html.
-Latest stage: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.html.
+5 December 2024.
+OASIS Committee Specification 01.
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-cs01.md.
+Latest stage: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.md
 
 #### Notices
 
@@ -13173,6 +13173,7 @@ assistance:
 |TOSCA-v2.0-csd05|19 January 2023|Chris Lauwers and Calin Curescu|Formalize function syntax and introduce support for user-defined functions. Harmonize constraint syntax, filter syntax, and condition syntax using boolean functions.|
 |TOSCA-v2.0-csd06|12 July 2024|Chris Lauwers and Calin Curescu|Extend operational model with support for updating and upgrading running services. Enhance and formalize *Substitution Mapping* syntax.|
 |TOSCA-v2.0-csd07|9 October 2024|Chris Lauwers and Calin Curescu|Edits for consistency and completeness.|
+|TOSCA-v2.0-cs01|5 December 2024|Chris Lauwers and Calin Curescu|Edits for publication.|
 
 -------
 
