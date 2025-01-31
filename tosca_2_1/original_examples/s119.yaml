@@ -1,6 +1,0 @@
-tosca_definitions_version: tosca_2_0
-# tag::s119[]
-interfaces:
-  standard:
-    start: scripts/start_server.sh
-# end::s119[]
