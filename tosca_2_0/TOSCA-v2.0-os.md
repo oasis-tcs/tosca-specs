@@ -8170,7 +8170,7 @@ The following shows the TOSCA Path syntax in BNF format:
                          <empty>
 <rel_context> ::=        SOURCE, <node_context> | 
                          TARGET, <node_context> |
-                         CAPABILITY, <capability_context> | 
+                         CAPABILITY, <cap_context> | 
                          <empty>
 <cap_context> ::=        RELATIONSHIP, <idx>, <rel_context> |
                          <empty>
