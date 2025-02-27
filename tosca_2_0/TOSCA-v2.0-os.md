@@ -8164,16 +8164,15 @@ The following shows the TOSCA Path syntax in BNF format:
 ```bnf
 <tosca_path> ::=         <node_symbolic_name>, <idx>, <node_context> |
                          SELF, <node_context> |
-                         <relationship_symbolic_name>, <rel_context> |
                          SELF, <rel_context>
 <node_context> ::=       RELATIONSHIP, <requirement_name>, <idx>, <rel_context> |
-                         CAPABILITY, <capability_name>, RELATIONSHIP, <idx>, <rel_context> |
-                         CAPABILITY, <capability_name> |
+                         CAPABILITY, <capability_name>, <cap_context> |
                          <empty>
 <rel_context> ::=        SOURCE, <node_context> | 
                          TARGET, <node_context> |
-                         CAPABILITY, RELATIONSHIP <idx>, <rel_context> | 
-                         CAPABILITY |
+                         CAPABILITY, <cap_context> | 
+                         <empty>
+<cap_context> ::=        RELATIONSHIP, <idx>, <rel_context> |
                          <empty>
 <idx> ::=                <integer_index> | 
                          ALL | 
@@ -8189,24 +8188,27 @@ The initial context can refer to either a node or a relationship context:
 A `<node_context>` can further:
 
 - lead to the outgoing relationship with index `<idx>` out of the relationship defined by the requirement with symbolic name `<requirement_name>` of the current node
-- lead to the relationship with index `<idx>` out of the incoming relationships that target the capability with symbolic name `<capability_name>` of the current node
-- end within the capability with symbolic name `<capability_name>` in the current node 
+- lead to the capability with symbolic name `<capability_name>` in the current node 
 - end within the current node via the `<empty>` resolution
 
 A `<rel_context>` can further:
 
-- lead to the "SOURCE" node of the current relationship
-- lead to the "TARGET" node of the current relationship
-- lead to a relationship with index `<idx>` out of the relationships defined by the same requirement as the current relationship
-- end within the target capability of the current relationship
+- lead to the source node of the current relationship
+- lead to the target node of the current relationship
+- lead to the target capability of the current relationship
 - end within the current relationship via the `<empty>` resolution
+
+A `<cap_context>` can further:
+
+- lead to the incoming relationship with index `<idx>` targeting the current capability
+- end within the current capability via the `<empty>` resolution
 
 Note that the `<idx>` can either be a non-negative integer, the value "ALL", or missing:
 
 - If it is a non-negative integer, 0 represents the first index and so on incrementally.
-- If the index is missing, the semantic meaning is that the first index (index with value 0) is used.
 - If it is the value "ALL", then we return the result for all possible indices (further resolved separately) as a list.
   If the there are multiple "ALL" values in the definition, then all the results shall be merged into a single list.
+- If the index is missing, the semantic meaning is that the first index (index with value 0) is used.
 
 We further list the changes from the `$get_property` and `$get_attribute`
 expression from v1.3 to v2.0:
