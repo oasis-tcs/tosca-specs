@@ -8201,6 +8201,7 @@ A `<rel_context>` can further:
 A `<cap_context>` can further:
 
 - lead to the incoming relationship with index `<idx>` targeting the current capability
+  - Note that the grouping/ordering of incoming relationships is currently undefined and left to the implementation.
 - end within the current capability via the `<empty>` resolution
 
 Note that the `<idx>` can either be a non-negative integer, the value "ALL", or missing:
@@ -8209,9 +8210,9 @@ Note that the `<idx>` can either be a non-negative integer, the value "ALL", or 
 - If it is the value "ALL", then we return the result for all possible indices (further resolved separately) as a list.
   If the there are multiple "ALL" values in the definition, then all the results shall be merged into a single list.
 - If the index is missing, the semantic meaning is that the first index (index with value 0) is used.
+  - Also note that the next element in the arguments list (after the arguments part of the tosca_path) for all functions that use tosca_path (e.g. in the `$get_property/$get_attribute` functions) must be a non-number, so that it won't cause ambiguity (that it is intepreted as a last `<idx>` within the tosca_path). All TOSCA built-in functions that use tosca_path in their arguments fulfill this condition.
 
-We further list the changes from the `$get_property` and `$get_attribute`
-expression from v1.3 to v2.0:
+We further list the changes from the `$get_property` and `$get_attribute` expression from v1.3 to v2.0:
 
 - Added multi-step traversal of the representation graph
 - Added the backward traversal from capabilities to incoming
