@@ -4481,7 +4481,7 @@ requirement definition:
 |`description`|no|str|The optional [description](#description) of the requirement definition.|
 |`metadata`|no|map of [metadata](#metadata)|Defines a section used to declare additional information. |
 |`relationship`|yes|relationship definition|The mandatory keyname used to define the relationship created as a result of fulfilling the requirement.|
-|node|no|str|The optional keyname used to provide the name of a valid node type that contains the capability definition that can be used to fulfill the requirement.|
+|`node`|no|str|The optional keyname used to provide the name of a valid node type that contains the capability definition that can be used to fulfill the requirement.|
 |`capability`|yes|str|The mandatory keyname used to specify the capability type for capabilities that can be used to fulfill this requirement. If the requirement definition defines a target node type, the `capability` keyname can also be used instead to specify the symbolic name of a capability defined by that target node type.|
 |`node_filter`|no|[node filter](#node-filter-definition)|The optional filter definition that TOSCA orchestrators will use to select a type-compatible target node that can fulfill this requirement at runtime.|
 |`count_range`|no|seq of 2 ints (see note)|The optional minimum required and maximum allowed number of relationships created by the requirement. If this key is not specified, the implied default of [ 0, UNBOUNDED ] will be used. Note: the value UNBOUNDED is also supported to represent any positive integer.|
