@@ -1428,15 +1428,15 @@ non-functional behavior or quality-of-services in particular domains.
 Furthermore, a policy type might be associated with a set of node
 types the non-functional behavior or quality-of-service it describes.
 
-**Policy templates** provide actual values of properties of the types
-defined by policy types. For example, a policy template for monthly
+**Policy definitions** provide actual values of properties of the types
+defined by policy types. For example, a policy definition for monthly
 payments for customers located in the USA will set the "payment-period"
 property to "monthly" and the "currency" property to "USD", leaving the
 "amount" property open. The "amount" property will be set when the
-corresponding policy template is used for a policy within a node
-template. Thus, a policy template defines the invariant properties of
+corresponding policy definition is used for a policy within a node
+template. Thus, a policy definition defines the invariant properties of
 a policy, while the policy sets the variant properties resulting from
-the actual usage of a policy template in a node template.
+the actual usage of a policy definition in a node template.
 
 -------
 
@@ -1471,8 +1471,7 @@ implemented. Instead, it aims to provide users of TOSCA with a mental
 model of how TOSCA implementations are expected to process TOSCA
 files.
 
-Note that it is not mandatory for compliant TOSCA implementations to four
-kinds of TOSCA abstractions defined in Section 2.4 support all three service
+Note that it is not mandatory for compliant TOSCA implementations to support all three service
 lifecycle phases. Some implementations may use TOSCA only for service design
 and delegate orchestration and ongoing lifecycle management functionality to
 external (non-TOSCA) orchestrators. Other implementations may decide to use
@@ -2068,7 +2067,7 @@ given in [`scalar`](#scalar).
 
 TOSCA provides a type system to describe reusable building blocks to
 construct a service template (i.e. for the nodes, relationship, group
-and policy templates, and the data, capabilities, interfaces, and
+and policy definitions, and the data, capabilities, interfaces, and
 artifacts used in the node and relationship templates). TOSCA types are
 reusable TOSCA entities and are defined in their specific sections in
 the TOSCA file.
@@ -2921,7 +2920,7 @@ import the file referenced by `<file_uri>` as follows:
     the `repository` keyname), then `<file_uri>` refers to the path name of
     a file relative to the root of the named repository
 
-  - If the import definition does not specify a `<profile_name>` then
+  - If the import definition does not specify a `<repository_name>` then
     `<file_uri>` refers to a TOSCA file located in the repository that
     contains the TOSCA file that includes the import definition. If
     the importing TOSCA file is located in a CSAR file, then that CSAR
@@ -9626,6 +9625,7 @@ The content in this section is normative unless otherwise labeled except:
 - references unless labelled as normative.
 
 ## 13.1 Declarative Workflows <a name=declarative-workflows></a>
+Declarative workflows are subject to further study.
 
 ## 13.2 Imperative Workflows <a name=imperative-workflows></a>
 
