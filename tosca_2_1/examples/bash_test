@@ -1,0 +1,17 @@
+
+good=0
+bad=0
+first_bad=""
+
+for file in tosca_2_1/examples/*.yaml; do
+  if puccini-tosca parse "$file" --quiet; then
+    good=$((good+1))
+  else
+    if [ "$bad" -eq 0 ]; then
+      puccini-tosca parse $file
+    fi
+    bad=$((bad+1))
+  fi
+done
+echo "$good valid files, $bad invalid files"
+

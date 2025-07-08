@@ -1,0 +1,10 @@
+tosca_definitions_version: tosca_2_0
+service_template:
+# tag::s87[]
+  inputs:
+    cpus:
+      type: integer
+      description: Number of CPUs for the server.
+      validation: { $valid_values: [ $value, [ 1, 2, 4, 8 ] ] }
+# end::s87[]
+      default: 1
