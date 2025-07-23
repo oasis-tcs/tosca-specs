@@ -10,9 +10,9 @@
 
 #### This Stage
 
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-os.md (Authoritative) \
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-os.html \
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-os.pdf
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/os/TOSCA-v2.0-os.md (Authoritative) \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/os/TOSCA-v2.0-os.html \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/os/TOSCA-v2.0-os.pdf
 
 #### Previous Stage
 
@@ -79,7 +79,7 @@ _TOSCA Version 2.0_.
 Edited by Chris Lauwers and Calin Curescu.
 22 July 2025.
 OASIS Standard.
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-os.md
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/os/TOSCA-v2.0-os.md
 Latest stage: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.md
 
 #### Notices
