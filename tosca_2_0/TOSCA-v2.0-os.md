@@ -4,21 +4,21 @@
 
 # TOSCA Version 2.0
 
-## Committee Specification 01
+## OASIS Standard
 
-## 5 December 2024
+## 22 July 2025
 
 #### This Stage
+
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-os.md (Authoritative) \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-os.html \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-os.pdf
+
+#### Previous Stage
 
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-cs01.md (Authoritative) \
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-cs01.html \
 https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-cs01.pdf
-
-#### Previous Stage
-
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd07/TOSCA-v2.0-csd07.md (Authoritative) \
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd07/TOSCA-v2.0-csd07.html \
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/csd07/TOSCA-v2.0-csd07.pdf
 
 #### Latest Stage
 
@@ -77,14 +77,14 @@ When referencing this specification the following citation format should be used
 
 _TOSCA Version 2.0_.
 Edited by Chris Lauwers and Calin Curescu.
-5 December 2024.
-OASIS Committee Specification 01.
-https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-cs01.md.
+22 July 2025.
+OASIS Standard.
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/cs01/TOSCA-v2.0-os.md
 Latest stage: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.md
 
 #### Notices
 
-Copyright &copy; OASIS Open 2024. All Rights Reserved.
+Copyright &copy; OASIS Open 2025. All Rights Reserved.
 
 Distributed under the terms of the OASIS [IPR Policy](https://www.oasis-open.org/policies-guidelines/ipr/).
 
@@ -1899,8 +1899,8 @@ status of a TOSCA file:
 
 ```yaml #s2
 metadata: 
-  creation-date: '2024-04-14'
-  date-updated: '2024-05-01'
+  creation-date: '2025-04-14'
+  date-updated: '2025-05-01'
   status: developmental  
 ```
 
@@ -12904,7 +12904,7 @@ assistance:
 
 <!-- Required section. Do not modify. -->
 
-Copyright &copy; OASIS Open 2024. All Rights Reserved.
+Copyright &copy; OASIS Open 2025. All Rights Reserved.
 
 All capitalized terms in the following text have the meanings assigned to them in the OASIS Intellectual Property Rights Policy (the "OASIS IPR Policy"). The full [Policy](https://www.oasis-open.org/policies-guidelines/ipr/) may be found at the OASIS website.
 
