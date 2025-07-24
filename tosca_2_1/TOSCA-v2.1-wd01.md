@@ -4,7 +4,7 @@
 
 # TOSCA Version 2.1
 
-## Committee Specification Draft 01/WD
+## Committee Specification Draft 01
 
 ## 8 July 2025
 
@@ -16,7 +16,9 @@ https://docs.oasis-open.org/tosca/TOSCA/v2.1/csd01/TOSCA-v2.1-csd01.pdf
 
 #### Previous Stage
 
-> Update with information about Version 2.0 OS
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/os/TOSCA-v2.0-os.md (Authoritative) \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/os/TOSCA-v2.0-os.html \
+https://docs.oasis-open.org/tosca/TOSCA/v2.0/os/TOSCA-v2.0-os.pdf
 
 #### Latest Stage
 
@@ -37,13 +39,15 @@ Chris Lauwers (lauwers@ubicity.com), Individual Member
 Chris Lauwers (lauwers@ubicity.com), Individual Member \
 Calin Curescu (calin.curescu@ericsson.com), [Ericsson](http://ericsson.com/)
 
-#### Related Work - update as needed
+#### Related Work
 
 This specification replaces or supersedes:
 
-* _Topology and Orchestration Specification for Cloud Applications Version 1.0._ Edited by Derek Palma and Thomas Spatzier. OASIS Standard. Latest version: http://docs.oasis-open.org/tosca/TOSCA/v1.0/TOSCA-v1.0.html.
+* _TOSCA Version 2.0_. Edited by Chris Lauwers and Calin Curescu. OASIS Standard. Latest version: https://docs.oasis-open.org/tosca/TOSCA/v2.0/TOSCA-v2.0.md
 
 * _TOSCA Simple Profile in YAML Version 1.3._ Edited by Matt Rutkowski, Chris Lauwers, Claude Noshpitz, and Calin Curescu. Latest stage: https://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.3/TOSCA-Simple-Profile-YAML-v1.3.html.
+
+* _Topology and Orchestration Specification for Cloud Applications Version 1.0._ Edited by Derek Palma and Thomas Spatzier. OASIS Standard. Latest version: http://docs.oasis-open.org/tosca/TOSCA/v1.0/TOSCA-v1.0.html.
 
 This specification is related to:
 
@@ -133,65 +137,11 @@ connections, compositions) drives the automated processes.
 The content in this section is non-normative.
 
 ## 1.1 Changes from Earlier Versions <a name=changes-from-earlier-versions></a>
-This version of the specification includes significant changes from
-TOSCA 1.3. In particular:
+This version of the specification includes the following changes
+compared to TOSCA 2.0:
 
-1. TOSCA v2.0 removes the *Simple Profile* type definitions from the
-   standard. These type definitions are now managed as an open source
-   project in the
-   [TOSCA Discussion](#tosca-discussion)
-   github repository.
-
-2. Rather than bundling Profiles with the TOSCA standard, TOSCA v2.0
-   provides support for user-defined domain-specific profiles as follows:
-
-   - It allows collections of type definitions to be bundled together
-     into named profiles.
-
-   - It supports importing profiles using their profile name.
-
-3. TOSCA v2.0 formalizes support for in-life operation of a running
-   service.
-
-   - It formalizes the role of a representation model and clarifies
-     how to create representation models from service templates.
-
-   - It documents how to create multiple node representations from the
-     same node template and multiple relationships from the same
-     requirement assignment.
-
-   - It defines an operational model that provides guidance for
-     updating and/or upgrading a running service and for responding to
-     notifications about state changes or errors.
-
-4. TOSCA v2.0 introduces a new TOSCA Path syntax that allows a defined
-   traversal of an arbitrary graph of nodes and relationships to an
-   attribute or property.
-
-5. TOSCA v2.0 significantly enhances support for functions. It
-   formalizes function syntax, it extends the set of built-in
-   functions, and it introduces support for user-defined custom
-   functions.
-
-6. TOSCA v2.0 harmonizes constraint syntax, filter syntax, and
-   condition syntax using Boolean functions. 
-
-7. TOSCA v2.0 addresses shortcomings of the v1.3 substitution mapping
-   grammar.
-
-8. TOSCA v2.0 simplifies and extends the CSAR file format.
-
-9. TOSCA v2.0 includes a broad set of syntax clarifications,
+1. TOSCA v2.1 includes a broad set of syntax clarifications,
    including but not limited to:
-
-   - The service template is renamed TOSCA file and service template
-     is redefined.
-
-   - Grammar for relationship types, requirement definitions, and
-     requirement assignments has been extended and clarified.
-
-   - Short notation for `entry_schema` and `key_schema` has been
-     documented
 
 ## 1.2 Document Conventions <a name=document-conventions></a>
 
@@ -1582,6 +1532,7 @@ specification:
 
 | Version String        | TOSCA Specification                      |
 |-----------------------|------------------------------------------|
+| tosca_2_1             | TOSCA Version 2.1                        |
 | tosca_2_0             | TOSCA Version 2.0                        |
 | tosca_simple_yaml_1_3 | TOSCA Simple Profile in YAML Version 1.3 |
 | tosca_simple_yaml_1_2 | TOSCA Simple Profile in YAML Version 1.2 |
@@ -12450,7 +12401,7 @@ assistance:
 
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |
-|TOSCA-v2.1-csd01|DD MM YYYY|Chris Lauwers and Calin Curescu||
+|TOSCA-v2.1-csd01|24 July 2025|Chris Lauwers|Update `tosca_definititions_version`|
 
 -------
 
