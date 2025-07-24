@@ -1221,7 +1221,7 @@ The content in this section is normative unless otherwise labeled except for:
 ## 5.1 TOSCA Modeling Concepts <a name=tosca-modeling-concepts></a>
 
 This section defines concepts used in support of the modeling
-functionality of the TOSCA Version 2.0 specification. Specifically, it
+functionality of the TOSCA Version 2.1 specification. Specifically, it
 introduces grammar for defining TOSCA types and templates as defined
 in [the Chapter TOSCA Core Concepts](#tosca-core-concepts), it introduces the concepts of
 entity definitions and entity assignments, and presents rules for type
@@ -1539,15 +1539,15 @@ specification:
 | tosca_simple_yaml_1_1 | TOSCA Simple Profile in YAML Version 1.1 |
 | tosca_simple_yaml_1_0 | TOSCA Simple Profile in YAML Version 1.0 |
 
-The version for this specification is `tosca_2_0`. The following
+The version for this specification is `tosca_2_1`. The following
 shows an example `tosca_definitions_version` in a TOSCA file created
-using the TOSCA Version 2.0 specification:
+using the TOSCA Version 2.1 specification:
 
 ```yaml #s8
 tosca_definitions_version: tosca_2_0
 ```
 
-Note that it is not mandatory for TOSCA Version 2.0 implementations to
+Note that it is not mandatory for TOSCA Version 2.1 implementations to
 support older versions of the TOSCA specifications.
 
 ## 6.3 DSL Definitions <a name=dsl-definitions></a>
