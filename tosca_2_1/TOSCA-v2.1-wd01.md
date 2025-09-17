@@ -7737,7 +7737,7 @@ We further list the changes from the `$get_property` and `$get_attribute` expres
   - The initial "SOURCE", ... becomes "SELF", "SOURCE", ...
   - The initial "TARGET", ... becomes "SELF", "TARGET", ...
 
-## 10.4 Function Definitions <a name=function-definitions></a>
+## 10.4 Function Definition <a name=function-definition></a>
 
 TOSCA allows for the use of *custom functions* that extend the set of
 built-in functions documented in the previous section. TOSCA
