@@ -1512,6 +1512,8 @@ The following rules apply:
   other TOSCA files. However, a TOSCA file that defines a `profile`
   MUST NOT define a `service_template`.
 
+- Where a keyname is present, the corresponding map may not be empty.
+
 The remainder of this chapter provides detailed descriptions of the
 keynames and associated grammars used in a TOSCA file definition.
 
