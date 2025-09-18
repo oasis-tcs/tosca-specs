@@ -1242,6 +1242,7 @@ share a number of common keynames, each type definition has its own set of keyna
 with their own syntax and semantics. TOSCA supports *node types*,
 *relationship types*, *capability types*, *interface types*, *artifact
 types*, *policy types*, *group types*, and *data types*.
+Type names are strings and may not be nul
 
 Some keynames in TOSCA type definitions are used to specify TOSCA **entity
 definitions** that *declare* the presence of those entities in the
